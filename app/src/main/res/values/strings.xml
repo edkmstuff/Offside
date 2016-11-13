@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Offside</string>
+    <string name="points">Points</string>
+    <string name="position">Position</string>
+    <string name="leader_score">Leader score</string>
+    <string name="active_questions">Active questions</string>
+</resources>
