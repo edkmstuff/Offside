@@ -16,16 +16,29 @@
             </intent-filter>
         </activity>
         <activity android:name=".QuestionActivity" />
-
         <activity android:name=".ClosedQuestionActivity" />
         <activity android:name=".ProcessedQuestionActivity" />
         <activity
             android:name=".AdminActivity"
             android:label="@string/title_activity_admin"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CreateGameActivity" />
-        <activity android:name=".AskQuestionActivity" />
-        <activity android:name=".AnswerQuestionActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".CreateGameActivity" android:label="@string/create_game">
+
+        </activity>
+        <activity android:name=".AskQuestionActivity" android:label="@string/ask_question">
+
+        </activity>
+        <activity android:name=".AnswerQuestionActivity" android:label="@string/answer_question">
+
+        </activity>
     </application>
 
 </manifest>

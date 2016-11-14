@@ -12,10 +12,11 @@
         <item>When possible</item>
         <item>Never</item>
     </string-array>
-    <string name="title_activity_admin">AdminActivity</string>
+    <string name="title_activity_admin">Game Admin</string>
     <string name="create_game">Create Game</string>
     <string name="ask_question">Ask Question</string>
     <string name="answer_question">Answer Question</string>
+    <string name="welcome">Welcome</string>
 
 
 </resources>
