@@ -9,5 +9,8 @@ public class PlayerScoreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_score);
+        //ToDo: Add properties to override oonClick actions (see tutorial)
+        //ToDo: Add navigaton to leader board
+        //ToDo: Add anvigation to open Questions
     }
 }
