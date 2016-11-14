@@ -15,6 +15,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".QuestionActivity" />
+
+        <activity android:name=".ClosedQuestionActivity" />
+        <activity android:name=".ProcessedQuestionActivity" />
+        <activity
+            android:name=".AdminActivity"
+            android:label="@string/title_activity_admin"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".CreateGameActivity" />
+        <activity android:name=".AskQuestionActivity" />
+        <activity android:name=".AnswerQuestionActivity"></activity>
     </application>
 
 </manifest>

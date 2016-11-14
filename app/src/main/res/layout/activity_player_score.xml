@@ -54,7 +54,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/football_ball" />
+                    android:src="@drawable/leaderboard" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -89,7 +89,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/football_ball" />
+                    android:src="@drawable/trophy" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
                     android:layout_marginRight="2dp"
                     android:textSize="20sp"
                     android:text="1256"
-                     />
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -136,7 +136,7 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/football_ball" />
+                    android:src="@drawable/faq_50" />
 
                 <TextView
                     android:layout_width="wrap_content"
