@@ -39,6 +39,8 @@
         <activity android:name=".AnswerQuestionActivity" android:label="@string/answer_question">
 
         </activity>
+
+        <service android:name=".helpers.SignalRService"></service>
     </application>
 
 </manifest>

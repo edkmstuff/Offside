@@ -83,7 +83,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/linearLayout">
 
                 <ImageView
                     android:layout_width="32dp"
@@ -101,7 +102,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true">
+                android:layout_alignParentRight="true"
+                android:id="@+id/linearLayout2">
                 <TextView
                     android:id="@+id/leader_score"
                     android:layout_width="wrap_content"
@@ -117,6 +119,17 @@
                     android:text="@string/points"
                     android:textSize="12sp"/>
             </LinearLayout>
+
+            <Button
+                android:text="get"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayout"
+                android:layout_toLeftOf="@+id/linearLayout2"
+                android:layout_toStartOf="@+id/linearLayout2"
+                android:layout_marginRight="33dp"
+                android:layout_marginEnd="33dp"
+                android:id="@+id/getsig" />
 
         </RelativeLayout>
         <RelativeLayout

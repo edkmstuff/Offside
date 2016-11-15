@@ -1,8 +1,24 @@
 package com.offsidegame.offside;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
+
+import com.offsidegame.offside.helpers.PlayerScoreEvent;
+import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.helpers.SignalrClient;
+import com.offsidegame.offside.models.PlayerScore;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.concurrent.ExecutionException;
 
@@ -14,6 +30,30 @@ import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.hubs.HubProxy;
 
 public class PlayerScoreActivity extends AppCompatActivity {
+    private final Context mContext = this;
+    private SignalRService mService;
+    private boolean mBound = false;
+
+
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     */
+    private final ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to SignalRService, cast the IBinder and get SignalRService instance
+            SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
 
 
 
@@ -21,45 +61,49 @@ public class PlayerScoreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_score);
-        Platform.loadPlatformComponent( new AndroidPlatformComponent() );
-        HubConnection connection = new HubConnection("http://offside.somee.com");
-        final HubProxy proxy = connection.createHubProxy("OffsideHub");
-        connection.error(new ErrorCallback() {
+
+        Button btn = (Button) findViewById(R.id.getsig);
+        btn.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onError(Throwable error) {
-                System.err.println("There was an error communicating with the server.");
-                System.err.println("Error detail: " + error.toString());
-
-                error.printStackTrace(System.err);
+            public void onClick(View view) {
+                mService.getPlayerScore();
             }
-        });
-
-//        connection.connected(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                Toast toast = Toast.makeText(getApplicationContext(), "connected", Toast.LENGTH_LONG);
-//            }
-//        });
-
-        proxy.subscribe(new Object() {
-            @SuppressWarnings("unused")
-            public void SendNotification(String notification) {
-                System.err.println("OFFSIDE NOTIFICATION IS: " + notification);
-            }
-
 
         });
 
-        SignalRFuture<Void> awaitConnection = connection.start();
-        try {
-            awaitConnection.get();
-        } catch (InterruptedException e) {
-            System.err.println("Error detail: " + e.getMessage().toString());
-        } catch (ExecutionException e) {
-            System.err.println("Error detail: " + e.getMessage().toString());
+        Intent intent = new Intent();
+        intent.setClass(mContext, SignalRService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
         }
+
+        super.onStop();
+    }
+
+
+    @Subscribe
+    public void onPlayerScoreEvent(PlayerScoreEvent event) {
+        PlayerScore playerScore = event.playerScore;
+
+        //ToDo:now update the ui
+
+
     }
 
 
