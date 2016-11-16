@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.offsidegame.offside.helpers.SignalRService;
@@ -40,6 +41,13 @@ public class PlayerScoreActivity extends AppCompatActivity {
     };
 
 
+    TextView score;
+    TextView position;
+    TextView leaderScore;
+    TextView totalOpenQuestions;
+
+
+
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
@@ -49,19 +57,25 @@ public class PlayerScoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_score);
 
-//        Button btn = (Button) findViewById(R.id.getsig);
-//        btn.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View view) {
-//                mService.getPlayerScore();
-//            }
-//
-//        });
+        Button btn = (Button) findViewById(R.id.getsig);
+        btn.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                mService.getPlayerScore();
+            }
+
+        });
 
         Intent intent = new Intent();
         intent.setClass(mContext, SignalRService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+        score = (TextView) findViewById(R.id.score);
+        position = (TextView) findViewById(R.id.position);
+        leaderScore = (TextView) findViewById(R.id.leader_score);
+        totalOpenQuestions = (TextView) findViewById(R.id.total_active_questions);
+
 
     }
 
@@ -84,14 +98,20 @@ public class PlayerScoreActivity extends AppCompatActivity {
     }
 
 
-
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayerScore(PlayerScore playerScore) {
-        Toast.makeText(mContext, playerScore.getGameTitle(), Toast.LENGTH_LONG).show();
-        //ToDo:now update the ui
+        updatePlayerScoreInUi(playerScore);
+        Toast.makeText(mContext, getString(R.string.data_updated), Toast.LENGTH_SHORT).show();
+    }
 
-
+    void updatePlayerScoreInUi(PlayerScore playerScore) {
+        score.setText(Integer.toString(playerScore.getScore()));
+        //player position
+        position.setText(Integer.toString(playerScore.getPosition()) + " " + getString(R.string.out_of) + " " + Integer.toString(playerScore.getTotalPlayers()));
+        //leader score
+        leaderScore.setText(Integer.toString(playerScore.getLeaderScore()));
+        //open questions
+        totalOpenQuestions.setText(Integer.toString(playerScore.getTotalOpenQuestions()));
     }
 
 

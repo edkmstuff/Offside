@@ -5,6 +5,8 @@
     <string name="leader_score">Leader score</string>
     <string name="active_questions">Active questions</string>
     <string name="send">Send</string>
+    <string name="out_of">out of</string>
+    <string name="data_updated">Data updated</string>
 
 
     <string-array name="answers">
