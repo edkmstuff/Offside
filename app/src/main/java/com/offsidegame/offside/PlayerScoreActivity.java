@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class PlayerScoreActivity extends AppCompatActivity {
+    public static final String PREFERENCE_NAME = "OffsidePlayerPreferences";
+
     private final Context mContext = this;
     private SignalRService mService;
     private boolean mBound = false;
@@ -54,8 +57,20 @@ public class PlayerScoreActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_score);
+
+
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences(PREFERENCE_NAME, 0);
+        boolean isLoggedIn = settings.getBoolean("isLoggedIn", false);
+
+        if(!isLoggedIn){
+            Intent intent = new Intent(mContext,LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
 
         Button btn = (Button) findViewById(R.id.getsig);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +91,22 @@ public class PlayerScoreActivity extends AppCompatActivity {
         leaderScore = (TextView) findViewById(R.id.leader_score);
         totalOpenQuestions = (TextView) findViewById(R.id.total_active_questions);
 
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        setContentView(R.layout.activity_player_score);
+        // Restore preferences
+        SharedPreferences settings = getSharedPreferences(PREFERENCE_NAME, 0);
+        boolean isLoggedIn = settings.getBoolean("isLoggedIn", false);
+
+        if(!isLoggedIn){
+            Intent intent = new Intent(mContext,LoginActivity.class);
+            startActivity(intent);
+            return;
+        }
 
     }
 
@@ -105,13 +136,15 @@ public class PlayerScoreActivity extends AppCompatActivity {
     }
 
     void updatePlayerScoreInUi(PlayerScore playerScore) {
-        score.setText(Integer.toString(playerScore.getScore()));
+
+
+        score.setText(playerScore.getScore().toString());
         //player position
-        position.setText(Integer.toString(playerScore.getPosition()) + " " + getString(R.string.out_of) + " " + Integer.toString(playerScore.getTotalPlayers()));
+        position.setText(playerScore.getPosition().toString() + " " + getString(R.string.out_of) + " " + playerScore.getTotalPlayers().toString());
         //leader score
-        leaderScore.setText(Integer.toString(playerScore.getLeaderScore()));
+        leaderScore.setText(playerScore.getLeaderScore().toString());
         //open questions
-        totalOpenQuestions.setText(Integer.toString(playerScore.getTotalOpenQuestions()));
+        totalOpenQuestions.setText(playerScore.getTotalOpenQuestions().toString());
     }
 
 

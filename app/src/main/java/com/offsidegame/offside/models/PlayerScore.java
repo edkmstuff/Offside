@@ -16,19 +16,19 @@ public class PlayerScore {
     private String userName;
 
     @com.google.gson.annotations.SerializedName("Score")
-    private int score;
+    private Integer score;
 
     @com.google.gson.annotations.SerializedName("Position")
-    private int position;
+    private Integer position;
 
     @com.google.gson.annotations.SerializedName("TotalPlayers")
-    private int totalPlayers;
+    private Integer totalPlayers;
 
     @com.google.gson.annotations.SerializedName("TotalOpenQuestions")
-    private int totalOpenQuestions;
+    private Integer totalOpenQuestions;
 
     @com.google.gson.annotations.SerializedName("LeaderScore")
-    private int leaderScore;
+    private Integer leaderScore;
 
 
     public PlayerScore() {
@@ -60,7 +60,7 @@ public class PlayerScore {
         this.userName = userName;
     }
 
-    public int getPosition() {
+    public Integer getPosition() {
         return position;
     }
 
@@ -68,7 +68,7 @@ public class PlayerScore {
         this.position = position;
     }
 
-    public int getTotalPlayers() {
+    public Integer getTotalPlayers() {
         return totalPlayers;
     }
 
@@ -76,7 +76,7 @@ public class PlayerScore {
         this.totalPlayers = totalPlayers;
     }
 
-    public int getTotalOpenQuestions() {
+    public Integer getTotalOpenQuestions() {
         return totalOpenQuestions;
     }
 
@@ -84,7 +84,7 @@ public class PlayerScore {
         this.totalOpenQuestions = totalOpenQuestions;
     }
 
-    public int getLeaderScore() {
+    public Integer getLeaderScore() {
         return leaderScore;
     }
 
@@ -92,7 +92,7 @@ public class PlayerScore {
         this.leaderScore = leaderScore;
     }
 
-    public int getScore() {
+    public Integer getScore() {
         return score;
     }
 

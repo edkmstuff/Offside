@@ -19,6 +19,7 @@
     <string name="ask_question">Ask Question</string>
     <string name="answer_question">Answer Question</string>
     <string name="welcome">Welcome</string>
+    <string name="goto_player_score">Go to Player Score</string>
 
 
 </resources>
