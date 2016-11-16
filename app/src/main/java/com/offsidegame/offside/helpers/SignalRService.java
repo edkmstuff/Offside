@@ -100,7 +100,7 @@ public class SignalRService extends Service {
     private void startSignalR() {
         Platform.loadPlatformComponent(new AndroidPlatformComponent());
 
-        String serverUrl = "http://offside.somee.com";
+        String serverUrl = "http://offsidedev.somee.com/";
         hubConnection = new HubConnection(serverUrl);
         String SERVER_HUB = "OffsideHub";
         hub = hubConnection.createHubProxy(SERVER_HUB);
@@ -114,7 +114,7 @@ public class SignalRService extends Service {
             return;
         }
 
-        //getPlayerScore();
+        getPlayerScore();
     }
 
 
