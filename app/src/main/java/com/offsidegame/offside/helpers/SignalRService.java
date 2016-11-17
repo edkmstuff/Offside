@@ -11,6 +11,7 @@ import android.util.Log;
 import com.offsidegame.offside.models.LoginEvent;
 import com.offsidegame.offside.models.LoginInfo;
 import com.offsidegame.offside.models.PlayerScore;
+import com.offsidegame.offside.models.PlayerScoreEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -84,14 +85,14 @@ public class SignalRService extends Service {
 
             @Override
             public void run(PlayerScore playerScore) throws Exception {
-                EventBus.getDefault().post(playerScore);
+                EventBus.getDefault().post(new PlayerScoreEvent(playerScore));
             }
         });
     }
 
     public void login(String email) {
 
-        hub.invoke(LoginInfo.class, "Login").done(new Action<LoginInfo>() {
+        hub.invoke(LoginInfo.class, "Login", email).done(new Action<LoginInfo>() {
 
             @Override
             public void run(LoginInfo loginInfo) throws Exception {
@@ -125,7 +126,7 @@ public class SignalRService extends Service {
             return;
         }
 
-        getPlayerScore();
+//        getPlayerScore();
     }
 
 

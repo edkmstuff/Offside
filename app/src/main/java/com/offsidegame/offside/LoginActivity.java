@@ -22,6 +22,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class LoginActivity extends AppCompatActivity {
 
     private final Context mContext = this;
@@ -99,7 +102,16 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(getString(R.string.is_logged_in_key), true);
         editor.putString(getString(R.string.user_id_key), id);
+        Date current = new Date();
+        String currentAsString = new SimpleDateFormat(getString(R.string.date_format)).format(current);
+        editor.putString(getString(R.string.last_login_time), currentAsString);
         editor.commit();
+
+        Intent intent = new Intent(mContext, PlayerScoreActivity.class);
+        startActivity(intent);
+
+
+
 
     }
 

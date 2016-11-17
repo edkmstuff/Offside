@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,10 +16,15 @@ import android.widget.Toast;
 
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.PlayerScore;
+import com.offsidegame.offside.models.PlayerScoreEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PlayerScoreActivity extends AppCompatActivity {
 
@@ -50,7 +56,6 @@ public class PlayerScoreActivity extends AppCompatActivity {
     TextView totalOpenQuestions;
 
 
-
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
@@ -66,11 +71,11 @@ public class PlayerScoreActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);
 
-        if(!isLoggedIn){
-            Intent intent = new Intent(mContext,LoginActivity.class);
-            startActivity(intent);
-            return;
-        }
+//        if(!isLoggedIn){
+//            Intent intent = new Intent(mContext,LoginActivity.class);
+//            startActivity(intent);
+//            return;
+//        }
 
         Button btn = (Button) findViewById(R.id.getsig);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -95,15 +100,27 @@ public class PlayerScoreActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         setContentView(R.layout.activity_player_score);
         // Restore preferences
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);
 
-        if(!isLoggedIn){
-            Intent intent = new Intent(mContext,LoginActivity.class);
+        String loginExpirationTimeAsString = (String) settings.getString(getString(R.string.last_login_time), "");
+        SimpleDateFormat formatter = new SimpleDateFormat(getString(R.string.date_format));
+
+        Date loginExpirationTime;
+        try {
+            loginExpirationTime = formatter.parse(loginExpirationTimeAsString);
+        }catch (ParseException pe){
+            Log.e(getString(R.string.log_tag), pe.getMessage());
+            loginExpirationTime = new Date();
+        }
+
+        Date current = new Date();
+        if (!isLoggedIn || current.after(loginExpirationTime) ) {
+            Intent intent = new Intent(mContext, LoginActivity.class);
             startActivity(intent);
             return;
         }
@@ -130,14 +147,13 @@ public class PlayerScoreActivity extends AppCompatActivity {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceivePlayerScore(PlayerScore playerScore) {
+    public void onReceivePlayerScore(PlayerScoreEvent playerScoreEvent) {
+        PlayerScore playerScore = playerScoreEvent.getPlayerScore();
         updatePlayerScoreInUi(playerScore);
         Toast.makeText(mContext, getString(R.string.data_updated), Toast.LENGTH_SHORT).show();
     }
 
     void updatePlayerScoreInUi(PlayerScore playerScore) {
-
-
         score.setText(playerScore.getScore().toString());
         //player position
         position.setText(playerScore.getPosition().toString() + " " + getString(R.string.out_of) + " " + playerScore.getTotalPlayers().toString());
