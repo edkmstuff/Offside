@@ -9,8 +9,6 @@ import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,23 +27,23 @@ import java.util.Date;
 public class PlayerScoreActivity extends AppCompatActivity {
 
 
-    private final Context mContext = this;
-    private SignalRService mService;
-    private boolean mBound = false;
+    private final Context context = this;
+    private SignalRService signalRService;
+    private boolean boundToSignalRService = false;
 
-    private final ServiceConnection mConnection = new ServiceConnection() {
+    private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
             // We've bound to SignalRService, cast the IBinder and get SignalRService instance
             SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
+            signalRService = binder.getService();
+            boundToSignalRService = true;
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
+        public void onServiceDisconnected(ComponentName className) {
+            boundToSignalRService = false;
         }
     };
 
@@ -66,37 +64,14 @@ public class PlayerScoreActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_score);
 
-
-        // Restore preferences
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);
-
-//        if(!isLoggedIn){
-//            Intent intent = new Intent(mContext,LoginActivity.class);
-//            startActivity(intent);
-//            return;
-//        }
-
-        Button btn = (Button) findViewById(R.id.getsig);
-        btn.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                mService.getPlayerScore();
-            }
-
-        });
-
         Intent intent = new Intent();
-        intent.setClass(mContext, SignalRService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        intent.setClass(context, SignalRService.class);
+        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
 
         score = (TextView) findViewById(R.id.score);
         position = (TextView) findViewById(R.id.position);
         leaderScore = (TextView) findViewById(R.id.leader_score);
         totalOpenQuestions = (TextView) findViewById(R.id.total_active_questions);
-
-
     }
 
     @Override
@@ -107,7 +82,7 @@ public class PlayerScoreActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);
 
-        String loginExpirationTimeAsString = (String) settings.getString(getString(R.string.last_login_time), "");
+        String loginExpirationTimeAsString = (String) settings.getString(getString(R.string.login_expiration_time), "");
         SimpleDateFormat formatter = new SimpleDateFormat(getString(R.string.date_format));
 
         Date loginExpirationTime;
@@ -120,7 +95,7 @@ public class PlayerScoreActivity extends AppCompatActivity {
 
         Date current = new Date();
         if (!isLoggedIn || current.after(loginExpirationTime) ) {
-            Intent intent = new Intent(mContext, LoginActivity.class);
+            Intent intent = new Intent(context, LoginActivity.class);
             startActivity(intent);
             return;
         }
@@ -130,16 +105,16 @@ public class PlayerScoreActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(mContext);
+        EventBus.getDefault().register(context);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(mContext);
+        EventBus.getDefault().unregister(context);
         // Unbind from the service
-        if (mBound) {
-            unbindService(mConnection);
-            mBound = false;
+        if (boundToSignalRService) {
+            unbindService(signalRServiceConnection);
+            boundToSignalRService = false;
         }
 
         super.onStop();
@@ -150,7 +125,7 @@ public class PlayerScoreActivity extends AppCompatActivity {
     public void onReceivePlayerScore(PlayerScoreEvent playerScoreEvent) {
         PlayerScore playerScore = playerScoreEvent.getPlayerScore();
         updatePlayerScoreInUi(playerScore);
-        Toast.makeText(mContext, getString(R.string.data_updated), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, getString(R.string.data_updated), Toast.LENGTH_SHORT).show();
     }
 
     void updatePlayerScoreInUi(PlayerScore playerScore) {

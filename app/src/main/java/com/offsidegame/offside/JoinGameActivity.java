@@ -8,11 +8,13 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ButtonBarLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.JoinGameEvent;
 import com.offsidegame.offside.models.LoginEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -23,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class LoginActivity extends AppCompatActivity {
+public class JoinGameActivity extends AppCompatActivity {
 
     private final Context context = this;
     private SignalRService signalRService;
@@ -45,30 +47,37 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    EditText email;
-    Button login;
+
+    EditText gameCode;
+    Button join;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_join_game);
+
 
         Intent intent = new Intent();
         intent.setClass(context, SignalRService.class);
         bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
 
-        email = (EditText) findViewById(R.id.email);
-        login = (Button) findViewById(R.id.login_button);
-        login.setOnClickListener(new View.OnClickListener() {
+        gameCode = (EditText) findViewById(R.id.gameCode);
+        join = (Button) findViewById(R.id.join_button);
+        join.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
                 if (isBoundToSignalRService){
-                    signalRService.login(email.getText().toString());
+                    signalRService.joinGame(gameCode.getText().toString());
                 }
             }
 
         });
+
+
+
+
     }
 
     @Override
@@ -89,31 +98,16 @@ public class LoginActivity extends AppCompatActivity {
         super.onStop();
     }
 
-
-
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLogin(LoginEvent loginEvent) {
-        String id = loginEvent.getId();
-        String name = loginEvent.getName();
+    public void onJoinGame(JoinGameEvent joinGameEvent) {
+        String gameId = joinGameEvent.getGameId();
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean(getString(R.string.is_logged_in_key), true);
-        editor.putString(getString(R.string.user_id_key), id);
-        editor.putString(getString(R.string.user_name_key), name);
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.HOUR_OF_DAY, 3);
-        Date expirationTime = cal.getTime();
-        String currentAsString = new SimpleDateFormat(getString(R.string.date_format)).format(expirationTime);
-        editor.putString(getString(R.string.login_expiration_time), currentAsString);
+
+        editor.putString(getString(R.string.game_id_key), gameId);
         editor.commit();
 
-        Intent intent = new Intent(context, JoinGameActivity.class);
+        Intent intent = new Intent(context, PlayerScoreActivity.class);
         startActivity(intent);
-
-
-
-
     }
-
-
 }

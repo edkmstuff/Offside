@@ -32,13 +32,13 @@
         </activity>
         <activity
             android:name=".CreateGameActivity"
-            android:label="@string/create_game"></activity>
+            android:label="@string/create_game" />
         <activity
             android:name=".AskQuestionActivity"
-            android:label="@string/ask_question"></activity>
+            android:label="@string/ask_question" />
         <activity
             android:name=".AnswerQuestionActivity"
-            android:label="@string/answer_question"></activity>
+            android:label="@string/answer_question" />
 
         <service
             android:name=".helpers.SignalRService"
@@ -48,8 +48,11 @@
             android:name=".LoginActivity"
             android:label="Login" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <activity android:name=".JoinGameActivity"></activity>
     </application>
 
 </manifest>

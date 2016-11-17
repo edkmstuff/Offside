@@ -2,12 +2,15 @@ package com.offsidegame.offside.helpers;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
+import com.offsidegame.offside.R;
+import com.offsidegame.offside.models.JoinGameEvent;
 import com.offsidegame.offside.models.LoginEvent;
 import com.offsidegame.offside.models.LoginInfo;
 import com.offsidegame.offside.models.PlayerScore;
@@ -96,7 +99,21 @@ public class SignalRService extends Service {
 
             @Override
             public void run(LoginInfo loginInfo) throws Exception {
-                EventBus.getDefault().post(new LoginEvent(loginInfo.getId()));
+                EventBus.getDefault().post(new LoginEvent(loginInfo.getId(), loginInfo.getName()));
+            }
+        });
+    }
+
+    public void joinGame(String gameCode) {
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        String userId = settings.getString(getString(R.string.user_id_key), "");
+        String userName = settings.getString(getString(R.string.user_name_key), "");
+
+        hub.invoke(String.class, "RegisterToGame", gameCode, userId, userName).done(new Action<String>() {
+
+            @Override
+            public void run(String gameId) throws Exception {
+                EventBus.getDefault().post(new JoinGameEvent(gameId));
             }
         });
     }

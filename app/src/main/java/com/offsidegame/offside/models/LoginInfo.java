@@ -10,13 +10,16 @@ public class LoginInfo {
     @com.google.gson.annotations.SerializedName("Id")
     private String id;
 
-    public LoginInfo() {
+    @com.google.gson.annotations.SerializedName("Name")
+    private String name;
 
-    }
+    public LoginInfo() {}
 
     public String getId() {
         return id;
     }
 
-
+    public String getName() {
+        return name;
+    }
 }
