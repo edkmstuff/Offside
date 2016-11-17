@@ -22,4 +22,10 @@
     <string name="goto_player_score">Go to Player Score</string>
 
 
+    <string name="facebook_app_id">1302214459813433</string>
+    <string name="preference_name">OffsidePlayerPreferences</string>
+    <string name="is_logged_in_key">isLoggedIn</string>
+    <string name="user_id_key">userId</string>
+
+
 </resources>

@@ -47,6 +47,9 @@
         <activity
             android:name=".LoginActivity"
             android:label="Login" />
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
     </application>
 
 </manifest>

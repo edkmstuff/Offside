@@ -21,7 +21,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 public class PlayerScoreActivity extends AppCompatActivity {
-    public static final String PREFERENCE_NAME = "OffsidePlayerPreferences";
+
 
     private final Context mContext = this;
     private SignalRService mService;
@@ -63,8 +63,8 @@ public class PlayerScoreActivity extends AppCompatActivity {
 
 
         // Restore preferences
-        SharedPreferences settings = getSharedPreferences(PREFERENCE_NAME, 0);
-        boolean isLoggedIn = settings.getBoolean("isLoggedIn", false);
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);
 
         if(!isLoggedIn){
             Intent intent = new Intent(mContext,LoginActivity.class);
@@ -99,8 +99,8 @@ public class PlayerScoreActivity extends AppCompatActivity {
         super.onResume();
         setContentView(R.layout.activity_player_score);
         // Restore preferences
-        SharedPreferences settings = getSharedPreferences(PREFERENCE_NAME, 0);
-        boolean isLoggedIn = settings.getBoolean("isLoggedIn", false);
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);
 
         if(!isLoggedIn){
             Intent intent = new Intent(mContext,LoginActivity.class);

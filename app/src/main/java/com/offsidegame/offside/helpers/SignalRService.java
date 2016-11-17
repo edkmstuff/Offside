@@ -7,8 +7,9 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.offsidegame.offside.models.LoginEvent;
+import com.offsidegame.offside.models.LoginInfo;
 import com.offsidegame.offside.models.PlayerScore;
 
 import org.greenrobot.eventbus.EventBus;
@@ -21,7 +22,6 @@ import microsoft.aspnet.signalr.client.SignalRFuture;
 import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
 import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.hubs.HubProxy;
-import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 import microsoft.aspnet.signalr.client.transport.ClientTransport;
 import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 
@@ -85,6 +85,17 @@ public class SignalRService extends Service {
             @Override
             public void run(PlayerScore playerScore) throws Exception {
                 EventBus.getDefault().post(playerScore);
+            }
+        });
+    }
+
+    public void login(String email) {
+
+        hub.invoke(LoginInfo.class, "Login").done(new Action<LoginInfo>() {
+
+            @Override
+            public void run(LoginInfo loginInfo) throws Exception {
+                EventBus.getDefault().post(new LoginEvent(loginInfo.getId()));
             }
         });
     }
