@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.PlayerScore;
 import com.offsidegame.offside.models.PlayerScoreEvent;
+import com.offsidegame.offside.models.SignalRServiceBoundEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,6 +41,7 @@ public class PlayerScoreActivity extends AppCompatActivity {
             SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
             signalRService = binder.getService();
             boundToSignalRService = true;
+            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
         }
 
         @Override
@@ -63,21 +66,23 @@ public class PlayerScoreActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_score);
-
-        Intent intent = new Intent();
-        intent.setClass(context, SignalRService.class);
-        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
-
         score = (TextView) findViewById(R.id.score);
         position = (TextView) findViewById(R.id.position);
         leaderScore = (TextView) findViewById(R.id.leader_score);
         totalOpenQuestions = (TextView) findViewById(R.id.total_active_questions);
+
+//
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        setContentView(R.layout.activity_player_score);
+//        setContentView(R.layout.activity_player_score);
+//        score = (TextView) findViewById(R.id.score);
+//        position = (TextView) findViewById(R.id.position);
+//        leaderScore = (TextView) findViewById(R.id.leader_score);
+//        totalOpenQuestions = (TextView) findViewById(R.id.total_active_questions);
         // Restore preferences
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);
@@ -100,6 +105,11 @@ public class PlayerScoreActivity extends AppCompatActivity {
             return;
         }
 
+        Intent intent = new Intent();
+        intent.setClass(context, SignalRService.class);
+        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+
+
     }
 
     @Override
@@ -120,6 +130,12 @@ public class PlayerScoreActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+        Context eventContext = signalRServiceBoundEvent.getContext();
+        if (eventContext == context)
+            signalRService.getPlayerScore();
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayerScore(PlayerScoreEvent playerScoreEvent) {
@@ -129,13 +145,22 @@ public class PlayerScoreActivity extends AppCompatActivity {
     }
 
     void updatePlayerScoreInUi(PlayerScore playerScore) {
+//            boolean isOnMainThread = Looper.myLooper() == Looper.getMainLooper();
+//        if (!isOnMainThread)
+//            return;
         score.setText(playerScore.getScore().toString());
+//        score.invalidate();
         //player position
         position.setText(playerScore.getPosition().toString() + " " + getString(R.string.out_of) + " " + playerScore.getTotalPlayers().toString());
         //leader score
         leaderScore.setText(playerScore.getLeaderScore().toString());
         //open questions
         totalOpenQuestions.setText(playerScore.getTotalOpenQuestions().toString());
+
+
+
+
+
     }
 
 
