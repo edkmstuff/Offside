@@ -81,10 +81,11 @@ public class SignalRService extends Service {
 
     /**
      * method for clients (activities)
+     * @param gameId
      */
-    public void getPlayerScore() {
+    public void getPlayerScore(String gameId) {
 
-        hub.invoke(PlayerScore.class, "GetPlayerScoreJava").done(new Action<PlayerScore>() {
+        hub.invoke(PlayerScore.class, "GetPlayerScore", gameId).done(new Action<PlayerScore>() {
 
             @Override
             public void run(PlayerScore playerScore) throws Exception {

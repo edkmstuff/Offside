@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.LoginEvent;
 
@@ -100,11 +101,13 @@ public class LoginActivity extends AppCompatActivity {
         editor.putBoolean(getString(R.string.is_logged_in_key), true);
         editor.putString(getString(R.string.user_id_key), id);
         editor.putString(getString(R.string.user_name_key), name);
-        Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.HOUR_OF_DAY, 3);
-        Date expirationTime = cal.getTime();
-        String currentAsString = new SimpleDateFormat(getString(R.string.date_format)).format(expirationTime);
-        editor.putString(getString(R.string.login_expiration_time), currentAsString);
+
+        DateHelper dateHelper = new DateHelper();
+        Date current = dateHelper.getCurrentDate();
+        Date expirationTime = dateHelper.addHours(current, 3);
+
+        String expirationTimeAsString = dateHelper.formatAsString(expirationTime, context);
+        editor.putString(getString(R.string.login_expiration_time), expirationTimeAsString);
         editor.commit();
 
         Intent intent = new Intent(context, JoinGameActivity.class);

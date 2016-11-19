@@ -13,6 +13,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.PlayerScore;
 import com.offsidegame.offside.models.PlayerScoreEvent;
@@ -88,17 +89,13 @@ public class PlayerScoreActivity extends AppCompatActivity {
         boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);
 
         String loginExpirationTimeAsString = (String) settings.getString(getString(R.string.login_expiration_time), "");
-        SimpleDateFormat formatter = new SimpleDateFormat(getString(R.string.date_format));
 
-        Date loginExpirationTime;
-        try {
-            loginExpirationTime = formatter.parse(loginExpirationTimeAsString);
-        }catch (ParseException pe){
-            Log.e(getString(R.string.log_tag), pe.getMessage());
-            loginExpirationTime = new Date();
-        }
+        DateHelper dateHelper = new DateHelper();
+        Date loginExpirationTime = dateHelper.formatAsDate(loginExpirationTimeAsString, context);
+        if (loginExpirationTime == null)
+            loginExpirationTime = dateHelper.getCurrentDate();
 
-        Date current = new Date();
+        Date current = dateHelper.getCurrentDate();
         if (!isLoggedIn || current.after(loginExpirationTime) ) {
             Intent intent = new Intent(context, LoginActivity.class);
             startActivity(intent);
@@ -133,8 +130,12 @@ public class PlayerScoreActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
         Context eventContext = signalRServiceBoundEvent.getContext();
-        if (eventContext == context)
-            signalRService.getPlayerScore();
+        if (eventContext == context){
+            SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+            String gameId = settings.getString(getString(R.string.game_id_key), "");
+
+            signalRService.getPlayerScore(gameId);
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -145,9 +146,9 @@ public class PlayerScoreActivity extends AppCompatActivity {
     }
 
     void updatePlayerScoreInUi(PlayerScore playerScore) {
-//            boolean isOnMainThread = Looper.myLooper() == Looper.getMainLooper();
-//        if (!isOnMainThread)
-//            return;
+        boolean isOnMainThread = Looper.myLooper() == Looper.getMainLooper();
+        if (!isOnMainThread)
+            return;
         score.setText(playerScore.getScore().toString());
 //        score.invalidate();
         //player position

@@ -24,11 +24,13 @@ public class PlayerScore {
     @com.google.gson.annotations.SerializedName("TotalPlayers")
     private Integer totalPlayers;
 
+    @com.google.gson.annotations.SerializedName("LeaderScore")
+    private Integer leaderScore;
+
     @com.google.gson.annotations.SerializedName("TotalOpenQuestions")
     private Integer totalOpenQuestions;
 
-    @com.google.gson.annotations.SerializedName("LeaderScore")
-    private Integer leaderScore;
+
 
 
     public PlayerScore() {

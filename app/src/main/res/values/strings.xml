@@ -26,7 +26,7 @@
     <string name="preference_name">OffsidePlayerPreferences</string>
     <string name="is_logged_in_key">isLoggedIn</string>
     <string name="user_id_key">userId</string>
-    <string name="login_expiration_time">lastLoginTime</string>
+    <string name="login_expiration_time">loginExpirationTime</string>
     <string name="date_format">EEEE, dd/MM/yyyy/hh:mm:ss</string>
     <string name="log_tag">OffsideLog</string>
     <string name="user_name_key">userName</string>
