@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.models.ActiveGameEvent;
+import com.offsidegame.offside.models.GameCreationEvent;
 import com.offsidegame.offside.models.JoinGameEvent;
 import com.offsidegame.offside.models.LoginEvent;
 import com.offsidegame.offside.models.LoginInfo;
@@ -70,6 +71,8 @@ public class SignalRService extends Service {
         return binder;
     }
 
+
+
     /**
      * Class used for the client Binder.  Because we know this service always
      * runs in the same process as its clients, we don't need to deal with IPC.
@@ -85,9 +88,9 @@ public class SignalRService extends Service {
      * method for clients (activities)
      * @param gameId
      */
-    public void getPlayerScore(String gameId) {
+    public void getPlayerScore(String gameId, String userId, String userName) {
 
-        hub.invoke(PlayerScore.class, "GetPlayerScore", gameId).done(new Action<PlayerScore>() {
+        hub.invoke(PlayerScore.class, "GetPlayerScore", gameId, userId, userName).done(new Action<PlayerScore>() {
 
             @Override
             public void run(PlayerScore playerScore) throws Exception {
@@ -128,6 +131,16 @@ public class SignalRService extends Service {
             @Override
             public void run(Boolean isGameActive) throws Exception {
                 EventBus.getDefault().post(new ActiveGameEvent(isGameActive));
+            }
+        });
+    }
+
+    public void createGame(String gameCode, String homeTeam, String visitorTeam) {
+        hub.invoke(String.class,"CreateGame", gameCode, homeTeam, visitorTeam).done(new Action<String>() {
+
+            @Override
+            public void run(String gameCode) throws Exception {
+                EventBus.getDefault().post(new GameCreationEvent(gameCode));
             }
         });
     }

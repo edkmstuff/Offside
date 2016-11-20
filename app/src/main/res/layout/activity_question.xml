@@ -8,9 +8,13 @@
     android:orientation="vertical"
     tools:context="com.offsidegame.offside.QuestionActivity">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="i am a question"/>
     <fragment
-        android:id="@+id/activity_question_fragment"
-        android:name="com.offsidegame.offside.QuestionFragment"
+        android:id="@+id/activity_answers_fragment"
+        android:name="com.offsidegame.offside.AnswersFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 

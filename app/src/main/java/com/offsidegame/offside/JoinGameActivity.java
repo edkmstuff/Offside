@@ -22,6 +22,7 @@ import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.ActiveGameEvent;
+import com.offsidegame.offside.models.GameCreationEvent;
 import com.offsidegame.offside.models.JoinGameEvent;
 import com.offsidegame.offside.models.LoginEvent;
 import com.offsidegame.offside.models.PlayerScore;
@@ -61,6 +62,7 @@ public class JoinGameActivity extends AppCompatActivity {
 
     EditText gameCode;
     Button join;
+    Button createGame;
 
 
 
@@ -77,15 +79,23 @@ public class JoinGameActivity extends AppCompatActivity {
 
         gameCode = (EditText) findViewById(R.id.gameCode);
         join = (Button) findViewById(R.id.join_button);
+        createGame = (Button) findViewById(R.id.create_game_button);
         join.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 if (isBoundToSignalRService) {
                     signalRService.joinGame(gameCode.getText().toString());
                 }
             }
+        });
 
+        createGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isBoundToSignalRService) {
+                    signalRService.createGame("1234", "Barcelona", "Real Madrid");
+                }
+            }
         });
     }
 
@@ -139,11 +149,12 @@ public class JoinGameActivity extends AppCompatActivity {
             Intent intent = new Intent(context, PlayerScoreActivity.class);
             startActivity(intent);
         }
+    }
 
-
-
-
-        //Log.e("Offside",String.valueOf(isGameActive));
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveIsGameCreated(GameCreationEvent gameCreationEvent) {
+        String newGameCode = gameCreationEvent.getGameCode();
+        gameCode.setText(newGameCode);
     }
 
 

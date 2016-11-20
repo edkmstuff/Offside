@@ -140,8 +140,13 @@ public class PlayerScoreActivity extends AppCompatActivity {
         if (eventContext == context){
             SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
             String gameId = settings.getString(getString(R.string.game_id_key), "");
-            if (gameId != null && gameId != "")
-                signalRService.getPlayerScore(gameId);
+            String userId = settings.getString(getString(R.string.user_id_key), "");
+            String userName = settings.getString(getString(R.string.user_name_key), "");
+
+            if (gameId != null && gameId != ""
+                    && userId != null && userId!=""
+                    && userName!=null && userName !="")
+                signalRService.getPlayerScore(gameId, userId, userName);
         }
     }
 

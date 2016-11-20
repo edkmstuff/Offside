@@ -12,7 +12,7 @@ import android.widget.ListView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class QuestionFragment extends ListFragment {
+public class AnswersFragment extends ListFragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
