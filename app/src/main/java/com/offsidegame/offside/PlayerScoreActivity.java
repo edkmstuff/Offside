@@ -10,6 +10,8 @@ import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,7 +87,8 @@ public class PlayerScoreActivity extends AppCompatActivity {
 //        leaderScore = (TextView) findViewById(R.id.leader_score);
 //        totalOpenQuestions = (TextView) findViewById(R.id.total_active_questions);
         // Restore preferences
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+
+        /*SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);
 
         String loginExpirationTimeAsString = (String) settings.getString(getString(R.string.login_expiration_time), "");
@@ -96,12 +99,16 @@ public class PlayerScoreActivity extends AppCompatActivity {
             loginExpirationTime = dateHelper.getCurrentDate();
 
         Date current = dateHelper.getCurrentDate();
-        if (!isLoggedIn || current.after(loginExpirationTime) ) {
+        if (!isLoggedIn *//*|| current.after(loginExpirationTime)*//* ) {
             Intent intent = new Intent(context, LoginActivity.class);
             startActivity(intent);
             return;
-        }
+        }*/
 
+        /*Intent intent = new Intent(context, LoginActivity.class);
+        startActivity(intent);
+        return;
+*/
         Intent intent = new Intent();
         intent.setClass(context, SignalRService.class);
         bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
@@ -133,8 +140,8 @@ public class PlayerScoreActivity extends AppCompatActivity {
         if (eventContext == context){
             SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
             String gameId = settings.getString(getString(R.string.game_id_key), "");
-
-            signalRService.getPlayerScore(gameId);
+            if (gameId != null && gameId != "")
+                signalRService.getPlayerScore(gameId);
         }
     }
 
@@ -161,6 +168,39 @@ public class PlayerScoreActivity extends AppCompatActivity {
 
 
 
+
+    }
+
+
+    /*------------temp - navigation to other Activities*/
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //inflates the menu; this addsitems to the action bar if it is exist
+        getMenuInflater().inflate(R.menu.admin_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean handled = true;
+        int id= item.getItemId();
+
+        switch (id){
+            case R.id.action_showQuestion:
+                onClickMenuShowQuestion(item);
+                break;
+
+            default:
+                handled = super.onOptionsItemSelected(item);
+        }
+
+        return handled;
+
+    }
+
+    void onClickMenuShowQuestion (MenuItem item){
+        Intent intent = new Intent(this,QuestionActivity.class);
+        startActivity(intent);
 
     }
 

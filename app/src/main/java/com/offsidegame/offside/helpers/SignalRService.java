@@ -10,6 +10,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.models.ActiveGameEvent;
 import com.offsidegame.offside.models.JoinGameEvent;
 import com.offsidegame.offside.models.LoginEvent;
 import com.offsidegame.offside.models.LoginInfo;
@@ -18,6 +19,7 @@ import com.offsidegame.offside.models.PlayerScoreEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.net.InetAddress;
 import java.util.concurrent.ExecutionException;
 
 import microsoft.aspnet.signalr.client.Action;
@@ -119,6 +121,18 @@ public class SignalRService extends Service {
         });
     }
 
+    public void isGameActive(String gameId) {
+
+        hub.invoke(Boolean.class,"IsGameActive", gameId).done(new Action<Boolean>() {
+
+            @Override
+            public void run(Boolean isGameActive) throws Exception {
+                EventBus.getDefault().post(new ActiveGameEvent(isGameActive));
+            }
+        });
+    }
+
+
     /**
      * method for clients (activities)
      */
@@ -129,8 +143,15 @@ public class SignalRService extends Service {
 
     private void startSignalR() {
         Platform.loadPlatformComponent(new AndroidPlatformComponent());
+        String ip;
 
-        String serverUrl = "http://offsidedev.somee.com/";
+        try{
+            ip = InetAddress.getLocalHost().toString();
+        }
+        catch(Exception ex){
+            ip = "192.168.1.140";
+        }
+        String serverUrl = "http://" + ip +":8080/";
         hubConnection = new HubConnection(serverUrl);
         String SERVER_HUB = "OffsideHub";
         hub = hubConnection.createHubProxy(SERVER_HUB);

@@ -14,6 +14,7 @@ import android.widget.EditText;
 
 import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.JoinGameEvent;
 import com.offsidegame.offside.models.LoginEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -53,6 +54,23 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);
+
+        String loginExpirationTimeAsString = (String) settings.getString(getString(R.string.login_expiration_time), "");
+
+        DateHelper dateHelper = new DateHelper();
+        Date loginExpirationTime = dateHelper.formatAsDate(loginExpirationTimeAsString, context);
+        if (loginExpirationTime == null)
+            loginExpirationTime = dateHelper.getCurrentDate();
+
+        Date current = dateHelper.getCurrentDate();
+        if (isLoggedIn /*|| current.after(loginExpirationTime)*/ ) {
+            Intent intent = new Intent(context, JoinGameActivity.class);
+            startActivity(intent);
+            return;
+        }
 
         Intent intent = new Intent();
         intent.setClass(context, SignalRService.class);

@@ -5,17 +5,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ButtonBarLayout;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.ActiveGameEvent;
 import com.offsidegame.offside.models.JoinGameEvent;
 import com.offsidegame.offside.models.LoginEvent;
+import com.offsidegame.offside.models.PlayerScore;
+import com.offsidegame.offside.models.PlayerScoreEvent;
+import com.offsidegame.offside.models.SignalRServiceBoundEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,6 +50,7 @@ public class JoinGameActivity extends AppCompatActivity {
             SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
             signalRService = binder.getService();
             isBoundToSignalRService = true;
+            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
         }
 
         @Override
@@ -47,9 +59,10 @@ public class JoinGameActivity extends AppCompatActivity {
         }
     };
 
-
     EditText gameCode;
     Button join;
+
+
 
 
     @Override
@@ -68,16 +81,12 @@ public class JoinGameActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                if (isBoundToSignalRService){
+                if (isBoundToSignalRService) {
                     signalRService.joinGame(gameCode.getText().toString());
                 }
             }
 
         });
-
-
-
-
     }
 
     @Override
@@ -110,4 +119,32 @@ public class JoinGameActivity extends AppCompatActivity {
         Intent intent = new Intent(context, PlayerScoreActivity.class);
         startActivity(intent);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+        Context eventContext = signalRServiceBoundEvent.getContext();
+        if (eventContext == context) {
+            SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+            String gameId = settings.getString(getString(R.string.game_id_key), "");
+
+            signalRService.isGameActive(gameId);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveIsGameActive(ActiveGameEvent activeGameEvent) {
+        Boolean isGameActive = activeGameEvent.getIsGameActive();
+
+        if(isGameActive){
+            Intent intent = new Intent(context, PlayerScoreActivity.class);
+            startActivity(intent);
+        }
+
+
+
+
+        //Log.e("Offside",String.valueOf(isGameActive));
+    }
+
+
 }
