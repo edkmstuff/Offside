@@ -5,37 +5,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ButtonBarLayout;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.ActiveGameEvent;
 import com.offsidegame.offside.models.GameCreationEvent;
 import com.offsidegame.offside.models.JoinGameEvent;
-import com.offsidegame.offside.models.LoginEvent;
-import com.offsidegame.offside.models.PlayerScore;
-import com.offsidegame.offside.models.PlayerScoreEvent;
 import com.offsidegame.offside.models.SignalRServiceBoundEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 public class JoinGameActivity extends AppCompatActivity {
 
@@ -120,13 +106,17 @@ public class JoinGameActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onJoinGame(JoinGameEvent joinGameEvent) {
         String gameId = joinGameEvent.getGameId();
+        if (gameId == null) {
+            Toast.makeText(context, "No such game code", Toast.LENGTH_LONG).show();
+            return;
+        }
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
 
         editor.putString(getString(R.string.game_id_key), gameId);
         editor.commit();
 
-        Intent intent = new Intent(context, PlayerScoreActivity.class);
+        Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
         startActivity(intent);
     }
 
@@ -146,7 +136,7 @@ public class JoinGameActivity extends AppCompatActivity {
         Boolean isGameActive = activeGameEvent.getIsGameActive();
 
         if(isGameActive){
-            Intent intent = new Intent(context, PlayerScoreActivity.class);
+            Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
             startActivity(intent);
         }
     }

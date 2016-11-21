@@ -8,6 +8,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.offsidegame.offside.models.Answer;
+import com.offsidegame.offside.models.adapters.AnswerAdapter;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -17,15 +24,31 @@ public class AnswersFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String [] values = new String[]{"Eran","Kfir", "Roee"};
-        ArrayAdapter<String> adapter= new ArrayAdapter<String>(getActivity(),android.R.layout.simple_expandable_list_item_1, values);
 
-        setListAdapter(adapter);
+        Answer[] answers = new Answer[]{
+                new Answer("1", "This is answer 1", 0.2, 100, false, false),
+                new Answer("2", "This is answer 1", 0.2, 100, false, false),
+                new Answer("3", "This is answer 1", 0.5, 30, false, false),
+                new Answer("4", "This is answer 1", 0.1, 300, false, false)
+        };
+
+
+      ArrayList<Answer> values = new ArrayList<Answer>(Arrays.asList(answers));
+//
+//        values.addAll(answers);
+
+
+
+        AnswerAdapter answerAdapter = new AnswerAdapter(getActivity(), values);
+
+
+
+        setListAdapter(answerAdapter);
     }
 
     @Override
-    public void onListItemClick(ListView l,View v,int position, long id){
-        super.onListItemClick(l,v,position,id);
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        super.onListItemClick(l, v, position, id);
 
     }
 

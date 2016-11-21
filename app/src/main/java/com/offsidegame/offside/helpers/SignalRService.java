@@ -84,20 +84,11 @@ public class SignalRService extends Service {
         }
     }
 
-    /**
-     * method for clients (activities)
-     * @param gameId
-     */
-    public void getPlayerScore(String gameId, String userId, String userName) {
 
-        hub.invoke(PlayerScore.class, "GetPlayerScore", gameId, userId, userName).done(new Action<PlayerScore>() {
 
-            @Override
-            public void run(PlayerScore playerScore) throws Exception {
-                EventBus.getDefault().post(new PlayerScoreEvent(playerScore));
-            }
-        });
-    }
+
+    /*     methods for clients (activities)  */
+
 
     public void login(String email) {
 
@@ -115,7 +106,7 @@ public class SignalRService extends Service {
         String userId = settings.getString(getString(R.string.user_id_key), "");
         String userName = settings.getString(getString(R.string.user_name_key), "");
 
-        hub.invoke(String.class, "RegisterToGame", gameCode, userId, userName).done(new Action<String>() {
+        hub.invoke(String.class, "JoinGame", gameCode, userId, userName).done(new Action<String>() {
 
             @Override
             public void run(String gameId) throws Exception {
@@ -141,6 +132,17 @@ public class SignalRService extends Service {
             @Override
             public void run(String gameCode) throws Exception {
                 EventBus.getDefault().post(new GameCreationEvent(gameCode));
+            }
+        });
+    }
+
+    public void getPlayerScore(String gameId, String userId, String userName) {
+
+        hub.invoke(PlayerScore.class, "GetPlayerScore", gameId, userId, userName).done(new Action<PlayerScore>() {
+
+            @Override
+            public void run(PlayerScore playerScore) throws Exception {
+                EventBus.getDefault().post(new PlayerScoreEvent(playerScore));
             }
         });
     }

@@ -9,13 +9,11 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.PlayerScore;
 import com.offsidegame.offside.models.PlayerScoreEvent;
@@ -25,11 +23,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-public class PlayerScoreActivity extends AppCompatActivity {
+public class ViewPlayerScoreActivity extends AppCompatActivity {
 
 
     private final Context context = this;
@@ -68,7 +62,7 @@ public class PlayerScoreActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_player_score);
+        setContentView(R.layout.activity_view_player_score);
         score = (TextView) findViewById(R.id.score);
         position = (TextView) findViewById(R.id.position);
         leaderScore = (TextView) findViewById(R.id.leader_score);
@@ -169,12 +163,17 @@ public class PlayerScoreActivity extends AppCompatActivity {
         leaderScore.setText(playerScore.getLeaderScore().toString());
         //open questions
         totalOpenQuestions.setText(playerScore.getTotalOpenQuestions().toString());
-
-
-
-
-
     }
+
+
+    //CONTINUE HERE
+
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onReceiveQuestion(QuestionEvent questionEvent) {
+//        PlayerScore playerScore = playerScoreEvent.getPlayerScore();
+//        updatePlayerScoreInUi(playerScore);
+//        Toast.makeText(context, getString(R.string.data_updated), Toast.LENGTH_SHORT).show();
+//    }
 
 
     /*------------temp - navigation to other Activities*/
@@ -204,7 +203,7 @@ public class PlayerScoreActivity extends AppCompatActivity {
     }
 
     void onClickMenuShowQuestion (MenuItem item){
-        Intent intent = new Intent(this,QuestionActivity.class);
+        Intent intent = new Intent(this,AnswerQuestionActivity.class);
         startActivity(intent);
 
     }
