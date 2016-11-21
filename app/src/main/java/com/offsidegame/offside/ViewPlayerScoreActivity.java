@@ -15,8 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.PlayerScore;
 import com.offsidegame.offside.models.PlayerScoreEvent;
+import com.offsidegame.offside.models.Question;
+import com.offsidegame.offside.models.QuestionEvent;
 import com.offsidegame.offside.models.SignalRServiceBoundEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -168,13 +171,14 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
     //CONTINUE HERE
 
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onReceiveQuestion(QuestionEvent questionEvent) {
-//        PlayerScore playerScore = playerScoreEvent.getPlayerScore();
-//        updatePlayerScoreInUi(playerScore);
-//        Toast.makeText(context, getString(R.string.data_updated), Toast.LENGTH_SHORT).show();
-//    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveQuestion(QuestionEvent questionEvent) {
+        Question question = questionEvent.getQuestion();
+        String questionState = questionEvent.getQuestionState();
+        //ToDo: pass the data to activity: answerQuestion
 
+        Toast.makeText(context, getString(R.string.data_updated), Toast.LENGTH_SHORT).show();
+    }
 
     /*------------temp - navigation to other Activities*/
     @Override
@@ -203,8 +207,16 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     }
 
     void onClickMenuShowQuestion (MenuItem item){
-        Intent intent = new Intent(this,AnswerQuestionActivity.class);
-        startActivity(intent);
+        Answer[] answers = new Answer[]{
+                new Answer(null,"Eran",0.5,300,false,false),
+                new Answer(null,"Eran2",0.5,300,false,false),
+                new Answer(null,"Eran3",0.5,300,false,false),
+                new Answer(null,"Eran4",0.5,300,false,false)
+
+        };
+          signalRService.adminAskQuestion(new Question("who are you",answers));
+//        Intent intent = new Intent(this,AnswerQuestionActivity.class);
+//        startActivity(intent);
 
     }
 

@@ -6,32 +6,42 @@
 
     <!-- for: Ask, Processed, Closed -->
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/answer_text"/>
+        style="@style/OffsideAnswer"
+        android:id="@+id/answer_number"
+ />
+    <!-- for: Ask, Processed, Closed -->
+    <TextView
+        style="@style/OffsideAnswer"
+        android:id="@+id/answer_text"
+        />
 
     <!-- for: Processed, Closed -->
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/percent_users_answered"/>
+        style="@style/OffsideAnswer"
+        android:id="@+id/percent_users_answered"
+/>
 
     <!-- for: Processed, Closed -->
-    <TextView
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/progress_bar_percent_user_Answered"
+        android:layout_weight="1"
+        />
+
+    <TextView
+        style="@style/OffsideAnswer"
         android:id="@+id/score"/>
 
     <!-- for: Processed, Closed -->
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/OffsideAnswer"
         android:id="@+id/is_the_answer_of_the_user"/>
 
     <!-- for: Closed -->
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/OffsideAnswer"
         android:id="@+id/is_correct"/>
 
 </LinearLayout>

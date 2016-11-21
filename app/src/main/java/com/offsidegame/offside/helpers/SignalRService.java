@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.models.ActiveGameEvent;
@@ -17,6 +18,8 @@ import com.offsidegame.offside.models.LoginEvent;
 import com.offsidegame.offside.models.LoginInfo;
 import com.offsidegame.offside.models.PlayerScore;
 import com.offsidegame.offside.models.PlayerScoreEvent;
+import com.offsidegame.offside.models.Question;
+import com.offsidegame.offside.models.QuestionEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -29,8 +32,14 @@ import microsoft.aspnet.signalr.client.SignalRFuture;
 import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
 import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.hubs.HubProxy;
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
+import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 import microsoft.aspnet.signalr.client.transport.ClientTransport;
 import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
+
+import microsoft.aspnet.signalr.client.ErrorCallback;
+
+
 
 /**
  * Created by KFIR on 11/15/2016.
@@ -126,8 +135,12 @@ public class SignalRService extends Service {
         });
     }
 
-    public void createGame(String gameCode, String homeTeam, String visitorTeam) {
-        hub.invoke(String.class,"CreateGame", gameCode, homeTeam, visitorTeam).done(new Action<String>() {
+    public void adminAskQuestion(Question question) {
+        hub.invoke(Question.class,"AdminAskQuestion",question);
+    }
+
+    public void adminCreateGame(String gameCode, String homeTeam, String visitorTeam) {
+        hub.invoke(String.class,"AdminCreateGame", gameCode, homeTeam, visitorTeam).done(new Action<String>() {
 
             @Override
             public void run(String gameCode) throws Exception {
@@ -164,7 +177,8 @@ public class SignalRService extends Service {
             ip = InetAddress.getLocalHost().toString();
         }
         catch(Exception ex){
-            ip = "192.168.1.140";
+            //ip = "192.168.1.140";
+            ip ="10.0.0.41";
         }
         String serverUrl = "http://" + ip +":8080/";
         hubConnection = new HubConnection(serverUrl);
@@ -180,27 +194,28 @@ public class SignalRService extends Service {
             return;
         }
 
-//        getPlayerScore();
+        SubscriptionHandler1 askQuestionHandler = new SubscriptionHandler1<Question>() {
+            @Override
+            public void run(Question question) {
+                EventBus.getDefault().post(new QuestionEvent(question,QuestionEvent.QuestionStates.NEW_QUESTION));
+            }
+        };
+
+        hub.on("AskQuestion", (SubscriptionHandler) askQuestionHandler);
+
+
+
     }
 
 
 
-//        String CLIENT_METHOD_BROADAST_MESSAGE = "broadcastMessage";
-//        hubProxy.on("UpdatePlayerScore",
-//                new SubscriptionHandler1<PlayerScore>() {
-//                    @Override
-//                    public void run(final PlayerScore msg) {
-//                        final String finalMsg = msg.UserName + " says " + msg.Message;
-//                        // display Toast message
-//                        handler.post(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                Toast.makeText(getApplicationContext(), finalMsg, Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
-//                    }
-//                }
-//                , CustomMessage.class);
+
+
+
+
+
+
+
 
 
     }

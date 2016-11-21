@@ -8,6 +8,8 @@ public class Answer {
 
     @com.google.gson.annotations.SerializedName("Id")
     private String id;
+    @com.google.gson.annotations.SerializedName("AnswerNumber")
+    private String answerNumber;
     @com.google.gson.annotations.SerializedName("AnswerText")
     private String answerText;
 //    @com.google.gson.annotations.SerializedName("AnswerImage")

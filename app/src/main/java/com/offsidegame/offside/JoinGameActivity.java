@@ -79,7 +79,7 @@ public class JoinGameActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (isBoundToSignalRService) {
-                    signalRService.createGame("1234", "Barcelona", "Real Madrid");
+                    signalRService.adminCreateGame("1234", "Barcelona", "Real Madrid");
                 }
             }
         });
