@@ -177,8 +177,8 @@ public class SignalRService extends Service {
             ip = InetAddress.getLocalHost().toString();
         }
         catch(Exception ex){
-            //ip = "192.168.1.140";
-            ip ="10.0.0.41";
+            ip = "192.168.1.140";
+            //ip ="10.0.0.41";
         }
         String serverUrl = "http://" + ip +":8080/";
         hubConnection = new HubConnection(serverUrl);
@@ -194,6 +194,22 @@ public class SignalRService extends Service {
             return;
         }
 
+        hub.on("AskQuestion", new SubscriptionHandler1<Question>() {
+            @Override
+            public void run(Question question) {
+                EventBus.getDefault().post(new QuestionEvent(question,QuestionEvent.QuestionStates.NEW_QUESTION));
+            }
+        },Question.class);
+
+
+
+
+
+
+    }
+
+
+    public void subscribeToServer(){
         SubscriptionHandler1 askQuestionHandler = new SubscriptionHandler1<Question>() {
             @Override
             public void run(Question question) {
@@ -201,10 +217,7 @@ public class SignalRService extends Service {
             }
         };
 
-        hub.on("AskQuestion", (SubscriptionHandler) askQuestionHandler);
-
-
-
+        hub.on("AskQuestion", askQuestionHandler,null);
     }
 
 

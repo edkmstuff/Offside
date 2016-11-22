@@ -214,7 +214,11 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                 new Answer(null,"Eran4",0.5,300,false,false)
 
         };
-          signalRService.adminAskQuestion(new Question("who are you",answers));
+
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        String gameId = settings.getString(getString(R.string.game_id_key), "");
+
+          signalRService.adminAskQuestion(new Question("who are you",answers, gameId));
 //        Intent intent = new Intent(this,AnswerQuestionActivity.class);
 //        startActivity(intent);
 

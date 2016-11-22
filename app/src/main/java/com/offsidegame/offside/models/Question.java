@@ -22,9 +22,10 @@ public class Question {
 
     }
 
-    public Question(String questionText,Answer[] answers) {
+    public Question(String questionText,Answer[] answers, String gameId) {
         this.questionText = questionText;
         this.answers = answers;
+        this.gameId = gameId;
 
     }
 
