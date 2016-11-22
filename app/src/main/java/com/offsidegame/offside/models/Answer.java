@@ -1,10 +1,12 @@
 package com.offsidegame.offside.models;
 
+import java.io.Serializable;
+
 /**
  * Created by KFIR on 11/21/2016.
  */
 
-public class Answer {
+public class Answer implements Serializable {
 
     @com.google.gson.annotations.SerializedName("Id")
     private String id;

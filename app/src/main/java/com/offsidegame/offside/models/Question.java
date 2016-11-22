@@ -1,5 +1,6 @@
 package com.offsidegame.offside.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -7,7 +8,7 @@ import java.util.Date;
  * Created by USER on 11/21/2016.
  */
 
-public class Question {
+public class Question implements Serializable {
 
     @com.google.gson.annotations.SerializedName("Id")
     private String id;

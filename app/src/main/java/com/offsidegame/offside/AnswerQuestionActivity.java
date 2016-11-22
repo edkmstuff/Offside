@@ -7,15 +7,21 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.Question;
+import com.offsidegame.offside.models.QuestionEvent;
 
-public class AnswerQuestionActivity extends AppCompatActivity  {
+public class AnswerQuestionActivity extends AppCompatActivity implements IQuestionHolder {
 
     private final Context context = this;
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
+    private Question question;
+
+    private TextView questionTextView;
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
@@ -39,9 +45,22 @@ public class AnswerQuestionActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer_question);
 
-        Intent intent = new Intent();
-        intent.setClass(context, SignalRService.class);
-        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+        //get the question
+        String newQuestionKey = QuestionEvent.QuestionStates.NEW_QUESTION;
+        question = (Question) getIntent().getSerializableExtra(newQuestionKey);
+//        //pass to fragment
+//        Bundle bundle = new Bundle();
+//        bundle.putSerializable(newQuestionKey, question);
+//        AnswersFragment myFrag = new AnswersFragment();
+//        myFrag.setArguments(bundle);
+
+        questionTextView = (TextView) findViewById(R.id.question_text);
+        questionTextView.setText(question.getQuestionText());
+
+
+        Intent bindServiceIntent = new Intent();
+        bindServiceIntent.setClass(context, SignalRService.class);
+        bindService(bindServiceIntent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
 
 
     }
@@ -65,5 +84,8 @@ public class AnswerQuestionActivity extends AppCompatActivity  {
     }
 
 
-
+    @Override
+    public Question getQuestion() {
+        return question;
+    }
 }

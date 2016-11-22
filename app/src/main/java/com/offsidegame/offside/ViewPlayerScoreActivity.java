@@ -175,9 +175,25 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     public void onReceiveQuestion(QuestionEvent questionEvent) {
         Question question = questionEvent.getQuestion();
         String questionState = questionEvent.getQuestionState();
-        //ToDo: pass the data to activity: answerQuestion
+        if(questionState == QuestionEvent.QuestionStates.NEW_QUESTION){
+            Intent intent = new Intent(context, AnswerQuestionActivity.class);
+            intent.putExtra(questionState,question);
+            startActivity(intent);
+        }
+        else if (questionState == QuestionEvent.QuestionStates.PROCESSED_QUESTION){
+//            Intent intent = new Intent(context, AnswerQuestionActivity.class);
+//            intent.putExtra("ASKED_QUESTION",question);
+//            startActivity(intent);
 
-        Toast.makeText(context, getString(R.string.data_updated), Toast.LENGTH_SHORT).show();
+        }
+        else if (questionState == QuestionEvent.QuestionStates.CLOSED_QUESTION){
+//            Intent intent = new Intent(context, AnswerQuestionActivity.class);
+//            intent.putExtra("ASKED_QUESTION",question);
+//            startActivity(intent);
+
+        }
+
+
     }
 
     /*------------temp - navigation to other Activities*/

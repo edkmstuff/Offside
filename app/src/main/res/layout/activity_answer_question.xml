@@ -9,8 +9,9 @@
     tools:context="com.offsidegame.offside.AnswerQuestionActivity">
 
     <TextView
+        android:id="@+id/question_text"
         style="@style/OffsideAnswer.QuestionText"
-        android:text="i am a question"/>
+        />
     <fragment
         android:id="@+id/activity_answers_fragment"
         android:name="com.offsidegame.offside.AnswersFragment"
