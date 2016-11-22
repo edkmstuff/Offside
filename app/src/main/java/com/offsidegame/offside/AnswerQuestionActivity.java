@@ -20,6 +20,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
     private Question question;
+    private String questionState;
 
     private TextView questionTextView;
 
@@ -46,8 +47,9 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         setContentView(R.layout.activity_answer_question);
 
         //get the question
-        String newQuestionKey = QuestionEvent.QuestionStates.NEW_QUESTION;
-        question = (Question) getIntent().getSerializableExtra(newQuestionKey);
+        Bundle bundle = getIntent().getExtras();
+        question = (Question) bundle.getSerializable("question");
+        questionState = bundle.getString("questionState");
 //        //pass to fragment
 //        Bundle bundle = new Bundle();
 //        bundle.putSerializable(newQuestionKey, question);
@@ -87,5 +89,10 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     @Override
     public Question getQuestion() {
         return question;
+    }
+
+    @Override
+    public String getQuestionState() {
+        return questionState;
     }
 }

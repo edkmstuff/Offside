@@ -33,6 +33,7 @@ public class AnswersFragment extends ListFragment {
 
 
         Question question = activity.getQuestion();
+        String questionState = activity.getQuestionState();
         Answer[] answers = question.getAnswers();
 //        Answer[] answers = new Answer[]{
 //                new Answer("1", "This is answer 1", 0.2, 100, false, false),
@@ -48,7 +49,7 @@ public class AnswersFragment extends ListFragment {
 
 
 
-        AnswerAdapter answerAdapter = new AnswerAdapter(getActivity(), values);
+        AnswerAdapter answerAdapter = new AnswerAdapter(getActivity(), values, questionState );
 
 
 
