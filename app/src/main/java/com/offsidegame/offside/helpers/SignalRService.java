@@ -8,11 +8,11 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.models.ActiveGameEvent;
 import com.offsidegame.offside.models.GameCreationEvent;
+import com.offsidegame.offside.models.IsAnswerAcceptedEvent;
 import com.offsidegame.offside.models.JoinGameEvent;
 import com.offsidegame.offside.models.LoginEvent;
 import com.offsidegame.offside.models.LoginInfo;
@@ -32,13 +32,9 @@ import microsoft.aspnet.signalr.client.SignalRFuture;
 import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
 import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.hubs.HubProxy;
-import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler;
 import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
 import microsoft.aspnet.signalr.client.transport.ClientTransport;
 import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
-
-import microsoft.aspnet.signalr.client.ErrorCallback;
-
 
 
 /**
@@ -51,9 +47,14 @@ public class SignalRService extends Service {
     private Handler handler; // to display Toast message
     private final IBinder binder = new LocalBinder(); // Binder given to clients
 
+
+    //<editor-fold desc="constructors">
     public SignalRService() {
     }
 
+    //</editor-fold>
+
+    //<editor-fold desc="startup">
     @Override
     public void onCreate() {
         super.onCreate();
@@ -80,25 +81,36 @@ public class SignalRService extends Service {
         return binder;
     }
 
+    private void startSignalR() {
+        Platform.loadPlatformComponent(new AndroidPlatformComponent());
+        String ip;
 
-
-    /**
-     * Class used for the client Binder.  Because we know this service always
-     * runs in the same process as its clients, we don't need to deal with IPC.
-     */
-    public class LocalBinder extends Binder {
-        public SignalRService getService() {
-            // Return this instance of SignalRService so clients can call public methods
-            return SignalRService.this;
+        try {
+            ip = InetAddress.getLocalHost().toString();
+        } catch (Exception ex) {
+            //ip = "192.168.1.140";
+            ip = "10.0.0.41";
         }
+        String serverUrl = "http://" + ip + ":8080/";
+        hubConnection = new HubConnection(serverUrl);
+        String SERVER_HUB = "OffsideHub";
+        hub = hubConnection.createHubProxy(SERVER_HUB);
+        ClientTransport clientTransport = new ServerSentEventsTransport(hubConnection.getLogger());
+        SignalRFuture<Void> signalRFuture = hubConnection.start(clientTransport);
+
+        try {
+            signalRFuture.get();
+        } catch (InterruptedException | ExecutionException e) {
+            Log.e("SimpleSignalR", e.toString());
+            return;
+        }
+
+        subscribeToServer();
     }
 
+    //</editor-fold>
 
-
-
-    /*     methods for clients (activities)  */
-
-
+    //<editor-fold desc="Admin methods">
     public void login(String email) {
 
         hub.invoke(LoginInfo.class, "Login", email).done(new Action<LoginInfo>() {
@@ -126,7 +138,7 @@ public class SignalRService extends Service {
 
     public void isGameActive(String gameId) {
 
-        hub.invoke(Boolean.class,"IsGameActive", gameId).done(new Action<Boolean>() {
+        hub.invoke(Boolean.class, "IsGameActive", gameId).done(new Action<Boolean>() {
 
             @Override
             public void run(Boolean isGameActive) throws Exception {
@@ -136,11 +148,11 @@ public class SignalRService extends Service {
     }
 
     public void adminAskQuestion(Question question) {
-        hub.invoke(Question.class,"AdminAskQuestion",question);
+        hub.invoke(Question.class, "AdminAskQuestion", question);
     }
 
     public void adminCreateGame(String gameCode, String homeTeam, String visitorTeam) {
-        hub.invoke(String.class,"AdminCreateGame", gameCode, homeTeam, visitorTeam).done(new Action<String>() {
+        hub.invoke(String.class, "AdminCreateGame", gameCode, homeTeam, visitorTeam).done(new Action<String>() {
 
             @Override
             public void run(String gameCode) throws Exception {
@@ -148,6 +160,11 @@ public class SignalRService extends Service {
             }
         });
     }
+
+
+    //</editor-fold>
+
+    //<editor-fold desc="methods for client activities">
 
     public void getPlayerScore(String gameId, String userId, String userName) {
 
@@ -161,75 +178,55 @@ public class SignalRService extends Service {
     }
 
 
-    /**
-     * method for clients (activities)
-     */
-//    public void sendMessage_To(String receiverName, String message) {
-//        String SERVER_METHOD_SEND_TO = "SendChatMessage";
-//        hubProxy.invoke(SERVER_METHOD_SEND_TO, receiverName, message);
-//    }
-
-    private void startSignalR() {
-        Platform.loadPlatformComponent(new AndroidPlatformComponent());
-        String ip;
-
-        try{
-            ip = InetAddress.getLocalHost().toString();
-        }
-        catch(Exception ex){
-            ip = "192.168.1.140";
-            //ip ="10.0.0.41";
-        }
-        String serverUrl = "http://" + ip +":8080/";
-        hubConnection = new HubConnection(serverUrl);
-        String SERVER_HUB = "OffsideHub";
-        hub = hubConnection.createHubProxy(SERVER_HUB);
-        ClientTransport clientTransport = new ServerSentEventsTransport(hubConnection.getLogger());
-        SignalRFuture<Void> signalRFuture = hubConnection.start(clientTransport);
-
-        try {
-            signalRFuture.get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.e("SimpleSignalR", e.toString());
-            return;
-        }
-
+    public void subscribeToServer() {
         hub.on("AskQuestion", new SubscriptionHandler1<Question>() {
             @Override
             public void run(Question question) {
-                EventBus.getDefault().post(new QuestionEvent(question,QuestionEvent.QuestionStates.NEW_QUESTION));
+                EventBus.getDefault().post(new QuestionEvent(question, QuestionEvent.QuestionStates.NEW_QUESTION));
             }
-        },Question.class);
+        }, Question.class);
 
-
-
-
-
-
-    }
-
-
-    public void subscribeToServer(){
-        SubscriptionHandler1 askQuestionHandler = new SubscriptionHandler1<Question>() {
+        /*hub.on("SendProcessedQuestion", new SubscriptionHandler1<Question>() {
             @Override
             public void run(Question question) {
-                EventBus.getDefault().post(new QuestionEvent(question,QuestionEvent.QuestionStates.NEW_QUESTION));
+                EventBus.getDefault().post(new QuestionEvent(question, QuestionEvent.QuestionStates.PROCESSED_QUESTION));
             }
-        };
+        }, Question.class);*/
+    }
 
-        hub.on("AskQuestion", askQuestionHandler,null);
+    public void postAnswer(String gameId,String questionId,String answerId) {
+
+        hub.invoke(Boolean.class, "PostAnswer", gameId,questionId,answerId).done(new Action<Boolean>(){
+            @Override
+            public void run(Boolean isAnswerAccepted) throws Exception {
+                EventBus.getDefault().post(new IsAnswerAcceptedEvent(isAnswerAccepted));
+            }
+
+        });
+
     }
 
 
 
 
+    //</editor-fold>
 
+    //<editor-fold desc="support classes">
 
-
-
-
-
-
-
+    /**
+     * Class used for the client Binder.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with IPC.
+     */
+    public class LocalBinder extends Binder {
+        public SignalRService getService() {
+            // Return this instance of SignalRService so clients can call public methods
+            return SignalRService.this;
+        }
     }
+
+    //</editor-fold>
+
+
+
+}
 

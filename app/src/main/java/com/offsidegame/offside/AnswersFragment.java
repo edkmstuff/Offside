@@ -9,11 +9,17 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.Question;
+import com.offsidegame.offside.models.QuestionAnsweredEvent;
 import com.offsidegame.offside.models.QuestionEvent;
+import com.offsidegame.offside.models.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.adapters.AnswerAdapter;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.StringBufferInputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +30,9 @@ import java.util.Arrays;
  */
 public class AnswersFragment extends ListFragment {
 
+    public Question question;
+    public Answer[] answers;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -31,10 +40,9 @@ public class AnswersFragment extends ListFragment {
         IQuestionHolder activity = (IQuestionHolder) getActivity();
 
 
-
-        Question question = activity.getQuestion();
+        question = activity.getQuestion();
         String questionState = activity.getQuestionState();
-        Answer[] answers = question.getAnswers();
+        answers = question.getAnswers();
 //        Answer[] answers = new Answer[]{
 //                new Answer("1", "This is answer 1", 0.2, 100, false, false),
 //                new Answer("2", "This is answer 1", 0.2, 100, false, false),
@@ -43,14 +51,11 @@ public class AnswersFragment extends ListFragment {
 //        };
 
 
-      ArrayList<Answer> values = new ArrayList<Answer>(Arrays.asList(answers));
+        ArrayList<Answer> values = new ArrayList<Answer>(Arrays.asList(answers));
 //
 //        values.addAll(answers);
 
-
-
-        AnswerAdapter answerAdapter = new AnswerAdapter(getActivity(), values, questionState );
-
+        AnswerAdapter answerAdapter = new AnswerAdapter(getActivity(), values, questionState);
 
 
         setListAdapter(answerAdapter);
@@ -58,10 +63,16 @@ public class AnswersFragment extends ListFragment {
     }
 
 
-
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         super.onListItemClick(l, v, position, id);
+
+        String gameId = question.getGameId();
+        String questionId = question.getId();
+        String answerId = answers[position].getId();
+
+        EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId));
+
 
     }
 

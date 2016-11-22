@@ -8,11 +8,17 @@ import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.IsAnswerAcceptedEvent;
 import com.offsidegame.offside.models.Question;
-import com.offsidegame.offside.models.QuestionEvent;
+import com.offsidegame.offside.models.QuestionAnsweredEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class AnswerQuestionActivity extends AppCompatActivity implements IQuestionHolder {
 
@@ -50,15 +56,9 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         Bundle bundle = getIntent().getExtras();
         question = (Question) bundle.getSerializable("question");
         questionState = bundle.getString("questionState");
-//        //pass to fragment
-//        Bundle bundle = new Bundle();
-//        bundle.putSerializable(newQuestionKey, question);
-//        AnswersFragment myFrag = new AnswersFragment();
-//        myFrag.setArguments(bundle);
 
         questionTextView = (TextView) findViewById(R.id.question_text);
-        questionTextView.setText(question.getQuestionText());
-
+       questionTextView.setText(question.getQuestionText());
 
         Intent bindServiceIntent = new Intent();
         bindServiceIntent.setClass(context, SignalRService.class);
@@ -70,12 +70,12 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     @Override
     public void onStart() {
         super.onStart();
-     //   EventBus.getDefault().register(context);
+        EventBus.getDefault().register(context);
     }
 
     @Override
     public void onStop() {
-       // EventBus.getDefault().unregister(context);
+        EventBus.getDefault().unregister(context);
         // Unbind from the service
         if (isBoundToSignalRService) {
             unbindService(signalRServiceConnection);
@@ -94,5 +94,25 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     @Override
     public String getQuestionState() {
         return questionState;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onQuestionAnsweredEvent(QuestionAnsweredEvent questionAnswered) {
+        String gameId = questionAnswered.getGameId();
+        String questionId = questionAnswered.getQuestionId();
+        String answerId =questionAnswered.getAnswerId();
+        signalRService.postAnswer(gameId,questionId,answerId);
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onIsAnswerAcceptedEvent(IsAnswerAcceptedEvent answerAcceptedEvent) {
+        if(answerAcceptedEvent.getIsAnswerAccepted())
+            Toast.makeText(context,getString(R.string.answer_accepted_message),Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(context,getString(R.string.answer_not_accepted_message),Toast.LENGTH_LONG).show();
+
+
+
     }
 }

@@ -131,9 +131,6 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(context, JoinGameActivity.class);
         startActivity(intent);
 
-
-
-
     }
 
 

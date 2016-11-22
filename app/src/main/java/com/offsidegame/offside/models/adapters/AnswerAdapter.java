@@ -93,7 +93,6 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
 
         }
 
-
         viewHolder.answerNumber.setText(answerNumber.toString());
         viewHolder.answerText.setText(answer.getAnswerText());
         viewHolder.percentUsersAnswered.setText(Double.toString(answer.getPercentUsersAnswered()));
