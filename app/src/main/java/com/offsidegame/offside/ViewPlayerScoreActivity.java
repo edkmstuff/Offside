@@ -179,28 +179,23 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     public void onReceiveQuestion(QuestionEvent questionEvent) {
         Question question = questionEvent.getQuestion();
         String questionState = questionEvent.getQuestionState();
-        if (questionState.equals(QuestionEvent.QuestionStates.NEW_QUESTION)) {
-            Intent intent = new Intent(context, AnswerQuestionActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("question", question);
-            bundle.putString("questionState", questionState);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        } else if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
-            Intent intent = new Intent(context, ViewProcessedQuestionActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("question", question);
-            bundle.putString("questionState", questionState);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        } else if (questionState.equals(QuestionEvent.QuestionStates.CLOSED_QUESTION)) {
-            Intent intent = new Intent(context, ViewClosedQuestionActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("question", question);
-            bundle.putString("questionState", questionState);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        }
+
+        // default is NEW_QUESTION
+        Class<?> activityClass = AnswerQuestionActivity.class;
+
+        //PROCESSED_QUESTION
+        if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION))
+            activityClass = ViewProcessedQuestionActivity.class;
+        //CLOSED_QUESTION
+        else if (questionState.equals(QuestionEvent.QuestionStates.CLOSED_QUESTION))
+            activityClass = ViewClosedQuestionActivity.class;
+
+        Intent intent = new Intent(context, activityClass);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("question", question);
+        bundle.putString("questionState", questionState);
+        intent.putExtras(bundle);
+        startActivity(intent);
 
 
     }

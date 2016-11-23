@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,7 +30,6 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
     private TextView questionTextView;
 
 
-
     //</editor-fold>
 
     //<editor-fold desc="Getters">
@@ -46,7 +46,6 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
 
 //</editor-fold>
 
-    //ToDo: Check why layout is not updated when starting this activity
 
     //<editor-fold desc="startup">
 
@@ -67,6 +66,10 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         }
     };
 
+    private Handler delayHandler;
+    private Runnable goToViewPlayerScore;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,25 +84,41 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         String questionText = question.getQuestionText();
         questionTextView.setText(questionText);
 
+
         Intent bindServiceIntent = new Intent();
         bindServiceIntent.setClass(context, SignalRService.class);
         bindService(bindServiceIntent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+
+
+        // to go back to view player score
+        delayHandler = new Handler();
+        goToViewPlayerScore = new Runnable() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
+                startActivity(intent);
+            }
+        };
+
+        delayHandler.postDelayed(goToViewPlayerScore, 10000);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(context);
+        //EventBus.getDefault().register(context);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(context);
+        //EventBus.getDefault().unregister(context);
         // Unbind from the service
         if (isBoundToSignalRService) {
             unbindService(signalRServiceConnection);
             isBoundToSignalRService = false;
         }
+
+        delayHandler.removeCallbacks(goToViewPlayerScore);
 
         super.onStop();
     }
@@ -109,39 +128,37 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
 
     //<editor-fold desc="Subscribers">
     //ToDo: ?? add subscriber to QuestionEvent (ask) on each activity?
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveQuestion(QuestionEvent questionEvent) {
-        Question question = questionEvent.getQuestion();
-        String questionState = questionEvent.getQuestionState();
-        if (questionState.equals(QuestionEvent.QuestionStates.NEW_QUESTION)) {
-            Intent intent = new Intent(context, AnswerQuestionActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("question", question);
-            bundle.putString("questionState", questionState);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        } else if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
-            Intent intent = new Intent(context, ViewProcessedQuestionActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("question", question);
-            bundle.putString("questionState", questionState);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        } else if (questionState.equals(QuestionEvent.QuestionStates.CLOSED_QUESTION)) {
-            Intent intent = new Intent(context, ViewClosedQuestionActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("question", question);
-            bundle.putString("questionState", questionState);
-            intent.putExtras(bundle);
-            startActivity(intent);
-        }
-
-
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onReceiveQuestion(QuestionEvent questionEvent) {
+//        Question question = questionEvent.getQuestion();
+//        String questionState = questionEvent.getQuestionState();
+//        if (questionState.equals(QuestionEvent.QuestionStates.NEW_QUESTION)) {
+//            Intent intent = new Intent(context, AnswerQuestionActivity.class);
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("question", question);
+//            bundle.putString("questionState", questionState);
+//            intent.putExtras(bundle);
+//            startActivity(intent);
+//        } else if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
+//            Intent intent = new Intent(context, ViewProcessedQuestionActivity.class);
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("question", question);
+//            bundle.putString("questionState", questionState);
+//            intent.putExtras(bundle);
+//            startActivity(intent);
+//        } else if (questionState.equals(QuestionEvent.QuestionStates.CLOSED_QUESTION)) {
+//            Intent intent = new Intent(context, ViewClosedQuestionActivity.class);
+//            Bundle bundle = new Bundle();
+//            bundle.putSerializable("question", question);
+//            bundle.putString("questionState", questionState);
+//            intent.putExtras(bundle);
+//            startActivity(intent);
+//        }
+//
+//
+//    }
 
     //</editor-fold>
-
-
 
 
 }
