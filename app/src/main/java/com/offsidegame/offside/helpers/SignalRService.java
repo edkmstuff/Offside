@@ -88,8 +88,8 @@ public class SignalRService extends Service {
         try {
             ip = InetAddress.getLocalHost().toString();
         } catch (Exception ex) {
-            //ip = "192.168.1.140";
-            ip = "10.0.0.41";
+            ip = "192.168.1.140";
+            //ip = "10.0.0.41";
         }
         String serverUrl = "http://" + ip + ":8080/";
         hubConnection = new HubConnection(serverUrl);

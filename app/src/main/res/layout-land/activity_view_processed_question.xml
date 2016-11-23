@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_view_processed_question"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.offsidegame.offside.ViewProcessedQuestionActivity">
@@ -11,12 +10,12 @@
         android:id="@+id/app_bar"
         layout="@layout/app_bar"
         />
-
     <TextView
         android:id="@+id/question_text1"
         style="@style/OffsideAnswer.QuestionText"
+        android:text="who are you"
         />
-
+    <!--
     <fragment
         android:id="@+id/activity_answers_fragment"
         android:name="com.offsidegame.offside.AnswersFragment"
@@ -25,4 +24,5 @@
         tools:layout="@layout/answer_list_item">
 
     </fragment>
+    !-->
 </LinearLayout>

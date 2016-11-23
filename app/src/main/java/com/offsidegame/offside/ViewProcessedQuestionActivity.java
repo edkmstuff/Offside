@@ -28,6 +28,8 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
     private String questionState;
     private TextView questionTextView;
 
+
+
     //</editor-fold>
 
     //<editor-fold desc="Getters">
@@ -76,7 +78,8 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         questionState = bundle.getString("questionState");
 
         questionTextView = (TextView) findViewById(R.id.question_text1);
-        questionTextView.setText(question.getQuestionText());
+        String questionText = question.getQuestionText();
+        questionTextView.setText(questionText);
 
         Intent bindServiceIntent = new Intent();
         bindServiceIntent.setClass(context, SignalRService.class);
