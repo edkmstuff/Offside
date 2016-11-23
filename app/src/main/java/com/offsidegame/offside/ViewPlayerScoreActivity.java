@@ -9,6 +9,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -28,11 +29,18 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class ViewPlayerScoreActivity extends AppCompatActivity {
 
-
+    //<editor-fold desc="Class members">
     private final Context context = this;
     private SignalRService signalRService;
     private boolean boundToSignalRService = false;
+    TextView score;
+    TextView position;
+    TextView leaderScore;
+    TextView totalOpenQuestions;
+    private Toolbar toolbar;
+    //</editor-fold>
 
+    //<editor-fold desc="Startup methods">
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
@@ -50,13 +58,6 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         }
     };
 
-
-    TextView score;
-    TextView position;
-    TextView leaderScore;
-    TextView totalOpenQuestions;
-
-
     /**
      * Defines callbacks for service binding, passed to bindService()
      */
@@ -66,12 +67,15 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_player_score);
+
+
+        toolbar = (Toolbar) findViewById((R.id.app_bar));
+        setSupportActionBar(toolbar);
+
         score = (TextView) findViewById(R.id.score);
         position = (TextView) findViewById(R.id.position);
         leaderScore = (TextView) findViewById(R.id.leader_score);
         totalOpenQuestions = (TextView) findViewById(R.id.total_active_questions);
-
-//
 
     }
 
@@ -131,18 +135,22 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    //</editor-fold>me
+
+    //<editor-fold desc="Subscribe methods">
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
         Context eventContext = signalRServiceBoundEvent.getContext();
-        if (eventContext == context){
+        if (eventContext == context) {
             SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
             String gameId = settings.getString(getString(R.string.game_id_key), "");
             String userId = settings.getString(getString(R.string.user_id_key), "");
             String userName = settings.getString(getString(R.string.user_name_key), "");
 
             if (gameId != null && gameId != ""
-                    && userId != null && userId!=""
-                    && userName!=null && userName !="")
+                    && userId != null && userId != ""
+                    && userName != null && userName != "")
                 signalRService.getPlayerScore(gameId, userId, userName);
         }
     }
@@ -159,64 +167,59 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         if (!isOnMainThread)
             return;
         score.setText(playerScore.getScore().toString());
-//        score.invalidate();
-        //player position
+
         position.setText(playerScore.getPosition().toString() + " " + getString(R.string.out_of) + " " + playerScore.getTotalPlayers().toString());
-        //leader score
+
         leaderScore.setText(playerScore.getLeaderScore().toString());
-        //open questions
+
         totalOpenQuestions.setText(playerScore.getTotalOpenQuestions().toString());
     }
-
-
-    //CONTINUE HERE
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveQuestion(QuestionEvent questionEvent) {
         Question question = questionEvent.getQuestion();
         String questionState = questionEvent.getQuestionState();
-        if(questionState.equals(QuestionEvent.QuestionStates.NEW_QUESTION)){
+        if (questionState.equals(QuestionEvent.QuestionStates.NEW_QUESTION)) {
             Intent intent = new Intent(context, AnswerQuestionActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable("question",question);
-            bundle.putString("questionState",questionState);
+            bundle.putSerializable("question", question);
+            bundle.putString("questionState", questionState);
             intent.putExtras(bundle);
             startActivity(intent);
-        }
-        else if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)){
+        } else if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
             Intent intent = new Intent(context, ViewProcessedQuestionActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable("question",question);
-            bundle.putString("questionState",questionState);
+            bundle.putSerializable("question", question);
+            bundle.putString("questionState", questionState);
             intent.putExtras(bundle);
             startActivity(intent);
-        }
-        else if (questionState.equals(QuestionEvent.QuestionStates.CLOSED_QUESTION)){
+        } else if (questionState.equals(QuestionEvent.QuestionStates.CLOSED_QUESTION)) {
             Intent intent = new Intent(context, ViewClosedQuestionActivity.class);
             Bundle bundle = new Bundle();
-            bundle.putSerializable("question",question);
-            bundle.putString("questionState",questionState);
+            bundle.putSerializable("question", question);
+            bundle.putString("questionState", questionState);
             intent.putExtras(bundle);
             startActivity(intent);
         }
 
 
     }
+    //</editor-fold>
 
-    /*------------temp - navigation to other Activities*/
+    //<editor-fold desc="temp code">
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //inflates the menu; this addsitems to the action bar if it is exist
-        getMenuInflater().inflate(R.menu.admin_menu,menu);
+        getMenuInflater().inflate(R.menu.admin_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean handled = true;
-        int id= item.getItemId();
+        int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case R.id.action_showQuestion:
                 onClickMenuShowQuestion(item);
                 break;
@@ -229,23 +232,25 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
     }
 
-    void onClickMenuShowQuestion (MenuItem item){
+    void onClickMenuShowQuestion(MenuItem item) {
         Answer[] answers = new Answer[]{
-                new Answer(null,"Eran",0.5,300,false,false),
-                new Answer(null,"Eran2",0.5,300,false,false),
-                new Answer(null,"Eran3",0.5,300,false,false),
-                new Answer(null,"Eran4",0.5,300,false,false)
+                new Answer(null, "Eran", 0.5, 300, false, false),
+                new Answer(null, "Eran2", 0.5, 300, false, false),
+                new Answer(null, "Eran3", 0.5, 300, false, false),
+                new Answer(null, "Eran4", 0.5, 300, false, false)
 
         };
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         String gameId = settings.getString(getString(R.string.game_id_key), "");
 
-          signalRService.adminAskQuestion(new Question("who are you",answers, gameId));
+        signalRService.adminAskQuestion(new Question("who are you", answers, gameId));
 //        Intent intent = new Intent(this,AnswerQuestionActivity.class);
 //        startActivity(intent);
 
     }
+
+    //</editor-fold>
 
 
 }

@@ -8,6 +8,11 @@
     android:orientation="vertical"
     tools:context="com.offsidegame.offside.AnswerQuestionActivity">
 
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar"
+        />
+
     <TextView
         android:id="@+id/question_text"
         style="@style/OffsideAnswer.QuestionText"

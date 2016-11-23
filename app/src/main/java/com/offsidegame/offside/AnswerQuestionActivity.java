@@ -22,13 +22,31 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class AnswerQuestionActivity extends AppCompatActivity implements IQuestionHolder {
 
+    //<editor-fold desc="Class members">
     private final Context context = this;
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
     private Question question;
     private String questionState;
-
     private TextView questionTextView;
+
+    //</editor-fold>
+
+    //<editor-fold desc="Getters">
+
+    @Override
+    public Question getQuestion() {
+        return question;
+    }
+
+    @Override
+    public String getQuestionState() {
+        return questionState;
+    }
+
+//</editor-fold>
+
+    //<editor-fold desc="startup">
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
@@ -58,13 +76,11 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         questionState = bundle.getString("questionState");
 
         questionTextView = (TextView) findViewById(R.id.question_text);
-       questionTextView.setText(question.getQuestionText());
+        questionTextView.setText(question.getQuestionText());
 
         Intent bindServiceIntent = new Intent();
         bindServiceIntent.setClass(context, SignalRService.class);
         bindService(bindServiceIntent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
-
-
     }
 
     @Override
@@ -86,33 +102,31 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     }
 
 
-    @Override
-    public Question getQuestion() {
-        return question;
-    }
+    //</editor-fold>
 
-    @Override
-    public String getQuestionState() {
-        return questionState;
-    }
+    //<editor-fold desc="Subscribers">
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onQuestionAnsweredEvent(QuestionAnsweredEvent questionAnswered) {
         String gameId = questionAnswered.getGameId();
         String questionId = questionAnswered.getQuestionId();
-        String answerId =questionAnswered.getAnswerId();
-        signalRService.postAnswer(gameId,questionId,answerId);
+        String answerId = questionAnswered.getAnswerId();
+        signalRService.postAnswer(gameId, questionId, answerId);
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onIsAnswerAcceptedEvent(IsAnswerAcceptedEvent answerAcceptedEvent) {
-        if(answerAcceptedEvent.getIsAnswerAccepted())
-            Toast.makeText(context,getString(R.string.answer_accepted_message),Toast.LENGTH_LONG).show();
+        if (answerAcceptedEvent.getIsAnswerAccepted())
+            Toast.makeText(context, getString(R.string.answer_accepted_message), Toast.LENGTH_LONG).show();
         else
-            Toast.makeText(context,getString(R.string.answer_not_accepted_message),Toast.LENGTH_LONG).show();
+            Toast.makeText(context, getString(R.string.answer_not_accepted_message), Toast.LENGTH_LONG).show();
 
-
-
+        Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
+        startActivity(intent);
     }
+
+    //</editor-fold>
+
+
 }

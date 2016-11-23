@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -30,6 +31,10 @@ public class LoginActivity extends AppCompatActivity {
     private final Context context = this;
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
+    EditText email;
+    Button login;
+
+    private Toolbar toolbar;
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
@@ -47,13 +52,13 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    EditText email;
-    Button login;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        toolbar = (Toolbar) findViewById((R.id.app_bar));
+        setSupportActionBar(toolbar);
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);

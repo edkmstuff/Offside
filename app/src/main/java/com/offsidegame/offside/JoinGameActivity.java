@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,6 +30,12 @@ public class JoinGameActivity extends AppCompatActivity {
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
 
+    EditText gameCode;
+    Button join;
+    Button createGame;
+
+    private Toolbar toolbar;
+
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
@@ -46,9 +53,7 @@ public class JoinGameActivity extends AppCompatActivity {
         }
     };
 
-    EditText gameCode;
-    Button join;
-    Button createGame;
+
 
 
 
@@ -57,6 +62,9 @@ public class JoinGameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_game);
+
+        toolbar = (Toolbar) findViewById((R.id.app_bar));
+        setSupportActionBar(toolbar);
 
 
         Intent intent = new Intent();

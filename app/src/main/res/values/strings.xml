@@ -16,7 +16,7 @@
     </string-array>
     <string name="title_activity_admin">Game Admin</string>
     <string name="create_game">Create Game</string>
-    <string name="ask_question">Ask Question</string>
+    <string name="ask_question">New Question</string>
     <string name="answer_question">Answer Question</string>
     <string name="welcome">Welcome</string>
     <string name="goto_player_score">Go to Player Score</string>
@@ -37,6 +37,7 @@
     <string name="show_question">Show Question</string>
     <string name="answer_accepted_message">Your answer was accepted</string>
     <string name="answer_not_accepted_message">Answer not sent</string>
+    <string name="processed_question_title">Answers Statistics</string>
 
 
 </resources>

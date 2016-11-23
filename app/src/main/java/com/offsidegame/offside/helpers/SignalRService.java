@@ -186,12 +186,12 @@ public class SignalRService extends Service {
             }
         }, Question.class);
 
-        /*hub.on("SendProcessedQuestion", new SubscriptionHandler1<Question>() {
+        hub.on("SendProcessedQuestion", new SubscriptionHandler1<Question>() {
             @Override
             public void run(Question question) {
                 EventBus.getDefault().post(new QuestionEvent(question, QuestionEvent.QuestionStates.PROCESSED_QUESTION));
             }
-        }, Question.class);*/
+        }, Question.class);
     }
 
     public void postAnswer(String gameId,String questionId,String answerId) {

@@ -5,8 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
     tools:context="com.offsidegame.offside.ViewPlayerScoreActivity">
+
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,13 +25,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
             android:text="0"
-            android:textSize="42sp" />
+            android:textSize="@dimen/score_text"
+            android:textColor="@color/textColorPrimary" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:textColor="@color/textColorPrimary"
+
             android:text="@string/points" />
     </LinearLayout>
 
@@ -40,7 +48,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:paddingRight="40dp"
+            android:paddingLeft="40dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -48,7 +58,9 @@
                 android:layout_alignParentLeft="true"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+
+                >
 
                 <ImageView
                     android:layout_width="32dp"
@@ -60,7 +72,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/position"
-                    android:textSize="20sp" />
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="@dimen/player_score_items" />
             </LinearLayout>
 
             <TextView
@@ -69,14 +82,16 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="1 out of 1"
-
-                android:textSize="20sp" />
+                android:textColor="@color/textColorPrimary"
+                android:textSize="@dimen/player_score_items"/>
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:paddingRight="40dp"
+            android:paddingLeft="40dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -96,20 +111,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/leader_score"
-                    android:textSize="20sp" />
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="@dimen/player_score_items" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:id="@+id/linearLayout2">
+                android:id="@+id/linearLayout2"
+                >
                 <TextView
                     android:id="@+id/leader_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="2dp"
-                    android:textSize="20sp"
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="@dimen/player_score_items"
                     android:text="0"
                     />
 
@@ -117,7 +135,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/points"
-                    android:textSize="12sp"/>
+                    android:textColor="@color/textColorPrimary"
+                    />
             </LinearLayout>
 
         </RelativeLayout>
@@ -125,7 +144,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:paddingRight="40dp"
+            android:paddingLeft="40dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -144,7 +165,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/active_questions"
-                    android:textSize="20sp" />
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="@dimen/player_score_items" />
             </LinearLayout>
 
             <LinearLayout
@@ -156,7 +178,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="2dp"
-                    android:textSize="20sp"
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="@dimen/player_score_items"
                     android:text="0"
                     />
 

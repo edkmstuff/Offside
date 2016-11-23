@@ -32,6 +32,9 @@ public class AnswersFragment extends ListFragment {
 
     public Question question;
     public Answer[] answers;
+    public String questionState;
+
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -39,9 +42,8 @@ public class AnswersFragment extends ListFragment {
 
         IQuestionHolder activity = (IQuestionHolder) getActivity();
 
-
         question = activity.getQuestion();
-        String questionState = activity.getQuestionState();
+        questionState = activity.getQuestionState();
         answers = question.getAnswers();
 //        Answer[] answers = new Answer[]{
 //                new Answer("1", "This is answer 1", 0.2, 100, false, false),
@@ -50,30 +52,29 @@ public class AnswersFragment extends ListFragment {
 //                new Answer("4", "This is answer 1", 0.1, 300, false, false)
 //        };
 
-
         ArrayList<Answer> values = new ArrayList<Answer>(Arrays.asList(answers));
 //
 //        values.addAll(answers);
 
         AnswerAdapter answerAdapter = new AnswerAdapter(getActivity(), values, questionState);
 
-
         setListAdapter(answerAdapter);
+
 
     }
 
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        super.onListItemClick(l, v, position, id);
 
-        String gameId = question.getGameId();
-        String questionId = question.getId();
-        String answerId = answers[position].getId();
+        if(questionState.equals(QuestionEvent.QuestionStates.NEW_QUESTION)){
+            super.onListItemClick(l, v, position, id);
+            String gameId = question.getGameId();
+            String questionId = question.getId();
+            String answerId = answers[position].getId();
+            EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId));
 
-        EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId));
-
-
+        }
     }
 
 
