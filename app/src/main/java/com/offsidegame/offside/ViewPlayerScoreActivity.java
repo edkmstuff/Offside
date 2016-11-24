@@ -177,8 +177,8 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveQuestion(QuestionEvent questionEvent) {
-        Question question = questionEvent.getQuestion();
-        String questionState = questionEvent.getQuestionState();
+        question =  questionEvent.getQuestion();
+        questionState = questionEvent.getQuestionState();
 
         // default is NEW_QUESTION
         Class<?> activityClass = AnswerQuestionActivity.class;
@@ -202,6 +202,11 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     //</editor-fold>
 
     //<editor-fold desc="temp code">
+    static Question question;
+    static String questionState;
+
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //inflates the menu; this addsitems to the action bar if it is exist
@@ -215,10 +220,12 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         switch (id) {
-            case R.id.action_showQuestion:
-                onClickMenuShowQuestion(item);
+            case R.id.action_askQuestion:
+                onClickMenuAskQuestion(item);
                 break;
-
+            case R.id.action_closeQuestion:
+                onClickMenuCloseQuestion(item);
+                break;
             default:
                 handled = super.onOptionsItemSelected(item);
         }
@@ -227,7 +234,12 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
     }
 
-    void onClickMenuShowQuestion(MenuItem item) {
+    void onClickMenuAskQuestion(MenuItem item) {
+
+
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        String gameId = settings.getString(getString(R.string.game_id_key), "");
+
         Answer[] answers = new Answer[]{
                 new Answer(null, "Eran", 0.5, 300, false, false),
                 new Answer(null, "Eran2", 0.5, 300, false, false),
@@ -235,13 +247,22 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                 new Answer(null, "Eran4", 0.5, 300, false, false)
 
         };
+        question = new Question("who are you", answers, gameId);
+        signalRService.adminAskQuestion(question);
+
+    }
+
+    void onClickMenuCloseQuestion(MenuItem item) {
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         String gameId = settings.getString(getString(R.string.game_id_key), "");
 
-        signalRService.adminAskQuestion(new Question("who are you", answers, gameId));
-//        Intent intent = new Intent(this,AnswerQuestionActivity.class);
-//        startActivity(intent);
+        String questionId = question.getId();
+        String correctAnswerId = question.getAnswers()[2].getId();
+
+
+        signalRService.adminCloseQuestion(gameId, questionId ,correctAnswerId);
+
 
     }
 

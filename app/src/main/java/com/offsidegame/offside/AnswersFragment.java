@@ -34,8 +34,6 @@ public class AnswersFragment extends ListFragment {
     public Answer[] answers;
     public String questionState;
 
-
-
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -62,7 +60,6 @@ public class AnswersFragment extends ListFragment {
 
 
     }
-
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {

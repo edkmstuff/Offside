@@ -2,8 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/action_showQuestion"
-        android:title="@string/show_question" />
+        android:id="@+id/action_askQuestion"
+        android:title="@string/ask_question" />
+    <item
+        android:id="@+id/action_closeQuestion"
+        android:title="@string/close_question" />
 
 
 </menu>

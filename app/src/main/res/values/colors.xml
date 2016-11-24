@@ -3,8 +3,8 @@
     <color name="colorPrimary">#689F38</color>
     <color name="colorPrimaryDark">#1B5E20</color>
     <color name="colorAccent">#2979FF</color>
-    <color name="textColorPrimary">#FAFAFA</color>
-    <color name="windowBackground">#81C784</color>
+    <color name="textColorPrimary">#424242</color>
+    <color name="windowBackground">#E8F5E9</color>
     <color name="navigationBarColor">#2E7D32</color>
 
     <!--Offside Styles-->

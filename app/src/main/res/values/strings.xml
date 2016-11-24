@@ -34,10 +34,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="show_question">Show Question</string>
+
     <string name="answer_accepted_message">Your answer was accepted</string>
     <string name="answer_not_accepted_message">Answer not sent</string>
     <string name="processed_question_title">Answers Statistics</string>
+    <string name="close_question">Close Question</string>
+    <string name="closed_question_title">Answer Arrived</string>
 
 
 </resources>

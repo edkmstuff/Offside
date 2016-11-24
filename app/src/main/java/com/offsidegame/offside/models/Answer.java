@@ -63,4 +63,8 @@ public class Answer implements Serializable {
     public boolean getIsTheAnswerOfTheUser() {
         return isTheAnswerOfTheUser;
     }
+
+    public void setIsCorrect() {
+        this.isCorrect= true;
+    }
 }

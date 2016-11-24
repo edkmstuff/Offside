@@ -20,12 +20,19 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".JoinGameActivity"/>
+        <activity android:name=".JoinGameActivity" />
 
         <activity android:name=".ViewPlayerScoreActivity" />
 
-        <activity android:name=".AnswerQuestionActivity" android:label="@string/ask_question" />
-        <activity android:name=".ViewProcessedQuestionActivity" android:label="@string/processed_question_title" />
+        <activity
+            android:name=".AnswerQuestionActivity"
+            android:label="@string/ask_question" />
+        <activity
+            android:name=".ViewProcessedQuestionActivity"
+            android:label="@string/processed_question_title" />
+        <activity
+            android:name=".ViewClosedQuestionActivity"
+            android:label="@string/closed_question_title" />
 
 
         <service

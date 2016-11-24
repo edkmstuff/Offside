@@ -28,6 +28,8 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
     private Question question;
     private String questionState;
     private TextView questionTextView;
+    private Handler delayHandler;
+    private Runnable goToViewPlayerScore;
 
 
     //</editor-fold>
@@ -66,10 +68,6 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         }
     };
 
-    private Handler delayHandler;
-    private Runnable goToViewPlayerScore;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +78,7 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         question = (Question) bundle.getSerializable("question");
         questionState = bundle.getString("questionState");
 
-        questionTextView = (TextView) findViewById(R.id.question_text1);
+        questionTextView = (TextView) findViewById(R.id.question_text);
         String questionText = question.getQuestionText();
         questionTextView.setText(questionText);
 
@@ -125,9 +123,9 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
 
 
     //</editor-fold>
-
+//ToDo: ?? add subscriber to QuestionEvent (ask) on each activity?
     //<editor-fold desc="Subscribers">
-    //ToDo: ?? add subscriber to QuestionEvent (ask) on each activity?
+
 //    @Subscribe(threadMode = ThreadMode.MAIN)
 //    public void onReceiveQuestion(QuestionEvent questionEvent) {
 //        Question question = questionEvent.getQuestion();

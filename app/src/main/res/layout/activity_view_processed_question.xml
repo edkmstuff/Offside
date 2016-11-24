@@ -13,7 +13,7 @@
         />
 
     <TextView
-        android:id="@+id/question_text1"
+        android:id="@+id/question_text"
         style="@style/OffsideAnswer.QuestionText"
         />
 

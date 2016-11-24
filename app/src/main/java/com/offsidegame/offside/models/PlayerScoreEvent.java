@@ -7,7 +7,6 @@ package com.offsidegame.offside.models;
 public class PlayerScoreEvent {
     private PlayerScore playerScore;
 
-
     public PlayerScoreEvent(PlayerScore playerScore) {
 
         this.playerScore = playerScore;

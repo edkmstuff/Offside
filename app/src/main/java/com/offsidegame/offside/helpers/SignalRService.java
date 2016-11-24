@@ -13,6 +13,7 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.models.ActiveGameEvent;
 import com.offsidegame.offside.models.GameCreationEvent;
 import com.offsidegame.offside.models.IsAnswerAcceptedEvent;
+import com.offsidegame.offside.models.IsCloseAnswerAcceptedEvent;
 import com.offsidegame.offside.models.JoinGameEvent;
 import com.offsidegame.offside.models.LoginEvent;
 import com.offsidegame.offside.models.LoginInfo;
@@ -46,6 +47,9 @@ public class SignalRService extends Service {
     private HubProxy hub;
     private Handler handler; // to display Toast message
     private final IBinder binder = new LocalBinder(); // Binder given to clients
+
+    //public final String defaultIp = new String("192.168.1.140");
+    public final String defaultIp = new String("10.0.0.6");
 
 
     //<editor-fold desc="constructors">
@@ -88,8 +92,9 @@ public class SignalRService extends Service {
         try {
             ip = InetAddress.getLocalHost().toString();
         } catch (Exception ex) {
-            ip = "192.168.1.140";
-            //ip = "10.0.0.41";
+            ip = defaultIp;
+
+
         }
         String serverUrl = "http://" + ip + ":8080/";
         hubConnection = new HubConnection(serverUrl);
@@ -136,6 +141,16 @@ public class SignalRService extends Service {
         });
     }
 
+    public void adminCreateGame(String gameCode, String homeTeam, String visitorTeam) {
+        hub.invoke(String.class, "AdminCreateGame", gameCode, homeTeam, visitorTeam).done(new Action<String>() {
+
+            @Override
+            public void run(String gameCode) throws Exception {
+                EventBus.getDefault().post(new GameCreationEvent(gameCode));
+            }
+        });
+    }
+
     public void isGameActive(String gameId) {
 
         hub.invoke(Boolean.class, "IsGameActive", gameId).done(new Action<Boolean>() {
@@ -151,17 +166,47 @@ public class SignalRService extends Service {
         hub.invoke(Question.class, "AdminAskQuestion", question);
     }
 
-    public void adminCreateGame(String gameCode, String homeTeam, String visitorTeam) {
-        hub.invoke(String.class, "AdminCreateGame", gameCode, homeTeam, visitorTeam).done(new Action<String>() {
-
+    public void adminCloseQuestion(String gameId, String questionId, String correctAnswerId) {
+        hub.invoke(Boolean.class, "AdminCloseQuestion", gameId,questionId,correctAnswerId).done(new Action<Boolean>(){
             @Override
-            public void run(String gameCode) throws Exception {
-                EventBus.getDefault().post(new GameCreationEvent(gameCode));
+            public void run(Boolean isAnswerAccepted) throws Exception {
+                EventBus.getDefault().post(new IsCloseAnswerAcceptedEvent(isAnswerAccepted));
             }
+
         });
+
     }
 
 
+
+
+    //</editor-fold>
+
+    //<editor-fold desc="subscribeToServer">
+    public void subscribeToServer() {
+        hub.on("AskQuestion", new SubscriptionHandler1<Question>() {
+            @Override
+            public void run(Question question) {
+                EventBus.getDefault().post(new QuestionEvent(question, QuestionEvent.QuestionStates.NEW_QUESTION));
+            }
+        }, Question.class);
+
+        hub.on("SendProcessedQuestion", new SubscriptionHandler1<Question>() {
+            @Override
+            public void run(Question question) {
+                EventBus.getDefault().post(new QuestionEvent(question, QuestionEvent.QuestionStates.PROCESSED_QUESTION));
+            }
+        }, Question.class);
+
+        hub.on("CloseQuestion", new SubscriptionHandler1<Question>() {
+            @Override
+            public void run(Question question) {
+                EventBus.getDefault().post(new QuestionEvent(question, QuestionEvent.QuestionStates.CLOSED_QUESTION));
+            }
+        }, Question.class);
+
+
+    }
     //</editor-fold>
 
     //<editor-fold desc="methods for client activities">
@@ -178,22 +223,6 @@ public class SignalRService extends Service {
     }
 
 
-    public void subscribeToServer() {
-        hub.on("AskQuestion", new SubscriptionHandler1<Question>() {
-            @Override
-            public void run(Question question) {
-                EventBus.getDefault().post(new QuestionEvent(question, QuestionEvent.QuestionStates.NEW_QUESTION));
-            }
-        }, Question.class);
-
-        hub.on("SendProcessedQuestion", new SubscriptionHandler1<Question>() {
-            @Override
-            public void run(Question question) {
-                EventBus.getDefault().post(new QuestionEvent(question, QuestionEvent.QuestionStates.PROCESSED_QUESTION));
-            }
-        }, Question.class);
-    }
-
     public void postAnswer(String gameId,String questionId,String answerId) {
 
         hub.invoke(Boolean.class, "PostAnswer", gameId,questionId,answerId).done(new Action<Boolean>(){
@@ -205,11 +234,7 @@ public class SignalRService extends Service {
         });
 
     }
-
-
-
-
-    //</editor-fold>
+       //</editor-fold>
 
     //<editor-fold desc="support classes">
 
