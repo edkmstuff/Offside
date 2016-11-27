@@ -46,6 +46,11 @@
 
     </style>
 
+    <style name="OffsideLargeText">
+        <item name="android:textSize">28sp</item>
+
+    </style>
+
 
 
 </resources>

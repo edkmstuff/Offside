@@ -24,6 +24,9 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.login.widget.ProfilePictureView;
+import com.offsidegame.offside.models.LoginEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 
 public class FacebookLoginFragment extends Fragment {
@@ -31,11 +34,13 @@ public class FacebookLoginFragment extends Fragment {
     private TextView fbNameTextView;
     private ProfilePictureView fbPictureImageView;
     private CallbackManager mCallbackManager;
+
     private FacebookCallback<LoginResult> mCallback = new FacebookCallback<LoginResult>() {
 
         private ProfileTracker mProfileTracker;
         @Override
         public void onSuccess(LoginResult loginResult) {
+
             AccessToken accessToken = loginResult.getAccessToken();
 
             //fix issue profile return as null by using Profiletracker
@@ -47,10 +52,11 @@ public class FacebookLoginFragment extends Fragment {
                     protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
                         // profile2 is the new profile
                         Log.v("facebook - profile", profile2.getFirstName());
-                        fbNameTextView.setText(String.format("Welcome %1$s",profile2.getName()));
+
+                        //fbNameTextView.setText(String.format("Welcome %1$s",profile2.getName()));
                         //Uri imageUri = profile2.getProfilePictureUri(50,50);
                         //fbPictureImageView.setImageURI(imageUri);
-                        fbPictureImageView.setProfileId(Profile.getCurrentProfile().getId());
+                        //fbPictureImageView.setProfileId(Profile.getCurrentProfile().getId());
                         mProfileTracker.stopTracking();
                     }
                 };
@@ -59,18 +65,15 @@ public class FacebookLoginFragment extends Fragment {
             }
             else {
                 Profile profile = Profile.getCurrentProfile();
-                fbNameTextView.setText(String.format("Welcome %1$s",profile.getName()));
+                //fbNameTextView.setText(String.format("Welcome %1$s",profile.getName()));
                 //Uri imageUri = profile.getProfilePictureUri(50,50);
                 //fbPictureImageView.setImageURI(imageUri);
-                fbPictureImageView.setProfileId(Profile.getCurrentProfile().getId());
+                //fbPictureImageView.setProfileId(Profile.getCurrentProfile().getId());
                 Log.v("facebook - profile", profile.getFirstName());
 
             }
-
-
-
-
-
+           // fbNameTextView.setVisibility(View.VISIBLE);
+           // fbPictureImageView.setVisibility(View.VISIBLE);
 
 
         }
@@ -113,8 +116,10 @@ public class FacebookLoginFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view,savedInstanceState);
-        fbNameTextView = (TextView)view.findViewById(R.id.fbNameTextView);
-        fbPictureImageView =(ProfilePictureView) view.findViewById(R.id.fbPictureImageView);
+       // fbNameTextView = (TextView)view.findViewById(R.id.fbNameTextView);
+       // fbPictureImageView =(ProfilePictureView) view.findViewById(R.id.fbPictureImageView);
+        //fbNameTextView.setVisibility(View.GONE);
+        //fbPictureImageView.setVisibility(View.GONE);
         LoginButton loginButton = (LoginButton) view.findViewById(R.id.login_button);
         loginButton.setReadPermissions("email");
         loginButton.setFragment(this);
