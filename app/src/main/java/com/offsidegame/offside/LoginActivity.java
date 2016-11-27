@@ -13,17 +13,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.SignalRService;
-import com.offsidegame.offside.models.JoinGameEvent;
 import com.offsidegame.offside.models.LoginEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class LoginActivity extends AppCompatActivity {
@@ -54,8 +53,12 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(getApplication());
 
         toolbar = (Toolbar) findViewById((R.id.app_bar));
         setSupportActionBar(toolbar);
@@ -82,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
         bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
 
         email = (EditText) findViewById(R.id.email);
-        login = (Button) findViewById(R.id.login_button);
+        login = (Button) findViewById(R.id.email_login_button);
         login.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -112,6 +115,8 @@ public class LoginActivity extends AppCompatActivity {
 
         super.onStop();
     }
+
+
 
 
 

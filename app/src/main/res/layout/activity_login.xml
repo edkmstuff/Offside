@@ -25,6 +25,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:id="@+id/login_button" />
+        android:id="@+id/email_login_button" />
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.offsidegame.offside.FacebookLoginFragment"
+        android:id="@+id/fragment_facebook_login" />
+
 
 </LinearLayout>

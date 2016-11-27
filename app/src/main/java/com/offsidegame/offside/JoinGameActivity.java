@@ -23,6 +23,7 @@ import com.offsidegame.offside.models.SignalRServiceBoundEvent;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import com.facebook.FacebookSdk;
 
 public class JoinGameActivity extends AppCompatActivity {
 

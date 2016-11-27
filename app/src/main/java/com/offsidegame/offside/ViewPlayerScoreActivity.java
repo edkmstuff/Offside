@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.PlayerScore;
@@ -67,6 +69,9 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_player_score);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(getApplication());
 
 
         toolbar = (Toolbar) findViewById((R.id.app_bar));
