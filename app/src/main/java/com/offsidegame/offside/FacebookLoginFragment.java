@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -49,14 +50,10 @@ public class FacebookLoginFragment extends Fragment {
             if(Profile.getCurrentProfile() == null) {
                 mProfileTracker = new ProfileTracker() {
                     @Override
-                    protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
+                    protected void onCurrentProfileChanged(Profile oldProfile, Profile newProfile) {
                         // profile2 is the new profile
-                        Log.v("facebook - profile", profile2.getFirstName());
-
-                        //fbNameTextView.setText(String.format("Welcome %1$s",profile2.getName()));
-                        //Uri imageUri = profile2.getProfilePictureUri(50,50);
-                        //fbPictureImageView.setImageURI(imageUri);
-                        //fbPictureImageView.setProfileId(Profile.getCurrentProfile().getId());
+                        Log.v("facebook - profile", newProfile.getName());
+                        EventBus.getDefault().post(new LoginEvent(newProfile.getId(), newProfile.getName(),newProfile));
                         mProfileTracker.stopTracking();
                     }
                 };
@@ -65,16 +62,10 @@ public class FacebookLoginFragment extends Fragment {
             }
             else {
                 Profile profile = Profile.getCurrentProfile();
-                //fbNameTextView.setText(String.format("Welcome %1$s",profile.getName()));
-                //Uri imageUri = profile.getProfilePictureUri(50,50);
-                //fbPictureImageView.setImageURI(imageUri);
-                //fbPictureImageView.setProfileId(Profile.getCurrentProfile().getId());
-                Log.v("facebook - profile", profile.getFirstName());
+                Log.v("facebook - profile", profile.getName());
+                EventBus.getDefault().post(new LoginEvent(profile.getId(), profile.getName(),profile));
 
             }
-           // fbNameTextView.setVisibility(View.VISIBLE);
-           // fbPictureImageView.setVisibility(View.VISIBLE);
-
 
         }
 
@@ -102,6 +93,7 @@ public class FacebookLoginFragment extends Fragment {
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
 
         mCallbackManager = CallbackManager.Factory.create();
+
 
     }
 

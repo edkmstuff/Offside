@@ -14,18 +14,24 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.facebook.FacebookSdk;
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.gson.Gson;
 import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.FacebookLoginInfo;
 import com.offsidegame.offside.models.LoginEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class LoginActivity extends AppCompatActivity {
+import static com.offsidegame.offside.R.string.fbProfile_key;
+
+public class LoginActivity extends AppCompatActivity implements Serializable{
 
     private final Context context = this;
     private SignalRService signalRService;
@@ -124,11 +130,18 @@ public class LoginActivity extends AppCompatActivity {
     public void onLogin(LoginEvent loginEvent) {
         String id = loginEvent.getId();
         String name = loginEvent.getName();
+
+        /*Profile profile = loginEvent.getFbProfile();
+        FacebookLoginInfo fbLoginInfo = new FacebookLoginInfo(profile.getFirstName(),profile.getLastName(),profile.getName(),profile.getId(),profile.getLinkUri().toString());
+        Gson gson = new Gson();
+        String fbProfileJson = gson.toJson(fbLoginInfo);*/
+
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(getString(R.string.is_logged_in_key), true);
         editor.putString(getString(R.string.user_id_key), id);
         editor.putString(getString(R.string.user_name_key), name);
+//        editor.putString(getString(fbProfile_key), fbProfileJson);
 
         DateHelper dateHelper = new DateHelper();
         Date current = dateHelper.getCurrentDate();
@@ -139,6 +152,7 @@ public class LoginActivity extends AppCompatActivity {
         editor.commit();
 
         Intent intent = new Intent(context, JoinGameActivity.class);
+
         startActivity(intent);
 
     }
