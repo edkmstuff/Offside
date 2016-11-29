@@ -6,4 +6,8 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="score_text">52dp</dimen>
     <dimen name="player_score_items">24dp</dimen>
+    <dimen name="OffsideExtraLargeText">60sp</dimen>
+    <dimen name="OffsideLargeText">30sp</dimen>
+    <dimen name="OffsideMediumText">15sp</dimen>
+    <dimen name="OffsideSmallText">7sp</dimen>
 </resources>

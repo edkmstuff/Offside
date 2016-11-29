@@ -30,11 +30,11 @@
 
         <activity
             android:name=".ViewProcessedQuestionActivity"
-            android:label="@string/processed_question_title" />
+            android:label="@string/lbl_processed_question_title" />
 
         <activity
             android:name=".ViewClosedQuestionActivity"
-            android:label="@string/closed_question_title" />
+            android:label="@string/lbl_closed_question_title" />
 
         <service
             android:name=".helpers.SignalRService"
