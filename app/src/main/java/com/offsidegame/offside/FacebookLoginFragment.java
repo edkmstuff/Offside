@@ -46,18 +46,21 @@ public class FacebookLoginFragment extends Fragment {
             //fix issue profile return as null by using Profiletracker
             //http://stackoverflow.com/questions/29642759/profile-getcurrentprofile-returns-null-after-logging-in-fb-api-v4-0
 
+
+
             if(Profile.getCurrentProfile() == null) {
                 mProfileTracker = new ProfileTracker() {
                     @Override
-                    protected void onCurrentProfileChanged(Profile profile, Profile profile2) {
-                        // profile2 is the new profile
-                        Log.v("facebook - profile", profile2.getFirstName());
+                    protected void onCurrentProfileChanged(Profile oldProfile, Profile newProfile) {
+                        // newProfile is the new oldProfile
+//                        Log.v("facebook - oldProfile", newProfile.getFirstName());
 
-                        //fbNameTextView.setText(String.format("Welcome %1$s",profile2.getName()));
-                        //Uri imageUri = profile2.getProfilePictureUri(50,50);
+                        //fbNameTextView.setText(String.format("Welcome %1$s",newProfile.getName()));
+                        //Uri imageUri = newProfile.getProfilePictureUri(50,50);
                         //fbPictureImageView.setImageURI(imageUri);
                         //fbPictureImageView.setProfileId(Profile.getCurrentProfile().getId());
                         mProfileTracker.stopTracking();
+                        EventBus.getDefault().post(new LoginEvent(newProfile.getId(), newProfile.getName()));
                     }
                 };
                 // no need to call startTracking() on mProfileTracker
@@ -65,11 +68,14 @@ public class FacebookLoginFragment extends Fragment {
             }
             else {
                 Profile profile = Profile.getCurrentProfile();
+                EventBus.getDefault().post(new LoginEvent(profile.getId(), profile.getName()));
+
+
                 //fbNameTextView.setText(String.format("Welcome %1$s",profile.getName()));
                 //Uri imageUri = profile.getProfilePictureUri(50,50);
                 //fbPictureImageView.setImageURI(imageUri);
                 //fbPictureImageView.setProfileId(Profile.getCurrentProfile().getId());
-                Log.v("facebook - profile", profile.getFirstName());
+//                Log.v("facebook - profile", profile.getFirstName());
 
             }
            // fbNameTextView.setVisibility(View.VISIBLE);

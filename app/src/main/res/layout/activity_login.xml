@@ -32,7 +32,7 @@
         android:gravity="center"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="20dp"
-        style="@style/OffsideLargeText"
+        android:textSize="@dimen/OffsideExtraLargeText"
         />
 
     <EditText

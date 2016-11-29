@@ -4,10 +4,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.TextClock;
 import android.widget.TextView;
 
 import com.offsidegame.offside.helpers.SignalRService;
@@ -28,8 +30,13 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
     private Question question;
     private String questionState;
     private TextView questionTextView;
+    private TextView timeToStartQuestionText;
+
+
     private Handler delayHandler;
     private Runnable goToViewPlayerScore;
+
+    private CountDownTimer timer;
 
 
     //</editor-fold>
@@ -82,23 +89,50 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         String questionText = question.getQuestionText();
         questionTextView.setText(questionText);
 
+        timeToStartQuestionText = (TextView) findViewById(R.id.timeToStartQuestionText);
+
+        final String countDownLabel = getString(R.string.lbl_question_starts_in);
+        timeToStartQuestionText.setText(countDownLabel);
+
 
         Intent bindServiceIntent = new Intent();
         bindServiceIntent.setClass(context, SignalRService.class);
         bindService(bindServiceIntent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
 
 
-        // to go back to view player score
-        delayHandler = new Handler();
-        goToViewPlayerScore = new Runnable() {
-            @Override
-            public void run() {
+//        // to go back to view player score
+//        delayHandler = new Handler();
+//        goToViewPlayerScore = new Runnable() {
+//            @Override
+//            public void run() {
+//                Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
+//                startActivity(intent);
+//            }
+//        };
+//
+//        delayHandler.postDelayed(goToViewPlayerScore, 10000);
+
+
+        timer = new CountDownTimer(10000, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                timeToStartQuestionText.setText(countDownLabel + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+                timeToStartQuestionText.setText(getString(R.string.lbl_go));
                 Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
                 startActivity(intent);
             }
-        };
+        }.start();
 
-        delayHandler.postDelayed(goToViewPlayerScore, 10000);
+
+
+
+
+
+
+
     }
 
     @Override
@@ -116,7 +150,10 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
             isBoundToSignalRService = false;
         }
 
-        delayHandler.removeCallbacks(goToViewPlayerScore);
+        //delayHandler.removeCallbacks(goToViewPlayerScore);
+
+        timer.cancel();
+        timer = null;
 
         super.onStop();
     }

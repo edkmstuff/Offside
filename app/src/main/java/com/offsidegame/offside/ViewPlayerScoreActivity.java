@@ -37,7 +37,8 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     private boolean boundToSignalRService = false;
     TextView score;
     TextView position;
-    TextView leaderScore;
+    TextView totalPlayers;
+//    TextView leaderScore;
     TextView totalOpenQuestions;
     private Toolbar toolbar;
     //</editor-fold>
@@ -79,7 +80,8 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
         score = (TextView) findViewById(R.id.score);
         position = (TextView) findViewById(R.id.position);
-        leaderScore = (TextView) findViewById(R.id.leader_score);
+        totalPlayers = (TextView) findViewById(R.id.total_players);
+//        leaderScore = (TextView) findViewById(R.id.leader_score);
         totalOpenQuestions = (TextView) findViewById(R.id.total_active_questions);
 
     }
@@ -164,7 +166,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     public void onReceivePlayerScore(PlayerScoreEvent playerScoreEvent) {
         PlayerScore playerScore = playerScoreEvent.getPlayerScore();
         updatePlayerScoreInUi(playerScore);
-        Toast.makeText(context, getString(R.string.data_updated), Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, getString(R.string.lbl_data_updated), Toast.LENGTH_SHORT).show();
     }
 
     void updatePlayerScoreInUi(PlayerScore playerScore) {
@@ -173,17 +175,29 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
             return;
         score.setText(playerScore.getScore().toString());
 
-        position.setText(playerScore.getPosition().toString() + " " + getString(R.string.out_of) + " " + playerScore.getTotalPlayers().toString());
-
-        leaderScore.setText(playerScore.getLeaderScore().toString());
+        position.setText(playerScore.getPosition().toString());
+        totalPlayers.setText(playerScore.getTotalPlayers().toString());
+//        leaderScore.setText(playerScore.getLeaderScore().toString());
 
         totalOpenQuestions.setText(playerScore.getTotalOpenQuestions().toString());
     }
 
+
+    //to handle question events
+//    private QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(context);
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveQuestion(QuestionEvent questionEvent) {
-        question =  questionEvent.getQuestion();
-        questionState = questionEvent.getQuestionState();
+        Question question =  questionEvent.getQuestion();
+        String questionState = questionEvent.getQuestionState();
+
+        //for admin///////////////////////////////
+
+        adminQuestion = question;
+
+
+        ////////////////////////////////////////
+
 
         // default is NEW_QUESTION
         Class<?> activityClass = AnswerQuestionActivity.class;
@@ -203,12 +217,14 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         startActivity(intent);
 
 
+
+
     }
     //</editor-fold>
 
     //<editor-fold desc="temp code">
-    static Question question;
-    static String questionState;
+    static Question adminQuestion;
+    //static String questionState;
 
 
 
@@ -252,8 +268,8 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                 new Answer(null, "Eran4", 0.5, 300, false, false)
 
         };
-        question = new Question("who are you", answers, gameId);
-        signalRService.adminAskQuestion(question);
+        adminQuestion = new Question("who are you", answers, gameId);
+        signalRService.adminAskQuestion(adminQuestion);
 
     }
 
@@ -262,8 +278,8 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         String gameId = settings.getString(getString(R.string.game_id_key), "");
 
-        String questionId = question.getId();
-        String correctAnswerId = question.getAnswers()[2].getId();
+        String questionId = adminQuestion.getId();
+        String correctAnswerId = adminQuestion.getAnswers()[2].getId();
 
 
         signalRService.adminCloseQuestion(gameId, questionId ,correctAnswerId);

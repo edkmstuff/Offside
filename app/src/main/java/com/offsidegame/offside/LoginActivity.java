@@ -66,7 +66,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);
 
-        String loginExpirationTimeAsString = (String) settings.getString(getString(R.string.login_expiration_time), "");
+        String loginExpirationTimeAsString = (String) settings.getString(getString(R.string.login_expiration_time_key), "");
 
         DateHelper dateHelper = new DateHelper();
         Date loginExpirationTime = dateHelper.formatAsDate(loginExpirationTimeAsString, context);
@@ -135,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
         Date expirationTime = dateHelper.addHours(current, 3);
 
         String expirationTimeAsString = dateHelper.formatAsString(expirationTime, context);
-        editor.putString(getString(R.string.login_expiration_time), expirationTimeAsString);
+        editor.putString(getString(R.string.login_expiration_time_key), expirationTimeAsString);
         editor.commit();
 
         Intent intent = new Intent(context, JoinGameActivity.class);

@@ -118,9 +118,9 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onIsAnswerAcceptedEvent(IsAnswerAcceptedEvent answerAcceptedEvent) {
         if (answerAcceptedEvent.getIsAnswerAccepted())
-            Toast.makeText(context, getString(R.string.answer_accepted_message), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, getString(R.string.lbl_answer_accepted_message), Toast.LENGTH_LONG).show();
         else
-            Toast.makeText(context, getString(R.string.answer_not_accepted_message), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, getString(R.string.lbl_answer_not_accepted_message), Toast.LENGTH_LONG).show();
 
         Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
         startActivity(intent);
