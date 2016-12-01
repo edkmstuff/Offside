@@ -18,6 +18,55 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingLeft="30dp">
+        <!--Title row-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                 >
+
+                <com.facebook.login.widget.ProfilePictureView
+                    android:id="@+id/fbPictureImageView"
+                    android:layout_height="50dp"
+                    android:layout_width="50dp"
+                    android:layout_gravity="left"
+                    />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+
+                    <TextView
+                        android:text="FB Name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/fbNameTextView"
+                        android:layout_gravity="center"
+                        android:textSize="@dimen/fab_margin"
+                        android:gravity="left"
+                        android:layout_marginLeft="5dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/game_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="You are watching Team A vs Team B"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="left"/>
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
         <!--First row-->
         <LinearLayout
             android:layout_width="match_parent"
