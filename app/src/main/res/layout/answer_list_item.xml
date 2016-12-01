@@ -1,55 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/answer_list_item"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/answer_list_item">
+    android:paddingLeft="20dp">
 
     <!-- for: Closed -->
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/closed_question_answer_indicator"/>
 
-
-    <!-- for: Ask, Processed, Closed -->
-    <TextView
-        style="@style/OffsideAnswer"
-        android:id="@+id/answer_number"
- />
-    <!-- for: Ask, Processed, Closed -->
-    <TextView
-        style="@style/OffsideAnswer"
-        android:id="@+id/answer_text"
-        />
-
-    <!-- for: Processed, Closed -->
-    <TextView
-        style="@style/OffsideAnswer"
-        android:id="@+id/percent_users_answered"
-/>
-
-    <!-- for: Processed, Closed -->
-    <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
+    <!--Wrong Or Right-->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progress_bar_percent_user_Answered"
-        android:layout_weight="1"
-        />
+        android:orientation="horizontal">
 
-    <TextView
-        style="@style/OffsideAnswer"
-        android:id="@+id/score"/>
+        <!--Right or Wrong -->
+        <ImageView
+            android:id="@+id/right_wrong_answer_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-    <!-- for: Processed, Closed -->
-    <TextView
-        style="@style/OffsideAnswer"
-        android:id="@+id/is_the_answer_of_the_user"/>
+        <!--Answer Number-->
+        <TextView
+            android:id="@+id/answer_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:textSize="@dimen/OffsideMediumText" />
 
-    <!-- for: Closed -->
-    <TextView
-        style="@style/OffsideAnswer"
-        android:id="@+id/is_correct"/>
+        <!--Answer Text -->
+        <TextView
+            android:id="@+id/answer_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/OffsideMediumText" />
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- Percent Users Answered-->
+        <TextView
+            android:id="@+id/answered_by_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_answered_by"
+            android:textSize="@dimen/OffsideMediumText"
+            android:paddingRight="5dp"/>
+
+        <TextView
+            android:id="@+id/percent_users_answered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/OffsideMediumText"/>
+
+        <TextView
+            android:id="@+id/percent_sign_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="%"
+            android:textSize="@dimen/OffsideMediumText"
+            android:paddingRight="5dp"/>
+
+
+        <TextView
+            android:id="@+id/you_can_earn_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/you_can_earn"
+            android:textSize="@dimen/OffsideMediumText"
+            android:paddingRight="5dp"/>
+
+        <TextView
+            android:id="@+id/score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/OffsideMediumText"
+            android:paddingRight="5dp"/>
+
+
+        <TextView
+            android:id="@+id/points_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_points"
+            android:textSize="@dimen/OffsideMediumText"
+            />
+        <!-- for: Processed, Closed -->
+        <!--<ProgressBar-->
+        <!--style="?android:attr/progressBarStyleHorizontal"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/progress_bar_percent_user_Answered"-->
+        <!--android:layout_weight="1"-->
+        <!--/>-->
+
+        <!-- Score -->
+
+        <!-- for: Processed, Closed -->
+        <!--<TextView-->
+        <!--style="@style/OffsideAnswer"-->
+        <!--android:id="@+id/is_the_answer_of_the_user"/>-->
+
+        <!-- for: Closed -->
+        <!--<TextView-->
+        <!--style="@style/OffsideAnswer"-->
+        <!--android:id="@+id/is_correct"/>-->
+
+
+    </LinearLayout>
+
 
 </LinearLayout>
