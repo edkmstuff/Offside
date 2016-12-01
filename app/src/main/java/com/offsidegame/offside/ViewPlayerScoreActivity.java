@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.v7.app.ActionBar;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +29,7 @@ import com.offsidegame.offside.models.PlayerScoreEvent;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.QuestionEvent;
 import com.offsidegame.offside.models.SignalRServiceBoundEvent;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -46,8 +49,8 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     TextView totalOpenQuestions;
     private Toolbar toolbar;
     TextView fbName;
-    ProfilePictureView fbProfilePicture;
-
+//    ProfilePictureView fbProfilePicture;
+    ImageView fbProfilePicture;
     //</editor-fold>
 
     //<editor-fold desc="Startup methods">
@@ -84,11 +87,18 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById((R.id.app_bar));
         setSupportActionBar(toolbar);
 
-        fbName = (TextView) findViewById(R.id.fbNameTextView);
-        fbProfilePicture = (ProfilePictureView) findViewById(R.id.fbPictureImageView);
+        //fbName = (TextView) findViewById(R.id.fbNameTextView);
+        //fbProfilePicture = (ProfilePictureView) findViewById(R.id.fbPictureImageView);
+        fbProfilePicture = (ImageView) findViewById(R.id.fbPictureImageView);
 
-        fbName.setText(Profile.getCurrentProfile().getName());
-        fbProfilePicture.setProfileId(Profile.getCurrentProfile().getId());
+
+
+        //fbName.setText(Profile.getCurrentProfile().getName());
+        //fbProfilePicture.setProfileId(Profile.getCurrentProfile().getId());
+
+        Uri fbImageUrl = Profile.getCurrentProfile().getProfilePictureUri(100,100);
+        //fbProfilePicture.setImageURI(fbImageUrl);
+        Picasso.with(context).load(fbImageUrl).into(fbProfilePicture);
 
         gameTitle = (TextView) findViewById(R.id.game_title);
         score = (TextView) findViewById(R.id.score);

@@ -48,8 +48,8 @@ public class SignalRService extends Service {
     private Handler handler; // to display Toast message
     private final IBinder binder = new LocalBinder(); // Binder given to clients
 
-    //public final String defaultIp = new String("192.168.1.140");
-    public final String defaultIp = new String("10.0.0.6");
+    public final String defaultIp = new String("192.168.1.140");
+    //public final String defaultIp = new String("10.0.0.6");
     //public final String defaultIp = new String("offsidedev.somee.com");
 
 
