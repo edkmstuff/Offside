@@ -9,7 +9,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/closed_question_answer_indicator"/>
+        android:id="@+id/right_wrong_answer_indicator"/>
 
 
     <!-- for: Ask, Processed, Closed -->

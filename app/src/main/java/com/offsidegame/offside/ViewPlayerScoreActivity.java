@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.Looper;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,7 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.widget.ProfilePictureView;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.PlayerScore;
@@ -35,12 +38,16 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     private final Context context = this;
     private SignalRService signalRService;
     private boolean boundToSignalRService = false;
+    TextView gameTitle;
     TextView score;
     TextView position;
     TextView totalPlayers;
 //    TextView leaderScore;
     TextView totalOpenQuestions;
     private Toolbar toolbar;
+    TextView fbName;
+    ProfilePictureView fbProfilePicture;
+
     //</editor-fold>
 
     //<editor-fold desc="Startup methods">
@@ -74,10 +81,16 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
 
-
         toolbar = (Toolbar) findViewById((R.id.app_bar));
         setSupportActionBar(toolbar);
 
+        fbName = (TextView) findViewById(R.id.fbNameTextView);
+        fbProfilePicture = (ProfilePictureView) findViewById(R.id.fbPictureImageView);
+
+        fbName.setText(Profile.getCurrentProfile().getName());
+        fbProfilePicture.setProfileId(Profile.getCurrentProfile().getId());
+
+        gameTitle = (TextView) findViewById(R.id.game_title);
         score = (TextView) findViewById(R.id.score);
         position = (TextView) findViewById(R.id.position);
         totalPlayers = (TextView) findViewById(R.id.total_players);
@@ -164,8 +177,10 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayerScore(PlayerScoreEvent playerScoreEvent) {
+
         PlayerScore playerScore = playerScoreEvent.getPlayerScore();
         updatePlayerScoreInUi(playerScore);
+
         Toast.makeText(context, getString(R.string.lbl_data_updated), Toast.LENGTH_SHORT).show();
     }
 
@@ -173,8 +188,9 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         boolean isOnMainThread = Looper.myLooper() == Looper.getMainLooper();
         if (!isOnMainThread)
             return;
-        score.setText(playerScore.getScore().toString());
 
+        gameTitle.setText(playerScore.getGameTitle().toString());
+        score.setText(playerScore.getScore().toString());
         position.setText(playerScore.getPosition().toString());
         totalPlayers.setText(playerScore.getTotalPlayers().toString());
 //        leaderScore.setText(playerScore.getLeaderScore().toString());

@@ -29,7 +29,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.Serializable;
 import java.util.Date;
 
-import static com.offsidegame.offside.R.string.fbProfile_key;
+//import static com.offsidegame.offside.R.string.fbProfile_key;
 
 public class LoginActivity extends AppCompatActivity implements Serializable{
 
