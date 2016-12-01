@@ -12,6 +12,30 @@
         layout="@layout/app_bar"
         />
 
+    <TextView
+        android:text="@string/lbl_welcome"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:text="FB Name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fbNameTextView"
+        android:layout_gravity="center"
+        android:textSize="@dimen/fab_margin"
+        />
+
+
+    <com.facebook.login.widget.ProfilePictureView
+        android:id="@+id/fbPictureImageView"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+
+        />
+
 
     <EditText
 
@@ -34,5 +58,7 @@
         android:layout_height="wrap_content"
 
         android:text="Create game" />
+
+
 
 </LinearLayout>

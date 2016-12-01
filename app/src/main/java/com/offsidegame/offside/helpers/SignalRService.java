@@ -48,9 +48,9 @@ public class SignalRService extends Service {
     private Handler handler; // to display Toast message
     private final IBinder binder = new LocalBinder(); // Binder given to clients
 
-    public final String defaultIp = new String("192.168.1.140");
-    //public final String defaultIp = new String("10.0.0.41");
-
+    //public final String defaultIp = new String("192.168.1.140");
+    public final String defaultIp = new String("10.0.0.6");
+    //public final String defaultIp = new String("offsidedev.somee.com");
 
 
     //<editor-fold desc="constructors">
@@ -97,8 +97,7 @@ public class SignalRService extends Service {
 
 
         }
-       String serverUrl = "http://" + ip + ":8080/";
-       // String serverUrl = "http://" + ip;
+        String serverUrl = "http://" + ip + ":8080/";
         hubConnection = new HubConnection(serverUrl);
         String SERVER_HUB = "OffsideHub";
         hub = hubConnection.createHubProxy(SERVER_HUB);
@@ -118,30 +117,6 @@ public class SignalRService extends Service {
     //</editor-fold>
 
     //<editor-fold desc="Admin methods">
-    public void login(String email) {
-
-        hub.invoke(LoginInfo.class, "Login", email).done(new Action<LoginInfo>() {
-
-            @Override
-            public void run(LoginInfo loginInfo) throws Exception {
-                EventBus.getDefault().post(new LoginEvent(loginInfo.getId(), loginInfo.getName()));
-            }
-        });
-    }
-
-    public void joinGame(String gameCode) {
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        String userId = settings.getString(getString(R.string.user_id_key), "");
-        String userName = settings.getString(getString(R.string.user_name_key), "");
-
-        hub.invoke(String.class, "JoinGame", gameCode, userId, userName).done(new Action<String>() {
-
-            @Override
-            public void run(String gameId) throws Exception {
-                EventBus.getDefault().post(new JoinGameEvent(gameId));
-            }
-        });
-    }
 
     public void adminCreateGame(String gameCode, String homeTeam, String visitorTeam) {
         hub.invoke(String.class, "AdminCreateGame", gameCode, homeTeam, visitorTeam).done(new Action<String>() {
@@ -212,6 +187,31 @@ public class SignalRService extends Service {
     //</editor-fold>
 
     //<editor-fold desc="methods for client activities">
+
+    public void login(String email) {
+
+        hub.invoke(LoginInfo.class, "Login", email).done(new Action<LoginInfo>() {
+
+            @Override
+            public void run(LoginInfo loginInfo) throws Exception {
+                EventBus.getDefault().post(new LoginEvent(loginInfo.getId(), loginInfo.getName()));
+            }
+        });
+    }
+
+    public void joinGame(String gameCode) {
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        String userId = settings.getString(getString(R.string.user_id_key), "");
+        String userName = settings.getString(getString(R.string.user_name_key), "");
+
+        hub.invoke(String.class, "JoinGame", gameCode, userId, userName).done(new Action<String>() {
+
+            @Override
+            public void run(String gameId) throws Exception {
+                EventBus.getDefault().post(new JoinGameEvent(gameId));
+            }
+        });
+    }
 
     public void getPlayerScore(String gameId, String userId, String userName) {
 
