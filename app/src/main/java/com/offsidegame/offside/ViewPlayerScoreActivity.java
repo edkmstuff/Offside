@@ -96,7 +96,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         //fbName.setText(Profile.getCurrentProfile().getName());
         //fbProfilePicture.setProfileId(Profile.getCurrentProfile().getId());
 
-        Uri fbImageUrl = Profile.getCurrentProfile().getProfilePictureUri(100,100);
+        Uri fbImageUrl = Profile.getCurrentProfile().getProfilePictureUri(120,120);
         //fbProfilePicture.setImageURI(fbImageUrl);
         Picasso.with(context).load(fbImageUrl).into(fbProfilePicture);
 

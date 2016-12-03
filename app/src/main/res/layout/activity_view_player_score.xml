@@ -22,8 +22,8 @@
         <!--Title row-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="vertical">
 
             <TextView
@@ -32,33 +32,37 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:gravity="center"
-                android:text="You are watching Team A vs Team B" />
+                android:text="Team A vs Team B" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:background="@color/colorAccent">
+                    >
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:background="@android:color/black">
+                        android:layout_height="1dp"
+                        android:background= "@color/textColorPrimary">
 
                     </View>
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0dp">
+                 <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center">
 
                     <ImageView
                         android:id="@+id/fbPictureImageView"
@@ -81,12 +85,12 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:gravity="center_vertical"
-                    android:background="@color/colorAccent">
+                    >
 
                     <View
                         android:layout_width="wrap_content"
-                        android:layout_height="2dp"
-                        android:background="@android:color/black">
+                        android:layout_height="1dp"
+                        android:background="@color/textColorPrimary">
 
 
                     </View>
