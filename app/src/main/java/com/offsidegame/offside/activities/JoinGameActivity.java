@@ -1,4 +1,4 @@
-package com.offsidegame.offside;
+package com.offsidegame.offside.activities;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -17,10 +17,9 @@ import android.widget.Toast;
 
 import com.facebook.Profile;
 import com.facebook.login.widget.ProfilePictureView;
-import com.google.gson.Gson;
+import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.ActiveGameEvent;
-import com.offsidegame.offside.models.FacebookLoginInfo;
 import com.offsidegame.offside.models.GameCreationEvent;
 import com.offsidegame.offside.models.JoinGameEvent;
 import com.offsidegame.offside.models.SignalRServiceBoundEvent;

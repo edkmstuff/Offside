@@ -4,243 +4,278 @@
     android:id="@+id/activity_player_score"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="0dp"
     android:orientation="vertical"
+    android:padding="0dp"
 
-    tools:context="com.offsidegame.offside.ViewPlayerScoreActivity">
+    tools:context="com.offsidegame.offside.activities.ViewPlayerScoreActivity">
 
     <include
         android:id="@+id/app_bar"
         layout="@layout/app_bar" />
 
-
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp">
-        <!--Title row-->
+        android:layout_margin="5dp">
+
+        <!-- Background Picture-->
+        <!--<ImageView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:src="@drawable/green" />-->
+
+        <!-- Content Root -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:background="@drawable/white_background_border"
+            android:orientation="vertical"
+            >
 
-            <TextView
-                android:id="@+id/game_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:gravity="center"
-                android:text="Team A vs Team B" />
 
+            <!-- 1/3 top -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="20dp"
-                >
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    >
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background= "@color/textColorPrimary">
-
-                    </View>
-
-                </LinearLayout>
-
-                 <LinearLayout
+                <!--title-->
+                <TextView
+                    android:id="@+id/game_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:textSize="12sp"
+                    android:text="Group A Vs Group B"/>
+
+
+                <!-- Your Score -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
                     android:gravity="center">
 
-                    <ImageView
-                        android:id="@+id/fbPictureImageView"
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="@string/lbl_your_score"
+                        android:textSize="@dimen/OffsideLargeText" />
 
-
-                         />
-
-                    <!--<com.facebook.login.widget.ProfilePictureView-->
-                        <!--android:id="@+id/fbPictureImageView"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_weight="1" />-->
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    >
-
-                    <View
+                    <TextView
+                        android:id="@+id/score"
                         android:layout_width="wrap_content"
-                        android:layout_height="1dp"
-                        android:background="@color/textColorPrimary">
-
-
-                    </View>
-
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/OffsideExtraLargeText"
+                        android:text="0"/>
 
                 </LinearLayout>
 
 
-                <!--<LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    >
-
-                    <TextView
-                        android:text="FB Name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/fbNameTextView"
-                        android:layout_gravity="center"
-                        android:textSize="@dimen/fab_margin"
-                        android:gravity="left"
-                        android:layout_marginLeft="5dp"
-                        />
-
-                    <TextView
-                        android:id="@+id/game_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="You are watching Team A vs Team B"
-                        android:layout_marginLeft="5dp"
-                        android:gravity="left"/>
-                </LinearLayout>-->
-
-            </LinearLayout>
-        </LinearLayout>
-
-        <!--First row-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <!-- Your Score -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_your_score"
-                    android:textSize="@dimen/OffsideMediumText" />
-
-                <TextView
-                    android:id="@+id/score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/OffsideExtraLargeText" />
-
             </LinearLayout>
 
-        </LinearLayout>
 
-        <!--Second row-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <!-- Your Position -->
+            <!-- 2/3 middle-->
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_your_position"
-                    android:textSize="@dimen/OffsideMediumText" />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/position"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:textSize="@dimen/OffsideLargeText" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
-                        android:text="@string/lbl_out_of"
-                        android:textSize="@dimen/OffsideMediumText" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:background="@color/textColorPrimary">
 
-                    <TextView
-                        android:id="@+id/total_players"
+                        </View>
+
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/OffsideLargeText" />
+                        android:gravity="center">
+
+                        <ImageView
+                            android:id="@+id/fbPictureImageView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+
+                            />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical">
+
+                        <View
+                            android:layout_width="wrap_content"
+                            android:layout_height="2dp"
+                            android:background="@color/textColorPrimary">
+
+
+                        </View>
+
+
+                    </LinearLayout>
+
+
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- 3/3 bottom-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <!-- Your Position -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/lbl_your_position"
+                            android:textSize="@dimen/OffsideMediumText" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/position"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="5dp"
+                                android:textSize="@dimen/OffsideLargeText" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="5dp"
+                                android:text="@string/lbl_out_of"
+                                android:textSize="@dimen/OffsideMediumText" />
+
+                            <TextView
+                                android:id="@+id/total_players"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="@dimen/OffsideLargeText" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right">
+                        <Button
+                            android:id="@+id/scoreboard_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/lbl_scoreboard"
+                            />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <!--Third row-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <!-- Open Questions -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/lbl_open_questions"
+                            android:textSize="@dimen/OffsideMediumText"
+                            />
+
+                        <TextView
+                            android:id="@+id/total_active_questions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/OffsideLargeText" />
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right">
+                        <Button
+                            android:id="@+id/questions_btn"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/lbl_all_questions"
+                            />
+                    </LinearLayout>
 
                 </LinearLayout>
 
 
             </LinearLayout>
 
-        </LinearLayout>
 
-        <!--Third row-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
 
-            <!-- Open Questions -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_open_questions"
-                    android:textSize="@dimen/OffsideMediumText" />
 
-                <TextView
-                    android:id="@+id/total_active_questions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/OffsideLargeText" />
 
-            </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+    </FrameLayout>
+
 
 </LinearLayout>
 

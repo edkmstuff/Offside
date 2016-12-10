@@ -1,4 +1,4 @@
-package com.offsidegame.offside;
+package com.offsidegame.offside.activities;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -9,17 +9,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.widget.TextClock;
 import android.widget.TextView;
 
+import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.models.Question;
-import com.offsidegame.offside.models.QuestionAnsweredEvent;
-import com.offsidegame.offside.models.QuestionEvent;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 public class ViewProcessedQuestionActivity extends AppCompatActivity implements IQuestionHolder {
 

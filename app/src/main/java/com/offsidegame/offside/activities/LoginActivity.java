@@ -1,4 +1,4 @@
-package com.offsidegame.offside;
+package com.offsidegame.offside.activities;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,12 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.facebook.FacebookSdk;
-import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
-import com.google.gson.Gson;
+import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.SignalRService;
-import com.offsidegame.offside.models.FacebookLoginInfo;
 import com.offsidegame.offside.models.LoginEvent;
 
 import org.greenrobot.eventbus.EventBus;

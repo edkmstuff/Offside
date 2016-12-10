@@ -1,4 +1,4 @@
-package com.offsidegame.offside;
+package com.offsidegame.offside.activities;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,7 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.models.Question;
 
 public class ViewClosedQuestionActivity extends AppCompatActivity implements IQuestionHolder {

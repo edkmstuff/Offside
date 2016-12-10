@@ -21,6 +21,8 @@ import com.offsidegame.offside.models.PlayerScore;
 import com.offsidegame.offside.models.PlayerScoreEvent;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.QuestionEvent;
+import com.offsidegame.offside.models.Scoreboard;
+import com.offsidegame.offside.models.ScoreboardEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -236,7 +238,17 @@ public class SignalRService extends Service {
         });
 
     }
-       //</editor-fold>
+
+    public void getScoreboard(String gameId) {
+        hub.invoke(Scoreboard.class, "GetScoreboard", gameId).done(new Action<Scoreboard>() {
+
+            @Override
+            public void run(Scoreboard scoreboard) throws Exception {
+                EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
+            }
+        });
+    }
+    //</editor-fold>
 
     //<editor-fold desc="support classes">
 

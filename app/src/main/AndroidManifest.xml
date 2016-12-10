@@ -10,48 +10,45 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:label="Offside">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".JoinGameActivity" />
-
-        <activity android:name=".ViewPlayerScoreActivity" />
-
+        <activity android:name=".activities.JoinGameActivity" />
+        <activity android:name=".activities.ViewPlayerScoreActivity" />
         <activity
-            android:name=".AnswerQuestionActivity"
+            android:name=".activities.AnswerQuestionActivity"
             android:label="@string/ask_question" />
-
         <activity
-            android:name=".ViewProcessedQuestionActivity"
+            android:name=".activities.ViewProcessedQuestionActivity"
             android:label="@string/lbl_processed_question_title" />
-
         <activity
-            android:name=".ViewClosedQuestionActivity"
+            android:name=".activities.ViewClosedQuestionActivity"
             android:label="@string/lbl_closed_question_title" />
 
         <service
             android:name=".helpers.SignalRService"
             android:exported="false" />
 
-        <!--facebook login stuff -->
-        <activity android:name="com.facebook.FacebookActivity"
+        <!-- facebook login stuff -->
+        <activity
+            android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name" />
-
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
@@ -60,6 +57,7 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
+        <activity android:name=".activities.ViewScoreboardActivity"></activity>
     </application>
 
 </manifest>

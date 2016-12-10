@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.offsidegame.offside.AnswerQuestionActivity;
-import com.offsidegame.offside.ViewClosedQuestionActivity;
-import com.offsidegame.offside.ViewProcessedQuestionActivity;
+import com.offsidegame.offside.activities.AnswerQuestionActivity;
+import com.offsidegame.offside.activities.ViewClosedQuestionActivity;
+import com.offsidegame.offside.activities.ViewProcessedQuestionActivity;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.QuestionEvent;
 

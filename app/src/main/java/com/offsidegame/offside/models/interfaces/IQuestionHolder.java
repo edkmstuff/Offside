@@ -1,4 +1,4 @@
-package com.offsidegame.offside;
+package com.offsidegame.offside.models.interfaces;
 
 import com.offsidegame.offside.models.Question;
 

@@ -1,19 +1,22 @@
-package com.offsidegame.offside;
+package com.offsidegame.offside.activities;
 
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.Looper;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,7 +24,8 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.widget.ProfilePictureView;
+import com.offsidegame.offside.R;
+import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.PlayerScore;
@@ -51,6 +55,8 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     TextView fbName;
 //    ProfilePictureView fbProfilePicture;
     ImageView fbProfilePicture;
+    Button scoreboardBtn;
+    Button questionsBtn;
     //</editor-fold>
 
     //<editor-fold desc="Startup methods">
@@ -96,16 +102,38 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         //fbName.setText(Profile.getCurrentProfile().getName());
         //fbProfilePicture.setProfileId(Profile.getCurrentProfile().getId());
 
-        Uri fbImageUrl = Profile.getCurrentProfile().getProfilePictureUri(120,120);
+        Uri fbImageUrl = Profile.getCurrentProfile().getProfilePictureUri(200,200);
         //fbProfilePicture.setImageURI(fbImageUrl);
-        Picasso.with(context).load(fbImageUrl).into(fbProfilePicture);
+        Picasso.with(context).load(fbImageUrl).into(fbProfilePicture, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
+                RoundImage roundedImage = new RoundImage(bm);
+                fbProfilePicture.setImageDrawable(roundedImage);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+
+
 
         gameTitle = (TextView) findViewById(R.id.game_title);
         score = (TextView) findViewById(R.id.score);
         position = (TextView) findViewById(R.id.position);
         totalPlayers = (TextView) findViewById(R.id.total_players);
-//        leaderScore = (TextView) findViewById(R.id.leader_score);
         totalOpenQuestions = (TextView) findViewById(R.id.total_active_questions);
+        scoreboardBtn = (Button) findViewById(R.id.scoreboard_btn);
+        questionsBtn = (Button) findViewById(R.id.questions_btn);
+
+        scoreboardBtn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ViewScoreboardActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

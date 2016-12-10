@@ -5,7 +5,7 @@
     android:id="@+id/activity_login"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.offsidegame.offside.LoginActivity">
+    tools:context="com.offsidegame.offside.activities.LoginActivity">
 
     <include
         android:id="@+id/app_bar"
@@ -21,7 +21,7 @@
     <fragment
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:name="com.offsidegame.offside.FacebookLoginFragment"
+        android:name="com.offsidegame.offside.activities.fragments.FacebookLoginFragment"
         android:id="@+id/fragment_facebook_login"
         tools:layout="@layout/fragment_facebook_login" />
 

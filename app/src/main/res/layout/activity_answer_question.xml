@@ -1,46 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_question"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.offsidegame.offside.AnswerQuestionActivity">
+    android:animateLayoutChanges="true"
+    tools:context="com.offsidegame.offside.activities.AnswerQuestionActivity">
 
     <include
         android:id="@+id/app_bar"
-        layout="@layout/app_bar"
-        />
+        layout="@layout/app_bar" />
 
 
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/OffsideLargeText"
-            android:text="Am i a  very very very long question?"
-            android:padding="20dp"
-            android:id="@+id/question_text">
-
-        </TextView>
-
-
-
-
-
-
-
-
-    <fragment
-        android:id="@+id/activity_answers_fragment"
-        android:name="com.offsidegame.offside.AnswersFragment"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:layout="@layout/answer_list_item">
+        android:padding="5dp">
 
-    </fragment>
+        <!--<ImageView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:src="@drawable/green" />-->
 
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/question_and_answers_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/white_background_border"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/question_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:padding="20dp"
+                android:text="Am i a  very very very long question?"
+                android:textColor="#FFFFFF"
+                android:background="@color/colorPrimary"
+                android:textSize="@dimen/OffsideLargeText">
+
+            </TextView>
+
+            <fragment
+                android:id="@+id/activity_answers_fragment"
+                android:name="com.offsidegame.offside.activities.fragments.AnswersFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout="@layout/answer_list_item"></fragment>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/time_to_next_question_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/white_background_border"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Next question in"
+                    android:textSize="@dimen/OffsideMediumText"
+                    android:layout_marginRight="5dp"/>
+
+                <TextView
+                    android:id="@+id/time_to_next_question"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5"
+                    android:textSize="@dimen/OffsideLargeText"
+                    android:layout_marginRight="5dp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="sec"
+                    android:textSize="@dimen/OffsideMediumText"
+                    />
+
+
+            </LinearLayout>
+
+
+            <!--Sponsered by-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sponsered by"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/heineken"
+                    android:layout_gravity="bottom"
+                    android:padding="50dp"
+                    />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>

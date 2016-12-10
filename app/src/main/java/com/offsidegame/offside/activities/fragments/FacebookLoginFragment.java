@@ -1,4 +1,4 @@
-package com.offsidegame.offside;
+package com.offsidegame.offside.activities.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +25,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.facebook.login.widget.ProfilePictureView;
+import com.offsidegame.offside.R;
 import com.offsidegame.offside.models.LoginEvent;
 
 import org.greenrobot.eventbus.EventBus;
