@@ -7,6 +7,7 @@ import com.facebook.Profile;
 /**
  * Created by USER on 11/29/2016.
  */
+/*
 public class FacebookLoginInfo  {
     private String firstName;
     private String lastName;
@@ -49,3 +50,4 @@ public class FacebookLoginInfo  {
     //":"Eran","id":"10153837762934596","lastName":"Dagan Bokobza","linkUri":{"cachedFsi":-2,"cachedSsi":-2,"scheme":"NOT CACHED","uriString":"https://www.facebook.com/app_scoped_user_id/10153837762934596/","host":"NOT CACHED","port":-2},"middleName":"","name":"Eran Dagan Bokobza"}
 
 }
+*/

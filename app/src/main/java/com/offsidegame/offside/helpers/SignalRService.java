@@ -24,6 +24,7 @@ import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.events.QuestionEvent;
 import com.offsidegame.offside.models.Scoreboard;
 import com.offsidegame.offside.events.ScoreboardEvent;
+import com.offsidegame.offside.models.User;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -51,8 +52,8 @@ public class SignalRService extends Service {
     private Handler handler; // to display Toast message
     private final IBinder binder = new LocalBinder(); // Binder given to clients
 
-    public final String defaultIp = new String("192.168.1.140");
-    //public final String defaultIp = new String("10.0.0.6");
+    //public final String defaultIp = new String("192.168.1.140");
+    public final String defaultIp = new String("10.0.0.55");
     //public final String defaultIp = new String("offsidedev.somee.com");
 
 
@@ -121,15 +122,6 @@ public class SignalRService extends Service {
 
     //<editor-fold desc="Admin methods">
 
-    public void adminCreateGame(String gameCode, String homeTeam, String visitorTeam) {
-        hub.invoke(String.class, "AdminCreateGame", gameCode, homeTeam, visitorTeam).done(new Action<String>() {
-
-            @Override
-            public void run(String gameCode) throws Exception {
-                EventBus.getDefault().post(new GameCreationEvent(gameCode));
-            }
-        });
-    }
 
     public void isGameActive(String gameId) {
 
@@ -193,11 +185,13 @@ public class SignalRService extends Service {
 
     public void login(String email) {
 
-        hub.invoke(LoginInfo.class, "Login", email).done(new Action<LoginInfo>() {
+        hub.invoke(LoginInfo.class, "LoginWithEmail", email).done(new Action<LoginInfo>() {
 
             @Override
             public void run(LoginInfo loginInfo) throws Exception {
-                EventBus.getDefault().post(new LoginEvent(loginInfo.getId(), loginInfo.getName()));
+                boolean isFacebookLogin = false;
+                String password =loginInfo.getPassword();
+                EventBus.getDefault().post(new LoginEvent(loginInfo.getId(), loginInfo.getName(),password, isFacebookLogin));
             }
         });
     }
@@ -258,6 +252,18 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(new QuestionsEvent(questions));
             }
         });
+    }
+
+    public void saveUser(User user) {
+
+        hub.invoke(Boolean.class, "SaveUser",user.getId(),user.getName(),user.getEmail(),user.getProfilePictureUri(),user.getPassword()).done(new Action<Boolean>(){
+            @Override
+            public void run(Boolean isAnswerAccepted) throws Exception {
+                EventBus.getDefault().post(new IsAnswerAcceptedEvent(isAnswerAccepted));
+            }
+
+        });
+
     }
     //</editor-fold>
 

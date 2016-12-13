@@ -11,17 +11,16 @@ import java.net.URI;
 public class LoginEvent {
     private String id;
     private String name;
-    private Profile fbProfile;
+    private String password;
+    private boolean isFacebookLogin;
 
-    public LoginEvent(String id, String name) {
+
+
+    public LoginEvent(String id, String name, String password, boolean isFacebookLogin) {
         this.id = id;
         this.name = name;
-    }
-
-    public LoginEvent(String id, String name, Profile profile) {
-        this.id = id;
-        this.name = name;
-        this.fbProfile = profile;
+        this.password= password;
+        this.isFacebookLogin = isFacebookLogin;
     }
 
     public String getId() {
@@ -32,5 +31,9 @@ public class LoginEvent {
         return name;
     }
 
-    public Profile getFbProfile(){ return fbProfile;}
+    public boolean getIsFacebookLogin(){ return isFacebookLogin;}
+
+    public String getPassword() {
+        return password;
+    }
 }

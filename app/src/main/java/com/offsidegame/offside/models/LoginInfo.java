@@ -8,10 +8,13 @@ public class LoginInfo {
 
 
     @com.google.gson.annotations.SerializedName("Id")
-    private String id;
+    private String id; //email
 
     @com.google.gson.annotations.SerializedName("Name")
     private String name;
+
+    @com.google.gson.annotations.SerializedName("Password")
+    private String password;
 
     public LoginInfo() {}
 
@@ -21,5 +24,13 @@ public class LoginInfo {
 
     public String getName() {
         return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

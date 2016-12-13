@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,17 +14,19 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.Profile;
-import com.facebook.login.widget.ProfilePictureView;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.GameCreationEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,8 +43,8 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
     EditText gameCode;
     Button join;
     Button createGame;
-    TextView fbName;
-    ProfilePictureView fbProfilePicture;
+    TextView userName;
+    ImageView profilePicture;
 
     private Toolbar toolbar;
 
@@ -76,29 +80,44 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
-        if(Profile.getCurrentProfile()==null){
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putBoolean(getString(R.string.is_logged_in_key), false);
-            editor.commit();
-            Intent intent = new Intent();
-            intent.setClass(context, LoginActivity.class);
-            startActivity(intent);
-            return;
-        }
-        else{
+//        if(Profile.getCurrentProfile()==null){
+//            SharedPreferences.Editor editor = settings.edit();
+//            editor.putBoolean(getString(R.string.is_logged_in_key), false);
+//            editor.commit();
+//            Intent intent = new Intent();
+//            intent.setClass(context, LoginActivity.class);
+//            startActivity(intent);
+//            return;
+//        }
+//        else{
             Intent intent = new Intent();
             intent.setClass(context, SignalRService.class);
             bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
 
-            fbName = (TextView) findViewById(R.id.fbNameTextView);
-            fbProfilePicture = (ProfilePictureView) findViewById(R.id.fbPictureImageView);
+            userName = (TextView) findViewById(R.id.fbNameTextView);
+            userName.setText(settings.getString(getString(R.string.user_name_key),""));
 
-            fbName.setText(Profile.getCurrentProfile().getName());
-            fbProfilePicture.setProfileId(Profile.getCurrentProfile().getId());
+            profilePicture = (ImageView) findViewById(R.id.userPictureImageView);
+            String useProfilePictureUrl = settings.getString(getString(R.string.user_profile_picture_url_key),"");
+
+            Picasso.with(context).load(useProfilePictureUrl).into(profilePicture, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    Bitmap bm = ((BitmapDrawable) profilePicture.getDrawable()).getBitmap();
+                    RoundImage roundedImage = new RoundImage(bm);
+                    profilePicture.setImageDrawable(roundedImage);
+                }
+
+                @Override
+                public void onError() {
+
+                }
+            });
+
 
             gameCode = (EditText) findViewById(R.id.gameCode);
             join = (Button) findViewById(R.id.join_button);
-            createGame = (Button) findViewById(R.id.create_game_button);
+
             join.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -108,15 +127,8 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
                 }
             });
 
-            createGame.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (isBoundToSignalRService) {
-                        signalRService.adminCreateGame("1234", "Barcelona", "Real Madrid");
-                    }
-                }
-            });
-        }
+
+       // }
 
         /*FacebookLoginInfo fbLoginInfo;
 
@@ -195,12 +207,6 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
             Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
             startActivity(intent);
         }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveIsGameCreated(GameCreationEvent gameCreationEvent) {
-        String newGameCode = gameCreationEvent.getGameCode();
-        gameCode.setText(newGameCode);
     }
 
 

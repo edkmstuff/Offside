@@ -48,7 +48,8 @@ public class FacebookLoginFragment extends Fragment {
                     protected void onCurrentProfileChanged(Profile oldProfile, Profile newProfile) {
                         // profile2 is the new profile
                         Log.v("facebook - profile", newProfile.getName());
-                        EventBus.getDefault().post(new LoginEvent(newProfile.getId(), newProfile.getName(),newProfile));
+                        boolean isFacebookLogin = true;
+                        EventBus.getDefault().post(new LoginEvent(newProfile.getId(), newProfile.getName(),null,isFacebookLogin));
                         mProfileTracker.stopTracking();
                     }
                 };
@@ -58,7 +59,8 @@ public class FacebookLoginFragment extends Fragment {
             else {
                 Profile profile = Profile.getCurrentProfile();
                 Log.v("facebook - profile", profile.getName());
-                EventBus.getDefault().post(new LoginEvent(profile.getId(), profile.getName(),profile));
+                boolean isFacebookLogin = true;
+                EventBus.getDefault().post(new LoginEvent(profile.getId(), profile.getName(),null,isFacebookLogin));
 
             }
 

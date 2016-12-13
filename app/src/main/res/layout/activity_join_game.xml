@@ -27,14 +27,20 @@
         android:textSize="@dimen/fab_margin"
         />
 
-
-    <com.facebook.login.widget.ProfilePictureView
-        android:id="@+id/fbPictureImageView"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/userPictureImageView"
         android:layout_width="wrap_content"
-        android:layout_gravity="center"
-
+        android:layout_height="wrap_content"
         />
+
+
+    <!--<com.facebook.login.widget.ProfilePictureView-->
+        <!--android:id="@+id/fbPictureImageView"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+
+        <!--/>-->
 
 
     <EditText
@@ -51,14 +57,5 @@
         android:layout_height="wrap_content"
 
         android:text="Join" />
-
-    <Button
-        android:id="@+id/create_game_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:text="Create game" />
-
-
 
 </LinearLayout>

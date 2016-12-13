@@ -14,11 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.facebook.FacebookSdk;
+import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.events.LoginEvent;
+import com.offsidegame.offside.models.User;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -126,20 +128,28 @@ public class LoginActivity extends AppCompatActivity implements Serializable{
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLogin(LoginEvent loginEvent) {
+
+        boolean isFacebookLogin= loginEvent.getIsFacebookLogin();
         String id = loginEvent.getId();
         String name = loginEvent.getName();
+        //ToDo: get the user email from facebook profile
+        String email = isFacebookLogin ? null: loginEvent.getId();
+        //ToDo:checkUri.toString() retrns the url as string
+        String profilePictureUrl =  isFacebookLogin ? Profile.getCurrentProfile().getProfilePictureUri(100,100).toString(): "http://www.fm-base.co.uk/forum/attachments/football-manager-2012-stories/230724d1331933618-paul-gazza-gascoigne-footballsmall.jpg" ;
 
-        /*Profile profile = loginEvent.getFbProfile();
-        FacebookLoginInfo fbLoginInfo = new FacebookLoginInfo(profile.getFirstName(),profile.getLastName(),profile.getName(),profile.getId(),profile.getLinkUri().toString());
-        Gson gson = new Gson();
-        String fbProfileJson = gson.toJson(fbLoginInfo);*/
+        String password=isFacebookLogin ? null: loginEvent.getPassword() ;
+        User user = new User(id,name,email,profilePictureUrl,password);
+
+        signalRService.saveUser(user);
+
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean(getString(R.string.is_logged_in_key), true);
+        //Todo: changeback to true
+        editor.putBoolean(getString(R.string.is_logged_in_key), false);
         editor.putString(getString(R.string.user_id_key), id);
         editor.putString(getString(R.string.user_name_key), name);
-//        editor.putString(getString(fbProfile_key), fbProfileJson);
+        editor.putString(getString(R.string.user_profile_picture_url_key),profilePictureUrl );
 
         DateHelper dateHelper = new DateHelper();
         Date current = dateHelper.getCurrentDate();

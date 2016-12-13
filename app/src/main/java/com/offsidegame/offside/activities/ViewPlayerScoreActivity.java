@@ -53,7 +53,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     TextView totalOpenQuestions;
     private Toolbar toolbar;
     TextView fbName;
-//    ProfilePictureView fbProfilePicture;
+//    ProfilePictureView profilePicture;
     ImageView fbProfilePicture;
     Button scoreboardBtn;
     Button questionsBtn;
@@ -93,17 +93,17 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById((R.id.app_bar));
         setSupportActionBar(toolbar);
 
-        //fbName = (TextView) findViewById(R.id.fbNameTextView);
-        //fbProfilePicture = (ProfilePictureView) findViewById(R.id.fbPictureImageView);
+        //userName = (TextView) findViewById(R.id.fbNameTextView);
+        //profilePicture = (ProfilePictureView) findViewById(R.id.fbPictureImageView);
         fbProfilePicture = (ImageView) findViewById(R.id.fbPictureImageView);
 
 
 
-        //fbName.setText(Profile.getCurrentProfile().getName());
-        //fbProfilePicture.setProfileId(Profile.getCurrentProfile().getId());
+        //userName.setText(Profile.getCurrentProfile().getName());
+        //profilePicture.setProfileId(Profile.getCurrentProfile().getId());
 
         Uri fbImageUrl = Profile.getCurrentProfile().getProfilePictureUri(200,200);
-        //fbProfilePicture.setImageURI(fbImageUrl);
+        //profilePicture.setImageURI(fbImageUrl);
         Picasso.with(context).load(fbImageUrl).into(fbProfilePicture, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
