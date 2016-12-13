@@ -1,4 +1,4 @@
-package com.offsidegame.offside.models;
+package com.offsidegame.offside.events;
 
 import com.facebook.Profile;
 

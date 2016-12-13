@@ -8,7 +8,7 @@ import com.offsidegame.offside.activities.AnswerQuestionActivity;
 import com.offsidegame.offside.activities.ViewClosedQuestionActivity;
 import com.offsidegame.offside.activities.ViewProcessedQuestionActivity;
 import com.offsidegame.offside.models.Question;
-import com.offsidegame.offside.models.QuestionEvent;
+import com.offsidegame.offside.events.QuestionEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

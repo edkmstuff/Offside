@@ -18,7 +18,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.SignalRService;
-import com.offsidegame.offside.models.LoginEvent;
+import com.offsidegame.offside.events.LoginEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 
+import com.offsidegame.offside.adapters.QuestionAdapter;
 import com.offsidegame.offside.adapters.ScoreAdapter;
+import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.Score;
 import com.offsidegame.offside.models.Scoreboard;
 
@@ -13,10 +15,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
-public class ScoresFragment extends ListFragment {
+public class QuestionsFragment extends ListFragment {
 
     private Context context;
-    private Scoreboard scoreboard;
+    private Question[] questions;
 
 
     @Override
@@ -38,11 +40,10 @@ public class ScoresFragment extends ListFragment {
     }
 
 
-    public void updateData(Scoreboard scoreboard) {
-        ArrayList<Score> values = new ArrayList<>(Arrays.asList(scoreboard.getScores()));
-        ScoreAdapter scoreAdapter = new ScoreAdapter(context, values);
-        setListAdapter(scoreAdapter);
-        //scoreAdapter.notifyDataSetChanged();
+    public void updateData(Question[] questions) {
+        ArrayList<Question> values = new ArrayList<>(Arrays.asList(questions));
+        QuestionAdapter questionAdapter = new QuestionAdapter(context, values);
+        setListAdapter(questionAdapter);
     }
 }
 

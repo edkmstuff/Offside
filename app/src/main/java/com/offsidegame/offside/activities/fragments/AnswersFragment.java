@@ -11,8 +11,8 @@ import android.widget.ListView;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.models.Question;
-import com.offsidegame.offside.models.QuestionAnsweredEvent;
-import com.offsidegame.offside.models.QuestionEvent;
+import com.offsidegame.offside.events.QuestionAnsweredEvent;
+import com.offsidegame.offside.events.QuestionEvent;
 import com.offsidegame.offside.adapters.AnswerAdapter;
 
 import org.greenrobot.eventbus.EventBus;

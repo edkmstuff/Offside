@@ -4,26 +4,19 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Parcel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.Profile;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.RoundImage;
-import com.offsidegame.offside.models.Answer;
-import com.offsidegame.offside.models.QuestionEvent;
 import com.offsidegame.offside.models.Score;
 import com.squareup.picasso.Picasso;
 
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by KFIR on 11/21/2016.

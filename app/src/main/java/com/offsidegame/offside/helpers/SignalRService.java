@@ -10,19 +10,20 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.models.ActiveGameEvent;
-import com.offsidegame.offside.models.GameCreationEvent;
-import com.offsidegame.offside.models.IsAnswerAcceptedEvent;
-import com.offsidegame.offside.models.IsCloseAnswerAcceptedEvent;
-import com.offsidegame.offside.models.JoinGameEvent;
-import com.offsidegame.offside.models.LoginEvent;
+import com.offsidegame.offside.events.ActiveGameEvent;
+import com.offsidegame.offside.events.GameCreationEvent;
+import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
+import com.offsidegame.offside.events.IsCloseAnswerAcceptedEvent;
+import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.LoginEvent;
+import com.offsidegame.offside.events.QuestionsEvent;
 import com.offsidegame.offside.models.LoginInfo;
 import com.offsidegame.offside.models.PlayerScore;
-import com.offsidegame.offside.models.PlayerScoreEvent;
+import com.offsidegame.offside.events.PlayerScoreEvent;
 import com.offsidegame.offside.models.Question;
-import com.offsidegame.offside.models.QuestionEvent;
+import com.offsidegame.offside.events.QuestionEvent;
 import com.offsidegame.offside.models.Scoreboard;
-import com.offsidegame.offside.models.ScoreboardEvent;
+import com.offsidegame.offside.events.ScoreboardEvent;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -245,6 +246,16 @@ public class SignalRService extends Service {
             @Override
             public void run(Scoreboard scoreboard) throws Exception {
                 EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
+            }
+        });
+    }
+
+    public void getQuestions(String gameId) {
+        hub.invoke(Question[].class, "GetQuestions", gameId).done(new Action<Question[]>() {
+
+            @Override
+            public void run(Question[] questions) throws Exception {
+                EventBus.getDefault().post(new QuestionsEvent(questions));
             }
         });
     }

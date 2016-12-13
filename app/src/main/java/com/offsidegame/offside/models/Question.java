@@ -18,15 +18,18 @@ public class Question implements Serializable {
     private String gameId;
     @com.google.gson.annotations.SerializedName("Answers")
     private Answer[] answers ;
+    @com.google.gson.annotations.SerializedName("IsActive")
+    private boolean isActive ;
 
     public Question() {
 
     }
 
-    public Question(String questionText,Answer[] answers, String gameId) {
+    public Question(String questionText,Answer[] answers, String gameId, boolean isActive) {
         this.questionText = questionText;
         this.answers = answers;
         this.gameId = gameId;
+        this.isActive = isActive;
 
     }
 
@@ -44,5 +47,9 @@ public class Question implements Serializable {
 
     public Answer[] getAnswers() {
         return answers;
+    }
+
+    public boolean isActive() {
+        return isActive;
     }
 }

@@ -29,10 +29,10 @@ import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.PlayerScore;
-import com.offsidegame.offside.models.PlayerScoreEvent;
+import com.offsidegame.offside.events.PlayerScoreEvent;
 import com.offsidegame.offside.models.Question;
-import com.offsidegame.offside.models.QuestionEvent;
-import com.offsidegame.offside.models.SignalRServiceBoundEvent;
+import com.offsidegame.offside.events.QuestionEvent;
+import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -131,6 +131,13 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         scoreboardBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 Intent intent = new Intent(context, ViewScoreboardActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        questionsBtn.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ViewQuestionsActivity.class);
                 startActivity(intent);
             }
         });
@@ -322,7 +329,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                 new Answer(null, "Eran4", 0.5, 300, false, false)
 
         };
-        adminQuestion = new Question("who are you", answers, gameId);
+        adminQuestion = new Question("who are you", answers, gameId, true);
         signalRService.adminAskQuestion(adminQuestion);
 
     }

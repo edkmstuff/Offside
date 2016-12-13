@@ -5,27 +5,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.os.IBinder;
-
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.v7.app.AppCompatActivity;
 
 import com.offsidegame.offside.R;
-
-import com.offsidegame.offside.activities.fragments.ScoresFragment;
+import com.offsidegame.offside.activities.fragments.QuestionsFragment;
+import com.offsidegame.offside.events.QuestionsEvent;
 import com.offsidegame.offside.helpers.SignalRService;
-import com.offsidegame.offside.models.Scoreboard;
-import com.offsidegame.offside.events.ScoreboardEvent;
+import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-public class ViewScoreboardActivity extends AppCompatActivity {
+public class ViewQuestionsActivity extends AppCompatActivity {
 
     private final Context context = this;
-    private Scoreboard scoreboard;
+    private Question[] questions;
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
@@ -48,7 +46,7 @@ public class ViewScoreboardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_scoreboard);
+        setContentView(R.layout.activity_view_questions);
     }
 
     @Override
@@ -87,17 +85,17 @@ public class ViewScoreboardActivity extends AppCompatActivity {
 
 
             if (gameId != null && !gameId.isEmpty())
-                signalRService.getScoreboard(gameId);
+                signalRService.getQuestions(gameId);
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveScoreboard(ScoreboardEvent scoreboardEvent) {
-        scoreboard = scoreboardEvent.getScoreboard();
+    public void onReceiveQuestions(QuestionsEvent questionsEvent) {
+        questions = questionsEvent.getQuestions();
 
 
-        ScoresFragment scoresFragment = (ScoresFragment) getSupportFragmentManager().findFragmentById(R.id.scores_fragment);
-        scoresFragment.updateData(scoreboard);
+        QuestionsFragment questionsFragment = (QuestionsFragment) getSupportFragmentManager().findFragmentById(R.id.questions_fragment);
+        questionsFragment.updateData(questions);
 
 
     }

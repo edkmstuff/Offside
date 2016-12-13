@@ -1,4 +1,4 @@
-package com.offsidegame.offside.models;
+package com.offsidegame.offside.events;
 
 /**
  * Created by KFIR on 11/17/2016.

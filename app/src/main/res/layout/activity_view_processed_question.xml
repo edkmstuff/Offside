@@ -27,7 +27,7 @@
         android:text="Am i a  very very very long question?"
         android:textColor="#FFFFFF"
         android:background="@color/colorPrimary"
-        android:textSize="@dimen/OffsideLargeText"
+        android:textSize="@dimen/OffsideMediumText"
         />
 
     <fragment

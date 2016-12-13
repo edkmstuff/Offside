@@ -16,7 +16,7 @@ import com.facebook.Profile;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.Answer;
-import com.offsidegame.offside.models.QuestionEvent;
+import com.offsidegame.offside.events.QuestionEvent;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

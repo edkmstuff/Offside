@@ -19,10 +19,10 @@ import com.facebook.Profile;
 import com.facebook.login.widget.ProfilePictureView;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.SignalRService;
-import com.offsidegame.offside.models.ActiveGameEvent;
-import com.offsidegame.offside.models.GameCreationEvent;
-import com.offsidegame.offside.models.JoinGameEvent;
-import com.offsidegame.offside.models.SignalRServiceBoundEvent;
+import com.offsidegame.offside.events.ActiveGameEvent;
+import com.offsidegame.offside.events.GameCreationEvent;
+import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

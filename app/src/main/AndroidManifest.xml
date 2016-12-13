@@ -58,6 +58,7 @@
             android:value="@string/facebook_app_id" />
 
         <activity android:name=".activities.ViewScoreboardActivity"></activity>
+        <activity android:name=".activities.ViewQuestionsActivity"></activity>
     </application>
 
 </manifest>

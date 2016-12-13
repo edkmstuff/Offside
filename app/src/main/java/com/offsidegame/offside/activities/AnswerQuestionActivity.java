@@ -15,9 +15,9 @@ import android.widget.Toast;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.interfaces.IQuestionHolder;
-import com.offsidegame.offside.models.IsAnswerAcceptedEvent;
+import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
 import com.offsidegame.offside.models.Question;
-import com.offsidegame.offside.models.QuestionAnsweredEvent;
+import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -36,7 +36,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     private LinearLayout timeToNextQuestionRoot;
     private CountDownTimer timer;
     private TextView timeToNextQuestionTextView;
-    private final int timeToNextQuestion = 10000;
+    private final int timeToNextQuestion = 5000;
     private int secondsLeft = 0;
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {

@@ -1,4 +1,6 @@
-package com.offsidegame.offside.models;
+package com.offsidegame.offside.events;
+
+import com.offsidegame.offside.models.Question;
 
 /**
  * Created by USER on 11/21/2016.

@@ -1,4 +1,4 @@
-package com.offsidegame.offside.models;
+package com.offsidegame.offside.events;
 
 /**
  * Created by USER on 11/22/2016.
