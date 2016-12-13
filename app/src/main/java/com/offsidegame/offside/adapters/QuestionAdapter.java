@@ -2,6 +2,7 @@ package com.offsidegame.offside.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
@@ -123,10 +124,13 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
 
 
     private void loadFbImage(final ImageView fbProfilePicture) {
-        Uri fbImageUrl = Profile.getCurrentProfile().getProfilePictureUri(100,100);
-        //fbProfilePicture.setImageURI(fbImageUrl);
+        SharedPreferences settings = context.getSharedPreferences(context.getString(R.string.preference_name), 0);
+        String userPictureUrl = settings.getString(context.getString(R.string.user_profile_picture_url_key), "");
+        Uri imageUri = Uri.parse(userPictureUrl);
 
-        Picasso.with(context).load(fbImageUrl).into(fbProfilePicture, new com.squareup.picasso.Callback() {
+        //fbProfilePicture.setImageURI(imageUri);
+
+        Picasso.with(context).load(imageUri).into(fbProfilePicture, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
                 Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
