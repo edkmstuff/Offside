@@ -18,12 +18,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.Profile;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.events.ActiveGameEvent;
-import com.offsidegame.offside.events.GameCreationEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.squareup.picasso.Picasso;
@@ -42,7 +40,7 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
 
     EditText gameCode;
     Button join;
-    Button createGame;
+    //Button createGame;
     TextView userName;
     ImageView profilePicture;
 
@@ -64,11 +62,6 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
             isBoundToSignalRService = false;
         }
     };
-
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,13 +87,13 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
             intent.setClass(context, SignalRService.class);
             bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
 
-            userName = (TextView) findViewById(R.id.fbNameTextView);
+            userName = (TextView) findViewById(R.id.join_game_user_name_text_view);
             userName.setText(settings.getString(getString(R.string.user_name_key),""));
 
             profilePicture = (ImageView) findViewById(R.id.userPictureImageView);
-            String useProfilePictureUrl = settings.getString(getString(R.string.user_profile_picture_url_key),"");
+            final String userPictureUrl = settings.getString(getString(R.string.user_profile_picture_url_key),"");
 
-            Picasso.with(context).load(useProfilePictureUrl).into(profilePicture, new com.squareup.picasso.Callback() {
+            Picasso.with(context).load(userPictureUrl).into(profilePicture, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     Bitmap bm = ((BitmapDrawable) profilePicture.getDrawable()).getBitmap();

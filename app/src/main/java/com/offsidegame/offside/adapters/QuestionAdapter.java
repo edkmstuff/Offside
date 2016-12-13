@@ -99,7 +99,7 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
 
         viewHolder.questionQuestionText.setText(question.getQuestionText());
 
-        if (!question.isActive()) {
+         if (!question.isActive()) {
             if (answer.getIsCorrect())
                 viewHolder.questionRightWrongAnswerIndicator.setImageResource(R.drawable.ic_done_black_24dp);
             else

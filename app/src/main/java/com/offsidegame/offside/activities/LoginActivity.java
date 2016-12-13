@@ -31,7 +31,7 @@ import java.util.Date;
 
 //import static com.offsidegame.offside.R.string.fbProfile_key;
 
-public class LoginActivity extends AppCompatActivity implements Serializable{
+public class LoginActivity extends AppCompatActivity implements Serializable {
 
     private final Context context = this;
     private SignalRService signalRService;
@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable{
             loginExpirationTime = dateHelper.getCurrentDate();
 
         Date current = dateHelper.getCurrentDate();
-        if (isLoggedIn /*|| current.after(loginExpirationTime)*/ ) {
+        if (isLoggedIn /*|| current.after(loginExpirationTime)*/) {
             Intent intent = new Intent(context, JoinGameActivity.class);
             startActivity(intent);
             return;
@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable{
 
             @Override
             public void onClick(View view) {
-                if (isBoundToSignalRService){
+                if (isBoundToSignalRService) {
                     signalRService.login(email.getText().toString());
                 }
             }
@@ -123,22 +123,17 @@ public class LoginActivity extends AppCompatActivity implements Serializable{
     }
 
 
-
-
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLogin(LoginEvent loginEvent) {
 
-        boolean isFacebookLogin= loginEvent.getIsFacebookLogin();
+        boolean isFacebookLogin = loginEvent.getIsFacebookLogin();
         String id = loginEvent.getId();
         String name = loginEvent.getName();
         //ToDo: get the user email from facebook profile
-        String email = isFacebookLogin ? null: loginEvent.getId();
-        //ToDo:checkUri.toString() retrns the url as string
-        String profilePictureUrl =  isFacebookLogin ? Profile.getCurrentProfile().getProfilePictureUri(100,100).toString(): "http://www.fm-base.co.uk/forum/attachments/football-manager-2012-stories/230724d1331933618-paul-gazza-gascoigne-footballsmall.jpg" ;
-
-        String password=isFacebookLogin ? null: loginEvent.getPassword() ;
-        User user = new User(id,name,email,profilePictureUrl,password);
+        String email = isFacebookLogin ? null : loginEvent.getId();
+        String profilePictureUrl = isFacebookLogin ? Profile.getCurrentProfile().getProfilePictureUri(100, 100).toString() : "http://www.fm-base.co.uk/forum/attachments/football-manager-2012-stories/230724d1331933618-paul-gazza-gascoigne-footballsmall.jpg";
+        String password = isFacebookLogin ? null : loginEvent.getPassword();
+        User user = new User(id, name, email, profilePictureUrl, password);
 
         signalRService.saveUser(user);
 
@@ -146,21 +141,19 @@ public class LoginActivity extends AppCompatActivity implements Serializable{
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
         //Todo: changeback to true
-        editor.putBoolean(getString(R.string.is_logged_in_key), false);
+        editor.putBoolean(getString(R.string.is_logged_in_key), true);
         editor.putString(getString(R.string.user_id_key), id);
         editor.putString(getString(R.string.user_name_key), name);
-        editor.putString(getString(R.string.user_profile_picture_url_key),profilePictureUrl );
+        editor.putString(getString(R.string.user_profile_picture_url_key), profilePictureUrl);
 
         DateHelper dateHelper = new DateHelper();
         Date current = dateHelper.getCurrentDate();
         Date expirationTime = dateHelper.addHours(current, 3);
-
         String expirationTimeAsString = dateHelper.formatAsString(expirationTime, context);
         editor.putString(getString(R.string.login_expiration_time_key), expirationTimeAsString);
         editor.commit();
 
         Intent intent = new Intent(context, JoinGameActivity.class);
-
         startActivity(intent);
 
     }

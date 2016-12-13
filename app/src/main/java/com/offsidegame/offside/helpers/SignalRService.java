@@ -52,8 +52,8 @@ public class SignalRService extends Service {
     private Handler handler; // to display Toast message
     private final IBinder binder = new LocalBinder(); // Binder given to clients
 
-    //public final String defaultIp = new String("192.168.1.140");
-    public final String defaultIp = new String("10.0.0.55");
+    public final String defaultIp = new String("192.168.1.140");
+    //public final String defaultIp = new String("10.0.0.55");
     //public final String defaultIp = new String("offsidedev.somee.com");
 
 
@@ -200,8 +200,9 @@ public class SignalRService extends Service {
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         String userId = settings.getString(getString(R.string.user_id_key), "");
         String userName = settings.getString(getString(R.string.user_name_key), "");
+        String imageUrl = settings.getString(getString(R.string.user_profile_picture_url_key),"");
 
-        hub.invoke(String.class, "JoinGame", gameCode, userId, userName).done(new Action<String>() {
+        hub.invoke(String.class, "JoinGame", gameCode, userId, userName, imageUrl).done(new Action<String>() {
 
             @Override
             public void run(String gameId) throws Exception {
@@ -211,8 +212,9 @@ public class SignalRService extends Service {
     }
 
     public void getPlayerScore(String gameId, String userId, String userName) {
-
-        hub.invoke(PlayerScore.class, "GetPlayerScore", gameId, userId, userName).done(new Action<PlayerScore>() {
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        String imageUrl = settings.getString(getString(R.string.user_profile_picture_url_key),"");
+        hub.invoke(PlayerScore.class, "GetPlayerScore", gameId, userId, userName, imageUrl).done(new Action<PlayerScore>() {
 
             @Override
             public void run(PlayerScore playerScore) throws Exception {

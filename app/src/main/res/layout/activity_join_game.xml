@@ -22,7 +22,7 @@
         android:text="FB Name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/fbNameTextView"
+        android:id="@+id/join_game_user_name_text_view"
         android:layout_gravity="center"
         android:textSize="@dimen/fab_margin"
         />

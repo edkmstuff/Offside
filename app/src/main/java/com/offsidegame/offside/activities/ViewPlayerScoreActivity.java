@@ -101,8 +101,9 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
         //userName.setText(Profile.getCurrentProfile().getName());
         //profilePicture.setProfileId(Profile.getCurrentProfile().getId());
-
-        Uri fbImageUrl = Profile.getCurrentProfile().getProfilePictureUri(200,200);
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        String userPictureUrl = settings.getString(getString(R.string.user_profile_picture_url_key), "");
+        Uri fbImageUrl = Uri.parse(userPictureUrl);
         //profilePicture.setImageURI(fbImageUrl);
         Picasso.with(context).load(fbImageUrl).into(fbProfilePicture, new com.squareup.picasso.Callback() {
             @Override
