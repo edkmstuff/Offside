@@ -14,36 +14,52 @@
         layout="@layout/app_bar"
         />
 
-    <TextView
-        android:text="@string/lbl_welcome"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
-
-    <TextView
-        android:text="FB Name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/join_game_user_name_text_view"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_gravity="center"
-        android:textSize="@dimen/fab_margin"
-        />
+        android:orientation="horizontal">
+
+        <TextView
+            android:text="@string/lbl_welcome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:textSize="@dimen/OffsideMediumText"
+            />
+
+        <TextView
+            android:text="Danny Robust"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/join_game_user_name_text_view"
+            android:layout_marginRight="2dp"
+            android:textSize="@dimen/OffsideMediumText"
+
+            />
+        <TextView
+            android:text="!"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/OffsideMediumText"
+
+            />
+
+    </LinearLayout>
+
 
     <ImageView
         android:id="@+id/userPictureImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
         />
 
 
-    <!--<com.facebook.login.widget.ProfilePictureView-->
-        <!--android:id="@+id/fbPictureImageView"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_gravity="center"-->
 
-        <!--/>-->
 
 
     <EditText
@@ -52,6 +68,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+        android:hint="Game code"
         android:inputType="textEmailAddress" />
 
     <Button

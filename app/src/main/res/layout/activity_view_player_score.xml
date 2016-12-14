@@ -156,8 +156,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:paddingRight="5dp"
-                android:paddingLeft="5dp"
                 android:orientation="vertical">
 
 
@@ -166,6 +164,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:paddingLeft="10dp"
                     android:orientation="horizontal">
 
                     <!-- Your Position -->
@@ -217,11 +216,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:paddingBottom="20dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:gravity="center">
                         <Button
                             android:id="@+id/scoreboard_btn"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/windowBackground"
                             android:text="@string/lbl_scoreboard"
                             />
                     </LinearLayout>
@@ -234,6 +238,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:paddingLeft="10dp"
                     android:orientation="horizontal">
 
                     <!-- Open Questions -->
@@ -307,11 +312,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:paddingBottom="20dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
                         android:gravity="center">
                         <Button
                             android:id="@+id/questions_btn"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/windowBackground"
+
                             android:text="@string/lbl_all_questions"
                             />
                     </LinearLayout>

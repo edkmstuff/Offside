@@ -9,11 +9,14 @@ import android.os.IBinder;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 
 import com.offsidegame.offside.R;
 
 import com.offsidegame.offside.activities.fragments.ScoresFragment;
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.Score;
 import com.offsidegame.offside.models.Scoreboard;
 import com.offsidegame.offside.events.ScoreboardEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
@@ -26,6 +29,7 @@ public class ViewScoreboardActivity extends AppCompatActivity {
 
     private final Context context = this;
     private Scoreboard scoreboard;
+    private TextView gameDidNotStartYet;
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
@@ -49,6 +53,8 @@ public class ViewScoreboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_scoreboard);
+        gameDidNotStartYet = (TextView) findViewById(R.id.sb_game_did_not_start_yet_text_view);
+        gameDidNotStartYet.setVisibility(View.GONE);
     }
 
     @Override
@@ -94,7 +100,11 @@ public class ViewScoreboardActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveScoreboard(ScoreboardEvent scoreboardEvent) {
         scoreboard = scoreboardEvent.getScoreboard();
-
+        Score[] scores = scoreboard.getScores();
+        if (scores == null || scores.length < 1){
+            gameDidNotStartYet.setVisibility(View.VISIBLE);
+            return;
+        }
 
         ScoresFragment scoresFragment = (ScoresFragment) getSupportFragmentManager().findFragmentById(R.id.scores_fragment);
         scoresFragment.updateData(scoreboard);

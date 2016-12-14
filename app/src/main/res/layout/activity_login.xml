@@ -28,13 +28,13 @@
         tools:layout="@layout/fragment_facebook_login" />
 
     <TextView
-        android:text="--OR--"
+        android:text="OR"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="40dp"
         android:layout_marginBottom="20dp"
-        android:textSize="@dimen/OffsideExtraLargeText"
+        android:textSize="@dimen/OffsideMediumText"
         />
 
     <EditText
@@ -42,6 +42,7 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
+        android:hint="Email"
         android:id="@+id/email" />
 
     <Button

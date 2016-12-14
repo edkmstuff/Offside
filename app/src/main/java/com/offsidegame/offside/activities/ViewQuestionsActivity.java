@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.TextView;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.fragments.QuestionsFragment;
@@ -25,6 +27,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     private final Context context = this;
     private Question[] questions;
     private SignalRService signalRService;
+    private TextView gameDidNotStartYetTextView;
     private boolean isBoundToSignalRService = false;
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
@@ -47,6 +50,8 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_questions);
+        gameDidNotStartYetTextView = (TextView) findViewById(R.id.game_did_not_start_yet_text_view);
+        gameDidNotStartYetTextView.setVisibility(View.GONE);
     }
 
     @Override
@@ -92,7 +97,10 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveQuestions(QuestionsEvent questionsEvent) {
         questions = questionsEvent.getQuestions();
-
+        if (questions == null || questions.length < 1){
+            gameDidNotStartYetTextView.setVisibility(View.VISIBLE);
+            return;
+        }
 
         QuestionsFragment questionsFragment = (QuestionsFragment) getSupportFragmentManager().findFragmentById(R.id.questions_fragment);
         questionsFragment.updateData(questions);

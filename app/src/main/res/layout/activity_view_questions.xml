@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_view_scoreboard"
     android:layout_width="match_parent"
@@ -12,6 +12,18 @@
     android:keepScreenOn="true"
     tools:context="com.offsidegame.offside.activities.ViewScoreboardActivity">
 
+    <TextView
+        android:id="@+id/game_did_not_start_yet_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/lbl_game_did_not_start_yet"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textSize="@dimen/OffsideMediumText"
+
+        />
+
     <fragment
         android:id="@+id/questions_fragment"
         android:name="com.offsidegame.offside.activities.fragments.QuestionsFragment"
@@ -19,4 +31,4 @@
         android:layout_height="match_parent"
         tools:layout="@layout/question_list_item"></fragment>
 
-</RelativeLayout>
+</LinearLayout>
