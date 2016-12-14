@@ -5,6 +5,7 @@
     android:gravity="center"
     android:orientation="horizontal"
     android:padding="5dp"
+    android:layoutDirection="ltr"
     tools:context="com.offsidegame.offside.activities.fragments.ScoresFragment">
 
 

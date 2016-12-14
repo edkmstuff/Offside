@@ -7,6 +7,8 @@
     android:layout_margin="0dp"
     android:orientation="vertical"
     android:padding="0dp"
+    android:layoutDirection="ltr"
+    android:keepScreenOn="true"
 
     tools:context="com.offsidegame.offside.activities.ViewPlayerScoreActivity">
 
@@ -154,6 +156,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:paddingRight="5dp"
+                android:paddingLeft="5dp"
                 android:orientation="vertical">
 
 
@@ -166,10 +170,11 @@
 
                     <!-- Your Position -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="left">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -180,6 +185,7 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="left"
                             android:orientation="horizontal">
 
                             <TextView
@@ -187,32 +193,34 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="5dp"
-                                android:textSize="@dimen/OffsideLargeText" />
+                                android:textSize="@dimen/OffsideMediumText" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="5dp"
                                 android:text="@string/lbl_out_of"
-                                android:textSize="@dimen/OffsideMediumText" />
+                                android:textSize="@dimen/OffsideSmallText" />
 
                             <TextView
                                 android:id="@+id/total_players"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="@dimen/OffsideLargeText" />
+                                android:textSize="@dimen/OffsideMediumText" />
 
                         </LinearLayout>
 
 
                     </LinearLayout>
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="right">
+                        android:layout_weight="1"
+                        android:gravity="center">
                         <Button
                             android:id="@+id/scoreboard_btn"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/lbl_scoreboard"
                             />
@@ -230,32 +238,79 @@
 
                     <!-- Open Questions -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:gravity="center">
-
-                        <TextView
-                            android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="left">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="@string/lbl_open_questions"
-                            android:textSize="@dimen/OffsideMediumText"
-                            />
+                            android:orientation="vertical"
+                            android:gravity="left">
 
-                        <TextView
-                            android:id="@+id/total_active_questions"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/OffsideLargeText" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/lbl_open_questions"
+                                android:textSize="@dimen/OffsideMediumText" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/total_active_questions"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="5dp"
+                                    android:textSize="@dimen/OffsideMediumText" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="5dp"
+                                    android:text="@string/lbl_out_of"
+                                    android:textSize="@dimen/OffsideSmallText" />
+
+                                <TextView
+                                    android:id="@+id/total_questions"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textSize="@dimen/OffsideMediumText" />
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <!--<TextView-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="@string/lbl_open_questions"-->
+                            <!--android:textSize="@dimen/OffsideMediumText"-->
+                            <!--/>-->
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/total_active_questions"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_gravity="center"-->
+                            <!--android:text="0"-->
+                            <!--android:textSize="@dimen/OffsideMediumText" />-->
 
                     </LinearLayout>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="right">
+                        android:layout_weight="1"
+                        android:gravity="center">
                         <Button
                             android:id="@+id/questions_btn"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/lbl_all_questions"
                             />

@@ -52,7 +52,7 @@
     <string name="lbl_answered_by">Answered by:</string>
     <string name="points_value">Points value:</string>
     <string name="statistics">Statistics:</string>
-    <string name="lbl_scoreboard">Scoreboard</string>
+       <string name="lbl_scoreboard">Scoreboard</string>
     <string name="lbl_all_questions">All questions</string>
 
     <!-- TODO: Remove or change this placeholder text -->

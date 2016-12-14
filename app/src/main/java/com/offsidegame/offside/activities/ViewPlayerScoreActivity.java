@@ -51,6 +51,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     TextView totalPlayers;
 //    TextView leaderScore;
     TextView totalOpenQuestions;
+    TextView totalQuestions;
     private Toolbar toolbar;
     TextView fbName;
 //    ProfilePictureView profilePicture;
@@ -126,6 +127,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         position = (TextView) findViewById(R.id.position);
         totalPlayers = (TextView) findViewById(R.id.total_players);
         totalOpenQuestions = (TextView) findViewById(R.id.total_active_questions);
+        totalQuestions = (TextView) findViewById(R.id.total_questions);
         scoreboardBtn = (Button) findViewById(R.id.scoreboard_btn);
         questionsBtn = (Button) findViewById(R.id.questions_btn);
 
@@ -242,6 +244,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 //        leaderScore.setText(playerScore.getLeaderScore().toString());
 
         totalOpenQuestions.setText(playerScore.getTotalOpenQuestions().toString());
+        totalQuestions.setText(playerScore.getTotalQuestions().toString());
     }
 
 

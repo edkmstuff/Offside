@@ -4,8 +4,9 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorPrimary"
-    app:titleTextColor="@color/textColorPrimary"
-    app:navigationIcon="@mipmap/ic_offside_logo">
+    app:titleTextColor="@color/windowBackground"
+    android:layoutDirection="ltr"
+    >
 
 
 

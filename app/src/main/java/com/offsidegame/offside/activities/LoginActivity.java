@@ -131,7 +131,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         String name = loginEvent.getName();
         //ToDo: get the user email from facebook profile
         String email = isFacebookLogin ? null : loginEvent.getId();
-        String profilePictureUrl = isFacebookLogin ? Profile.getCurrentProfile().getProfilePictureUri(100, 100).toString() : "http://www.fm-base.co.uk/forum/attachments/football-manager-2012-stories/230724d1331933618-paul-gazza-gascoigne-footballsmall.jpg";
+        String profilePictureUrl = isFacebookLogin ? Profile.getCurrentProfile().getProfilePictureUri(150, 150).toString() : "http://www.fm-base.co.uk/forum/attachments/football-manager-2012-stories/230724d1331933618-paul-gazza-gascoigne-footballsmall.jpg";
         String password = isFacebookLogin ? null : loginEvent.getPassword();
         User user = new User(id, name, email, profilePictureUrl, password);
 
@@ -140,7 +140,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
-        //Todo: changeback to true
+
         editor.putBoolean(getString(R.string.is_logged_in_key), true);
         editor.putString(getString(R.string.user_id_key), id);
         editor.putString(getString(R.string.user_name_key), name);

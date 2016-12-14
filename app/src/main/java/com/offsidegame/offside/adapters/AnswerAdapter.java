@@ -103,6 +103,10 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
 
         final ImageView fbProfilePicture  = viewHolder.fbPicture;
 
+
+
+
+
         if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
             viewHolder.fbPicture.setAlpha(0.0f);
             viewHolder.fbPicture.setVisibility(View.VISIBLE);

@@ -30,6 +30,9 @@ public class PlayerScore {
     @com.google.gson.annotations.SerializedName("TotalOpenQuestions")
     private Integer totalOpenQuestions;
 
+    @com.google.gson.annotations.SerializedName("TotalQuestions")
+    private Integer totalQuestions;
+
 
 
 
@@ -100,6 +103,14 @@ public class PlayerScore {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public Integer getTotalQuestions() {
+        return totalQuestions;
+    }
+
+    public void setTotalQuestions(Integer totalQuestions) {
+        this.totalQuestions = totalQuestions;
     }
 }
 
