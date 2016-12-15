@@ -88,30 +88,24 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/lbl_answered_by"
-              android:textSize="@dimen/OffsideSmallText"
+              android:textSize="@dimen/OffsideMediumText"
               android:paddingRight="5dp"/>
 
           <TextView
               android:id="@+id/percent_users_answered"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:textSize="@dimen/OffsideSmallText"/>
+              android:background="@color/colorPrimary"
+              android:textColor="@color/windowBackground"
+              android:minWidth="50dp"
+              android:text="100%"
+              android:padding="2dp"
+              android:gravity="center"
+              android:layout_marginRight="5dp"
+              android:textSize="@dimen/OffsideMediumText"/>
 
-          <TextView
-              android:id="@+id/percent_sign_text"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="%"
-              android:textSize="@dimen/OffsideSmallText"
-              android:paddingRight="5dp"/>
 
-          <TextView
-              android:id="@+id/divider_text"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="|"
-              android:textSize="@dimen/OffsideSmallText"
-              android:paddingRight="5dp"/>
+
 
 
           <TextView
@@ -119,14 +113,20 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:text="@string/points_value"
-              android:textSize="@dimen/OffsideSmallText"
+              android:textSize="@dimen/OffsideMediumText"
               android:paddingRight="5dp"/>
 
           <TextView
               android:id="@+id/score"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:textSize="@dimen/OffsideSmallText"
+              android:textSize="@dimen/OffsideMediumText"
+              android:background="@color/colorPrimary"
+              android:textColor="@color/windowBackground"
+              android:minWidth="50dp"
+              android:padding="2dp"
+              android:gravity="center"
+              android:text="1000"
               android:paddingRight="5dp"/>
 
 

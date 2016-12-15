@@ -54,9 +54,9 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
         public TextView score;
         public LinearLayout answerListItem;
         public TextView answeredByText;
-        public TextView percentSignText;
+       // public TextView percentSignText;
         public TextView youCanEarnText;
-        public TextView dividerText;
+        //public TextView dividerText;
         public LinearLayout backgroundRoot;
 
     }
@@ -79,9 +79,9 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
             viewHolder.score = (TextView) convertView.findViewById(R.id.score);
             viewHolder.answerListItem = (LinearLayout) convertView.findViewById(R.id.answer_list_item);
             viewHolder.answeredByText = (TextView) convertView.findViewById(R.id.answered_by_text);
-            viewHolder.percentSignText = (TextView) convertView.findViewById(R.id.percent_sign_text);
+            //viewHolder.percentSignText = (TextView) convertView.findViewById(R.id.percent_sign_text);
             viewHolder.youCanEarnText = (TextView) convertView.findViewById(R.id.you_can_earn_text);
-            viewHolder.dividerText = (TextView) convertView.findViewById(R.id.divider_text);
+           // viewHolder.dividerText = (TextView) convertView.findViewById(R.id.divider_text);
             viewHolder.backgroundRoot = (LinearLayout) convertView.findViewById(R.id.background_root);
 
             convertView.setTag(viewHolder);
@@ -97,9 +97,9 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
         viewHolder.percentUsersAnswered.setVisibility(View.GONE);
         viewHolder.score.setVisibility(View.GONE);
         viewHolder.answeredByText.setVisibility(View.GONE);
-        viewHolder.percentSignText.setVisibility(View.GONE);
+        //viewHolder.percentSignText.setVisibility(View.GONE);
         viewHolder.youCanEarnText.setVisibility(View.GONE);
-        viewHolder.dividerText.setVisibility(View.GONE);
+        //viewHolder.dividerText.setVisibility(View.GONE);
 
         final ImageView fbProfilePicture  = viewHolder.fbPicture;
 
@@ -116,9 +116,9 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
             viewHolder.percentUsersAnswered.setVisibility(View.VISIBLE);
             viewHolder.score.setVisibility(View.VISIBLE);
             viewHolder.answeredByText.setVisibility(View.VISIBLE);
-            viewHolder.percentSignText.setVisibility(View.VISIBLE);
+            //viewHolder.percentSignText.setVisibility(View.VISIBLE);
             viewHolder.youCanEarnText.setVisibility(View.VISIBLE);
-            viewHolder.dividerText.setVisibility(View.VISIBLE);
+            //viewHolder.dividerText.setVisibility(View.VISIBLE);
 
         } else if (questionState.equals(QuestionEvent.QuestionStates.CLOSED_QUESTION)) {
             viewHolder.fbPicture.setVisibility(View.VISIBLE);
@@ -144,7 +144,7 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
         viewHolder.answerText.setText(answer.getAnswerText());
 
         //viewHolder.percentUsersAnswered.setText(context.getString(R.string.lbl_answered_by) + " " + Long.toString(percentUsersAnswered) + "%");
-        viewHolder.percentUsersAnswered.setText(Long.toString(Math.round(answer.getPercentUsersAnswered())));
+        viewHolder.percentUsersAnswered.setText(Long.toString(Math.round(answer.getPercentUsersAnswered())) + "%");
         viewHolder.score.setText(Long.toString(Math.round(answer.getScore())));
         //viewHolder.isTheAnswerOfTheUser.setText(Boolean.toString(answer.getIsTheAnswerOfTheUser()));
         //viewHolder.isCorrect.setText(Boolean.toString(answer.getIsCorrect()));

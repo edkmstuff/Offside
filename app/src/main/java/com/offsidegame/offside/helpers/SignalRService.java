@@ -177,6 +177,22 @@ public class SignalRService extends Service {
             }
         }, Question.class);
 
+        hub.on("UpdatePlayerScore", new SubscriptionHandler1<String>(){
+            @Override
+            public void run(String gameId) {
+                SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+                String userGameId = settings.getString(getString(R.string.game_id_key),"");
+                if (!userGameId.equals(gameId))
+                    return;
+
+                String userId =  settings.getString(getString(R.string.user_id_key),"");
+                String userName = settings.getString(getString(R.string.user_name_key),"");
+
+                getPlayerScore(gameId, userId, userName);
+
+            }
+        }, String.class);
+
 
     }
     //</editor-fold>

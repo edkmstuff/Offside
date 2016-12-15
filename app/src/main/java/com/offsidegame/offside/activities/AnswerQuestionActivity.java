@@ -4,6 +4,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.icu.util.Calendar;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
@@ -34,10 +37,16 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     private TextView questionTextView;
     private LinearLayout questionAndAnswersRoot;
     private LinearLayout timeToNextQuestionRoot;
-    private CountDownTimer timer;
+    private CountDownTimer timeToAnswerTimer;
+    private CountDownTimer timeToNextQuestionTimer;
     private TextView timeToNextQuestionTextView;
+    private TextView timeToAnswerTextView;
     private final int timeToNextQuestion = 5000;
+    private final int timeToAnswer = 10000;
     private int secondsLeft = 0;
+    private String answerId= null;
+    private final DateHelper dateHelper = new DateHelper();
+
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
 
@@ -85,6 +94,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         timeToNextQuestionRoot = (LinearLayout) findViewById(R.id.time_to_next_question_root);
         questionTextView = (TextView) findViewById(R.id.question_text);
         timeToNextQuestionTextView = (TextView) findViewById(R.id.time_to_next_question);
+        timeToAnswerTextView = (TextView) findViewById(R.id.time_to_answer_text_view);
 
         //show timer first
         questionAndAnswersRoot.setVisibility(View.GONE);
@@ -103,7 +113,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
 
         //run timer
 
-        timer = new CountDownTimer(timeToNextQuestion, 100) {
+        timeToNextQuestionTimer = new CountDownTimer(timeToNextQuestion, 100) {
             public void onTick(long millisUntilFinished) {
                 if (Math.round((float) millisUntilFinished / 1000.0f) != secondsLeft) {
                     secondsLeft = Math.round((float) millisUntilFinished / 1000.0f);
@@ -114,6 +124,34 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
                 //timer is done now we show question
                 timeToNextQuestionRoot.setVisibility(View.GONE);
                 questionAndAnswersRoot.setVisibility(View.VISIBLE);
+                secondsLeft = 0;
+
+                timeToAnswerTimer = new CountDownTimer(timeToAnswer, 100) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        if (Math.round((float) millisUntilFinished / 1000.0f) != secondsLeft) {
+                            secondsLeft = Math.round((float) millisUntilFinished / 1000.0f);
+                            timeToAnswerTextView.setText(Integer.toString(secondsLeft));
+                            if (secondsLeft < 7 && secondsLeft > 3 )
+                                timeToAnswerTextView.setBackgroundColor(Color.parseColor("#FFAB00"));
+                            if (secondsLeft < 4)
+                                timeToAnswerTextView.setBackgroundColor(Color.RED);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        //user did not answer this question, we select random answer
+                        if (answerId == null){
+                            int answersCount = question.getAnswers().length;
+                            int selectedAnswerIndex = (int)(Math.floor(Math.random() * answersCount));
+                            String randomAnswerId = question.getAnswers()[selectedAnswerIndex].getId();
+                            signalRService.postAnswer(question.getGameId(), question.getId(), randomAnswerId);
+                        }
+                    }
+                }.start();
             }
         }.start();
     }
@@ -134,8 +172,8 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         }
 
         //clear stuff
-        timer.cancel();
-        timer = null;
+        timeToNextQuestionTimer.cancel();
+        timeToNextQuestionTimer = null;
 
         super.onStop();
     }
@@ -150,7 +188,9 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     public void onQuestionAnsweredEvent(QuestionAnsweredEvent questionAnswered) {
         String gameId = questionAnswered.getGameId();
         String questionId = questionAnswered.getQuestionId();
-        String answerId = questionAnswered.getAnswerId();
+
+        // this parameter will be null if the user does not answer
+        answerId = questionAnswered.getAnswerId();
         signalRService.postAnswer(gameId, questionId, answerId);
 
     }

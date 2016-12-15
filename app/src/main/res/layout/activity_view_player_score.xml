@@ -9,7 +9,8 @@
     android:padding="0dp"
     android:layoutDirection="ltr"
     android:keepScreenOn="true"
-
+    android:clipChildren="false"
+    android:clipToPadding="false"
     tools:context="com.offsidegame.offside.activities.ViewPlayerScoreActivity">
 
     <include
@@ -19,6 +20,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:layout_margin="5dp">
 
         <!-- Background Picture-->
@@ -34,14 +37,20 @@
             android:layout_height="match_parent"
             android:background="@drawable/white_background_border"
             android:orientation="vertical"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:weightSum="5"
+
             >
 
 
             <!-- 1/3 top -->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:orientation="vertical">
 
 
@@ -52,8 +61,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="10dp"
                     android:textSize="12sp"
+
                     android:text="Group A Vs Group B"/>
 
 
@@ -63,6 +73,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:layout_gravity="center"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
                     android:gravity="center">
 
                     <TextView
@@ -76,6 +88,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/OffsideExtraLargeText"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
                         android:text="0"/>
 
                 </LinearLayout>
@@ -87,8 +101,10 @@
             <!-- 2/3 middle-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:gravity="center_vertical">
 
                 <LinearLayout
@@ -118,8 +134,9 @@
 
                         <ImageView
                             android:id="@+id/fbPictureImageView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:scaleType="centerCrop"
 
 
                             />
@@ -154,8 +171,8 @@
             <!-- 3/3 bottom-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="0dp"
+                android:layout_weight="2"
                 android:orientation="vertical">
 
 

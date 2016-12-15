@@ -293,12 +293,12 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //inflates the menu; this addsitems to the action bar if it is exist
-        getMenuInflater().inflate(R.menu.admin_menu, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        //inflates the menu; this addsitems to the action bar if it is exist
+//        getMenuInflater().inflate(R.menu.admin_menu, menu);
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -28,25 +28,47 @@
             <!--android:src="@drawable/green" />-->
 
         <LinearLayout
-            android:visibility="gone"
+            android:visibility="visible"
             android:id="@+id/question_and_answers_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/white_background_border"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/question_text"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:padding="20dp"
-                android:text="Am i a  very very very long question?"
-                android:textColor="#FFFFFF"
-                android:background="@color/colorPrimary"
-                android:textSize="@dimen/OffsideMediumText">
+                android:orientation="horizontal"
+                android:weightSum="4">
+                <TextView
+                    android:id="@+id/question_text"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
+                    android:text="Am i a  very very very long question?"
+                    android:textColor="#FFFFFF"
+                    android:background="@color/colorPrimary"
+                    android:textSize="@dimen/OffsideMediumText">
 
-            </TextView>
+                </TextView>
+                <TextView
+                    android:id="@+id/time_to_answer_text_view"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:text="10"
+                    android:textColor="#FFFFFF"
+                    android:background="@color/colorPrimary"
+                    android:textSize="@dimen/OffsideLargeText"
+                    android:gravity="center">
+
+                </TextView>
+
+            </LinearLayout>
+
+
 
             <fragment
                 android:id="@+id/activity_answers_fragment"
@@ -58,6 +80,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/time_to_next_question_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
