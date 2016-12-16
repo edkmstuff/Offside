@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.models.Question;
@@ -26,6 +27,7 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
     private String questionState;
     private TextView questionTextView;
     private TextView timeToStartQuestionText;
+    private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
 
 
     private Handler delayHandler;
@@ -133,12 +135,13 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
     @Override
     public void onStart() {
         super.onStart();
-        //EventBus.getDefault().register(context);
+        questionEventsHandler.register();
+
     }
 
     @Override
     public void onStop() {
-        //EventBus.getDefault().unregister(context);
+        questionEventsHandler.unregister();
         // Unbind from the service
         if (isBoundToSignalRService) {
             unbindService(signalRServiceConnection);

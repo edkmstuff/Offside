@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.models.Question;
@@ -26,6 +27,7 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     private TextView questionTextView;
     private Handler delayHandler;
     private Runnable goToViewPlayerScore;
+    private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
 
 
     //</editor-fold>
@@ -99,12 +101,13 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     @Override
     public void onStart() {
         super.onStart();
-        //EventBus.getDefault().register(context);
+        questionEventsHandler.register();
+
     }
 
     @Override
     public void onStop() {
-        //EventBus.getDefault().unregister(context);
+        questionEventsHandler.unregister();
         // Unbind from the service
         if (isBoundToSignalRService) {
             unbindService(signalRServiceConnection);

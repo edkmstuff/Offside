@@ -13,28 +13,24 @@ import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.facebook.FacebookSdk;
-import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.PlayerScore;
 import com.offsidegame.offside.events.PlayerScoreEvent;
 import com.offsidegame.offside.models.Question;
-import com.offsidegame.offside.events.QuestionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.squareup.picasso.Picasso;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -42,25 +38,22 @@ import org.greenrobot.eventbus.ThreadMode;
 public class ViewPlayerScoreActivity extends AppCompatActivity {
 
     //<editor-fold desc="Class members">
+
     private final Context context = this;
     private SignalRService signalRService;
     private boolean boundToSignalRService = false;
-    TextView gameTitle;
-    TextView score;
-    TextView position;
-    TextView totalPlayers;
-//    TextView leaderScore;
-    TextView totalOpenQuestions;
-    TextView totalQuestions;
+    private TextView gameTitle;
+    private TextView score;
+    private TextView position;
+    private TextView totalPlayers;
+    private TextView totalOpenQuestions;
+    private TextView totalQuestions;
     private Toolbar toolbar;
-    TextView fbName;
-//    ProfilePictureView profilePicture;
-    ImageView fbProfilePicture;
-    Button scoreboardBtn;
-    Button questionsBtn;
-    //</editor-fold>
-
-    //<editor-fold desc="Startup methods">
+    //private TextView fbName;
+    private ImageView profilePictureImageView;
+    private Button scoreboardBtn;
+    private Button questionsBtn;
+    private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
@@ -78,9 +71,9 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         }
     };
 
-    /**
-     * Defines callbacks for service binding, passed to bindService()
-     */
+    //</editor-fold>
+
+    //<editor-fold desc="Startup methods">
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,24 +87,19 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById((R.id.app_bar));
         setSupportActionBar(toolbar);
 
-        //userName = (TextView) findViewById(R.id.fbNameTextView);
-        //profilePicture = (ProfilePictureView) findViewById(R.id.fbPictureImageView);
-        fbProfilePicture = (ImageView) findViewById(R.id.fbPictureImageView);
 
+        profilePictureImageView = (ImageView) findViewById(R.id.fbPictureImageView);
 
-
-        //userName.setText(Profile.getCurrentProfile().getName());
-        //profilePicture.setProfileId(Profile.getCurrentProfile().getId());
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         String userPictureUrl = settings.getString(getString(R.string.user_profile_picture_url_key), "");
         Uri fbImageUrl = Uri.parse(userPictureUrl);
-        //profilePicture.setImageURI(fbImageUrl);
-        Picasso.with(context).load(fbImageUrl).into(fbProfilePicture, new com.squareup.picasso.Callback() {
+
+        Picasso.with(context).load(fbImageUrl).into(profilePictureImageView, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
-                Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
+                Bitmap bm = ((BitmapDrawable) profilePictureImageView.getDrawable()).getBitmap();
                 RoundImage roundedImage = new RoundImage(bm);
-                fbProfilePicture.setImageDrawable(roundedImage);
+                profilePictureImageView.setImageDrawable(roundedImage);
             }
 
             @Override
@@ -150,60 +138,32 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-//        setContentView(R.layout.activity_player_score);
-//        score = (TextView) findViewById(R.id.score);
-//        position = (TextView) findViewById(R.id.position);
-//        leaderScore = (TextView) findViewById(R.id.leader_score);
-//        totalOpenQuestions = (TextView) findViewById(R.id.total_active_questions);
-        // Restore preferences
-
-        /*SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);
-
-        String loginExpirationTimeAsString = (String) settings.getString(getString(R.string.login_expiration_time), "");
-
-        DateHelper dateHelper = new DateHelper();
-        Date loginExpirationTime = dateHelper.formatAsDate(loginExpirationTimeAsString, context);
-        if (loginExpirationTime == null)
-            loginExpirationTime = dateHelper.getCurrentDate();
-
-        Date current = dateHelper.getCurrentDate();
-        if (!isLoggedIn *//*|| current.after(loginExpirationTime)*//* ) {
-            Intent intent = new Intent(context, LoginActivity.class);
-            startActivity(intent);
-            return;
-        }*/
-
-        /*Intent intent = new Intent(context, LoginActivity.class);
-        startActivity(intent);
-        return;
-*/
+        //bind or re-bind to signalRService
         Intent intent = new Intent();
         intent.setClass(context, SignalRService.class);
         bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
-
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        questionEventsHandler.register();
         EventBus.getDefault().register(context);
     }
 
     @Override
     public void onStop() {
+        questionEventsHandler.unregister();
         EventBus.getDefault().unregister(context);
-        // Unbind from the service
+        // Unbind from signalRService service
         if (boundToSignalRService) {
             unbindService(signalRServiceConnection);
             boundToSignalRService = false;
         }
-
         super.onStop();
     }
 
-    //</editor-fold>me
+    //</editor-fold>
 
     //<editor-fold desc="Subscribe methods">
 
@@ -241,116 +201,11 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         score.setText(playerScore.getScore().toString());
         position.setText(playerScore.getPosition().toString());
         totalPlayers.setText(playerScore.getTotalPlayers().toString());
-//        leaderScore.setText(playerScore.getLeaderScore().toString());
-
         totalOpenQuestions.setText(playerScore.getTotalOpenQuestions().toString());
         totalQuestions.setText(playerScore.getTotalQuestions().toString());
     }
 
 
-    //to handle question events
-//    private QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(context);
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveQuestion(QuestionEvent questionEvent) {
-        Question question =  questionEvent.getQuestion();
-        String questionState = questionEvent.getQuestionState();
-
-        //for admin///////////////////////////////
-
-        adminQuestion = question;
-
-
-        ////////////////////////////////////////
-
-
-        // default is NEW_QUESTION
-        Class<?> activityClass = AnswerQuestionActivity.class;
-
-        //PROCESSED_QUESTION
-        if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION))
-            activityClass = ViewProcessedQuestionActivity.class;
-        //CLOSED_QUESTION
-        else if (questionState.equals(QuestionEvent.QuestionStates.CLOSED_QUESTION))
-            activityClass = ViewClosedQuestionActivity.class;
-
-        Intent intent = new Intent(context, activityClass);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("question", question);
-        bundle.putString("questionState", questionState);
-        intent.putExtras(bundle);
-        startActivity(intent);
-
-
-
-
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="temp code">
-    static Question adminQuestion;
-    //static String questionState;
-
-
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        //inflates the menu; this addsitems to the action bar if it is exist
-//        getMenuInflater().inflate(R.menu.admin_menu, menu);
-//        return true;
-//    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        boolean handled = true;
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.action_askQuestion:
-                onClickMenuAskQuestion(item);
-                break;
-            case R.id.action_closeQuestion:
-                onClickMenuCloseQuestion(item);
-                break;
-            default:
-                handled = super.onOptionsItemSelected(item);
-        }
-
-        return handled;
-
-    }
-
-    void onClickMenuAskQuestion(MenuItem item) {
-
-
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        String gameId = settings.getString(getString(R.string.game_id_key), "");
-
-        Answer[] answers = new Answer[]{
-                new Answer(null, "Eran", 0.5, 300, false, false),
-                new Answer(null, "Eran2", 0.5, 300, false, false),
-                new Answer(null, "Eran3", 0.5, 300, false, false),
-                new Answer(null, "Eran4", 0.5, 300, false, false)
-
-        };
-        adminQuestion = new Question("who are you", answers, gameId, true);
-        signalRService.adminAskQuestion(adminQuestion);
-
-    }
-
-    void onClickMenuCloseQuestion(MenuItem item) {
-
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        String gameId = settings.getString(getString(R.string.game_id_key), "");
-
-        String questionId = adminQuestion.getId();
-        String correctAnswerId = adminQuestion.getAnswers()[2].getId();
-
-
-        signalRService.adminCloseQuestion(gameId, questionId ,correctAnswerId);
-
-
-    }
 
     //</editor-fold>
 

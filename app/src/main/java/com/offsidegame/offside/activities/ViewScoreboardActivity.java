@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.offsidegame.offside.R;
 
 import com.offsidegame.offside.activities.fragments.ScoresFragment;
+import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.Score;
 import com.offsidegame.offside.models.Scoreboard;
@@ -32,6 +33,7 @@ public class ViewScoreboardActivity extends AppCompatActivity {
     private TextView gameDidNotStartYet;
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
+    private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
@@ -69,11 +71,13 @@ public class ViewScoreboardActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+        questionEventsHandler.register();
         EventBus.getDefault().register(context);
     }
 
     @Override
     public void onStop() {
+        questionEventsHandler.unregister();
         EventBus.getDefault().unregister(context);
         // Unbind from the service
         if (isBoundToSignalRService) {
