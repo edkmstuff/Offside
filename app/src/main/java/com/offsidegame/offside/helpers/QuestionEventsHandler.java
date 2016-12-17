@@ -21,10 +21,10 @@ import org.greenrobot.eventbus.ThreadMode;
  */
 
 public class QuestionEventsHandler {
-    private Activity activity;
+    private Activity context;
 
     public QuestionEventsHandler(Context context) {
-        this.activity = (Activity)context;
+        this.context = (Activity) context;
     }
 
     public void register() {
@@ -51,19 +51,35 @@ public class QuestionEventsHandler {
         else if (questionState.equals(QuestionEvent.QuestionStates.CLOSED_QUESTION))
             activityClass = ViewClosedQuestionActivity.class;
 
-        boolean shouldStartAnswerQuestionActivity = activityClass == AnswerQuestionActivity.class
-                && !(activity.getClass() == AnswerQuestionActivity.class);
 
-        boolean shouldStartOtherQuestionActivity = activity.getClass() == ViewPlayerScoreActivity.class
-                && (activityClass == ViewClosedQuestionActivity.class || activityClass == ViewProcessedQuestionActivity.class);
+        // all question activities can start when we are in view player score
+        boolean shouldStartAllQuestionActivities = false;
+        shouldStartAllQuestionActivities = context.getClass() == ViewPlayerScoreActivity.class;
 
-        if (shouldStartAnswerQuestionActivity || shouldStartOtherQuestionActivity) {
-            Intent intent = new Intent(activity, activityClass);
+        // answer question activity can start when we are in all other activities except for when we are during the process of answering a question
+        boolean shouldStartAnswerQuestionActivity = false;
+        shouldStartAnswerQuestionActivity = activityClass == AnswerQuestionActivity.class
+                && !(context.getClass() == AnswerQuestionActivity.class);
+
+        // processed question activity can also start when we have already answered the question (calc stats msg is visible)
+        boolean shouldStartProcessedQuestionActivity = false;
+
+        AnswerQuestionActivity answerQuestionActivity = null;
+        if (context.getClass() == AnswerQuestionActivity.class)
+            answerQuestionActivity = (AnswerQuestionActivity) context;
+
+        shouldStartProcessedQuestionActivity = activityClass == ViewProcessedQuestionActivity.class
+                && answerQuestionActivity != null
+                && answerQuestionActivity.isAnswered();
+
+
+        if (shouldStartAllQuestionActivities || shouldStartAnswerQuestionActivity || shouldStartProcessedQuestionActivity) {
+            Intent intent = new Intent(context, activityClass);
             Bundle bundle = new Bundle();
             bundle.putSerializable("question", question);
             bundle.putString("questionState", questionState);
             intent.putExtras(bundle);
-            activity.startActivity(intent);
+            context.startActivity(intent);
         }
     }
 

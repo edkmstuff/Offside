@@ -52,9 +52,9 @@ public class SignalRService extends Service {
     private Handler handler; // to display Toast message
     private final IBinder binder = new LocalBinder(); // Binder given to clients
 
-    //public final String defaultIp = new String("192.168.1.140:8080");
-    //public final String defaultIp = new String("10.0.0.55:8080");
-    public final String defaultIp = new String("offside.somee.com");
+    //public final String ip = new String("192.168.1.140:8080");
+    //public final String ip = new String("10.0.0.55:8080");
+    public final String ip = new String("offside.somee.com");
 
 
     //<editor-fold desc="constructors">
@@ -92,18 +92,9 @@ public class SignalRService extends Service {
 
     private void startSignalR() {
         Platform.loadPlatformComponent(new AndroidPlatformComponent());
-        String ip;
-
-        try {
-            ip = InetAddress.getLocalHost().toString();
-        } catch (Exception ex) {
-            ip = defaultIp;
-
-
-        }
-        String serverUrl = "http://" + ip ;
+        final String serverUrl = "http://" + ip ;
         hubConnection = new HubConnection(serverUrl);
-        String SERVER_HUB = "OffsideHub";
+        final String SERVER_HUB = "OffsideHub";
         hub = hubConnection.createHubProxy(SERVER_HUB);
         ClientTransport clientTransport = new ServerSentEventsTransport(hubConnection.getLogger());
         SignalRFuture<Void> signalRFuture = hubConnection.start(clientTransport);
@@ -117,40 +108,6 @@ public class SignalRService extends Service {
 
         subscribeToServer();
     }
-
-    //</editor-fold>
-
-    //<editor-fold desc="Admin methods">
-
-
-    public void isGameActive(String gameId) {
-
-        hub.invoke(Boolean.class, "IsGameActive", gameId).done(new Action<Boolean>() {
-
-            @Override
-            public void run(Boolean isGameActive) throws Exception {
-                EventBus.getDefault().post(new ActiveGameEvent(isGameActive));
-            }
-        });
-    }
-
-    public void adminAskQuestion(Question question) {
-        hub.invoke(Question.class, "AdminAskQuestion", question);
-    }
-
-    public void adminCloseQuestion(String gameId, String questionId, String correctAnswerId) {
-        hub.invoke(Boolean.class, "AdminCloseQuestion", gameId,questionId,correctAnswerId).done(new Action<Boolean>(){
-            @Override
-            public void run(Boolean isAnswerAccepted) throws Exception {
-                EventBus.getDefault().post(new IsCloseAnswerAcceptedEvent(isAnswerAccepted));
-            }
-
-        });
-
-    }
-
-
-
 
     //</editor-fold>
 
@@ -223,6 +180,17 @@ public class SignalRService extends Service {
             @Override
             public void run(String gameId) throws Exception {
                 EventBus.getDefault().post(new JoinGameEvent(gameId));
+            }
+        });
+    }
+
+    public void isGameActive(String gameId) {
+
+        hub.invoke(Boolean.class, "IsGameActive", gameId).done(new Action<Boolean>() {
+
+            @Override
+            public void run(Boolean isGameActive) throws Exception {
+                EventBus.getDefault().post(new ActiveGameEvent(isGameActive));
             }
         });
     }

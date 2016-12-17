@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.DateHelper;
+import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
@@ -36,6 +37,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     private String questionState;
     private TextView questionTextView;
     private LinearLayout questionAndAnswersRoot;
+    private LinearLayout calcQuestionStatisticsRoot;
     private LinearLayout timeToNextQuestionRoot;
     private CountDownTimer timeToAnswerTimer;
     private CountDownTimer timeToNextQuestionTimer;
@@ -46,6 +48,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     private int secondsLeft = 0;
     private String answerId= null;
     private final DateHelper dateHelper = new DateHelper();
+    private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
 
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
@@ -65,6 +68,11 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         }
     };
 
+    private boolean isAnswered = false;
+
+    public boolean isAnswered() {
+        return isAnswered;
+    }
 
     //</editor-fold>
 
@@ -91,6 +99,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         setContentView(R.layout.activity_answer_question);
 
         questionAndAnswersRoot = (LinearLayout) findViewById(R.id.question_and_answers_root);
+        calcQuestionStatisticsRoot = (LinearLayout) findViewById(R.id.calc_question_statistics_root);
         timeToNextQuestionRoot = (LinearLayout) findViewById(R.id.time_to_next_question_root);
         questionTextView = (TextView) findViewById(R.id.question_text);
         timeToNextQuestionTextView = (TextView) findViewById(R.id.time_to_next_question);
@@ -159,11 +168,13 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     @Override
     public void onStart() {
         super.onStart();
+        questionEventsHandler.register();
         EventBus.getDefault().register(context);
     }
 
     @Override
     public void onStop() {
+        questionEventsHandler.unregister();
         EventBus.getDefault().unregister(context);
         // Unbind from the service
         if (isBoundToSignalRService) {
@@ -203,9 +214,16 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         else
             Toast.makeText(context, getString(R.string.lbl_answer_not_accepted_message), Toast.LENGTH_LONG).show();
 
-        Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
+//        startActivity(intent);
+
+        calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
+        questionAndAnswersRoot.setVisibility(View.GONE);
+        isAnswered = true;
+
     }
+
+
 
     //</editor-fold>
 
