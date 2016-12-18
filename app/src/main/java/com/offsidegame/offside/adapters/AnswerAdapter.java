@@ -46,18 +46,44 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
 
 
     private class ViewHolder {
-        public ImageView rightWrongAnswerIndicator;
-        public ImageView fbPicture;
-        //public TextView answerNumber;
-        public TextView answerText;
-        public TextView percentUsersAnswered;
-        public TextView score;
-        public LinearLayout answerListItem;
-        public TextView answeredByText;
-       // public TextView percentSignText;
-        public TextView youCanEarnText;
-        //public TextView dividerText;
-        public LinearLayout backgroundRoot;
+        public LinearLayout answerQuestionRoot;
+        public LinearLayout processedQuestionRoot;
+        public LinearLayout closedQuestionRoot;
+
+        public ImageView answerQuestionUserAnswerImageView;
+        public TextView answerQuestionAnswerTextView;
+
+        public ImageView processedQuestionUserAnswerImageView;
+        public ImageView processedQuestionRightWrongAnswerIndicatorImageView;
+        public TextView processedQuestionAnswerTextView;
+        public TextView processedQuestionAnsweredByTextView;
+        public TextView processedQuestionPercentUsersAnsweredTextView;
+        public TextView processedQuestionYouCanEarnTextView;
+        public TextView processedQuestionScoreTextView;
+        public TextView processedQuestionPointsTextView;
+
+
+        public ImageView closedQuestionUserAnswerImageView;
+        public ImageView closedQuestionRightWrongAnswerIndicatorImageView;
+        public TextView closedQuestionAnswerTextView;
+        public TextView closedQuestionAnsweredByTextView;
+        public TextView closedQuestionPercentUsersAnsweredTextView;
+        public TextView closedQuestionYouCanEarnTextView;
+        public TextView closedQuestionScoreTextView;
+        public TextView closedQuestionPointsTextView;
+
+//        public ImageView rightWrongAnswerIndicator;
+//        public ImageView fbPicture;
+//        //public TextView answerNumber;
+//        public TextView answerText;
+//        public TextView percentUsersAnswered;
+//        public TextView score;
+//        public LinearLayout answerListItem;
+//        public TextView answeredByText;
+//       // public TextView percentSignText;
+//        public TextView youCanEarnText;
+//        //public TextView dividerText;
+//        public LinearLayout backgroundRoot;
 
     }
 
@@ -71,20 +97,43 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.answer_list_item, parent, false);
             viewHolder = new ViewHolder();
 
-            viewHolder.rightWrongAnswerIndicator = (ImageView) convertView.findViewById(R.id.right_wrong_answer_indicator);
-            viewHolder.fbPicture = (ImageView) convertView.findViewById(R.id.fb_picture);
-            //viewHolder.answerNumber = (TextView) convertView.findViewById(R.id.answer_number);
-            viewHolder.answerText = (TextView) convertView.findViewById(R.id.answer_text);
-            viewHolder.percentUsersAnswered = (TextView) convertView.findViewById(R.id.percent_users_answered);
-            viewHolder.score = (TextView) convertView.findViewById(R.id.score);
-            viewHolder.answerListItem = (LinearLayout) convertView.findViewById(R.id.answer_list_item);
-            viewHolder.answeredByText = (TextView) convertView.findViewById(R.id.answered_by_text);
-            //viewHolder.percentSignText = (TextView) convertView.findViewById(R.id.percent_sign_text);
-            viewHolder.youCanEarnText = (TextView) convertView.findViewById(R.id.you_can_earn_text);
-           // viewHolder.dividerText = (TextView) convertView.findViewById(R.id.divider_text);
-            viewHolder.backgroundRoot = (LinearLayout) convertView.findViewById(R.id.background_root);
+            // root elements
+            viewHolder.answerQuestionRoot = (LinearLayout) convertView.findViewById(R.id.answer_question_root);
+            viewHolder.processedQuestionRoot = (LinearLayout) convertView.findViewById(R.id.processed_question_root);
+            viewHolder.closedQuestionRoot= (LinearLayout) convertView.findViewById(R.id.closed_question_root);
+
+            //answer question elements
+            if (questionState.equals(QuestionEvent.QuestionStates.NEW_QUESTION)) {
+                viewHolder.answerQuestionUserAnswerImageView = (ImageView)convertView.findViewById(R.id.answer_question_user_answer_image_view);
+                viewHolder.answerQuestionAnswerTextView = (TextView)  convertView.findViewById(R.id.answer_question_answer_text_view);
+            }
+            //processed question elements
+            else if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
+                viewHolder.processedQuestionUserAnswerImageView = (ImageView) convertView.findViewById(R.id.processed_question_user_answer_image_view);
+                viewHolder.processedQuestionRightWrongAnswerIndicatorImageView = (ImageView) convertView.findViewById(R.id.processed_question_right_wrong_answer_indicator_image_view);
+                viewHolder.processedQuestionAnswerTextView = (TextView) convertView.findViewById(R.id.processed_question_answer_text_view);
+                viewHolder.processedQuestionAnsweredByTextView = (TextView) convertView.findViewById(R.id.processed_question_answered_by_text_view);
+                viewHolder.processedQuestionPercentUsersAnsweredTextView = (TextView) convertView.findViewById(R.id.processed_question_percent_users_answered_text_view);
+                viewHolder.processedQuestionYouCanEarnTextView = (TextView) convertView.findViewById(R.id.processed_question_you_can_earn_text_view);
+                viewHolder.processedQuestionScoreTextView = (TextView) convertView.findViewById(R.id.processed_question_score_text_view);
+                viewHolder.processedQuestionPointsTextView = (TextView) convertView.findViewById(R.id.processed_question_points_text_view);
+            }
+            //closed question elements
+            else if (questionState.equals(QuestionEvent.QuestionStates.CLOSED_QUESTION)) {
+
+                //closed question elements
+                viewHolder.closedQuestionUserAnswerImageView = (ImageView) convertView.findViewById(R.id.closed_question_user_answer_image_view);
+                viewHolder.closedQuestionRightWrongAnswerIndicatorImageView = (ImageView) convertView.findViewById(R.id.closed_question_right_wrong_answer_indicator_image_view);
+                viewHolder.closedQuestionAnswerTextView = (TextView) convertView.findViewById(R.id.closed_question_answer_text_view);
+                viewHolder.closedQuestionAnsweredByTextView = (TextView) convertView.findViewById(R.id.closed_question_answered_by_text_view);
+                viewHolder.closedQuestionPercentUsersAnsweredTextView = (TextView) convertView.findViewById(R.id.closed_question_percent_users_answered_text_view);
+                viewHolder.closedQuestionYouCanEarnTextView = (TextView) convertView.findViewById(R.id.closed_question_you_can_earn_text_view);
+                viewHolder.closedQuestionScoreTextView = (TextView) convertView.findViewById(R.id.closed_question_score_text_view);
+                viewHolder.closedQuestionPointsTextView = (TextView) convertView.findViewById(R.id.closed_question_points_text_view);
+            }
 
             convertView.setTag(viewHolder);
+
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
@@ -92,60 +141,72 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
         //String answerNumber = Integer.toString(position + 1);
 
 
-        viewHolder.rightWrongAnswerIndicator.setVisibility(View.GONE);
-        viewHolder.fbPicture.setVisibility(View.GONE);
-        viewHolder.percentUsersAnswered.setVisibility(View.GONE);
-        viewHolder.score.setVisibility(View.GONE);
-        viewHolder.answeredByText.setVisibility(View.GONE);
-        //viewHolder.percentSignText.setVisibility(View.GONE);
-        viewHolder.youCanEarnText.setVisibility(View.GONE);
-        //viewHolder.dividerText.setVisibility(View.GONE);
+        viewHolder.answerQuestionRoot.setVisibility(View.GONE);
+        viewHolder.processedQuestionRoot.setVisibility(View.GONE);
+        viewHolder.closedQuestionRoot.setVisibility(View.GONE);
 
-        final ImageView fbProfilePicture  = viewHolder.fbPicture;
+        //final ImageView fbProfilePicture  = viewHolder.fbPicture;
 
 
+        if (questionState.equals(QuestionEvent.QuestionStates.NEW_QUESTION)) {
+            viewHolder.answerQuestionRoot.setVisibility(View.VISIBLE);
+            viewHolder.answerQuestionAnswerTextView.setText(answer.getAnswerText());
 
+        }
+        else if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
+            viewHolder.processedQuestionRoot.setVisibility(View.VISIBLE);
+            viewHolder.processedQuestionAnswerTextView.setText(answer.getAnswerText());
+            viewHolder.processedQuestionPercentUsersAnsweredTextView.setText(Long.toString(Math.round(answer.getPercentUsersAnswered())) + "%");
+            viewHolder.processedQuestionScoreTextView.setText(Long.toString(Math.round(answer.getScore())));
 
+            viewHolder.processedQuestionUserAnswerImageView.setAlpha(0.0f);
 
-        if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
-            viewHolder.fbPicture.setAlpha(0.0f);
-            viewHolder.fbPicture.setVisibility(View.VISIBLE);
             if (answer.getIsTheAnswerOfTheUser()) {
-                loadFbImage(fbProfilePicture);
+                loadFbImage(viewHolder.processedQuestionUserAnswerImageView);
             }
-            viewHolder.percentUsersAnswered.setVisibility(View.VISIBLE);
-            viewHolder.score.setVisibility(View.VISIBLE);
-            viewHolder.answeredByText.setVisibility(View.VISIBLE);
-            //viewHolder.percentSignText.setVisibility(View.VISIBLE);
-            viewHolder.youCanEarnText.setVisibility(View.VISIBLE);
-            //viewHolder.dividerText.setVisibility(View.VISIBLE);
+
+
+//            viewHolder.fbPicture.setAlpha(0.0f);
+//            viewHolder.fbPicture.setVisibility(View.VISIBLE);
+//            if (answer.getIsTheAnswerOfTheUser()) {
+//                loadFbImage(fbProfilePicture);
+//            }
+//            viewHolder.percentUsersAnswered.setVisibility(View.VISIBLE);
+//            viewHolder.score.setVisibility(View.VISIBLE);
+//            viewHolder.answeredByText.setVisibility(View.VISIBLE);
+//            //viewHolder.percentSignText.setVisibility(View.VISIBLE);
+//            viewHolder.youCanEarnText.setVisibility(View.VISIBLE);
+//            //viewHolder.dividerText.setVisibility(View.VISIBLE);
 
         } else if (questionState.equals(QuestionEvent.QuestionStates.CLOSED_QUESTION)) {
-            viewHolder.fbPicture.setVisibility(View.VISIBLE);
+            viewHolder.closedQuestionRoot.setVisibility(View.VISIBLE);
+            viewHolder.closedQuestionAnswerTextView.setText(answer.getAnswerText());
+            viewHolder.closedQuestionPercentUsersAnsweredTextView.setText(Long.toString(Math.round(answer.getPercentUsersAnswered())) + "%");
+            viewHolder.closedQuestionScoreTextView.setText(Long.toString(Math.round(answer.getScore())));
+            viewHolder.closedQuestionUserAnswerImageView.setAlpha(0.0f);
+
+
             if (answer.getIsTheAnswerOfTheUser()) {
-                loadFbImage(fbProfilePicture);
+                loadFbImage(viewHolder.closedQuestionUserAnswerImageView);
             }
 
-            viewHolder.rightWrongAnswerIndicator.setVisibility(View.VISIBLE);
+            viewHolder.closedQuestionRightWrongAnswerIndicatorImageView.setVisibility(View.VISIBLE);
             if (answer.getIsCorrect())
-                viewHolder.rightWrongAnswerIndicator.setImageResource(R.drawable.ic_done_black_24dp);
+                viewHolder.closedQuestionRightWrongAnswerIndicatorImageView.setImageResource(R.drawable.ic_done_black_24dp);
             else
-                viewHolder.rightWrongAnswerIndicator.setImageResource(R.drawable.ic_clear_red_24dp);
+                viewHolder.closedQuestionRightWrongAnswerIndicatorImageView.setImageResource(R.drawable.ic_clear_red_24dp);
 
 
-            viewHolder.score.setVisibility(View.VISIBLE);
-            viewHolder.youCanEarnText.setVisibility(View.VISIBLE);
 
-            //viewHolder.dividerText.setVisibility(View.VISIBLE);
 
         }
 
         //viewHolder.answerNumber.setText(answerNumber.toString() + ".");
-        viewHolder.answerText.setText(answer.getAnswerText());
+        //viewHolder.answerText.setText(answer.getAnswerText());
 
         //viewHolder.percentUsersAnswered.setText(context.getString(R.string.lbl_answered_by) + " " + Long.toString(percentUsersAnswered) + "%");
-        viewHolder.percentUsersAnswered.setText(Long.toString(Math.round(answer.getPercentUsersAnswered())) + "%");
-        viewHolder.score.setText(Long.toString(Math.round(answer.getScore())));
+        //viewHolder.percentUsersAnswered.setText(Long.toString(Math.round(answer.getPercentUsersAnswered())) + "%");
+        //viewHolder.score.setText(Long.toString(Math.round(answer.getScore())));
         //viewHolder.isTheAnswerOfTheUser.setText(Boolean.toString(answer.getIsTheAnswerOfTheUser()));
         //viewHolder.isCorrect.setText(Boolean.toString(answer.getIsCorrect()));
 
@@ -153,10 +214,10 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
 //        Height
         int listViewHeight =(int) Math.floor(parent.getHeight() * 1);
         int itemHeight = (int) Math.floor(listViewHeight / answersCount);
-
+        viewHolder.answerQuestionRoot.setMinimumHeight( (int)Math.floor(itemHeight * 0.5));
         convertView.setMinimumHeight(itemHeight);
 
-        int listViewWidth = parent.getWidth();
+        //int listViewWidth = parent.getWidth();
 
 //        ViewGroup.LayoutParams params = viewHolder.backgroundRoot.getLayoutParams();
 //        params.height = (int) Math.floor(itemHeight * 0.95);
@@ -175,18 +236,18 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
 
     }
 
-    private void loadFbImage(final ImageView fbProfilePicture) {
+    private void loadFbImage(final ImageView imageView) {
         SharedPreferences settings = context.getSharedPreferences(context.getString(R.string.preference_name), 0);
         String userPictureUrl = settings.getString(context.getString(R.string.user_profile_picture_url_key), "");
         Uri imageUri = Uri.parse(userPictureUrl);
 
-        Picasso.with(context).load(imageUri).into(fbProfilePicture, new com.squareup.picasso.Callback() {
+        Picasso.with(context).load(imageUri).into(imageView, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
-                Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
+                Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
                 RoundImage roundedImage = new RoundImage(bm);
-                fbProfilePicture.setImageDrawable(roundedImage);
-                fbProfilePicture.animate().alpha(1.1f).setDuration(1000).start();
+                imageView.setImageDrawable(roundedImage);
+                imageView.animate().alpha(1.1f).setDuration(1000).start();
             }
 
             @Override

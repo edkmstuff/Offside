@@ -7,148 +7,288 @@
     android:orientation="vertical">
 
 
+    <LinearLayout
+        android:id="@+id/background_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/answer_question_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:background="@drawable/round_corners_layout_background"
+            android:orientation="horizontal"
+            android:visibility="visible">
+
+
+            <ImageView
+                android:id="@+id/answer_question_user_answer_image_view"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:scaleType="centerCrop" />
+
+            <!--Answer Text -->
+            <TextView
+                android:id="@+id/answer_question_answer_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:text="some answer text"
+                android:textColor="@color/windowBackground"
+                android:textSize="@dimen/OffsideMediumText"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/processed_question_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:background="@drawable/round_corners_layout_background"
+            android:orientation="vertical"
+
+            android:paddingTop="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/processed_question_user_answer_image_view"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+                    android:id="@+id/processed_question_right_wrong_answer_indicator_image_view"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="5dp"
+                    android:scaleType="centerCrop"
+
+                    />
+
+                <TextView
+                    android:id="@+id/processed_question_answer_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="some answer text"
+                    android:textColor="@color/windowBackground"
+                    android:textSize="@dimen/OffsideMediumText"
+
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2dp">
 
 
 
-  <LinearLayout
-      android:id="@+id/background_root"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="vertical">
+                <!-- Percent Users Answered-->
+                <TextView
+                    android:id="@+id/processed_question_answered_by_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_answered_by"
+                    android:textSize="@dimen/OffsideMediumText"
+                    android:paddingRight="5dp"/>
 
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_weight="1"
-          android:gravity="center_vertical"
-          android:padding="10dp"
-          >
-
-          <ImageView
-              android:id="@+id/fb_picture"
-              android:layout_width="40dp"
-              android:layout_height="40dp"
-              android:layout_marginRight="5dp"
-              />
-
-          <ImageView
-              android:id="@+id/right_wrong_answer_indicator"
-              android:layout_width="40dp"
-              android:layout_height="40dp"
-              android:layout_marginRight="5dp"
-              />
-
-
-
-              <!--&lt;!&ndash;Answer Number&ndash;&gt;-->
-              <!--<TextView-->
-                  <!--android:id="@+id/answer_number"-->
-                  <!--android:layout_width="wrap_content"-->
-                  <!--android:layout_height="wrap_content"-->
-                  <!--android:layout_marginRight="5dp"-->
-                  <!--android:visibility="gone"-->
-
-                  <!--android:textSize="@dimen/OffsideMediumText"-->
-                  <!--/>-->
-
-              <!--Answer Text -->
-              <TextView
-                  android:id="@+id/answer_text"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:textSize="@dimen/OffsideMediumText"
-                  android:text="some answer text"
-                  />
-
-
-
-
-
-
-          <!--Right or Wrong -->
-
-
-      </LinearLayout>
-
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="horizontal"
-          android:layout_weight="1"
-          android:gravity="bottom"
-          android:padding="2dp">
-
-
-
-          <!-- Percent Users Answered-->
-          <TextView
-              android:id="@+id/answered_by_text"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="@string/lbl_answered_by"
-              android:textSize="@dimen/OffsideMediumText"
-              android:paddingRight="5dp"/>
-
-          <TextView
-              android:id="@+id/percent_users_answered"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:background="@color/colorPrimary"
-              android:textColor="@color/windowBackground"
-              android:minWidth="50dp"
-              android:text="100%"
-              android:padding="2dp"
-              android:gravity="center"
-              android:layout_marginRight="5dp"
-              android:textSize="@dimen/OffsideMediumText"/>
-
-
-
-
-
-          <TextView
-              android:id="@+id/you_can_earn_text"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="@string/points_value"
-              android:textSize="@dimen/OffsideMediumText"
-              android:paddingRight="5dp"/>
-
-          <TextView
-              android:id="@+id/score"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:textSize="@dimen/OffsideMediumText"
-              android:background="@color/colorPrimary"
-              android:textColor="@color/windowBackground"
-              android:minWidth="50dp"
-              android:padding="2dp"
-              android:gravity="center"
-              android:text="1000"
-              android:paddingRight="5dp"/>
-
-
-          <TextView
-              android:id="@+id/points_text"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="@string/lbl_points"
-              android:textSize="@dimen/OffsideSmallText"
-              android:visibility="gone"
-              />
-
-
-
-      </LinearLayout>
+                <TextView
+                    android:id="@+id/processed_question_percent_users_answered_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/windowBackground"
+                    android:minWidth="50dp"
+                    android:text="100%"
+                    android:padding="2dp"
+                    android:gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:textSize="@dimen/OffsideMediumText"/>
 
 
 
 
 
+                <TextView
+                    android:id="@+id/processed_question_you_can_earn_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/points_value"
+                    android:textSize="@dimen/OffsideMediumText"
+                    android:paddingRight="5dp"/>
 
-  </LinearLayout>
+                <TextView
+                    android:id="@+id/processed_question_score_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/OffsideMediumText"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/windowBackground"
+                    android:minWidth="50dp"
+                    android:padding="2dp"
+                    android:gravity="center"
+                    android:text="1000"
+                    android:paddingRight="5dp"/>
+
+
+                <TextView
+                    android:id="@+id/processed_question_points_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_points"
+                    android:textSize="@dimen/OffsideSmallText"
+                    android:visibility="gone"
+                    />
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/closed_question_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:background="@drawable/round_corners_layout_background"
+            android:orientation="vertical"
+
+            android:paddingTop="5dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/closed_question_user_answer_image_view"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+                    android:id="@+id/closed_question_right_wrong_answer_indicator_image_view"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="5dp"
+                    android:scaleType="centerCrop"
+
+                    />
+
+                <TextView
+                    android:id="@+id/closed_question_answer_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="some answer text"
+                    android:textColor="@color/windowBackground"
+                    android:textSize="@dimen/OffsideMediumText"
+
+                    android:textStyle="bold" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="2dp">
+
+
+
+                <!-- Percent Users Answered-->
+                <TextView
+                    android:id="@+id/closed_question_answered_by_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_answered_by"
+                    android:textSize="@dimen/OffsideMediumText"
+                    android:paddingRight="5dp"/>
+
+                <TextView
+                    android:id="@+id/closed_question_percent_users_answered_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/windowBackground"
+                    android:minWidth="50dp"
+                    android:text="100%"
+                    android:padding="2dp"
+                    android:gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:textSize="@dimen/OffsideMediumText"/>
+
+
+
+
+
+                <TextView
+                    android:id="@+id/closed_question_you_can_earn_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/points_value"
+                    android:textSize="@dimen/OffsideMediumText"
+                    android:paddingRight="5dp"/>
+
+                <TextView
+                    android:id="@+id/closed_question_score_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/OffsideMediumText"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/windowBackground"
+                    android:minWidth="50dp"
+                    android:padding="2dp"
+                    android:gravity="center"
+                    android:text="1000"
+                    android:paddingRight="5dp"/>
+
+
+                <TextView
+                    android:id="@+id/closed_question_points_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_points"
+                    android:textSize="@dimen/OffsideSmallText"
+                    android:visibility="gone"
+                    />
+
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
 
 
 </LinearLayout>
