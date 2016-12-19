@@ -113,7 +113,7 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         timer = new CountDownTimer(10000, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                timeToStartQuestionText.setText(countDownLabel + millisUntilFinished / 1000);
+                timeToStartQuestionText.setText(Integer.toString( (int)Math.floor(millisUntilFinished / 1000)));
             }
 
             public void onFinish() {

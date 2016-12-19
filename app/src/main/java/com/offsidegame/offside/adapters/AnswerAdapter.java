@@ -54,15 +54,13 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
         public TextView answerQuestionAnswerTextView;
 
         public ImageView processedQuestionUserAnswerImageView;
-        public ImageView processedQuestionRightWrongAnswerIndicatorImageView;
+
         public TextView processedQuestionAnswerTextView;
         public TextView processedQuestionAnsweredByTextView;
         public TextView processedQuestionPercentUsersAnsweredTextView;
         public TextView processedQuestionYouCanEarnTextView;
         public TextView processedQuestionScoreTextView;
         public TextView processedQuestionPointsTextView;
-
-
         public ImageView closedQuestionUserAnswerImageView;
         public ImageView closedQuestionRightWrongAnswerIndicatorImageView;
         public TextView closedQuestionAnswerTextView;
@@ -110,7 +108,6 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
             //processed question elements
             else if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
                 viewHolder.processedQuestionUserAnswerImageView = (ImageView) convertView.findViewById(R.id.processed_question_user_answer_image_view);
-                viewHolder.processedQuestionRightWrongAnswerIndicatorImageView = (ImageView) convertView.findViewById(R.id.processed_question_right_wrong_answer_indicator_image_view);
                 viewHolder.processedQuestionAnswerTextView = (TextView) convertView.findViewById(R.id.processed_question_answer_text_view);
                 viewHolder.processedQuestionAnsweredByTextView = (TextView) convertView.findViewById(R.id.processed_question_answered_by_text_view);
                 viewHolder.processedQuestionPercentUsersAnsweredTextView = (TextView) convertView.findViewById(R.id.processed_question_percent_users_answered_text_view);

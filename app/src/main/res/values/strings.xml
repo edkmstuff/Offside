@@ -49,8 +49,8 @@
     <string name="lbl_your_position">YOUR POSITION</string>
     <string name="lbl_out_of">OUT OF</string>
     <string name="lbl_open_questions">OPEN QUESTIONS</string>
-    <string name="lbl_answered_by">Answered by:</string>
-    <string name="points_value">Points:</string>
+    <string name="lbl_answered_by">Answered</string>
+    <string name="points_value">Points</string>
     <string name="statistics">Statistics:</string>
        <string name="lbl_scoreboard">Scoreboard</string>
     <string name="lbl_all_questions">All questions</string>

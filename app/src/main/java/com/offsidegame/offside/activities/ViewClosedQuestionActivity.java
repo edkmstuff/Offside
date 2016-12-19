@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -25,8 +26,10 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     private Question question;
     private String questionState;
     private TextView questionTextView;
-    private Handler delayHandler;
-    private Runnable goToViewPlayerScore;
+    //private Handler delayHandler;
+    //private Runnable goToViewPlayerScore;
+    private CountDownTimer timer;
+    private TextView timeToStartQuestionText;
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
 
 
@@ -84,18 +87,33 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
         bindServiceIntent.setClass(context, SignalRService.class);
         bindService(bindServiceIntent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
 
+        timeToStartQuestionText = (TextView) findViewById(R.id.timeToStartQuestionText);
+        timer = new CountDownTimer(20000, 1000) {
 
-        // to go back to view player score
-        delayHandler = new Handler();
-        goToViewPlayerScore = new Runnable() {
-            @Override
-            public void run() {
+            public void onTick(long millisUntilFinished) {
+                timeToStartQuestionText.setText(Integer.toString( (int)Math.floor(millisUntilFinished / 1000)));
+            }
+
+            public void onFinish() {
                 Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
                 startActivity(intent);
             }
-        };
+        }.start();
 
-        delayHandler.postDelayed(goToViewPlayerScore, 20000);
+
+
+
+        // to go back to view player score
+//        delayHandler = new Handler();
+//        goToViewPlayerScore = new Runnable() {
+//            @Override
+//            public void run() {
+//                Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
+//                startActivity(intent);
+//            }
+//        };
+//
+//        delayHandler.postDelayed(goToViewPlayerScore, 20000);
     }
 
     @Override
@@ -114,7 +132,9 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
             isBoundToSignalRService = false;
         }
 
-        delayHandler.removeCallbacks(goToViewPlayerScore);
+        //delayHandler.removeCallbacks(goToViewPlayerScore);
+        timer.cancel();
+        timer = null;
 
         super.onStop();
     }

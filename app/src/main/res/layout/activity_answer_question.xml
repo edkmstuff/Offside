@@ -67,7 +67,7 @@
                     android:padding="10dp"
                     android:text="Am i a  very very very long question?"
                     android:textColor="@color/colorPrimary"
-                    android:textStyle="bold"
+
                     android:textSize="@dimen/OffsideMediumText">
 
                 </TextView>
