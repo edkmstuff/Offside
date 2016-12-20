@@ -66,7 +66,7 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
         public TextView closedQuestionAnswerTextView;
         public TextView closedQuestionAnsweredByTextView;
         public TextView closedQuestionPercentUsersAnsweredTextView;
-        public TextView closedQuestionYouCanEarnTextView;
+        //public TextView closedQuestionYouCanEarnTextView;
         public TextView closedQuestionScoreTextView;
         public TextView closedQuestionPointsTextView;
 
@@ -124,7 +124,7 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
                 viewHolder.closedQuestionAnswerTextView = (TextView) convertView.findViewById(R.id.closed_question_answer_text_view);
                 viewHolder.closedQuestionAnsweredByTextView = (TextView) convertView.findViewById(R.id.closed_question_answered_by_text_view);
                 viewHolder.closedQuestionPercentUsersAnsweredTextView = (TextView) convertView.findViewById(R.id.closed_question_percent_users_answered_text_view);
-                viewHolder.closedQuestionYouCanEarnTextView = (TextView) convertView.findViewById(R.id.closed_question_you_can_earn_text_view);
+                //viewHolder.closedQuestionYouCanEarnTextView = (TextView) convertView.findViewById(R.id.closed_question_you_can_earn_text_view);
                 viewHolder.closedQuestionScoreTextView = (TextView) convertView.findViewById(R.id.closed_question_score_text_view);
                 viewHolder.closedQuestionPointsTextView = (TextView) convertView.findViewById(R.id.closed_question_points_text_view);
             }

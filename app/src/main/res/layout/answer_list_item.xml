@@ -20,6 +20,7 @@
             android:layout_margin="20dp"
             android:background="@drawable/round_corners_layout_background"
             android:orientation="horizontal"
+            android:layoutDirection="rtl"
             android:visibility="gone">
 
 
@@ -37,7 +38,7 @@
                 android:id="@+id/answer_question_answer_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center"
                 android:gravity="center"
                 android:text="some answer text"
                 android:textColor="@color/windowBackground"
@@ -54,13 +55,13 @@
             android:layout_margin="20dp"
             android:background="@drawable/round_corners_layout_background"
             android:orientation="vertical"
-
             android:paddingTop="5dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layoutDirection="rtl">
 
                 <ImageView
                     android:id="@+id/processed_question_user_answer_image_view"
@@ -70,13 +71,12 @@
                     android:layout_marginRight="5dp"
                     android:scaleType="centerCrop" />
 
-
-
                 <TextView
                     android:id="@+id/processed_question_answer_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:layout_gravity="center"
                     android:text="some answer text"
                     android:textColor="@color/windowBackground"
                     android:textSize="@dimen/OffsideMediumText"
@@ -87,10 +87,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="5dp">
+                android:layoutDirection="rtl"
+                >
 
 
 
@@ -103,7 +104,8 @@
                     android:text="@string/lbl_answered_by"
                     android:textSize="@dimen/OffsideMediumText"
                     android:textColor="@color/windowBackground"
-                    android:paddingRight="5dp"/>
+                    android:padding="5dp"
+                    />
                 <TextView
                     android:id="@+id/processed_question_percent_users_answered_text_view"
                     android:layout_width="wrap_content"
@@ -112,7 +114,7 @@
                     android:textColor="@color/colorPrimary"
                     android:minWidth="50dp"
                     android:text="100%"
-                    android:padding="2dp"
+                    android:padding="5dp"
                     android:gravity="center"
                     android:layout_marginRight="5dp"
                     android:textSize="@dimen/OffsideMediumText"/>
@@ -130,7 +132,7 @@
                     android:text="@string/points_value"
                     android:textColor="@color/windowBackground"
                     android:textSize="@dimen/OffsideMediumText"
-                    android:paddingRight="5dp"/>
+                    android:padding="5dp"/>
 
                 <TextView
                     android:id="@+id/processed_question_score_text_view"
@@ -140,7 +142,7 @@
                     android:background="@color/windowBackground"
                     android:textColor="@color/colorPrimary"
                     android:minWidth="50dp"
-                    android:padding="2dp"
+                    android:padding="5dp"
                     android:gravity="center"
                     android:text="1000"
                     android:paddingRight="5dp"/>
@@ -174,23 +176,25 @@
             android:paddingTop="5dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layoutDirection="rtl">
 
                 <ImageView
                     android:id="@+id/closed_question_user_answer_image_view"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
                     android:scaleType="centerCrop" />
 
                 <ImageView
                     android:id="@+id/closed_question_right_wrong_answer_indicator_image_view"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginLeft="2dp"
                     android:scaleType="centerCrop"
 
                     />
@@ -202,6 +206,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:layout_gravity="center"
                     android:text="some answer text"
                     android:textColor="@color/windowBackground"
                     android:textSize="@dimen/OffsideMediumText"
@@ -212,9 +217,10 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:layoutDirection="rtl"
                 android:padding="5dp">
 
 
@@ -227,7 +233,7 @@
                     android:textColor="@color/windowBackground"
                     android:text="@string/lbl_answered_by"
                     android:textSize="@dimen/OffsideMediumText"
-                    android:paddingRight="5dp"/>
+                    android:padding="5dp"/>
 
                 <TextView
                     android:id="@+id/closed_question_percent_users_answered_text_view"
@@ -237,9 +243,9 @@
                     android:textColor="@color/colorPrimary"
                     android:minWidth="50dp"
                     android:text="100%"
-                    android:padding="2dp"
+                    android:padding="5dp"
                     android:gravity="center"
-                    android:layout_marginRight="5dp"
+
                     android:textSize="@dimen/OffsideMediumText"/>
 
 
@@ -247,13 +253,13 @@
 
 
                 <TextView
-                    android:id="@+id/closed_question_you_can_earn_text_view"
+                    android:id="@+id/closed_question_points_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/windowBackground"
                     android:text="@string/points_value"
                     android:textSize="@dimen/OffsideMediumText"
-                    android:paddingRight="5dp"/>
+                    android:padding="5dp"/>
 
                 <TextView
                     android:id="@+id/closed_question_score_text_view"
@@ -263,20 +269,13 @@
                     android:background="@color/windowBackground"
                     android:textColor="@color/colorPrimary"
                     android:minWidth="50dp"
-                    android:padding="2dp"
+                    android:padding="5dp"
                     android:gravity="center"
                     android:text="1000"
-                    android:paddingRight="5dp"/>
-
-
-                <TextView
-                    android:id="@+id/closed_question_points_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_points"
-                    android:textSize="@dimen/OffsideSmallText"
-                    android:visibility="gone"
                     />
+
+
+
 
 
 

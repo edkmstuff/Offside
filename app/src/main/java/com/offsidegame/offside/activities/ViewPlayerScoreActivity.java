@@ -25,6 +25,7 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.helpers.ViewGroupHelper;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.PlayerScore;
 import com.offsidegame.offside.events.PlayerScoreEvent;
@@ -80,6 +81,10 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_player_score);
+
+        //ENABLE THIS WHEN YOU DO ENGLISH (OR ANY OTHER LTR LANG) VERSION
+//        View root = findViewById(R.id.activity_player_score_root);
+//        ViewGroupHelper.ChangeRtlToLtr(root);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());

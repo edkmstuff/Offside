@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">Offside</string>
-    <string name="lbl_points">Points</string>
-    <string name="lbl_position">Position</string>
-    <string name="lbl_leader_score">Leader score</string>
-    <string name="lbl_active_questions">Active questions</string>
-    <string name="lbl_send">Send</string>
+    <string name="lbl_points">נקודות</string>
+    <string name="lbl_position">מיקום</string>
+    <string name="lbl_leader_score">המוביל</string>
+    <string name="lbl_active_questions">שאלות פתוחות</string>
+    <string name="lbl_send">שלח</string>
 
-    <string name="lbl_data_updated">Data updated</string>
+    <string name="lbl_data_updated">המידע עודכן</string>
 
 
     <!--<string-array name="answers">-->
@@ -18,8 +18,8 @@
 
     <string name="ask_question">New Question</string>
     <string name="answer_question">Answer Question</string>
-    <string name="lbl_welcome">Welcome</string>
-    <string name="lbl_goto_player_score">Go to Player Score</string>
+    <string name="lbl_welcome">אהלן</string>
+    <string name="lbl_goto_player_score">אל עמוד הבית</string>
 
     <!--kfir -->
     <!--<string name="facebook_app_id">1302214459813433</string>
@@ -38,27 +38,29 @@
     <string name="game_id_key">gameId</string>
 
 
-    <string name="lbl_answer_accepted_message">Your answer was accepted</string>
-    <string name="lbl_answer_not_accepted_message">Answer not sent</string>
-    <string name="lbl_processed_question_title">Answers Statistics</string>
-    <string name="close_question">Close Question</string>
-    <string name="lbl_closed_question_title">Answer Arrived</string>
-    <string name="lbl_go">Go!</string>
-    <string name="lbl_question_starts_in">"Question starts in: "</string>
-    <string name="lbl_your_score">YOUR SCORE</string>
-    <string name="lbl_your_position">YOUR POSITION</string>
-    <string name="lbl_out_of">OUT OF</string>
-    <string name="lbl_open_questions">OPEN QUESTIONS</string>
-    <string name="lbl_answered_by">Answered</string>
-    <string name="points_value">Points</string>
-    <string name="statistics">Statistics:</string>
-       <string name="lbl_scoreboard">Scoreboard</string>
-    <string name="lbl_all_questions">All questions</string>
+    <string name="lbl_answer_accepted_message">התשובה התקבלה</string>
+    <string name="lbl_answer_not_accepted_message">התשובה לא התקבלה</string>
+    <string name="lbl_processed_question_title">סטטיסטיקה</string>
+    <string name="close_question">שאלה פתורה</string>
+    <string name="lbl_closed_question_title">יש לנו תשובה</string>
+    <string name="lbl_go">יוצאים לדרך!</string>
+    <string name="lbl_question_starts_in">"השאלה תתחיל בעוד:"</string>
+    <string name="lbl_your_score">נקודות</string>
+    <string name="lbl_your_position">מיקום</string>
+    <string name="lbl_out_of">מתוך</string>
+    <string name="lbl_open_questions">שאלות פתוחות</string>
+    <string name="lbl_answered_by">ענו</string>
+    <string name="points_value">נקודות</string>
+    <string name="statistics">סטטיסטיקה:</string>
+       <string name="lbl_scoreboard">לוח תוצאות</string>
+    <string name="lbl_all_questions">כל השאלות</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="user_profile_picture_url_key">userProfilePictureUrl</string>
-    <string name="lbl_game_did_not_start_yet">No questions yet... </string>
+    <string name="lbl_game_did_not_start_yet">עוד לא התחלנו לשאול... </string>
+    <string name="lbl_getting_answers_and_calculating_statistics">אוסף תשובות ומחשב סטטיסטיקה</string>
+    <string name="lbl_sponsored_by">בחסות</string>
 
 
 </resources>

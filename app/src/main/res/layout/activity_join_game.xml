@@ -20,13 +20,15 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
         android:layout_gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layoutDirection="rtl">
 
         <TextView
             android:text="@string/lbl_welcome"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
             android:textSize="@dimen/OffsideMediumText"
             />
 
@@ -36,6 +38,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/join_game_user_name_text_view"
             android:layout_marginRight="2dp"
+            android:layout_marginLeft="2dp"
             android:textSize="@dimen/OffsideMediumText"
 
             />
@@ -70,6 +73,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Game code"
+        android:textDirection="rtl"
         android:inputType="textEmailAddress" />
 
     <Button

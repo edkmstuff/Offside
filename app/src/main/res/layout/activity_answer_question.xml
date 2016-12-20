@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_question"
+    android:id="@+id/activity_answer_question_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -35,7 +35,7 @@
                 android:textSize="@dimen/OffsideMediumText"
                 android:gravity="center"
                 android:layout_margin="5dp"
-                android:text="Getting answers and calculating statistics..."
+                android:text="@string/lbl_getting_answers_and_calculating_statistics"
                 />
             <ProgressBar
                 style="?android:attr/progressBarStyleLarge"
@@ -46,7 +46,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="visible"
+            android:visibility="gone"
             android:id="@+id/question_and_answers_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -58,6 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:orientation="horizontal"
+                android:layoutDirection="rtl"
                 android:weightSum="4">
                 <TextView
                     android:id="@+id/question_text"
@@ -67,7 +68,7 @@
                     android:padding="10dp"
                     android:text="Am i a  very very very long question?"
                     android:textColor="@color/colorPrimary"
-
+                    android:gravity="center"
                     android:textSize="@dimen/OffsideMediumText">
 
                 </TextView>
@@ -98,7 +99,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
+            android:visibility="visible"
             android:id="@+id/time_to_next_question_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -110,6 +111,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="horizontal"
+                android:layoutDirection="rtl"
                 android:gravity="center">
 
                 <TextView
@@ -126,6 +128,7 @@
                     android:text="5"
                     android:textSize="@dimen/OffsideLargeText"
                     android:layout_marginRight="5dp"
+                    android:layout_marginLeft="5dp"
                     />
 
                 <TextView
@@ -150,7 +153,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sponsered by"/>
+                    android:text="@string/lbl_sponsored_by"/>
 
                 <ImageView
                     android:layout_width="wrap_content"
