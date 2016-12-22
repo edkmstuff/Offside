@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
@@ -120,6 +121,9 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     public void onStart() {
         super.onStart();
         questionEventsHandler.register();
+        MediaPlayer player = MediaPlayer.create(context, R.raw.referee_short_whistle);
+        player.start();
+
 
     }
 

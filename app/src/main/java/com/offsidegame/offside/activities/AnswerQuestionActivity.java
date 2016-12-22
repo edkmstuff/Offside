@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.icu.util.Calendar;
+import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -170,6 +171,9 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         super.onStart();
         questionEventsHandler.register();
         EventBus.getDefault().register(context);
+
+        MediaPlayer player = MediaPlayer.create(context, R.raw.referee_short_whistle);
+        player.start();
     }
 
     @Override

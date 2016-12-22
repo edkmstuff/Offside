@@ -68,7 +68,7 @@ public class AnswersFragment extends ListFragment {
 
 
             ImageView userImageView =(ImageView) v.findViewById(R.id.answer_question_user_answer_image_view);
-            //v.animate().rotationX(360.0f).setDuration(200).start();
+            v.animate().rotationX(360.0f).setDuration(200).start();
             loadFbImage(userImageView);
 
             new Handler().postDelayed(new Runnable() {
@@ -94,7 +94,7 @@ public class AnswersFragment extends ListFragment {
                 Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
                 RoundImage roundedImage = new RoundImage(bm);
                 imageView.setImageDrawable(roundedImage);
-                imageView.animate().alpha(1.1f).setDuration(1000).start();
+                imageView.animate().alpha(1.1f).setDuration(500).start();
             }
 
             @Override
