@@ -7,23 +7,30 @@ package com.offsidegame.offside.models;
 public class LoginInfo {
 
 
-    @com.google.gson.annotations.SerializedName("Id")
+    @com.google.gson.annotations.SerializedName("I")
     private String id; //email
 
-    @com.google.gson.annotations.SerializedName("Name")
+    @com.google.gson.annotations.SerializedName("N")
     private String name;
 
-    @com.google.gson.annotations.SerializedName("Password")
+    @com.google.gson.annotations.SerializedName("P")
     private String password;
 
-    public LoginInfo() {}
 
     public String getId() {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPassword() {

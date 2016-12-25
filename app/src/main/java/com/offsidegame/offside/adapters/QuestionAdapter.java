@@ -65,7 +65,7 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         Answer answer = new Answer();
         for (Answer ans: question.getAnswers())
         {
-            if (ans.getIsTheAnswerOfTheUser())
+            if (ans.isTheAnswerOfTheUser())
                 answer = ans;
         }
 
@@ -101,7 +101,7 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         viewHolder.questionQuestionText.setText(question.getQuestionText());
 
          if (!question.isActive()) {
-            if (answer.getIsCorrect())
+            if (answer.isCorrect())
                 viewHolder.questionRightWrongAnswerIndicator.setImageResource(R.drawable.ic_done_black_24dp);
             else
                 viewHolder.questionRightWrongAnswerIndicator.setImageResource(R.drawable.ic_clear_red_24dp);

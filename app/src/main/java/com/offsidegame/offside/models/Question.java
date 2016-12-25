@@ -10,46 +10,55 @@ import java.util.Date;
 
 public class Question implements Serializable {
 
-    @com.google.gson.annotations.SerializedName("Id")
+    @com.google.gson.annotations.SerializedName("I")
     private String id;
-    @com.google.gson.annotations.SerializedName("QuestionText")
+    @com.google.gson.annotations.SerializedName("QT")
     private String questionText;
-    @com.google.gson.annotations.SerializedName("GameId")
+    @com.google.gson.annotations.SerializedName("GI")
     private String gameId;
-    @com.google.gson.annotations.SerializedName("Answers")
+    @com.google.gson.annotations.SerializedName("A")
     private Answer[] answers ;
-    @com.google.gson.annotations.SerializedName("IsActive")
+    @com.google.gson.annotations.SerializedName("IA")
     private boolean isActive ;
 
-    public Question() {
-
-    }
-
-    public Question(String questionText,Answer[] answers, String gameId, boolean isActive) {
-        this.questionText = questionText;
-        this.answers = answers;
-        this.gameId = gameId;
-        this.isActive = isActive;
-
-    }
-
-    public String getId() {
-        return id;
-    }
 
     public String getQuestionText() {
         return questionText;
     }
 
-    public String getGameId() {
-        return gameId;
+    public void setQuestionText(String questionText) {
+        this.questionText = questionText;
     }
 
     public Answer[] getAnswers() {
         return answers;
     }
 
+    public void setAnswers(Answer[] answers) {
+        this.answers = answers;
+    }
+
+    public String getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(String gameId) {
+        this.gameId = gameId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public boolean isActive() {
         return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

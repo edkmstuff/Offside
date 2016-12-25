@@ -8,33 +8,36 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.os.Looper;
+import android.support.annotation.IntegerRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
-import com.offsidegame.offside.helpers.ViewGroupHelper;
-import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.PlayerScore;
 import com.offsidegame.offside.events.PlayerScoreEvent;
-import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.squareup.picasso.Picasso;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Date;
 
 public class ViewPlayerScoreActivity extends AppCompatActivity {
 
@@ -71,6 +74,16 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
             boundToSignalRService = false;
         }
     };
+
+    private TextView currentQuestionTimeLeftTextView;
+    private TextView currentQuestionTextView;
+    private TextView currentQuestionAnswerTextView;
+    private LinearLayout currentQuestionRoot;
+
+    private CountDownTimer timeLeftToCurrentQuestionTimer;
+//    private String currentQuestionText;
+//    private String currentQuestionAnswerText;
+//    private int timeLeftToAnswer;
 
     //</editor-fold>
 
@@ -114,7 +127,6 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         });
 
 
-
         gameTitle = (TextView) findViewById(R.id.game_title);
         score = (TextView) findViewById(R.id.score);
         position = (TextView) findViewById(R.id.position);
@@ -124,14 +136,25 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         scoreboardBtn = (Button) findViewById(R.id.scoreboard_btn);
         questionsBtn = (Button) findViewById(R.id.questions_btn);
 
-        scoreboardBtn.setOnClickListener(new View.OnClickListener(){
+        currentQuestionTimeLeftTextView = (TextView) findViewById(R.id.current_question_time_left_text_view);
+        currentQuestionTextView = (TextView) findViewById(R.id.current_question_text_view);
+        currentQuestionAnswerTextView = (TextView) findViewById(R.id.current_question_answer_text_view);
+        currentQuestionRoot = (LinearLayout) findViewById(R.id.current_question_root);
+        currentQuestionRoot.setVisibility(View.GONE);
+
+        scoreboardBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(context, ViewScoreboardActivity.class);
+                String positionText = (String) position.getText();
+                String totalPlayersText = (String) totalPlayers.getText();
+
+                intent.putExtra("position", positionText);
+                intent.putExtra("totalPlayers", totalPlayersText);
                 startActivity(intent);
             }
         });
 
-        questionsBtn.setOnClickListener(new View.OnClickListener(){
+        questionsBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(context, ViewQuestionsActivity.class);
                 startActivity(intent);
@@ -154,6 +177,18 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         super.onStart();
         questionEventsHandler.register();
         EventBus.getDefault().register(context);
+//        Intent intent = getIntent();
+//        currentQuestionText = intent.getStringExtra("questionText");
+//        currentQuestionAnswerText = intent.getStringExtra("answerText");
+//        timeLeftToAnswer = intent.getIntExtra("timeToAnswer",0);
+//        if (currentQuestionText != null && currentQuestionAnswerText != null) {
+//            currentQuestionTimeLeftTextView.setText("מסתיימת בעוד מספר דקות");
+//            currentQuestionTextView.setText(currentQuestionText);
+//            currentQuestionAnswerTextView.setText(currentQuestionAnswerText);
+//            currentQuestionText = null;
+//            currentQuestionAnswerText = null;
+//        }
+
     }
 
     @Override
@@ -164,6 +199,10 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         if (boundToSignalRService) {
             unbindService(signalRServiceConnection);
             boundToSignalRService = false;
+        }
+        if (timeLeftToCurrentQuestionTimer != null) {
+            timeLeftToCurrentQuestionTimer.cancel();
+            timeLeftToCurrentQuestionTimer = null;
         }
         super.onStop();
     }
@@ -208,8 +247,61 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         totalPlayers.setText(playerScore.getTotalPlayers().toString());
         totalOpenQuestions.setText(playerScore.getTotalOpenQuestions().toString());
         totalQuestions.setText(playerScore.getTotalQuestions().toString());
-    }
+        String currentQuestionText = playerScore.getCurrentQuestionText();
+        if (currentQuestionText != null && currentQuestionText.length() > 0) {
+            currentQuestionRoot.setVisibility(View.VISIBLE);
+            //currentQuestionTimeLeftTextView.setText(Integer.toString(playerScore.getCurrentQuestionTimeLeftToAnswer()));
+            currentQuestionTextView.setText(playerScore.getCurrentQuestionText());
+            currentQuestionAnswerTextView.setText(playerScore.getCurrentQuestionAnswerText());
 
+            long currentQuestionUnixStartTime = playerScore.getCurrentQuestionUnixStartTime();
+            Date now = new Date();
+            long diffInMilliseconds = now.getTime() - currentQuestionUnixStartTime;
+            int currentQuestionExpirationInMin = playerScore.getCurrentQuestionExpirationInMin();
+
+            timeLeftToCurrentQuestionTimer = new CountDownTimer(currentQuestionExpirationInMin*60*1000 - diffInMilliseconds, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                    int min = (int)Math.floor(millisUntilFinished / 1000 / 60);
+                    int sec = ((int)Math.floor(millisUntilFinished/1000) % 60);
+                    String minString = Integer.toString(min);
+                    String secString = Integer.toString(sec);
+
+                    if (min < 10)
+                        minString =  "0" + minString;
+                    if (sec < 10)
+                        secString =  "0" + secString;
+
+                    currentQuestionTimeLeftTextView.setText(minString + ":" + secString);
+//                    if (millisUntilFinished < 30*1000)
+//                        currentQuestionTimeLeftTextView.setText("30 sec");
+//                    if (millisUntilFinished < 60*1000)
+//                        currentQuestionTimeLeftTextView.setText("1 min");
+//                    else if (millisUntilFinished < 2*60*1000)
+//                        currentQuestionTimeLeftTextView.setText("2 min");
+//                    else if (millisUntilFinished < 3*60*1000)
+//                        currentQuestionTimeLeftTextView.setText("3 min");
+//                    else if (millisUntilFinished < 4*60*1000)
+//                        currentQuestionTimeLeftTextView.setText("4 min");
+//                    else if (millisUntilFinished < 5*60*1000)
+//                        currentQuestionTimeLeftTextView.setText("5 min");
+//
+//                    else
+//                        currentQuestionTimeLeftTextView.setText("more than 5 min");
+                }
+
+                @Override
+                public void onFinish() {
+                    currentQuestionTimeLeftTextView.setText(R.string.lbl_few_moments);
+                }
+            }.start();
+
+
+
+        }
+
+    }
 
 
     //</editor-fold>

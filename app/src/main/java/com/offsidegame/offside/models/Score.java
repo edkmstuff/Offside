@@ -4,25 +4,17 @@ package com.offsidegame.offside.models;
  * Created by KFIR on 12/7/2016.
  */
 public class Score {
-    @com.google.gson.annotations.SerializedName("Position")
+    @com.google.gson.annotations.SerializedName("P")
     private int position;
 
-    @com.google.gson.annotations.SerializedName("Name")
+    @com.google.gson.annotations.SerializedName("N")
     private String name;
 
-    @com.google.gson.annotations.SerializedName("ImageUrl")
+    @com.google.gson.annotations.SerializedName("IU")
     private String imageUrl;
 
-    @com.google.gson.annotations.SerializedName("Points")
+    @com.google.gson.annotations.SerializedName("PO")
     private int points;
-
-    public Score (int position, String name, String imageUrl, int points){
-        this.points = position;
-        this.name = name;
-        this.imageUrl = imageUrl;
-        this.points = points;
-    }
-
 
     public int getPosition() {
         return position;

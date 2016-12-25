@@ -50,6 +50,8 @@ public class ViewScoreboardActivity extends AppCompatActivity {
             isBoundToSignalRService = false;
         }
     };
+    private String position;
+    private String totalPlayers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,10 @@ public class ViewScoreboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_scoreboard);
         gameDidNotStartYet = (TextView) findViewById(R.id.sb_game_did_not_start_yet_text_view);
         gameDidNotStartYet.setVisibility(View.GONE);
+        Intent intent = getIntent();
+        position = intent.getStringExtra("position");
+        totalPlayers = intent.getStringExtra("totalPlayers");
+
     }
 
     @Override

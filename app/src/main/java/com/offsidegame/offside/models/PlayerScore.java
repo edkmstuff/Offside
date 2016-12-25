@@ -1,53 +1,50 @@
 package com.offsidegame.offside.models;
 
+import java.util.Date;
+
 /**
  * Created by KFIR on 11/14/2016.
  */
 
 public class PlayerScore {
 
-    @com.google.gson.annotations.SerializedName("GameId")
-    private String gameId;
 
-    @com.google.gson.annotations.SerializedName("GameTitle")
+
+    @com.google.gson.annotations.SerializedName("GT")
     private String gameTitle;
 
-    @com.google.gson.annotations.SerializedName("UserName")
-    private String userName;
 
-    @com.google.gson.annotations.SerializedName("Score")
+
+    @com.google.gson.annotations.SerializedName("S")
     private Integer score;
 
-    @com.google.gson.annotations.SerializedName("Position")
+    @com.google.gson.annotations.SerializedName("P")
     private Integer position;
 
-    @com.google.gson.annotations.SerializedName("TotalPlayers")
+    @com.google.gson.annotations.SerializedName("TP")
     private Integer totalPlayers;
 
-    @com.google.gson.annotations.SerializedName("LeaderScore")
-    private Integer leaderScore;
 
-    @com.google.gson.annotations.SerializedName("TotalOpenQuestions")
+
+    @com.google.gson.annotations.SerializedName("TOQ")
     private Integer totalOpenQuestions;
 
-    @com.google.gson.annotations.SerializedName("TotalQuestions")
+    @com.google.gson.annotations.SerializedName("TQ")
     private Integer totalQuestions;
 
+    @com.google.gson.annotations.SerializedName("CQT")
+    private String currentQuestionText;
+
+    @com.google.gson.annotations.SerializedName("CQAT")
+    private String currentQuestionAnswerText;
+
+    @com.google.gson.annotations.SerializedName("CQUST")
+    private long currentQuestionUnixStartTime;
+
+    @com.google.gson.annotations.SerializedName("CQEIM")
+    private int currentQuestionExpirationInMin;
 
 
-
-    public PlayerScore() {
-
-    }
-
-
-    public String getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
 
     public String getGameTitle() {
         return gameTitle;
@@ -57,19 +54,19 @@ public class PlayerScore {
         this.gameTitle = gameTitle;
     }
 
-    public String getUserName() {
-        return userName;
+    public Integer getScore() {
+        return score;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setScore(Integer score) {
+        this.score = score;
     }
 
     public Integer getPosition() {
         return position;
     }
 
-    public void setPosition(int position) {
+    public void setPosition(Integer position) {
         this.position = position;
     }
 
@@ -77,7 +74,7 @@ public class PlayerScore {
         return totalPlayers;
     }
 
-    public void setTotalPlayers(int totalPlayers) {
+    public void setTotalPlayers(Integer totalPlayers) {
         this.totalPlayers = totalPlayers;
     }
 
@@ -85,24 +82,8 @@ public class PlayerScore {
         return totalOpenQuestions;
     }
 
-    public void setTotalOpenQuestions(int totalOpenQuestions) {
+    public void setTotalOpenQuestions(Integer totalOpenQuestions) {
         this.totalOpenQuestions = totalOpenQuestions;
-    }
-
-    public Integer getLeaderScore() {
-        return leaderScore;
-    }
-
-    public void setLeaderScore(int leaderScore) {
-        this.leaderScore = leaderScore;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 
     public Integer getTotalQuestions() {
@@ -111,6 +92,38 @@ public class PlayerScore {
 
     public void setTotalQuestions(Integer totalQuestions) {
         this.totalQuestions = totalQuestions;
+    }
+
+    public String getCurrentQuestionText() {
+        return currentQuestionText;
+    }
+
+    public void setCurrentQuestionText(String currentQuestionText) {
+        this.currentQuestionText = currentQuestionText;
+    }
+
+    public String getCurrentQuestionAnswerText() {
+        return currentQuestionAnswerText;
+    }
+
+    public void setCurrentQuestionAnswerText(String currentQuestionAnswerText) {
+        this.currentQuestionAnswerText = currentQuestionAnswerText;
+    }
+
+    public long getCurrentQuestionUnixStartTime() {
+        return currentQuestionUnixStartTime;
+    }
+
+    public void setCurrentQuestionUnixStartTime(long currentQuestionUnixStartTime) {
+        this.currentQuestionUnixStartTime = currentQuestionUnixStartTime;
+    }
+
+    public int getCurrentQuestionExpirationInMin() {
+        return currentQuestionExpirationInMin;
+    }
+
+    public void setCurrentQuestionExpirationInMin(int currentQuestionExpirationInMin) {
+        this.currentQuestionExpirationInMin = currentQuestionExpirationInMin;
     }
 }
 

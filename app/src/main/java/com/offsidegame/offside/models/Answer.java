@@ -8,63 +8,64 @@ import java.io.Serializable;
 
 public class Answer implements Serializable {
 
-    @com.google.gson.annotations.SerializedName("Id")
+    @com.google.gson.annotations.SerializedName("I")
     private String id;
-    @com.google.gson.annotations.SerializedName("AnswerNumber")
-    private String answerNumber;
-    @com.google.gson.annotations.SerializedName("AnswerText")
+    @com.google.gson.annotations.SerializedName("AT")
     private String answerText;
-//    @com.google.gson.annotations.SerializedName("AnswerImage")
-//    private String answerImage;
-    @com.google.gson.annotations.SerializedName("PercentUsersAnswered")
+    @com.google.gson.annotations.SerializedName("PUA")
     private double percentUsersAnswered;
-    @com.google.gson.annotations.SerializedName("Score")
+    @com.google.gson.annotations.SerializedName("S")
     private double score;
-    @com.google.gson.annotations.SerializedName("IsCorrect")
+    @com.google.gson.annotations.SerializedName("IC")
     private boolean isCorrect;
-    @com.google.gson.annotations.SerializedName("IsTheAnswerOfTheUser")
+    @com.google.gson.annotations.SerializedName("ITAOTU")
     private boolean isTheAnswerOfTheUser;
-
-    public Answer(){}
-    public Answer(String id, String answerText, double percentUsersAnswered, double score, boolean isCorrect, boolean isTheAnswerOfTheUser  ){
-        this.id = id;
-        this.answerText = answerText;
-        this.percentUsersAnswered = percentUsersAnswered;
-        this.score = score;
-        this.isCorrect = isCorrect;
-        this.isTheAnswerOfTheUser = isTheAnswerOfTheUser;
-    }
-
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAnswerText() {
         return answerText;
     }
 
-//    public String getAnswerImage() {
-//        return answerImage;
-//    }
+    public void setAnswerText(String answerText) {
+        this.answerText = answerText;
+    }
 
     public double getPercentUsersAnswered() {
         return percentUsersAnswered;
+    }
+
+    public void setPercentUsersAnswered(double percentUsersAnswered) {
+        this.percentUsersAnswered = percentUsersAnswered;
+    }
+
+    public boolean isTheAnswerOfTheUser() {
+        return isTheAnswerOfTheUser;
+    }
+
+    public void setTheAnswerOfTheUser(boolean theAnswerOfTheUser) {
+        isTheAnswerOfTheUser = theAnswerOfTheUser;
     }
 
     public double getScore() {
         return score;
     }
 
-    public boolean getIsCorrect() {
+    public void setScore(double score) {
+        this.score = score;
+    }
+
+    public boolean isCorrect() {
         return isCorrect;
     }
 
-    public boolean getIsTheAnswerOfTheUser() {
-        return isTheAnswerOfTheUser;
-    }
-
-    public void setIsCorrect() {
-        this.isCorrect= true;
+    public void setCorrect(boolean correct) {
+        isCorrect = correct;
     }
 }

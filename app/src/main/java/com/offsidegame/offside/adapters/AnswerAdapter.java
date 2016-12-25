@@ -158,7 +158,7 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
 
             viewHolder.processedQuestionUserAnswerImageView.setAlpha(0.0f);
 
-            if (answer.getIsTheAnswerOfTheUser()) {
+            if (answer.isTheAnswerOfTheUser()) {
                 loadFbImage(viewHolder.processedQuestionUserAnswerImageView);
             }
 
@@ -183,12 +183,12 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
             viewHolder.closedQuestionUserAnswerImageView.setAlpha(0.0f);
 
 
-            if (answer.getIsTheAnswerOfTheUser()) {
+            if (answer.isTheAnswerOfTheUser()) {
                 loadFbImage(viewHolder.closedQuestionUserAnswerImageView);
             }
 
             viewHolder.closedQuestionRightWrongAnswerIndicatorImageView.setVisibility(View.VISIBLE);
-            if (answer.getIsCorrect())
+            if (answer.isCorrect())
                 viewHolder.closedQuestionRightWrongAnswerIndicatorImageView.setImageResource(R.drawable.ic_done_black_24dp);
             else
                 viewHolder.closedQuestionRightWrongAnswerIndicatorImageView.setImageResource(R.drawable.ic_clear_red_24dp);

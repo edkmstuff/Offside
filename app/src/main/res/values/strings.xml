@@ -61,6 +61,10 @@
     <string name="lbl_game_did_not_start_yet">עוד לא התחלנו לשאול... </string>
     <string name="lbl_getting_answers_and_calculating_statistics">אוסף תשובות ומחשב סטטיסטיקה</string>
     <string name="lbl_sponsored_by">בחסות</string>
+    <string name="lbl_current_question">שאלה נוכחית:</string>
+    <string name="lbl_your_answer">התשובה שלך:</string>
+    <string name="lbl_few_moments">כמה רגעים</string>
+    <string name="time_left">זמן שנותר:</string>
 
 
 </resources>
