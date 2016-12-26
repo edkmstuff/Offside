@@ -131,7 +131,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         String name = loginEvent.getName();
         //ToDo: get the user email from facebook profile
         String email = isFacebookLogin ? null : loginEvent.getId();
-        String profilePictureUrl = isFacebookLogin ? Profile.getCurrentProfile().getProfilePictureUri(150, 150).toString() : "http://offside.somee.com/defaultImage.jpg";
+        String profilePictureUrl = isFacebookLogin ? Profile.getCurrentProfile().getProfilePictureUri(150, 150).toString() : "http://offside.somee.com/images/defaultImage.jpg";
         String password = isFacebookLogin ? null : loginEvent.getPassword();
         User user = new User(id, name, email, profilePictureUrl, password);
 
