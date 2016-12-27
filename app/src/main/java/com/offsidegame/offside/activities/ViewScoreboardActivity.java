@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
@@ -52,6 +53,9 @@ public class ViewScoreboardActivity extends AppCompatActivity {
     };
     private String position;
     private String totalPlayers;
+    private TextView positionTextView;
+    private TextView totalPlayersTextView;
+    private LinearLayout positionRoot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +63,17 @@ public class ViewScoreboardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_scoreboard);
         gameDidNotStartYet = (TextView) findViewById(R.id.sb_game_did_not_start_yet_text_view);
         gameDidNotStartYet.setVisibility(View.GONE);
+        positionRoot = (LinearLayout) findViewById(R.id.sb_position_root);
+        positionRoot.setVisibility(View.GONE);
         Intent intent = getIntent();
         position = intent.getStringExtra("position");
         totalPlayers = intent.getStringExtra("totalPlayers");
+        positionTextView = (TextView) findViewById(R.id.sb_position_text_view);
+        totalPlayersTextView = (TextView) findViewById(R.id.sb_total_players_text_view);
+        positionTextView.setText(position);
+        totalPlayersTextView.setText(totalPlayers);
+
+
 
     }
 
@@ -113,7 +125,8 @@ public class ViewScoreboardActivity extends AppCompatActivity {
         Score[] scores = scoreboard.getScores();
         if (scores == null || scores.length < 1){
             gameDidNotStartYet.setVisibility(View.VISIBLE);
-            return;
+        }else{
+            positionRoot.setVisibility(View.VISIBLE);
         }
 
         ScoresFragment scoresFragment = (ScoresFragment) getSupportFragmentManager().findFragmentById(R.id.scores_fragment);

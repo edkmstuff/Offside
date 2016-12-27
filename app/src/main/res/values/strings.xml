@@ -46,7 +46,7 @@
     <string name="lbl_go">יוצאים לדרך!</string>
     <string name="lbl_question_starts_in">"השאלה תתחיל בעוד:"</string>
     <string name="lbl_your_score">נקודות</string>
-    <string name="lbl_your_position">מיקום</string>
+    <string name="lbl_your_position">מיקומך:</string>
     <string name="lbl_out_of">מתוך</string>
     <string name="lbl_open_questions">שאלות פתוחות</string>
     <string name="lbl_answered_by">ענו</string>
@@ -65,6 +65,7 @@
     <string name="lbl_your_answer">התשובה שלך:</string>
     <string name="lbl_few_moments">כמה רגעים</string>
     <string name="time_left">זמן שנותר:</string>
+    <string name="lbl_position_outof">מיקום</string>
 
 
 </resources>
