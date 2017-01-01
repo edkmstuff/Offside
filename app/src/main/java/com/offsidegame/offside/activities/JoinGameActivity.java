@@ -83,9 +83,7 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
 //            return;
 //        }
 //        else{
-            Intent intent = new Intent();
-            intent.setClass(context, SignalRService.class);
-            bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+
 
             userName = (TextView) findViewById(R.id.join_game_user_name_text_view);
             userName.setText(settings.getString(getString(R.string.user_name_key),""));
@@ -144,6 +142,14 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
 
 
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Intent intent = new Intent();
+        intent.setClass(context, SignalRService.class);
+        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override

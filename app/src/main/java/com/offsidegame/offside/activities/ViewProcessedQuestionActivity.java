@@ -93,9 +93,7 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         timeToStartQuestionText.setText(countDownLabel);
 
 
-        Intent bindServiceIntent = new Intent();
-        bindServiceIntent.setClass(context, SignalRService.class);
-        bindService(bindServiceIntent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+
 
 
 //        // to go back to view player score
@@ -111,7 +109,7 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
 //        delayHandler.postDelayed(goToViewPlayerScore, 10000);
 
 
-        timer = new CountDownTimer(10000, 1000) {
+        timer = new CountDownTimer(15000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 timeToStartQuestionText.setText(Integer.toString( (int)Math.floor(millisUntilFinished / 1000)));
@@ -131,6 +129,14 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
 
 
 
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Intent intent = new Intent();
+        intent.setClass(context, SignalRService.class);
+        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override

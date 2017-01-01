@@ -29,11 +29,14 @@ import com.offsidegame.offside.models.User;
 import org.greenrobot.eventbus.EventBus;
 
 import java.net.InetAddress;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 import microsoft.aspnet.signalr.client.Action;
+import microsoft.aspnet.signalr.client.ConnectionState;
 import microsoft.aspnet.signalr.client.Platform;
 import microsoft.aspnet.signalr.client.SignalRFuture;
+import microsoft.aspnet.signalr.client.StateChangedCallback;
 import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
 import microsoft.aspnet.signalr.client.hubs.HubConnection;
 import microsoft.aspnet.signalr.client.hubs.HubProxy;
@@ -51,10 +54,11 @@ public class SignalRService extends Service {
     private HubProxy hub;
     private Handler handler; // to display Toast message
     private final IBinder binder = new LocalBinder(); // Binder given to clients
+    private Date startReconnectiong = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("192.168.1.140:8080");
     ////public final String ip = new String("10.0.0.55:8080");
-    public final String ip = new String("offside.somee.com");
+    //public final String ip = new String("offside.somee.com");
 
 
     //<editor-fold desc="constructors">
@@ -92,11 +96,39 @@ public class SignalRService extends Service {
 
     private void startSignalR() {
         Platform.loadPlatformComponent(new AndroidPlatformComponent());
-        final String serverUrl = "http://" + ip ;
+        final String serverUrl = "http://" + ip;
         hubConnection = new HubConnection(serverUrl);
         final String SERVER_HUB = "OffsideHub";
         hub = hubConnection.createHubProxy(SERVER_HUB);
         ClientTransport clientTransport = new ServerSentEventsTransport(hubConnection.getLogger());
+
+        hubConnection.stateChanged(new StateChangedCallback() {
+
+            @Override
+            public void stateChanged(ConnectionState oldState, ConnectionState newState) {
+                if (newState == ConnectionState.Disconnected) {
+                    //try reconnection for 2 min
+                    if (startReconnectiong == null) {
+                        startReconnectiong = new Date();
+                    }
+                    Date now = new Date();
+                    while (startReconnectiong != null && now.getTime() - startReconnectiong.getTime() < 2 * 60 * 1000 && hubConnection.getState() == ConnectionState.Disconnected) {
+                        try {
+                            Thread.sleep(10000);
+                            startSignalR();
+                            now = new Date();
+
+                        } catch (Exception ex) {
+                            return;
+                        }
+                    }
+                }
+                if (newState == ConnectionState.Connected)
+                    startReconnectiong = null;
+            }
+        });
+
+
         SignalRFuture<Void> signalRFuture = hubConnection.start(clientTransport);
 
         try {
@@ -134,16 +166,16 @@ public class SignalRService extends Service {
             }
         }, Question.class);
 
-        hub.on("UpdatePlayerScore", new SubscriptionHandler1<String>(){
+        hub.on("UpdatePlayerScore", new SubscriptionHandler1<String>() {
             @Override
             public void run(String gameId) {
                 SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-                String userGameId = settings.getString(getString(R.string.game_id_key),"");
+                String userGameId = settings.getString(getString(R.string.game_id_key), "");
                 if (!userGameId.equals(gameId))
                     return;
 
-                String userId =  settings.getString(getString(R.string.user_id_key),"");
-                String userName = settings.getString(getString(R.string.user_name_key),"");
+                String userId = settings.getString(getString(R.string.user_id_key), "");
+                String userName = settings.getString(getString(R.string.user_name_key), "");
 
                 getPlayerScore(gameId, userId, userName);
 
@@ -163,8 +195,8 @@ public class SignalRService extends Service {
             @Override
             public void run(LoginInfo loginInfo) throws Exception {
                 boolean isFacebookLogin = false;
-                String password =loginInfo.getPassword();
-                EventBus.getDefault().post(new LoginEvent(loginInfo.getId(), loginInfo.getName(),password, isFacebookLogin));
+                String password = loginInfo.getPassword();
+                EventBus.getDefault().post(new LoginEvent(loginInfo.getId(), loginInfo.getName(), password, isFacebookLogin));
             }
         });
     }
@@ -173,7 +205,7 @@ public class SignalRService extends Service {
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         String userId = settings.getString(getString(R.string.user_id_key), "");
         String userName = settings.getString(getString(R.string.user_name_key), "");
-        String imageUrl = settings.getString(getString(R.string.user_profile_picture_url_key),"");
+        String imageUrl = settings.getString(getString(R.string.user_profile_picture_url_key), "");
 
         hub.invoke(String.class, "JoinGame", gameCode, userId, userName, imageUrl).done(new Action<String>() {
 
@@ -197,7 +229,7 @@ public class SignalRService extends Service {
 
     public void getPlayerScore(String gameId, String userId, String userName) {
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        String imageUrl = settings.getString(getString(R.string.user_profile_picture_url_key),"");
+        String imageUrl = settings.getString(getString(R.string.user_profile_picture_url_key), "");
         hub.invoke(PlayerScore.class, "GetPlayerScore", gameId, userId, userName, imageUrl).done(new Action<PlayerScore>() {
 
             @Override
@@ -208,9 +240,9 @@ public class SignalRService extends Service {
     }
 
 
-    public void postAnswer(String gameId,String questionId,String answerId) {
+    public void postAnswer(String gameId, String questionId, String answerId) {
 
-        hub.invoke(Boolean.class, "PostAnswer", gameId,questionId,answerId).done(new Action<Boolean>(){
+        hub.invoke(Boolean.class, "PostAnswer", gameId, questionId, answerId).done(new Action<Boolean>() {
             @Override
             public void run(Boolean isAnswerAccepted) throws Exception {
                 EventBus.getDefault().post(new IsAnswerAcceptedEvent(isAnswerAccepted));
@@ -242,7 +274,7 @@ public class SignalRService extends Service {
 
     public void saveUser(User user) {
 
-        hub.invoke(Boolean.class, "SaveUser",user.getId(),user.getName(),user.getEmail(),user.getProfilePictureUri(),user.getPassword()).done(new Action<Boolean>(){
+        hub.invoke(Boolean.class, "SaveUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri(), user.getPassword()).done(new Action<Boolean>() {
             @Override
             public void run(Boolean isAnswerAccepted) throws Exception {
                 EventBus.getDefault().post(new IsAnswerAcceptedEvent(isAnswerAccepted));
@@ -267,7 +299,6 @@ public class SignalRService extends Service {
     }
 
     //</editor-fold>
-
 
 
 }

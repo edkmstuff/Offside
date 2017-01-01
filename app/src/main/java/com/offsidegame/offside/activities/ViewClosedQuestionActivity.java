@@ -83,13 +83,8 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
         String questionText = question.getQuestionText();
         questionTextView.setText(questionText);
 
-
-        Intent bindServiceIntent = new Intent();
-        bindServiceIntent.setClass(context, SignalRService.class);
-        bindService(bindServiceIntent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
-
         timeToStartQuestionText = (TextView) findViewById(R.id.timeToStartQuestionText);
-        timer = new CountDownTimer(20000, 1000) {
+        timer = new CountDownTimer(15000, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 timeToStartQuestionText.setText(Integer.toString( (int)Math.floor(millisUntilFinished / 1000)));
@@ -115,6 +110,14 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
 //        };
 //
 //        delayHandler.postDelayed(goToViewPlayerScore, 20000);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Intent intent = new Intent();
+        intent.setClass(context, SignalRService.class);
+        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override

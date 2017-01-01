@@ -38,11 +38,8 @@ public class PlayerScore {
     @com.google.gson.annotations.SerializedName("CQAT")
     private String currentQuestionAnswerText;
 
-    @com.google.gson.annotations.SerializedName("CQUST")
-    private long currentQuestionUnixStartTime;
-
     @com.google.gson.annotations.SerializedName("CQEIM")
-    private int currentQuestionExpirationInMin;
+    private int currentQuestionExpirationInMilliseconds;
 
 
 
@@ -110,20 +107,13 @@ public class PlayerScore {
         this.currentQuestionAnswerText = currentQuestionAnswerText;
     }
 
-    public long getCurrentQuestionUnixStartTime() {
-        return currentQuestionUnixStartTime;
+
+    public int getCurrentQuestionExpirationInMilliseconds() {
+        return currentQuestionExpirationInMilliseconds;
     }
 
-    public void setCurrentQuestionUnixStartTime(long currentQuestionUnixStartTime) {
-        this.currentQuestionUnixStartTime = currentQuestionUnixStartTime;
-    }
-
-    public int getCurrentQuestionExpirationInMin() {
-        return currentQuestionExpirationInMin;
-    }
-
-    public void setCurrentQuestionExpirationInMin(int currentQuestionExpirationInMin) {
-        this.currentQuestionExpirationInMin = currentQuestionExpirationInMin;
+    public void setCurrentQuestionExpirationInMilliseconds(int currentQuestionExpirationInMilliseconds) {
+        this.currentQuestionExpirationInMilliseconds = currentQuestionExpirationInMilliseconds;
     }
 }
 

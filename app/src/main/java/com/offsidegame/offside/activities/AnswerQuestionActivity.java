@@ -45,7 +45,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     private TextView timeToNextQuestionTextView;
     private TextView timeToAnswerTextView;
     private final int timeToNextQuestion = 5000;
-    private final int timeToAnswer = 10000;
+    private final int timeToAnswer = 15000;
     private int secondsLeft = 0;
     private String answerId= null;
     private final DateHelper dateHelper = new DateHelper();
@@ -116,10 +116,6 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         questionState = bundle.getString("questionState");
         questionTextView.setText(question.getQuestionText());
 
-        //bind to signalR service
-        Intent bindServiceIntent = new Intent();
-        bindServiceIntent.setClass(context, SignalRService.class);
-        bindService(bindServiceIntent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
 
         //run timer
 
@@ -164,6 +160,14 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
                 }.start();
             }
         }.start();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Intent intent = new Intent();
+        intent.setClass(context, SignalRService.class);
+        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override

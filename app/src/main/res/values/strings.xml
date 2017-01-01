@@ -66,6 +66,8 @@
     <string name="lbl_few_moments">כמה רגעים</string>
     <string name="time_left">זמן שנותר:</string>
     <string name="lbl_position_outof">מיקום</string>
+    <string name="lbl_next_question_in">השאלה הבאה בעוד</string>
+    <string name="lbl_seconds">שניות</string>
 
 
 </resources>

@@ -86,9 +86,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             return;
         }
 
-        Intent intent = new Intent();
-        intent.setClass(context, SignalRService.class);
-        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+
 
         email = (EditText) findViewById(R.id.email);
         login = (Button) findViewById(R.id.email_login_button);
@@ -102,6 +100,14 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             }
 
         });
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Intent intent = new Intent();
+        intent.setClass(context, SignalRService.class);
+        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override

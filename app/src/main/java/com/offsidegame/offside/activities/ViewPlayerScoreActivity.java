@@ -254,12 +254,10 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
             currentQuestionTextView.setText(playerScore.getCurrentQuestionText());
             currentQuestionAnswerTextView.setText(playerScore.getCurrentQuestionAnswerText());
 
-            long currentQuestionUnixStartTime = playerScore.getCurrentQuestionUnixStartTime();
-            Date now = new Date();
-            long diffInMilliseconds = now.getTime() - currentQuestionUnixStartTime;
-            int currentQuestionExpirationInMin = playerScore.getCurrentQuestionExpirationInMin();
 
-            timeLeftToCurrentQuestionTimer = new CountDownTimer(currentQuestionExpirationInMin*60*1000 - diffInMilliseconds, 1000) {
+            int currentQuestionExpirationInMilliseconds = playerScore.getCurrentQuestionExpirationInMilliseconds();
+
+            timeLeftToCurrentQuestionTimer = new CountDownTimer(currentQuestionExpirationInMilliseconds, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
 
