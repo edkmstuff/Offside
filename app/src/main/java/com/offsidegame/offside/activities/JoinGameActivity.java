@@ -24,6 +24,7 @@ import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.models.GameInfo;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -172,7 +173,11 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onJoinGame(JoinGameEvent joinGameEvent) {
-        String gameId = joinGameEvent.getGameId();
+        GameInfo gameInfo = joinGameEvent.getGameInfo();
+        String gameId = gameInfo.getGameId();
+        int timeToAnswerQuestion = gameInfo.getTimeToAnswerQuestion();
+        int timeToGoBackToPlayerScore = gameInfo.getTimeToGoBackToPlayerScore();
+        int timeToQuestionToPop = gameInfo.getTimeToQuestionToPop();
         if (gameId == null) {
             Toast.makeText(context, "No such game code", Toast.LENGTH_LONG).show();
             return;
@@ -181,6 +186,10 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
         SharedPreferences.Editor editor = settings.edit();
 
         editor.putString(getString(R.string.game_id_key), gameId);
+        editor.putInt(getString(R.string.time_to_answer_question_key),timeToAnswerQuestion);
+        editor.putInt(getString(R.string.time_to_go_back_to_player_score_key),timeToGoBackToPlayerScore);
+        editor.putInt(getString(R.string.time_to_question_to_pop_key),timeToQuestionToPop);
+
         editor.commit();
 
         Intent intent = new Intent(context, ViewPlayerScoreActivity.class);

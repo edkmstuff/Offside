@@ -4,8 +4,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.icu.util.Calendar;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.os.IBinder;
@@ -44,8 +44,8 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     private CountDownTimer timeToNextQuestionTimer;
     private TextView timeToNextQuestionTextView;
     private TextView timeToAnswerTextView;
-    private final int timeToNextQuestion = 5000;
-    private final int timeToAnswer = 15000;
+    private int timeToQuestionToPop ;
+    private int timeToAnswer ;
     private int secondsLeft = 0;
     private String answerId= null;
     private final DateHelper dateHelper = new DateHelper();
@@ -68,6 +68,10 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
             isBoundToSignalRService = false;
         }
     };
+
+    @Override
+    public void onBackPressed() {
+    }
 
     private boolean isAnswered = false;
 
@@ -99,6 +103,8 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer_question);
 
+        final SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+
         questionAndAnswersRoot = (LinearLayout) findViewById(R.id.question_and_answers_root);
         calcQuestionStatisticsRoot = (LinearLayout) findViewById(R.id.calc_question_statistics_root);
         timeToNextQuestionRoot = (LinearLayout) findViewById(R.id.time_to_next_question_root);
@@ -116,10 +122,11 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         questionState = bundle.getString("questionState");
         questionTextView.setText(question.getQuestionText());
 
-
         //run timer
 
-        timeToNextQuestionTimer = new CountDownTimer(timeToNextQuestion, 100) {
+        timeToQuestionToPop = settings.getInt(getString(R.string.time_to_question_to_pop_key),5000);
+
+        timeToNextQuestionTimer = new CountDownTimer(timeToQuestionToPop, 100) {
             public void onTick(long millisUntilFinished) {
                 if (Math.round((float) millisUntilFinished / 1000.0f) != secondsLeft) {
                     secondsLeft = Math.round((float) millisUntilFinished / 1000.0f);
@@ -132,6 +139,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
                 questionAndAnswersRoot.setVisibility(View.VISIBLE);
                 secondsLeft = 0;
 
+                timeToAnswer = settings.getInt(getString(R.string.time_to_answer_question_key),15000);
                 timeToAnswerTimer = new CountDownTimer(timeToAnswer, 100) {
                     @Override
                     public void onTick(long millisUntilFinished) {

@@ -17,6 +17,7 @@ import com.offsidegame.offside.events.IsCloseAnswerAcceptedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.LoginEvent;
 import com.offsidegame.offside.events.QuestionsEvent;
+import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.LoginInfo;
 import com.offsidegame.offside.models.PlayerScore;
 import com.offsidegame.offside.events.PlayerScoreEvent;
@@ -207,11 +208,11 @@ public class SignalRService extends Service {
         String userName = settings.getString(getString(R.string.user_name_key), "");
         String imageUrl = settings.getString(getString(R.string.user_profile_picture_url_key), "");
 
-        hub.invoke(String.class, "JoinGame", gameCode, userId, userName, imageUrl).done(new Action<String>() {
+        hub.invoke(GameInfo.class, "JoinGame", gameCode, userId, userName, imageUrl).done(new Action<GameInfo>() {
 
             @Override
-            public void run(String gameId) throws Exception {
-                EventBus.getDefault().post(new JoinGameEvent(gameId));
+            public void run(GameInfo gameInfo) throws Exception {
+                EventBus.getDefault().post(new JoinGameEvent(gameInfo));
             }
         });
     }

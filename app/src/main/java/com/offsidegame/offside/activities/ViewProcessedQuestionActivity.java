@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
@@ -29,6 +30,7 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
     private TextView questionTextView;
     private TextView timeToStartQuestionText;
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
+    private int timeToGoBackToPlayerScore;
 
 
     private Handler delayHandler;
@@ -78,6 +80,8 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_processed_question);
 
+        final SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+
         //get the question
         Bundle bundle = getIntent().getExtras();
         question = (Question) bundle.getSerializable("question");
@@ -109,7 +113,8 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
 //        delayHandler.postDelayed(goToViewPlayerScore, 10000);
 
 
-        timer = new CountDownTimer(15000, 1000) {
+        timeToGoBackToPlayerScore = settings.getInt(getString(R.string.time_to_go_back_to_player_score_key),15000);
+        timer = new CountDownTimer(timeToGoBackToPlayerScore, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 timeToStartQuestionText.setText(Integer.toString( (int)Math.floor(millisUntilFinished / 1000)));
@@ -161,6 +166,10 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         timer = null;
 
         super.onStop();
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 
 

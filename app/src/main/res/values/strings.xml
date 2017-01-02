@@ -71,6 +71,9 @@
     <string name="disconnect">התנתק</string>
     <string name="refresh">רענן</string>
     <string name="back">back</string>
+    <string name="time_to_answer_question_key">timeToAnswerQuestion</string>
+    <string name="time_to_go_back_to_player_score_key">timeToGoBackToPlayerScore</string>
+    <string name="time_to_question_to_pop_key">timeToQuestionToPop</string>
 
 
 </resources>

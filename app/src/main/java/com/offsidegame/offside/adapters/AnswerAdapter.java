@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.facebook.Profile;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.Answer;
@@ -189,7 +188,7 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
 
             viewHolder.closedQuestionRightWrongAnswerIndicatorImageView.setVisibility(View.VISIBLE);
             if (answer.isCorrect())
-                viewHolder.closedQuestionRightWrongAnswerIndicatorImageView.setImageResource(R.drawable.ic_done_black_24dp);
+                viewHolder.closedQuestionRightWrongAnswerIndicatorImageView.setImageResource(R.drawable.ic_done_white_24dp);
             else
                 viewHolder.closedQuestionRightWrongAnswerIndicatorImageView.setImageResource(R.drawable.ic_clear_red_24dp);
 

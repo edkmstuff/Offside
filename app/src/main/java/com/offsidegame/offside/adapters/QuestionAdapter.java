@@ -1,6 +1,5 @@
 package com.offsidegame.offside.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -11,18 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.support.v7.app.AppCompatActivity;
 
-import com.facebook.Profile;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.activities.fragments.QuestionsFragment;
-import com.offsidegame.offside.activities.fragments.ScoresFragment;
+import com.offsidegame.offside.activities.ViewClosedQuestionActivity;
+import com.offsidegame.offside.activities.ViewQuestionsActivity;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.Question;
-import com.offsidegame.offside.models.Score;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -102,7 +97,10 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
 
          if (!question.isActive()) {
             if (answer.isCorrect())
-                viewHolder.questionRightWrongAnswerIndicator.setImageResource(R.drawable.ic_done_black_24dp);
+                if(context.getClass()== ViewQuestionsActivity.class)
+                    viewHolder.questionRightWrongAnswerIndicator.setImageResource(R.drawable.ic_done_green_24dp);
+                else
+                    viewHolder.questionRightWrongAnswerIndicator.setImageResource(R.drawable.ic_done_white_24dp);
             else
                 viewHolder.questionRightWrongAnswerIndicator.setImageResource(R.drawable.ic_clear_red_24dp);
         }
