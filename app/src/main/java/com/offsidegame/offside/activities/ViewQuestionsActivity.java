@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -30,6 +32,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     private SignalRService signalRService;
     private TextView gameDidNotStartYetTextView;
     private boolean isBoundToSignalRService = false;
+    private Toolbar toolbar;
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
@@ -52,6 +55,12 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_questions);
+
+        toolbar = (Toolbar) findViewById((R.id.app_bar));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         gameDidNotStartYetTextView = (TextView) findViewById(R.id.game_did_not_start_yet_text_view);
         gameDidNotStartYetTextView.setVisibility(View.GONE);
     }
@@ -110,6 +119,18 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         questionsFragment.updateData(questions);
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 

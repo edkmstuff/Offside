@@ -9,6 +9,9 @@
     android:orientation="vertical"
 
     tools:context="com.offsidegame.offside.activities.ViewScoreboardActivity">
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar" />
 
     <TextView
         android:id="@+id/sb_game_did_not_start_yet_text_view"

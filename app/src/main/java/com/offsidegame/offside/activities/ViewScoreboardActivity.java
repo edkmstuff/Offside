@@ -1,5 +1,6 @@
 package com.offsidegame.offside.activities;
 
+import android.app.ActionBar;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,8 @@ import android.os.IBinder;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,6 +38,8 @@ public class ViewScoreboardActivity extends AppCompatActivity {
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
+    private Toolbar toolbar;
+
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
@@ -61,6 +66,15 @@ public class ViewScoreboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_scoreboard);
+        toolbar = (Toolbar) findViewById((R.id.app_bar));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+
+
+
         gameDidNotStartYet = (TextView) findViewById(R.id.sb_game_did_not_start_yet_text_view);
         gameDidNotStartYet.setVisibility(View.GONE);
         positionRoot = (LinearLayout) findViewById(R.id.sb_position_root);
@@ -133,6 +147,18 @@ public class ViewScoreboardActivity extends AppCompatActivity {
         scoresFragment.updateData(scoreboard);
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                this.finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 

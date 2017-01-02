@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -172,6 +173,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
@@ -206,6 +208,17 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         }
         super.onStop();
     }
+
+    //disable back button (option 1)
+    @Override
+    public void onBackPressed() {
+    }
+
+    //disable back button (option 2)
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        return false;
+//    }
 
     //</editor-fold>
 

@@ -68,6 +68,9 @@
     <string name="lbl_position_outof">מיקום</string>
     <string name="lbl_next_question_in">השאלה הבאה בעוד</string>
     <string name="lbl_seconds">שניות</string>
+    <string name="disconnect">התנתק</string>
+    <string name="refresh">רענן</string>
+    <string name="back">back</string>
 
 
 </resources>
