@@ -14,10 +14,15 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.models.Question;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class ViewClosedQuestionActivity extends AppCompatActivity implements IQuestionHolder {
 
@@ -127,6 +132,7 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     @Override
     public void onStart() {
         super.onStart();
+        EventBus.getDefault().register(context);
         questionEventsHandler.register();
         MediaPlayer player = MediaPlayer.create(context, R.raw.referee_short_whistle);
         player.start();
@@ -137,6 +143,7 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     @Override
     public void onStop() {
         questionEventsHandler.unregister();
+        EventBus.getDefault().unregister(context);
         // Unbind from the service
         if (isBoundToSignalRService) {
             unbindService(signalRServiceConnection);
@@ -153,6 +160,17 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     @Override
     public void onBackPressed() {
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+        Context eventContext = signalRServiceBoundEvent.getContext();
+        if (eventContext == null) {
+            Intent intent = new Intent(context, JoinGameActivity.class);
+            context.startActivity(intent);
+            return;
+        }
+    }
+
     //</editor-fold>
 
     //<editor-fold desc="Subscribers">

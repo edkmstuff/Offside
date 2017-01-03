@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.SignalRService;
@@ -237,6 +238,16 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         questionAndAnswersRoot.setVisibility(View.GONE);
         isAnswered = true;
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+        Context eventContext = signalRServiceBoundEvent.getContext();
+        if (eventContext == null) {
+            Intent intent = new Intent(context, JoinGameActivity.class);
+            context.startActivity(intent);
+            return;
+        }
     }
 
 

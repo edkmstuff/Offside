@@ -13,11 +13,16 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.models.Question;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class ViewProcessedQuestionActivity extends AppCompatActivity implements IQuestionHolder {
 
@@ -148,12 +153,14 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
     public void onStart() {
         super.onStart();
         questionEventsHandler.register();
+        EventBus.getDefault().register(context);
 
     }
 
     @Override
     public void onStop() {
         questionEventsHandler.unregister();
+        EventBus.getDefault().unregister(context);
         // Unbind from the service
         if (isBoundToSignalRService) {
             unbindService(signalRServiceConnection);
@@ -170,6 +177,16 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
 
     @Override
     public void onBackPressed() {
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+        Context eventContext = signalRServiceBoundEvent.getContext();
+        if (eventContext == null) {
+            Intent intent = new Intent(context, JoinGameActivity.class);
+            context.startActivity(intent);
+            return;
+        }
     }
 
 

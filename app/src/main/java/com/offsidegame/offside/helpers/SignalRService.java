@@ -58,9 +58,9 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnectiong = null;
 
-    public final String ip = new String("192.168.1.140:8080");
+    //public final String ip = new String("192.168.1.140:8080");
     //public final String ip = new String("10.0.0.17:8080");
-    //public final String ip = new String("offside.somee.com");
+    public final String ip = new String("offside.somee.com");
 
 
     //<editor-fold desc="constructors">
@@ -79,7 +79,7 @@ public class SignalRService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int result = super.onStartCommand(intent, flags, startId);
-        startSignalR();
+        startSignalR(false);
         return result;
     }
 
@@ -92,11 +92,11 @@ public class SignalRService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         // Return the communication channel to the service.
-        startSignalR();
+        startSignalR(false);
         return binder;
     }
 
-    private void startSignalR() {
+    private void startSignalR(Boolean notifyWhenConnected) {
         Platform.loadPlatformComponent(new AndroidPlatformComponent());
         final String serverUrl = "http://" + ip;
         hubConnection = new HubConnection(serverUrl);
@@ -113,25 +113,22 @@ public class SignalRService extends Service {
                     if (startReconnectiong == null) {
                         startReconnectiong = new Date();
                     }
+                    else
+                        return; // we are already trying to reconnect
                     Date now = new Date();
-                    while (startReconnectiong != null && now.getTime() - startReconnectiong.getTime() < 10 * 60 * 1000 && hubConnection.getState() == ConnectionState.Disconnected) {
+                    while (startReconnectiong != null && now.getTime() - startReconnectiong.getTime() < 10 * 60 * 1000
+                            && hubConnection.getState() == ConnectionState.Disconnected) {
                         try {
-
-                            Thread.sleep(10000);
-
-                            startSignalR();
+                            startSignalR(true);
                             now = new Date();
-
+                            //Thread.sleep(30000);
 
                         } catch (Exception ex) {
                             return;
                         }
                     }
                 }
-                if (newState == ConnectionState.Connected) {
-                    EventBus.getDefault().post(new SignalRServiceBoundEvent(null));
-                    startReconnectiong = null;
-                }
+
             }
         });
 
@@ -142,10 +139,16 @@ public class SignalRService extends Service {
             signalRFuture.get();
         } catch (InterruptedException | ExecutionException e) {
             Log.e("SimpleSignalR", e.toString());
-            return;
+            //return;
         }
 
-        subscribeToServer();
+        if (notifyWhenConnected && hubConnection.getState() == ConnectionState.Connected ){
+            EventBus.getDefault().post(new SignalRServiceBoundEvent(null));
+            startReconnectiong = null;
+        }
+
+        if (hubConnection.getState() == ConnectionState.Connected)
+            subscribeToServer();
     }
 
     //</editor-fold>

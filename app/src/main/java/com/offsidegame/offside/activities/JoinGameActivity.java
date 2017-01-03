@@ -174,14 +174,15 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onJoinGame(JoinGameEvent joinGameEvent) {
         GameInfo gameInfo = joinGameEvent.getGameInfo();
+        if (gameInfo == null || gameInfo.getGameId() == null){
+            Toast.makeText(context, R.string.lbl_no_such_game, Toast.LENGTH_LONG).show();
+            return;
+        }
         String gameId = gameInfo.getGameId();
         int timeToAnswerQuestion = gameInfo.getTimeToAnswerQuestion();
         int timeToGoBackToPlayerScore = gameInfo.getTimeToGoBackToPlayerScore();
         int timeToQuestionToPop = gameInfo.getTimeToQuestionToPop();
-        if (gameId == null) {
-            Toast.makeText(context, "No such game code", Toast.LENGTH_LONG).show();
-            return;
-        }
+
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
 
@@ -199,6 +200,19 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
         Context eventContext = signalRServiceBoundEvent.getContext();
+
+
+            if (eventContext == null){
+                Intent intent = new Intent(context, JoinGameActivity.class);
+                context.startActivity(intent);
+                return;
+            }
+
+
+
+
+
+
         if (eventContext == context) {
             SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
             String gameId = settings.getString(getString(R.string.game_id_key), "");

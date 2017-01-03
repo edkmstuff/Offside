@@ -97,6 +97,17 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
         Context eventContext = signalRServiceBoundEvent.getContext();
+
+
+
+            if (eventContext == null){
+                Intent intent = new Intent(context, JoinGameActivity.class);
+                context.startActivity(intent);
+                return;
+            }
+
+
+
         if (eventContext == context) {
             SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
             String gameId = settings.getString(getString(R.string.game_id_key), "");

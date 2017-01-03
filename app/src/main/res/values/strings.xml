@@ -74,6 +74,7 @@
     <string name="time_to_answer_question_key">timeToAnswerQuestion</string>
     <string name="time_to_go_back_to_player_score_key">timeToGoBackToPlayerScore</string>
     <string name="time_to_question_to_pop_key">timeToQuestionToPop</string>
+    <string name="lbl_no_such_game">משחק לא קיים</string>
 
 
 </resources>
