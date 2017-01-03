@@ -17,6 +17,7 @@ import com.offsidegame.offside.events.IsCloseAnswerAcceptedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.LoginEvent;
 import com.offsidegame.offside.events.QuestionsEvent;
+import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.LoginInfo;
 import com.offsidegame.offside.models.PlayerScore;
@@ -57,8 +58,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnectiong = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
-    public final String ip = new String("10.0.0.17:8080");
+    public final String ip = new String("192.168.1.140:8080");
+    //public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
 
 
@@ -108,24 +109,29 @@ public class SignalRService extends Service {
             @Override
             public void stateChanged(ConnectionState oldState, ConnectionState newState) {
                 if (newState == ConnectionState.Disconnected) {
-                    //try reconnection for 2 min
+                    //try reconnection for 10 min
                     if (startReconnectiong == null) {
                         startReconnectiong = new Date();
                     }
                     Date now = new Date();
-                    while (startReconnectiong != null && now.getTime() - startReconnectiong.getTime() < 2 * 60 * 1000 && hubConnection.getState() == ConnectionState.Disconnected) {
+                    while (startReconnectiong != null && now.getTime() - startReconnectiong.getTime() < 10 * 60 * 1000 && hubConnection.getState() == ConnectionState.Disconnected) {
                         try {
+
                             Thread.sleep(10000);
+
                             startSignalR();
                             now = new Date();
+
 
                         } catch (Exception ex) {
                             return;
                         }
                     }
                 }
-                if (newState == ConnectionState.Connected)
+                if (newState == ConnectionState.Connected) {
+                    EventBus.getDefault().post(new SignalRServiceBoundEvent(null));
                     startReconnectiong = null;
+                }
             }
         });
 
@@ -190,7 +196,8 @@ public class SignalRService extends Service {
     //<editor-fold desc="methods for client activities">
 
     public void login(String email) {
-
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
         hub.invoke(LoginInfo.class, "LoginWithEmail", email).done(new Action<LoginInfo>() {
 
             @Override
@@ -203,6 +210,8 @@ public class SignalRService extends Service {
     }
 
     public void joinGame(String gameCode) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         String userId = settings.getString(getString(R.string.user_id_key), "");
         String userName = settings.getString(getString(R.string.user_name_key), "");
@@ -218,7 +227,8 @@ public class SignalRService extends Service {
     }
 
     public void isGameActive(String gameId) {
-
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
         hub.invoke(Boolean.class, "IsGameActive", gameId).done(new Action<Boolean>() {
 
             @Override
@@ -229,6 +239,8 @@ public class SignalRService extends Service {
     }
 
     public void getPlayerScore(String gameId, String userId, String userName) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         String imageUrl = settings.getString(getString(R.string.user_profile_picture_url_key), "");
         hub.invoke(PlayerScore.class, "GetPlayerScore", gameId, userId, userName, imageUrl).done(new Action<PlayerScore>() {
@@ -242,7 +254,8 @@ public class SignalRService extends Service {
 
 
     public void postAnswer(String gameId, String questionId, String answerId) {
-
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
         hub.invoke(Boolean.class, "PostAnswer", gameId, questionId, answerId).done(new Action<Boolean>() {
             @Override
             public void run(Boolean isAnswerAccepted) throws Exception {
@@ -254,6 +267,8 @@ public class SignalRService extends Service {
     }
 
     public void getScoreboard(String gameId) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
         hub.invoke(Scoreboard.class, "GetScoreboard", gameId).done(new Action<Scoreboard>() {
 
             @Override
@@ -264,6 +279,8 @@ public class SignalRService extends Service {
     }
 
     public void getQuestions(String gameId) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
         hub.invoke(Question[].class, "GetQuestions", gameId).done(new Action<Question[]>() {
 
             @Override
@@ -274,6 +291,8 @@ public class SignalRService extends Service {
     }
 
     public void saveUser(User user) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
 
         hub.invoke(Boolean.class, "SaveUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri(), user.getPassword()).done(new Action<Boolean>() {
             @Override
