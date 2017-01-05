@@ -41,6 +41,8 @@ public class PlayerScore {
     @com.google.gson.annotations.SerializedName("CQEIM")
     private int currentQuestionExpirationInMilliseconds;
 
+    @com.google.gson.annotations.SerializedName("TTNQIM")
+    private int timeToNextQuestionInMilliseconds;
 
 
     public String getGameTitle() {
@@ -114,6 +116,14 @@ public class PlayerScore {
 
     public void setCurrentQuestionExpirationInMilliseconds(int currentQuestionExpirationInMilliseconds) {
         this.currentQuestionExpirationInMilliseconds = currentQuestionExpirationInMilliseconds;
+    }
+
+    public int getTimeToNextQuestionInMilliseconds() {
+        return timeToNextQuestionInMilliseconds;
+    }
+
+    public void setTimeToNextQuestionInMilliseconds(int timeToNextQuestionInMilliseconds) {
+        this.timeToNextQuestionInMilliseconds = timeToNextQuestionInMilliseconds;
     }
 }
 

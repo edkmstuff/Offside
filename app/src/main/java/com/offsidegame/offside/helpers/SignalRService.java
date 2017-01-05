@@ -11,9 +11,7 @@ import android.util.Log;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ActiveGameEvent;
-import com.offsidegame.offside.events.GameCreationEvent;
 import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
-import com.offsidegame.offside.events.IsCloseAnswerAcceptedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.LoginEvent;
 import com.offsidegame.offside.events.QuestionsEvent;
@@ -30,7 +28,6 @@ import com.offsidegame.offside.models.User;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.net.InetAddress;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
@@ -297,15 +294,17 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
-        hub.invoke(Boolean.class, "SaveUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri(), user.getPassword()).done(new Action<Boolean>() {
+        hub.invoke(Boolean.class, "SaveUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri(), user.getPassword(),user.getDeviceToken()).done(new Action<Boolean>() {
             @Override
-            public void run(Boolean isAnswerAccepted) throws Exception {
-                EventBus.getDefault().post(new IsAnswerAcceptedEvent(isAnswerAccepted));
+            public void run(Boolean isUserSaved) throws Exception {
+                EventBus.getDefault().post(new IsAnswerAcceptedEvent(isUserSaved));
             }
 
         });
 
     }
+
+
     //</editor-fold>
 
     //<editor-fold desc="support classes">

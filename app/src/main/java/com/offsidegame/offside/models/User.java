@@ -15,16 +15,19 @@ public class User {
     private String profilePictureUri;
     @com.google.gson.annotations.SerializedName("Password")
     private String password;
+    @com.google.gson.annotations.SerializedName("DeviceToken")
+    private String deviceToken;
 
 
     public User(){}
 
-    public User(String id,String name, String email, String profilePictureUri, String password){
+    public User(String id,String name, String email, String profilePictureUri, String password, String deviceToken){
         this.id=id;
         this.name=name;
         this.email= email;
         this.profilePictureUri=profilePictureUri;
         this.password= password;
+        this.deviceToken = deviceToken;
     }
 
     public String getId() {
@@ -65,5 +68,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

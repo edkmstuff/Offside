@@ -346,7 +346,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
+                android:id="@+id/current_question_timer_root"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -423,6 +423,41 @@
                         android:textColor="@color/colorBlack" />
 
                 </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/next_question_timer_root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:textColor="@color/colorBlack"
+                        android:textStyle="bold"
+                        android:text="@string/lbl_time_left_to_next_question"/>
+                    <TextView
+                        android:id="@+id/next_question_time_left_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="44:44"
+                        android:textColor="@color/colorBlack" />
+
+                </LinearLayout>
+
+
 
             </LinearLayout>
 

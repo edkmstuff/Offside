@@ -29,9 +29,19 @@ public class OffsideFirebaseMessagingService extends FirebaseMessagingService {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent= PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this);
-        String notificationTitle= String.valueOf(remoteMessage.getData().values().toArray()[1]);
-        String notificationBody = String.valueOf(remoteMessage.getData().values().toArray()[0]);
+        Object[] notificationContentArray = remoteMessage.getData().values().toArray();
+        String notificationBody="";
+        String notificationTitle= "";
+        if(notificationContentArray.length>0) {
+            //todo: replace with foreach
+            notificationBody = String.valueOf(notificationContentArray[0]);
+            notificationTitle = String.valueOf(notificationContentArray[1]);
+        }
 
+        else {
+            notificationBody= remoteMessage.getNotification().getBody().toString();
+            notificationTitle= "Manual Notification";
+        }
         notificationBuilder.setContentTitle(notificationTitle);
         notificationBuilder.setContentText(notificationBody);
         notificationBuilder.setAutoCancel(true);
@@ -39,9 +49,6 @@ public class OffsideFirebaseMessagingService extends FirebaseMessagingService {
         notificationBuilder.setContentIntent(pendingIntent);
         NotificationManager notificationManager =  (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0,notificationBuilder.build());
-
-
-
 
     }
 }

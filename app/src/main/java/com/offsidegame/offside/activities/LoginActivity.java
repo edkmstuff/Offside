@@ -18,6 +18,7 @@ import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.DateHelper;
+import com.offsidegame.offside.helpers.OffsideFirebaseInstanceIdService;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.events.LoginEvent;
 import com.offsidegame.offside.models.User;
@@ -49,6 +50,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
             signalRService = binder.getService();
             isBoundToSignalRService = true;
+
         }
 
         @Override
@@ -80,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             loginExpirationTime = dateHelper.getCurrentDate();
 
         Date current = dateHelper.getCurrentDate();
-        if (isLoggedIn /*|| current.after(loginExpirationTime)*/) {
+        if (isLoggedIn  /*|| current.after(loginExpirationTime)*/) {
             Intent intent = new Intent(context, JoinGameActivity.class);
             startActivity(intent);
             return;
@@ -139,12 +141,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         String email = isFacebookLogin ? null : loginEvent.getId();
         String profilePictureUrl = isFacebookLogin ? Profile.getCurrentProfile().getProfilePictureUri(150, 150).toString() : "http://offside.somee.com/images/defaultImage.jpg";
         String password = isFacebookLogin ? null : loginEvent.getPassword();
-        User user = new User(id, name, email, profilePictureUrl, password);
+
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+
+        String recentToken = settings.getString(getString(R.string.recent_token_key), "");
+
+        User user = new User(id, name, email, profilePictureUrl, password, recentToken);
 
         signalRService.saveUser(user);
 
-
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
 
         editor.putBoolean(getString(R.string.is_logged_in_key), true);

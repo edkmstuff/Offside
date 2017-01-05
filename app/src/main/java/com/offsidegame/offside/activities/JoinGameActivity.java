@@ -115,6 +115,7 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
                 public void onClick(View view) {
                     if (isBoundToSignalRService) {
                         signalRService.joinGame(gameCode.getText().toString());
+
                     }
                 }
             });
@@ -207,10 +208,6 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
                 context.startActivity(intent);
                 return;
             }
-
-
-
-
 
 
         if (eventContext == context) {
