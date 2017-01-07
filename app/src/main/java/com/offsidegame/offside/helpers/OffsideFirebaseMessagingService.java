@@ -32,7 +32,8 @@ public class OffsideFirebaseMessagingService extends FirebaseMessagingService {
         Object[] notificationContentArray = remoteMessage.getData().values().toArray();
         String notificationBody="";
         String notificationTitle= "";
-        if(notificationContentArray.length>0) {
+        if (remoteMessage.getData().size() > 0) {
+        //if(notificationContentArray.length>0) {
             //todo: replace with foreach
             notificationBody = String.valueOf(notificationContentArray[0]);
             notificationTitle = String.valueOf(notificationContentArray[1]);

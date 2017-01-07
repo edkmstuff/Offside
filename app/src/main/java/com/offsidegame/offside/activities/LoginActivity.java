@@ -16,6 +16,7 @@ import android.widget.EditText;
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.OffsideFirebaseInstanceIdService;
@@ -70,6 +71,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         toolbar = (Toolbar) findViewById((R.id.app_bar));
         setSupportActionBar(toolbar);
+
+        FirebaseMessaging.getInstance().subscribeToTopic("offside");
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         boolean isLoggedIn = settings.getBoolean(getString(R.string.is_logged_in_key), false);
