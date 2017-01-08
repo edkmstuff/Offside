@@ -12,12 +12,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.OffsideFirebaseInstanceIdService;
 import com.offsidegame.offside.helpers.SignalRService;
@@ -133,6 +135,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         super.onStop();
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectionEvent(ConnectionEvent connectionEvent) {
+        boolean isConnected = connectionEvent.getConnected();
+        if (isConnected)
+            Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLogin(LoginEvent loginEvent) {

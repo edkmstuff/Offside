@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.events.ActiveGameEvent;
@@ -196,6 +197,15 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
 
         Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
         startActivity(intent);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectionEvent(ConnectionEvent connectionEvent) {
+        boolean isConnected = connectionEvent.getConnected();
+        if (isConnected)
+            Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

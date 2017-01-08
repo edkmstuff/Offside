@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
@@ -184,8 +185,9 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         super.onStart();
         questionEventsHandler.register();
         EventBus.getDefault().register(context);
+        MediaPlayer player;
 
-        MediaPlayer player = MediaPlayer.create(context, R.raw.referee_short_whistle);
+        player = MediaPlayer.create(context, R.raw.referee_short_whistle);
         player.start();
     }
 
@@ -210,6 +212,15 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     //</editor-fold>
 
     //<editor-fold desc="Callbacks">
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectionEvent(ConnectionEvent connectionEvent) {
+        boolean isConnected = connectionEvent.getConnected();
+        if (isConnected)
+            Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
+    }
 
     // event fires when user clicks on answer in the list
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -15,10 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.offsidegame.offside.R;
 
 import com.offsidegame.offside.activities.fragments.ScoresFragment;
+import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.Score;
@@ -118,6 +120,16 @@ public class ViewScoreboardActivity extends AppCompatActivity {
         }
 
         super.onStop();
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectionEvent(ConnectionEvent connectionEvent) {
+        boolean isConnected = connectionEvent.getConnected();
+        if (isConnected)
+            Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

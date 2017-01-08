@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ActiveGameEvent;
+import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.LoginEvent;
@@ -94,58 +95,72 @@ public class SignalRService extends Service {
     }
 
     private void startSignalR(Boolean notifyWhenConnected) {
-        Platform.loadPlatformComponent(new AndroidPlatformComponent());
-        final String serverUrl = "http://" + ip;
-        hubConnection = new HubConnection(serverUrl);
-        final String SERVER_HUB = "OffsideHub";
-        hub = hubConnection.createHubProxy(SERVER_HUB);
-        ClientTransport clientTransport = new ServerSentEventsTransport(hubConnection.getLogger());
+        try {
+            Platform.loadPlatformComponent(new AndroidPlatformComponent());
+            final String serverUrl = "http://" + ip;
+            hubConnection = new HubConnection(serverUrl);
+            final String SERVER_HUB = "OffsideHub";
+            hub = hubConnection.createHubProxy(SERVER_HUB);
+            ClientTransport clientTransport = new ServerSentEventsTransport(hubConnection.getLogger());
 
-        hubConnection.stateChanged(new StateChangedCallback() {
+            hubConnection.stateChanged(new StateChangedCallback() {
 
-            @Override
-            public void stateChanged(ConnectionState oldState, ConnectionState newState) {
-                if (newState == ConnectionState.Disconnected) {
-                    //try reconnection for 10 min
-                    if (startReconnectiong == null) {
-                        startReconnectiong = new Date();
-                    }
-                    else
-                        return; // we are already trying to reconnect
-                    Date now = new Date();
-                    while (startReconnectiong != null && now.getTime() - startReconnectiong.getTime() < 10 * 60 * 1000
-                            && hubConnection.getState() == ConnectionState.Disconnected) {
-                        try {
-                            startSignalR(true);
-                            now = new Date();
-                            //Thread.sleep(30000);
+                @Override
+                public void stateChanged(ConnectionState oldState, ConnectionState newState) {
+                    try {
+                        if (newState == ConnectionState.Disconnected) {
+                            EventBus.getDefault().post(new ConnectionEvent(false, "inner try 1"));
+                            //try reconnection for 10 min
+                            if (startReconnectiong == null) {
+                                startReconnectiong = new Date();
+                            } else
+                                return; // we are already trying to reconnect
+                            Date now = new Date();
+                            while (startReconnectiong != null && now.getTime() - startReconnectiong.getTime() < 10 * 60 * 1000
+                                    && hubConnection.getState() == ConnectionState.Disconnected) {
+                                try {
+                                    startSignalR(true);
+                                    now = new Date();
+                                    Thread.sleep(20000);
 
-                        } catch (Exception ex) {
-                            return;
+                                } catch (Exception ex) {
+                                    EventBus.getDefault().post(new ConnectionEvent(true, ex.getMessage()));
+                                    return;
+                                }
+                            }
+                            if (hubConnection.getState() == ConnectionState.Connected) {
+                                EventBus.getDefault().post(new ConnectionEvent(true, "inner try 2"));
+                            }
                         }
                     }
+                    catch(Exception e1){
+                        EventBus.getDefault().post(new ConnectionEvent(false, e1.getMessage()));
+                    }
+
                 }
+            });
 
+
+            SignalRFuture<Void> signalRFuture = hubConnection.start(clientTransport);
+
+            try {
+                signalRFuture.get();
+            } catch (InterruptedException | ExecutionException e) {
+                Log.e("SimpleSignalR", e.getMessage());
+                //return;
             }
-        });
 
+            if (notifyWhenConnected && hubConnection.getState() == ConnectionState.Connected) {
+                EventBus.getDefault().post(new SignalRServiceBoundEvent(null));
+                startReconnectiong = null;
+            }
 
-        SignalRFuture<Void> signalRFuture = hubConnection.start(clientTransport);
-
-        try {
-            signalRFuture.get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.e("SimpleSignalR", e.toString());
-            //return;
+            if (hubConnection.getState() == ConnectionState.Connected)
+                subscribeToServer();
         }
-
-        if (notifyWhenConnected && hubConnection.getState() == ConnectionState.Connected ){
-            EventBus.getDefault().post(new SignalRServiceBoundEvent(null));
-            startReconnectiong = null;
+        catch (Exception e){
+            EventBus.getDefault().post(new ConnectionEvent(false,e.toString()));
         }
-
-        if (hubConnection.getState() == ConnectionState.Connected)
-            subscribeToServer();
     }
 
     //</editor-fold>

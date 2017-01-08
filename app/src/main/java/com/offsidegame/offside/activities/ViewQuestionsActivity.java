@@ -12,9 +12,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.fragments.QuestionsFragment;
+import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.QuestionsEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.SignalRService;
@@ -116,6 +118,16 @@ public class ViewQuestionsActivity extends AppCompatActivity {
             if (gameId != null && !gameId.isEmpty())
                 signalRService.getQuestions(gameId);
         }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectionEvent(ConnectionEvent connectionEvent) {
+        boolean isConnected = connectionEvent.getConnected();
+        if (isConnected)
+            Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

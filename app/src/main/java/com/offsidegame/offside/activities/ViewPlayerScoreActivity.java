@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
@@ -229,6 +230,19 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     //</editor-fold>
 
     //<editor-fold desc="Subscribe methods">
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectionEvent(ConnectionEvent connectionEvent) {
+        boolean isConnected = connectionEvent.getConnected();
+        if (isConnected){
+            Toast.makeText(context, R.string.lbl_you_are_connected , Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context,connectionEvent.getMsg(), Toast.LENGTH_LONG).show();
+        }
+        else{
+            Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context,connectionEvent.getMsg(), Toast.LENGTH_LONG).show();
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {

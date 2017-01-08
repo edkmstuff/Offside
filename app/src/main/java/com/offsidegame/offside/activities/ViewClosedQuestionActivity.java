@@ -12,17 +12,22 @@ import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.models.Question;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.Date;
 
 public class ViewClosedQuestionActivity extends AppCompatActivity implements IQuestionHolder {
 
@@ -92,11 +97,11 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
         questionTextView.setText(questionText);
 
         timeToStartQuestionText = (TextView) findViewById(R.id.timeToStartQuestionText);
-        timeToGoBackToPlayerScore = settings.getInt(getString(R.string.time_to_go_back_to_player_score_key),15000);
+        timeToGoBackToPlayerScore = settings.getInt(getString(R.string.time_to_go_back_to_player_score_key), 15000);
         timer = new CountDownTimer(timeToGoBackToPlayerScore, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                timeToStartQuestionText.setText(Integer.toString( (int)Math.floor(millisUntilFinished / 1000)));
+                timeToStartQuestionText.setText(Integer.toString((int) Math.floor(millisUntilFinished / 1000)));
             }
 
             public void onFinish() {
@@ -104,8 +109,6 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
                 startActivity(intent);
             }
         }.start();
-
-
 
 
         // to go back to view player score
@@ -122,7 +125,7 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         Intent intent = new Intent();
         intent.setClass(context, SignalRService.class);
@@ -134,8 +137,27 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
         super.onStart();
         EventBus.getDefault().register(context);
         questionEventsHandler.register();
-        MediaPlayer player = MediaPlayer.create(context, R.raw.referee_short_whistle);
-        player.start();
+        MediaPlayer player;
+        Answer correctAnswer = null;
+        for (Answer ans : question.getAnswers()) {
+            if (ans.isCorrect()) {
+                correctAnswer = ans;
+                break;
+            }
+        }
+        if (correctAnswer != null) {
+            if (correctAnswer.isTheAnswerOfTheUser()) {
+                Boolean isBravo = new Date().getTime() % 2 == 0;
+                if (isBravo)
+                    player = MediaPlayer.create(context, R.raw.bravo);
+                else
+                    player = MediaPlayer.create(context, R.raw.hooray);
+            } else {
+                player = MediaPlayer.create(context, R.raw.aww);
+            }
+
+            player.start();
+        }
 
 
     }
@@ -159,6 +181,15 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
 
     @Override
     public void onBackPressed() {
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectionEvent(ConnectionEvent connectionEvent) {
+        boolean isConnected = connectionEvent.getConnected();
+        if (isConnected)
+            Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
