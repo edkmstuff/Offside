@@ -59,19 +59,62 @@
                 android:textSize="@dimen/OffsideMediumText" />
 
 
+
             <TextView
-                android:id="@+id/vcq_correct_answer_text_view"
+                android:layout_marginTop="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:text="@string/lbl_the_correct_answer"
+                android:textSize="@dimen/OffsideMediumText" />
+
+            <LinearLayout
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
                 android:background="@drawable/round_corners_primary_background"
-                android:padding="10dp"
-                android:text="vbcvbcbcbcbcbcbcbcbcbc"
-                android:textColor="@color/windowBackground" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layoutDirection="rtl">
+
+                <ImageView
+
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:scaleType="centerCrop" />
+
+                <ImageView
+
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:scaleType="centerCrop"
+
+                    />
+
+
+
+                <TextView
+                    android:id="@+id/vcq_correct_answer_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:text="some question text?"
+                    android:textColor="@color/windowBackground"
+                    android:textSize="@dimen/OffsideMediumText"
+
+                    />
+
+
+            </LinearLayout>
+
 
 
             <TextView
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/lbl_your_answer"
@@ -81,7 +124,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="20dp"
+                android:layout_marginTop="5dp"
+                android:padding="5dp"
                 android:background="@drawable/round_corners_primary_background"
                 android:orientation="vertical"
                 >
@@ -136,6 +180,7 @@
 
 
             <LinearLayout
+                android:layout_marginTop="20dp"
                 android:id="@+id/vcq_you_earned_root"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -96,7 +96,7 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_closed_question_old);
+        setContentView(R.layout.activity_view_closed_question);
 
         final SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
