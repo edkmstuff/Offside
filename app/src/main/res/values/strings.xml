@@ -79,6 +79,8 @@
     <string name="lbl_time_left_to_next_question">השאלה הבאה בעוד</string>
     <string name="lbl_you_are_connected">מחובר לשרת!</string>
     <string name="lbl_you_are_disconnected">מנותק מהשרת, מנסה להתחבר...</string>
+    <string name="lbl_we_have_an_answer">יש לנו תשובה!</string>
+    <string name="lbl_you_earned">הרווחת</string>
 
 
 </resources>

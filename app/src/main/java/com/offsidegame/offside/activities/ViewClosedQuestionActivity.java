@@ -5,12 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,10 +23,12 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
+import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.models.Question;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,13 +44,19 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     private boolean isBoundToSignalRService = false;
     private Question question;
     private String questionState;
-    private TextView questionTextView;
-    //private Handler delayHandler;
-    //private Runnable goToViewPlayerScore;
     private CountDownTimer timer;
-    private TextView timeToStartQuestionText;
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private int timeToGoBackToPlayerScore;
+
+    private TextView timeToGoBackToPlayerScoreTextView;
+    private TextView questionTextView;
+    private TextView correctAnswerTextView;
+    private ImageView playerAnswerImageView;
+    private ImageView playerAnswerRightWrongIndicatorImageView;
+    private TextView playerAnswerTextView;
+    private LinearLayout youEarnedRoot;
+    private TextView earnedPointsTextView;
+
 
     //</editor-fold>
 
@@ -83,25 +96,72 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_closed_question);
+        setContentView(R.layout.activity_view_closed_question_old);
 
         final SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
+        Answer correctAnswer = null;
+        Answer playerAnswer = null;
         //get the question
         Bundle bundle = getIntent().getExtras();
         question = (Question) bundle.getSerializable("question");
         questionState = bundle.getString("questionState");
 
-        questionTextView = (TextView) findViewById(R.id.question_text);
-        String questionText = question.getQuestionText();
-        questionTextView.setText(questionText);
+        for (Answer ans: question.getAnswers()){
+            if (ans.isTheAnswerOfTheUser())
+                playerAnswer = ans;
+            if (ans.isCorrect())
+                correctAnswer = ans;
+        }
 
-        timeToStartQuestionText = (TextView) findViewById(R.id.timeToStartQuestionText);
+
+
+        questionTextView = (TextView) findViewById(R.id.vcq_question_text_view);
+        correctAnswerTextView = (TextView) findViewById(R.id.vcq_correct_answer_text_view);
+        playerAnswerImageView = (ImageView) findViewById(R.id.vcq_player_answer_image_view);
+        playerAnswerRightWrongIndicatorImageView= (ImageView) findViewById(R.id.vcq_player_answer_right_wrong_indicator_image_view);
+        playerAnswerTextView = (TextView) findViewById(R.id.vcq_player_answer_text_view);
+        youEarnedRoot = (LinearLayout) findViewById(R.id.vcq_you_earned_root);
+        earnedPointsTextView = (TextView) findViewById(R.id.vcq_earned_points_text_view);
+
+        questionTextView.setText(question.getQuestionText());
+        correctAnswerTextView.setText(correctAnswer != null? correctAnswer.getAnswerText() : "error: no correct answer");
+        loadPlayerImage(playerAnswerImageView);
+        if (playerAnswer.isCorrect())
+            playerAnswerRightWrongIndicatorImageView.setImageResource(R.drawable.ic_done_white_24dp);
+        else
+            playerAnswerRightWrongIndicatorImageView.setImageResource(R.drawable.ic_clear_red_24dp);
+
+        playerAnswerTextView.setText(playerAnswer.getAnswerText());
+        if (playerAnswer.isCorrect()){
+            youEarnedRoot.setVisibility(View.VISIBLE);
+            earnedPointsTextView.setText(Integer.toString((int)playerAnswer.getScore()));
+        }
+        else {
+            youEarnedRoot.setVisibility(View.GONE);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        timeToGoBackToPlayerScoreTextView = (TextView) findViewById(R.id.vcq_time_to_go_back_to_player_score_text_view);
         timeToGoBackToPlayerScore = settings.getInt(getString(R.string.time_to_go_back_to_player_score_key), 15000);
         timer = new CountDownTimer(timeToGoBackToPlayerScore, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                timeToStartQuestionText.setText(Integer.toString((int) Math.floor(millisUntilFinished / 1000)));
+                timeToGoBackToPlayerScoreTextView.setText(Integer.toString((int) Math.floor(millisUntilFinished / 1000)));
             }
 
             public void onFinish() {
@@ -111,18 +171,31 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
         }.start();
 
 
-        // to go back to view player score
-//        delayHandler = new Handler();
-//        goToViewPlayerScore = new Runnable() {
-//            @Override
-//            public void run() {
-//                Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
-//                startActivity(intent);
-//            }
-//        };
-//
-//        delayHandler.postDelayed(goToViewPlayerScore, 20000);
+
     }
+
+
+    private void loadPlayerImage(final ImageView imageView) {
+        SharedPreferences settings = context.getSharedPreferences(context.getString(R.string.preference_name), 0);
+        String userPictureUrl = settings.getString(context.getString(R.string.user_profile_picture_url_key), "");
+        Uri imageUri = Uri.parse(userPictureUrl);
+
+        Picasso.with(context).load(imageUri).into(imageView, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                RoundImage roundedImage = new RoundImage(bm);
+                imageView.setImageDrawable(roundedImage);
+                imageView.animate().alpha(1.1f).setDuration(1000).start();
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
 
     @Override
     public void onResume() {

@@ -52,7 +52,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 public class SignalRService extends Service {
     private HubConnection hubConnection;
     private HubProxy hub;
-    private Handler handler; // to display Toast message
+    //private Handler handler; // to display Toast message
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnectiong = null;
 
@@ -71,7 +71,7 @@ public class SignalRService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        handler = new Handler(Looper.getMainLooper());
+        //handler = new Handler(Looper.getMainLooper());
     }
 
     @Override

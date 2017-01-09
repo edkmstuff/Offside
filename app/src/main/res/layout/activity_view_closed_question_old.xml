@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_view_closed_question"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:layoutDirection="ltr"
+    android:orientation="vertical"
+    tools:context="com.offsidegame.offside.activities.ViewClosedQuestionActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/vcq_time_to_go_back_to_player_score_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:background="@color/colorPrimary"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="10"
+            android:textColor="#FFFFFF"
+            android:textSize="@dimen/OffsideLargeText">
+
+        </TextView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/round_corners_yellow_background"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="@string/lbl_we_have_an_answer"
+                android:textSize="@dimen/OffsideLargeText" />
+
+            <TextView
+                android:id="@+id/vcq_question_text_view"
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Some question that was answered before?"
+                android:textSize="@dimen/OffsideMediumText" />
+
+
+            <TextView
+                android:id="@+id/vcq_correct_answer_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/round_corners_primary_background"
+                android:padding="10dp"
+                android:text="vbcvbcbcbcbcbcbcbcbcbc"
+                android:textColor="@color/windowBackground" />
+
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_your_answer"
+                android:textSize="@dimen/OffsideMediumText" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:background="@drawable/round_corners_primary_background"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layoutDirection="rtl">
+
+                    <ImageView
+                        android:id="@+id/vcq_player_answer_image_view"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:scaleType="centerCrop" />
+
+                    <ImageView
+                        android:id="@+id/vcq_player_answer_right_wrong_indicator_image_view"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_marginLeft="2dp"
+                        android:scaleType="centerCrop"
+
+                        />
+
+
+
+                    <TextView
+                        android:id="@+id/vcq_player_answer_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:text="some answer text"
+                        android:textColor="@color/windowBackground"
+                        android:textSize="@dimen/OffsideMediumText"
+
+                        />
+
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+
+
+
+
+            <LinearLayout
+                android:id="@+id/vcq_you_earned_root"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layoutDirection="rtl"
+                    android:gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_you_earned"
+                        android:textSize="@dimen/OffsideMediumText" />
+                    <TextView
+                        android:id="@+id/vcq_earned_points_text_view"
+                        android:layout_marginLeft="2dp"
+                        android:layout_marginRight="2dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="100"
+                        android:textSize="@dimen/OffsideLargeText" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_points"
+                        android:textSize="@dimen/OffsideMediumText" />
+
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
