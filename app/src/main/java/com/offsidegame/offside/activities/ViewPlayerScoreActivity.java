@@ -205,6 +205,13 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setClass(context, SignalRService.class);
         bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+
+
+        //resetting list height (workaround in array adapter)
+        SharedPreferences settings = context.getSharedPreferences(context.getString(R.string.preference_name), 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt(context.getString(R.string.saved_list_view_height_key), 0);
+        editor.commit();
     }
 
 

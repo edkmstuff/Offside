@@ -126,7 +126,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
 
         //run timer
 
-        timeToQuestionToPop = settings.getInt(getString(R.string.time_to_question_to_pop_key),5000);
+        timeToQuestionToPop = question.getTimeToQuestionToPop();
 
         timeToNextQuestionTimer = new CountDownTimer(timeToQuestionToPop, 100) {
             public void onTick(long millisUntilFinished) {
@@ -141,7 +141,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
                 questionAndAnswersRoot.setVisibility(View.VISIBLE);
                 secondsLeft = 0;
 
-                timeToAnswer = settings.getInt(getString(R.string.time_to_answer_question_key),15000);
+                timeToAnswer = question.getTimeToAnswerQuestion();
                 timeToAnswerTimer = new CountDownTimer(timeToAnswer, 100) {
                     @Override
                     public void onTick(long millisUntilFinished) {

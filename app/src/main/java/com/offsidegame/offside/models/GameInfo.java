@@ -10,14 +10,12 @@ public class GameInfo {
     @com.google.gson.annotations.SerializedName("GI")
     private String gameId;
 
-    @com.google.gson.annotations.SerializedName("TTAQ")
-    private int timeToAnswerQuestion;
+
 
     @com.google.gson.annotations.SerializedName("TTGBTP")
     private int timeToGoBackToPlayerScore;
 
-    @com.google.gson.annotations.SerializedName("TTQTP")
-    private int timeToQuestionToPop;
+
 
     public String getGameId() {
         return gameId;
@@ -27,13 +25,7 @@ public class GameInfo {
         this.gameId = gameId;
     }
 
-    public int getTimeToAnswerQuestion() {
-        return timeToAnswerQuestion;
-    }
 
-    public void setTimeToAnswerQuestion(int timeToAnswerQuestion) {
-        this.timeToAnswerQuestion = timeToAnswerQuestion;
-    }
 
     public int getTimeToGoBackToPlayerScore() {
         return timeToGoBackToPlayerScore;
@@ -43,11 +35,5 @@ public class GameInfo {
         this.timeToGoBackToPlayerScore = timeToGoBackToPlayerScore;
     }
 
-    public int getTimeToQuestionToPop() {
-        return timeToQuestionToPop;
-    }
 
-    public void setTimeToQuestionToPop(int timeToQuestionToPop) {
-        this.timeToQuestionToPop = timeToQuestionToPop;
-    }
 }

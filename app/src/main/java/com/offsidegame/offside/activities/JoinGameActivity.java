@@ -181,17 +181,13 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
             return;
         }
         String gameId = gameInfo.getGameId();
-        int timeToAnswerQuestion = gameInfo.getTimeToAnswerQuestion();
         int timeToGoBackToPlayerScore = gameInfo.getTimeToGoBackToPlayerScore();
-        int timeToQuestionToPop = gameInfo.getTimeToQuestionToPop();
-
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
 
         editor.putString(getString(R.string.game_id_key), gameId);
-        editor.putInt(getString(R.string.time_to_answer_question_key),timeToAnswerQuestion);
         editor.putInt(getString(R.string.time_to_go_back_to_player_score_key),timeToGoBackToPlayerScore);
-        editor.putInt(getString(R.string.time_to_question_to_pop_key),timeToQuestionToPop);
+
 
         editor.commit();
 

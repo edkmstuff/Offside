@@ -5,10 +5,10 @@
     android:id="@+id/activity_answer_question_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:animateLayoutChanges="true"
-    android:layoutDirection="ltr"
     android:keepScreenOn="true"
+    android:layoutDirection="ltr"
+    android:orientation="vertical"
     tools:context="com.offsidegame.offside.activities.AnswerQuestionActivity">
 
     <include
@@ -22,121 +22,130 @@
         android:padding="5dp">
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/calc_question_statistics_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/white_background_border"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/OffsideMediumText"
-                android:gravity="center"
                 android:layout_margin="5dp"
+                android:gravity="center"
                 android:text="@string/lbl_getting_answers_and_calculating_statistics"
-                />
+                android:textSize="@dimen/OffsideMediumText" />
+
             <ProgressBar
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </ProgressBar>
+                android:layout_height="wrap_content"></ProgressBar>
 
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="gone"
             android:id="@+id/question_and_answers_root"
+            android:tag="question_and_answers_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/white_background_border"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <LinearLayout
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:orientation="horizontal"
                 android:layoutDirection="rtl"
+                android:orientation="horizontal"
                 android:weightSum="4">
+
                 <TextView
                     android:id="@+id/question_text"
                     android:layout_width="0dp"
-                    android:layout_weight="3"
                     android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:gravity="center"
                     android:padding="10dp"
                     android:text="Am i a  very very very long question?"
                     android:textColor="@color/colorPrimary"
-                    android:gravity="center"
                     android:textSize="@dimen/OffsideMediumText">
 
                 </TextView>
+
                 <TextView
                     android:id="@+id/time_to_answer_text_view"
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
                     android:text="10"
                     android:textColor="#FFFFFF"
-                    android:background="@color/colorPrimary"
-                    android:textSize="@dimen/OffsideLargeText"
-                    android:gravity="center">
+                    android:textSize="@dimen/OffsideLargeText">
 
                 </TextView>
 
             </LinearLayout>
 
 
-
-            <fragment
-                android:id="@+id/activity_answers_fragment"
-                android:name="com.offsidegame.offside.activities.fragments.AnswersFragment"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:layout="@layout/answer_list_item"></fragment>
+                android:tag="answer_fragment_root">
+
+                <fragment
+                    android:id="@+id/activity_answers_fragment"
+                    android:name="com.offsidegame.offside.activities.fragments.AnswersFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:layout="@layout/answer_list_item"></fragment>
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
         <LinearLayout
-            android:visibility="visible"
             android:id="@+id/time_to_next_question_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/white_background_border"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal"
+                android:gravity="center"
                 android:layoutDirection="rtl"
-                android:gravity="center">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
                     android:text="@string/lbl_next_question_in"
-                    android:textSize="@dimen/OffsideMediumText"
-                    android:layout_marginRight="5dp"/>
+                    android:textSize="@dimen/OffsideMediumText" />
 
                 <TextView
                     android:id="@+id/time_to_next_question"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5"
-                    android:textSize="@dimen/OffsideLargeText"
-                    android:layout_marginRight="5dp"
                     android:layout_marginLeft="5dp"
-                    />
+                    android:layout_marginRight="5dp"
+                    android:text="5"
+                    android:textSize="@dimen/OffsideLargeText" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/lbl_seconds"
-                    android:textSize="@dimen/OffsideMediumText"
-                    />
+                    android:textSize="@dimen/OffsideMediumText" />
 
 
             </LinearLayout>
@@ -147,22 +156,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/lbl_sponsored_by"/>
+                    android:text="@string/lbl_sponsored_by" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/heineken"
                     android:layout_gravity="bottom"
                     android:padding="50dp"
-                    />
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/heineken" />
 
             </LinearLayout>
 

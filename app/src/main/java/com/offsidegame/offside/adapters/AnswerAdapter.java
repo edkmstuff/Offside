@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,16 +32,18 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
     private String questionState;
     private Context context;
     private int answersCount;
+    private String questionId;
 
     public AnswerAdapter(Context context, ArrayList<Answer> answers) {
         super(context, 0, answers);
     }
 
-    public AnswerAdapter(Context context, ArrayList<Answer> answers, String questionState) {
+    public AnswerAdapter(Context context, ArrayList<Answer> answers, String questionState, String questionId) {
         super(context, 0, answers);
         this.context = context;
         this.questionState = questionState;
         this.answersCount = answers.size();
+        this.questionId = questionId;
     }
 
 
@@ -97,12 +100,12 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
             // root elements
             viewHolder.answerQuestionRoot = (LinearLayout) convertView.findViewById(R.id.answer_question_root);
             viewHolder.processedQuestionRoot = (LinearLayout) convertView.findViewById(R.id.processed_question_root);
-            viewHolder.closedQuestionRoot= (LinearLayout) convertView.findViewById(R.id.closed_question_root);
+            viewHolder.closedQuestionRoot = (LinearLayout) convertView.findViewById(R.id.closed_question_root);
 
             //answer question elements
             if (questionState.equals(QuestionEvent.QuestionStates.NEW_QUESTION)) {
-                viewHolder.answerQuestionUserAnswerImageView = (ImageView)convertView.findViewById(R.id.answer_question_user_answer_image_view);
-                viewHolder.answerQuestionAnswerTextView = (TextView)  convertView.findViewById(R.id.answer_question_answer_text_view);
+                viewHolder.answerQuestionUserAnswerImageView = (ImageView) convertView.findViewById(R.id.answer_question_user_answer_image_view);
+                viewHolder.answerQuestionAnswerTextView = (TextView) convertView.findViewById(R.id.answer_question_answer_text_view);
             }
             //processed question elements
             else if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
@@ -148,8 +151,7 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
             viewHolder.answerQuestionRoot.setVisibility(View.VISIBLE);
             viewHolder.answerQuestionAnswerTextView.setText(answer.getAnswerText());
 
-        }
-        else if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
+        } else if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
             viewHolder.processedQuestionRoot.setVisibility(View.VISIBLE);
             viewHolder.processedQuestionAnswerTextView.setText(answer.getAnswerText());
             viewHolder.processedQuestionPercentUsersAnsweredTextView.setText(Long.toString(Math.round(answer.getPercentUsersAnswered())) + "%");
@@ -193,8 +195,6 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
                 viewHolder.closedQuestionRightWrongAnswerIndicatorImageView.setImageResource(R.drawable.ic_clear_red_24dp);
 
 
-
-
         }
 
         //viewHolder.answerNumber.setText(answerNumber.toString() + ".");
@@ -208,10 +208,29 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
 
 
 //        Height
-        int listViewHeight =(int) Math.floor(parent.getHeight() * 1);
-        int itemHeight = (int) Math.floor(listViewHeight / answersCount);
-        viewHolder.answerQuestionRoot.setMinimumHeight( (int)Math.floor(itemHeight * 0.5));
+
+
+        LinearLayout actualListViewParent = findParent(parent, "question_and_answers_root");
+        int listViewHeight = (int) Math.floor(actualListViewParent.getChildAt(1).getHeight() -  actualListViewParent.getChildAt(0).getHeight() );
+
+//workaround to solve different parent height between ask question and process question
+        SharedPreferences settings = context.getSharedPreferences(context.getString(R.string.preference_name), 0);
+        int savedListViewHeight = settings.getInt(context.getString(R.string.saved_list_view_height_key), 0);
+        boolean needsSave = savedListViewHeight == 0;
+        savedListViewHeight = needsSave ? listViewHeight : savedListViewHeight;
+        // end of workaround
+
+
+        int itemHeight = (int) Math.floor(savedListViewHeight / answersCount);
+        viewHolder.answerQuestionRoot.setMinimumHeight((int) Math.floor(itemHeight * 0.7));
+        viewHolder.processedQuestionRoot.setMinimumHeight((int) Math.floor(itemHeight * 0.7));
         convertView.setMinimumHeight(itemHeight);
+
+        if (needsSave) {
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putInt(context.getString(R.string.saved_list_view_height_key), savedListViewHeight);
+            editor.commit();
+        }
 
         //int listViewWidth = parent.getWidth();
 
@@ -252,6 +271,59 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
             }
         });
     }
+
+//    private View findParentRecursively(View view, String tag) {
+//        if (view.getTag() != null && view.getTag().toString() == tag) {
+//            return view;
+//        }
+//        Object parent = null;
+//        parent = view.getParent();
+//
+//        while (!(view.getParent() instanceof LinearLayout)) {
+//            try {
+//
+//                Thread.sleep(1);
+//            } catch (InterruptedException e) {
+//            }
+//        }
+//
+//
+//        if (parent == null) {
+//            return null;
+//        }
+//        return findParentRecursively(parent, tag);
+//    }
+
+
+    private LinearLayout findParent(View view, String tag) {
+
+
+        ViewParent parent;
+        parent = view.getParent();
+
+        while (parent != null) {
+            if (parent instanceof LinearLayout
+                    && ((View)parent).getTag() != null
+                    && ((View)parent).getTag().toString().equals(tag) ) {
+
+                return (LinearLayout) parent;
+            }
+
+            parent = parent.getParent();
+        }
+
+
+        return null;
+
+    }
+
+
+
+
+
+
+
+
 
 
 }

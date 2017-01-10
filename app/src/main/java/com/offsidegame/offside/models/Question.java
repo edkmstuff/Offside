@@ -17,9 +17,13 @@ public class Question implements Serializable {
     @com.google.gson.annotations.SerializedName("GI")
     private String gameId;
     @com.google.gson.annotations.SerializedName("A")
-    private Answer[] answers ;
+    private Answer[] answers;
     @com.google.gson.annotations.SerializedName("IA")
-    private boolean isActive ;
+    private boolean isActive;
+    @com.google.gson.annotations.SerializedName("TTAQ")
+    private int timeToAnswerQuestion;
+    @com.google.gson.annotations.SerializedName("TTQTP")
+    private int timeToQuestionToPop;
 
 
     public String getQuestionText() {
@@ -60,5 +64,21 @@ public class Question implements Serializable {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public int getTimeToAnswerQuestion() {
+        return timeToAnswerQuestion;
+    }
+
+    public void setTimeToAnswerQuestion(int timeToAnswerQuestion) {
+        this.timeToAnswerQuestion = timeToAnswerQuestion;
+    }
+
+    public int getTimeToQuestionToPop() {
+        return timeToQuestionToPop;
+    }
+
+    public void setTimeToQuestionToPop(int timeToQuestionToPop) {
+        this.timeToQuestionToPop = timeToQuestionToPop;
     }
 }

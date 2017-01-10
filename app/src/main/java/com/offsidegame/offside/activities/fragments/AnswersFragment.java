@@ -51,7 +51,7 @@ public class AnswersFragment extends ListFragment {
 
         ArrayList<Answer> values = new ArrayList<Answer>(Arrays.asList(answers));
         Context context = getActivity();
-        AnswerAdapter answerAdapter = new AnswerAdapter(context, values, questionState);
+        AnswerAdapter answerAdapter = new AnswerAdapter(context, values, questionState, question.getId());
         setListAdapter(answerAdapter);
     }
 
