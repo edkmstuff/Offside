@@ -107,7 +107,7 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
         question = (Question) bundle.getSerializable("question");
         questionState = bundle.getString("questionState");
 
-        for (Answer ans: question.getAnswers()){
+        for (Answer ans : question.getAnswers()) {
             if (ans.isTheAnswerOfTheUser())
                 playerAnswer = ans;
             if (ans.isCorrect())
@@ -115,17 +115,16 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
         }
 
 
-
         questionTextView = (TextView) findViewById(R.id.vcq_question_text_view);
         correctAnswerTextView = (TextView) findViewById(R.id.vcq_correct_answer_text_view);
         playerAnswerImageView = (ImageView) findViewById(R.id.vcq_player_answer_image_view);
-        playerAnswerRightWrongIndicatorImageView= (ImageView) findViewById(R.id.vcq_player_answer_right_wrong_indicator_image_view);
+        playerAnswerRightWrongIndicatorImageView = (ImageView) findViewById(R.id.vcq_player_answer_right_wrong_indicator_image_view);
         playerAnswerTextView = (TextView) findViewById(R.id.vcq_player_answer_text_view);
         youEarnedRoot = (LinearLayout) findViewById(R.id.vcq_you_earned_root);
         earnedPointsTextView = (TextView) findViewById(R.id.vcq_earned_points_text_view);
 
         questionTextView.setText(question.getQuestionText());
-        correctAnswerTextView.setText(correctAnswer != null? correctAnswer.getAnswerText() : "error: no correct answer");
+        correctAnswerTextView.setText(correctAnswer != null ? correctAnswer.getAnswerText() : "error: no correct answer");
         loadPlayerImage(playerAnswerImageView);
         if (playerAnswer.isCorrect())
             playerAnswerRightWrongIndicatorImageView.setImageResource(R.drawable.ic_done_white_24dp);
@@ -133,27 +132,12 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
             playerAnswerRightWrongIndicatorImageView.setImageResource(R.drawable.ic_clear_red_24dp);
 
         playerAnswerTextView.setText(playerAnswer.getAnswerText());
-        if (playerAnswer.isCorrect()){
+        if (playerAnswer.isCorrect()) {
             youEarnedRoot.setVisibility(View.VISIBLE);
-            earnedPointsTextView.setText(Integer.toString((int)playerAnswer.getScore()));
-        }
-        else {
+            earnedPointsTextView.setText(Integer.toString((int) playerAnswer.getScore()));
+        } else {
             youEarnedRoot.setVisibility(View.GONE);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
         timeToGoBackToPlayerScoreTextView = (TextView) findViewById(R.id.vcq_time_to_go_back_to_player_score_text_view);
@@ -169,7 +153,6 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
                 startActivity(intent);
             }
         }.start();
-
 
 
     }
@@ -210,26 +193,26 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
         super.onStart();
         EventBus.getDefault().register(context);
         questionEventsHandler.register();
-        MediaPlayer player;
-        Answer correctAnswer = null;
-        for (Answer ans : question.getAnswers()) {
-            if (ans.isCorrect()) {
-                correctAnswer = ans;
-                break;
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        boolean isAlertsOn = settings.getBoolean(getString(R.string.is_alerts_on_key), true);
+        if (isAlertsOn) {
+            MediaPlayer player;
+            Answer correctAnswer = null;
+            for (Answer ans : question.getAnswers()) {
+                if (ans.isCorrect()) {
+                    correctAnswer = ans;
+                    break;
+                }
             }
-        }
-        if (correctAnswer != null) {
-            if (correctAnswer.isTheAnswerOfTheUser()) {
-                Boolean isBravo = new Date().getTime() % 2 == 0;
-                if (isBravo)
-                    player = MediaPlayer.create(context, R.raw.bravo);
-                else
+            if (correctAnswer != null) {
+                if (correctAnswer.isTheAnswerOfTheUser())
                     player = MediaPlayer.create(context, R.raw.hooray);
-            } else {
-                player = MediaPlayer.create(context, R.raw.aww);
+                else
+                    player = MediaPlayer.create(context, R.raw.aww);
+
+                player.start();
             }
 
-            player.start();
         }
 
 

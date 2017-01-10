@@ -82,6 +82,7 @@
     <string name="lbl_we_have_an_answer">יש לנו תשובה!</string>
     <string name="lbl_you_earned">הרווחת</string>
     <string name="lbl_the_correct_answer">התשובה הנכונה</string>
+    <string name="is_alerts_on_key">is_alert_on</string>
 
 
 </resources>

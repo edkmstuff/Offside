@@ -185,10 +185,13 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         super.onStart();
         questionEventsHandler.register();
         EventBus.getDefault().register(context);
-        MediaPlayer player;
-
-        player = MediaPlayer.create(context, R.raw.referee_short_whistle);
-        player.start();
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        boolean isAlertsOn = settings.getBoolean(getString(R.string.is_alerts_on_key), true);
+        if (isAlertsOn) {
+            MediaPlayer player;
+            player = MediaPlayer.create(context, R.raw.referee_short_whistle);
+            player.start();
+        }
     }
 
     @Override

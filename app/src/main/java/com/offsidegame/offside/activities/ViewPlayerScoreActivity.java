@@ -79,10 +79,11 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     private LinearLayout currentQuestionRoot;
     private LinearLayout currentQuestionTimerRoot;
     private LinearLayout nextQuestionTimerRoot;
-    private TextView  nextQuestionTimeLeftTextView;
+    private TextView nextQuestionTimeLeftTextView;
 
 
     private CountDownTimer timeLeftToCurrentOrNextQuestionTimer;
+    private ImageView controlAlertsImageView;
 
 //    private String currentQuestionText;
 //    private String currentQuestionAnswerText;
@@ -169,6 +170,32 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
             }
         });
 
+
+        //alerts
+        controlAlertsImageView = (ImageView) findViewById(R.id.vps_control_alerts_image_view);
+        boolean isAlertsOn = settings.getBoolean(getString(R.string.is_alerts_on_key), true);
+        if (isAlertsOn)
+            controlAlertsImageView.setImageResource(R.mipmap.ic_alerts_enabled);
+        else
+            controlAlertsImageView.setImageResource(R.mipmap.ic_alerts_disabled);
+
+        controlAlertsImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+                boolean isAlertsOn = settings.getBoolean(getString(R.string.is_alerts_on_key), true);
+                SharedPreferences.Editor editor = settings.edit();
+                if (isAlertsOn){
+                    editor.putBoolean(getString(R.string.is_alerts_on_key), false);
+                    controlAlertsImageView.setImageResource(R.mipmap.ic_alerts_disabled);
+                }else{
+                    editor.putBoolean(getString(R.string.is_alerts_on_key), true);
+                    controlAlertsImageView.setImageResource(R.mipmap.ic_alerts_enabled);
+                }
+
+                editor.commit();
+            }
+        });
     }
 
     @Override
@@ -234,11 +261,10 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onConnectionEvent(ConnectionEvent connectionEvent) {
         boolean isConnected = connectionEvent.getConnected();
-        if (isConnected){
-            Toast.makeText(context, R.string.lbl_you_are_connected , Toast.LENGTH_SHORT).show();
+        if (isConnected) {
+            Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
             //Toast.makeText(context,connectionEvent.getMsg(), Toast.LENGTH_LONG).show();
-        }
-        else{
+        } else {
             Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
             //Toast.makeText(context,connectionEvent.getMsg(), Toast.LENGTH_LONG).show();
         }
@@ -247,7 +273,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
         Context eventContext = signalRServiceBoundEvent.getContext();
-        if (eventContext == null){
+        if (eventContext == null) {
             Intent intent = new Intent(context, JoinGameActivity.class);
             context.startActivity(intent);
             return;
@@ -277,8 +303,6 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     }
 
 
-
-
     void updatePlayerScoreInUi(PlayerScore playerScore) {
         boolean isOnMainThread = Looper.myLooper() == Looper.getMainLooper();
         if (!isOnMainThread)
@@ -305,15 +329,15 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                 @Override
                 public void onTick(long millisUntilFinished) {
 
-                    int min = (int)Math.floor(millisUntilFinished / 1000 / 60);
-                    int sec = ((int)Math.floor(millisUntilFinished/1000) % 60);
+                    int min = (int) Math.floor(millisUntilFinished / 1000 / 60);
+                    int sec = ((int) Math.floor(millisUntilFinished / 1000) % 60);
                     String minString = Integer.toString(min);
                     String secString = Integer.toString(sec);
 
                     if (min < 10)
-                        minString =  "0" + minString;
+                        minString = "0" + minString;
                     if (sec < 10)
-                        secString =  "0" + secString;
+                        secString = "0" + secString;
 
                     currentQuestionTimeLeftTextView.setText(minString + ":" + secString);
 //                    if (millisUntilFinished < 30*1000)
@@ -339,8 +363,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                 }
             }.start();
 
-        }
-        else if (playerScore.getTimeToNextQuestionInMilliseconds()>0) {
+        } else if (playerScore.getTimeToNextQuestionInMilliseconds() > 0) {
 
             int timeLeftToNextQuestionInMilliseconds = playerScore.getTimeToNextQuestionInMilliseconds();
 
@@ -348,15 +371,15 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                 @Override
                 public void onTick(long millisUntilFinished) {
 
-                    int min = (int)Math.floor(millisUntilFinished / 1000 / 60);
-                    int sec = ((int)Math.floor(millisUntilFinished/1000) % 60);
+                    int min = (int) Math.floor(millisUntilFinished / 1000 / 60);
+                    int sec = ((int) Math.floor(millisUntilFinished / 1000) % 60);
                     String minString = Integer.toString(min);
                     String secString = Integer.toString(sec);
 
                     if (min < 10)
-                        minString =  "0" + minString;
+                        minString = "0" + minString;
                     if (sec < 10)
-                        secString =  "0" + secString;
+                        secString = "0" + secString;
 
                     nextQuestionTimeLeftTextView.setText(minString + ":" + secString);
 //                    if (millisUntilFinished < 30*1000)
