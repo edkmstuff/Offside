@@ -37,6 +37,7 @@
                 android:weightSum="4">
 
                 <TextView
+                    android:visibility="invisible"
                     android:id="@+id/question_text"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"

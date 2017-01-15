@@ -41,6 +41,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
     //<editor-fold desc="Class members">
 
+    public boolean isInBackground = false;
     private final Context context = this;
     private SignalRService signalRService;
     private boolean boundToSignalRService = false;
@@ -55,8 +56,11 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     private ImageView profilePictureImageView;
     private Button scoreboardBtn;
     private Button questionsBtn;
+    private LinearLayout loadingRoot;
+    private LinearLayout contentRoot;
+
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
-    private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
+    public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -98,6 +102,11 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_player_score);
+
+        questionEventsHandler.register();
+        EventBus.getDefault().register(context);
+
+
 
         //ENABLE THIS WHEN YOU DO ENGLISH (OR ANY OTHER LTR LANG) VERSION
 //        View root = findViewById(R.id.activity_player_score_root);
@@ -147,6 +156,14 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         currentQuestionTimerRoot = (LinearLayout) findViewById(R.id.current_question_timer_root);
         nextQuestionTimerRoot = (LinearLayout) findViewById(R.id.next_question_timer_root);
         nextQuestionTimeLeftTextView = (TextView) findViewById(R.id.next_question_time_left_text_view);
+
+        loadingRoot = (LinearLayout) findViewById(R.id.vps_loading_root);
+        contentRoot = (LinearLayout) findViewById(R.id.vps_content_root);
+
+        loadingRoot.setVisibility(View.VISIBLE);
+        contentRoot.setVisibility(View.GONE);
+
+
 
         currentQuestionRoot.setVisibility(View.GONE);
 
@@ -218,8 +235,8 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        questionEventsHandler.register();
-        EventBus.getDefault().register(context);
+       // questionEventsHandler.register();
+       // EventBus.getDefault().register(context);
 //        Intent intent = getIntent();
 //        currentQuestionText = intent.getStringExtra("questionText");
 //        currentQuestionAnswerText = intent.getStringExtra("answerText");
@@ -236,17 +253,20 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        questionEventsHandler.unregister();
-        EventBus.getDefault().unregister(context);
+        //questionEventsHandler.unregister();
+        //EventBus.getDefault().unregister(context);
+
         // Unbind from signalRService service
         if (boundToSignalRService) {
-            unbindService(signalRServiceConnection);
-            boundToSignalRService = false;
+            //unbindService(signalRServiceConnection);
+            //boundToSignalRService = false;
         }
         if (timeLeftToCurrentOrNextQuestionTimer != null) {
             timeLeftToCurrentOrNextQuestionTimer.cancel();
             timeLeftToCurrentOrNextQuestionTimer = null;
         }
+
+        isInBackground = true;
         super.onStop();
     }
 
@@ -270,6 +290,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         boolean isConnected = connectionEvent.getConnected();
         if (isConnected) {
             Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
+            //getPlayerScore();
             //Toast.makeText(context,connectionEvent.getMsg(), Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
@@ -288,16 +309,20 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         if (eventContext == context) {
 
 
-            SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-            String gameId = settings.getString(getString(R.string.game_id_key), "");
-            String userId = settings.getString(getString(R.string.user_id_key), "");
-            String userName = settings.getString(getString(R.string.user_name_key), "");
-
-            if (gameId != null && gameId != ""
-                    && userId != null && userId != ""
-                    && userName != null && userName != "")
-                signalRService.getPlayerScore(gameId, userId, userName);
+            getPlayerScore();
         }
+    }
+
+    private void getPlayerScore() {
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        String gameId = settings.getString(getString(R.string.game_id_key), "");
+        String userId = settings.getString(getString(R.string.user_id_key), "");
+        String userName = settings.getString(getString(R.string.user_name_key), "");
+
+        if (gameId != null && gameId != ""
+                && userId != null && userId != ""
+                && userName != null && userName != "")
+            signalRService.getPlayerScore(gameId, userId, userName);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -314,6 +339,10 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         boolean isOnMainThread = Looper.myLooper() == Looper.getMainLooper();
         if (!isOnMainThread)
             return;
+
+        loadingRoot.setVisibility(View.GONE);
+        contentRoot.setVisibility(View.VISIBLE);
+
 
         gameTitle.setText(playerScore.getGameTitle().toString());
         score.setText(playerScore.getScore().toString());

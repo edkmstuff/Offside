@@ -9,6 +9,9 @@ import com.offsidegame.offside.activities.AnswerQuestionActivity;
 import com.offsidegame.offside.activities.ViewClosedQuestionActivity;
 import com.offsidegame.offside.activities.ViewPlayerScoreActivity;
 import com.offsidegame.offside.activities.ViewProcessedQuestionActivity;
+import com.offsidegame.offside.activities.ViewQuestionsActivity;
+import com.offsidegame.offside.activities.ViewScoreboardActivity;
+import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.events.QuestionEvent;
 
@@ -79,7 +82,21 @@ public class QuestionEventsHandler {
             bundle.putSerializable("question", question);
             bundle.putString("questionState", questionState);
             intent.putExtras(bundle);
+            ((OffsideApplication)context.getApplicationContext()).setContext(context);
+
+            if (context.getClass() == ViewPlayerScoreActivity.class && ((ViewPlayerScoreActivity) context).isInBackground) {
+
+                EventBus.getDefault().unregister(context);
+                EventBus.getDefault().unregister(this);
+                //context.unbindService(((ViewPlayerScoreActivity) context).signalRServiceConnection);
+                //context = null;
+            }
+
+
+
             context.startActivity(intent);
+
+
         }
     }
 

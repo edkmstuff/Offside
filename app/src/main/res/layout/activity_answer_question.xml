@@ -26,22 +26,46 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/white_background_border"
-            android:gravity="center"
+            android:weightSum="4"
             android:orientation="vertical"
             android:visibility="gone">
-
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:id="@+id/stat_question_text_view"
+                android:textStyle="bold"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:padding="10dp"
                 android:gravity="center"
-                android:text="@string/lbl_getting_answers_and_calculating_statistics"
-                android:textSize="@dimen/OffsideMediumText" />
+                android:layout_weight="1"
+                android:textSize="@dimen/OffsideMediumText"
+                android:text="the text of the question"/>
 
-            <ProgressBar
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"></ProgressBar>
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:gravity="center"
+                    android:text="@string/lbl_getting_answers_and_calculating_statistics"
+                    android:textSize="@dimen/OffsideMediumText" />
+
+                <ProgressBar
+                    android:layout_gravity="center"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                </ProgressBar>
+
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -52,7 +76,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/white_background_border"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <LinearLayout
 
@@ -115,7 +139,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/white_background_border"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"

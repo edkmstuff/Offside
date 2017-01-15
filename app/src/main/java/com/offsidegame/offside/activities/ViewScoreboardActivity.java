@@ -34,6 +34,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 public class ViewScoreboardActivity extends AppCompatActivity {
 
+
     private final Context context = this;
     private Scoreboard scoreboard;
     private TextView gameDidNotStartYet;
@@ -42,7 +43,7 @@ public class ViewScoreboardActivity extends AppCompatActivity {
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private Toolbar toolbar;
 
-    private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
+    public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -96,7 +97,8 @@ public class ViewScoreboardActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-
+        questionEventsHandler.register();
+        EventBus.getDefault().register(context);
         Intent intent = new Intent();
         intent.setClass(context, SignalRService.class);
         bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
@@ -105,8 +107,7 @@ public class ViewScoreboardActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        questionEventsHandler.register();
-        EventBus.getDefault().register(context);
+
     }
 
     @Override

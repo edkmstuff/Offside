@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
     //Button createGame;
     TextView userName;
     ImageView profilePicture;
+    private LinearLayout joinGameRoot;
+    private LinearLayout loadingGameRoot;
 
     private Toolbar toolbar;
 
@@ -116,32 +119,22 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
                 public void onClick(View view) {
                     if (isBoundToSignalRService) {
                         signalRService.joinGame(gameCode.getText().toString());
+                        loadingGameRoot.setVisibility(View.VISIBLE);
+                        joinGameRoot.setVisibility(View.GONE);
 
                     }
                 }
             });
 
 
-       // }
+        joinGameRoot = (LinearLayout) findViewById(R.id.jg_join_game_root);
+        loadingGameRoot = (LinearLayout) findViewById(R.id.jg_loading_root);
 
-        /*FacebookLoginInfo fbLoginInfo;
+        loadingGameRoot.setVisibility(View.VISIBLE);
+        joinGameRoot.setVisibility(View.GONE);
 
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        Gson gson = new Gson();
-        String fbProfileJson = settings.getString(getString(R.string.fbProfile_key), "");
-        if(fbProfileJson!=""){
-            fbLoginInfo= gson.fromJson(fbProfileJson, FacebookLoginInfo.class);
-        }
-        else {
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putBoolean(getString(R.string.is_logged_in_key), false);
-            editor.commit();
-            Intent intent = new Intent();
-            intent.setClass(context, LoginActivity.class);
-            startActivity(intent);
-            return;
 
-        }*/
+
 
 
 
@@ -231,6 +224,9 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
         if(isGameActive){
             Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
             startActivity(intent);
+        }else{
+            loadingGameRoot.setVisibility(View.GONE);
+            joinGameRoot.setVisibility(View.VISIBLE);
         }
     }
 

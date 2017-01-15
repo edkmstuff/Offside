@@ -15,16 +15,19 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -32,13 +35,14 @@ import org.greenrobot.eventbus.ThreadMode;
 public class AnswerQuestionActivity extends AppCompatActivity implements IQuestionHolder {
 
     //<editor-fold desc="Class members">
-
+    private Context callingContext = null;
     private final Context context = this;
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
     private Question question;
     private String questionState;
     private TextView questionTextView;
+    private TextView statQuestionTextView;
     private LinearLayout questionAndAnswersRoot;
     private LinearLayout calcQuestionStatisticsRoot;
     private LinearLayout timeToNextQuestionRoot;
@@ -46,10 +50,10 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     private CountDownTimer timeToNextQuestionTimer;
     private TextView timeToNextQuestionTextView;
     private TextView timeToAnswerTextView;
-    private int timeToQuestionToPop ;
-    private int timeToAnswer ;
+    private int timeToQuestionToPop;
+    private int timeToAnswer;
     private int secondsLeft = 0;
-    private String answerId= null;
+    private String answerId = null;
     private final DateHelper dateHelper = new DateHelper();
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
 
@@ -63,6 +67,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
             SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
             signalRService = binder.getService();
             isBoundToSignalRService = true;
+            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
         }
 
         @Override
@@ -111,6 +116,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         calcQuestionStatisticsRoot = (LinearLayout) findViewById(R.id.calc_question_statistics_root);
         timeToNextQuestionRoot = (LinearLayout) findViewById(R.id.time_to_next_question_root);
         questionTextView = (TextView) findViewById(R.id.question_text);
+        statQuestionTextView = (TextView) findViewById(R.id.stat_question_text_view);
         timeToNextQuestionTextView = (TextView) findViewById(R.id.time_to_next_question);
         timeToAnswerTextView = (TextView) findViewById(R.id.time_to_answer_text_view);
 
@@ -123,6 +129,8 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         question = (Question) bundle.getSerializable("question");
         questionState = bundle.getString("questionState");
         questionTextView.setText(question.getQuestionText());
+        statQuestionTextView.setText(question.getQuestionText());
+        callingContext = ((OffsideApplication) getApplicationContext()).getContext();
 
         //run timer
 
@@ -135,6 +143,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
                     timeToNextQuestionTextView.setText(Integer.toString(secondsLeft));
                 }
             }
+
             public void onFinish() {
                 //timer is done now we show question
                 timeToNextQuestionRoot.setVisibility(View.GONE);
@@ -148,7 +157,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
                         if (Math.round((float) millisUntilFinished / 1000.0f) != secondsLeft) {
                             secondsLeft = Math.round((float) millisUntilFinished / 1000.0f);
                             timeToAnswerTextView.setText(Integer.toString(secondsLeft));
-                            if (secondsLeft < 7 && secondsLeft > 3 )
+                            if (secondsLeft < 7 && secondsLeft > 3)
                                 timeToAnswerTextView.setBackgroundColor(Color.parseColor("#FFAB00"));
                             if (secondsLeft < 4)
                                 timeToAnswerTextView.setBackgroundColor(Color.RED);
@@ -160,9 +169,9 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
                     @Override
                     public void onFinish() {
                         //user did not answer this question, we select random answer
-                        if (answerId == null){
+                        if (answerId == null) {
                             int answersCount = question.getAnswers().length;
-                            int selectedAnswerIndex = (int)(Math.floor(Math.random() * answersCount));
+                            int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
                             String randomAnswerId = question.getAnswers()[selectedAnswerIndex].getId();
                             signalRService.postAnswer(question.getGameId(), question.getId(), randomAnswerId);
                         }
@@ -173,7 +182,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         Intent intent = new Intent();
         intent.setClass(context, SignalRService.class);
@@ -262,8 +271,12 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
             context.startActivity(intent);
             return;
         }
+        if (callingContext != null && callingContext.getClass() == ViewPlayerScoreActivity.class) {
+            callingContext.unbindService(((ViewPlayerScoreActivity) callingContext).signalRServiceConnection);
+            callingContext = null;
+            ((OffsideApplication) getApplicationContext()).setContext(null);
+        }
     }
-
 
 
     //</editor-fold>

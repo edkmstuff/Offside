@@ -36,7 +36,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
     private boolean isBoundToSignalRService = false;
     private Toolbar toolbar;
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
-    private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
+    public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
@@ -65,22 +65,25 @@ public class ViewQuestionsActivity extends AppCompatActivity {
 
         gameDidNotStartYetTextView = (TextView) findViewById(R.id.game_did_not_start_yet_text_view);
         gameDidNotStartYetTextView.setVisibility(View.GONE);
+
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
+        questionEventsHandler.register();
+        EventBus.getDefault().register(context);
         Intent intent = new Intent();
         intent.setClass(context, SignalRService.class);
         bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        questionEventsHandler.register();
-        EventBus.getDefault().register(context);
+
     }
 
     @Override
@@ -89,7 +92,7 @@ public class ViewQuestionsActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(context);
         // Unbind from the service
         if (isBoundToSignalRService) {
-            unbindService(signalRServiceConnection);
+          unbindService(signalRServiceConnection);
             isBoundToSignalRService = false;
         }
 

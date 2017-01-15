@@ -14,13 +14,33 @@
         layout="@layout/app_bar" />
 
 
+    <LinearLayout
+        android:id="@+id/vps_loading_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="visible">
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+        </ProgressBar>
+
+    </LinearLayout>
+
+
     <!-- Content Root -->
     <LinearLayout
+        android:id="@+id/vps_content_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
         android:background="@drawable/white_background_border"
         android:orientation="vertical"
+        android:visibility="gone"
         android:weightSum="12">
 
 
