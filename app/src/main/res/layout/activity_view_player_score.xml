@@ -442,6 +442,8 @@
                     android:layoutDirection="rtl"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/lbl_time_left_to_current_question_answer"
+                        android:visibility="visible"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
@@ -475,6 +477,7 @@
                     android:layoutDirection="rtl"
                     android:orientation="horizontal">
                     <TextView
+                        android:id="@+id/lbl_time_left_to_next_question"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"

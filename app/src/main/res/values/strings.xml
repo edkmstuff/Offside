@@ -63,7 +63,8 @@
     <string name="lbl_sponsored_by">בחסות</string>
     <string name="lbl_current_question">שאלה נוכחית</string>
     <string name="lbl_your_answer">התשובה שלך</string>
-    <string name="lbl_few_moments">כמה רגעים</string>
+    <string name="lbl_question_on_its_way">השאלה בדרך...</string>
+    <string name="lbl_answer_on_its_way">התשובה בדרך...</string>
     <string name="time_left">זמן שנותר</string>
     <string name="lbl_position_outof">מיקום</string>
     <string name="lbl_next_question_in">השאלה הבאה בעוד</string>
@@ -84,6 +85,7 @@
     <string name="lbl_the_correct_answer">התשובה הנכונה</string>
     <string name="is_alerts_on_key">is_alert_on</string>
     <string name="saved_list_view_height_key">savedListViewHeight</string>
+    <string name="lbl_random_answer_accepted_message">תם הזמן, בחרנו תשובה עבורך</string>
 
 
 </resources>

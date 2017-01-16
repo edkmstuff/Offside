@@ -56,6 +56,8 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     private String answerId = null;
     private final DateHelper dateHelper = new DateHelper();
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
+    private boolean isRandomAnswer = false;
+    private TextView lblRandomAnswerAcceptedMessageTextView;
 
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
@@ -119,6 +121,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         statQuestionTextView = (TextView) findViewById(R.id.stat_question_text_view);
         timeToNextQuestionTextView = (TextView) findViewById(R.id.time_to_next_question);
         timeToAnswerTextView = (TextView) findViewById(R.id.time_to_answer_text_view);
+        lblRandomAnswerAcceptedMessageTextView = (TextView) findViewById(R.id.lbl_random_answer_accepted_message);
 
         //show timer first
         questionAndAnswersRoot.setVisibility(View.GONE);
@@ -170,10 +173,14 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
                     public void onFinish() {
                         //user did not answer this question, we select random answer
                         if (answerId == null) {
+                            isRandomAnswer= true;
                             int answersCount = question.getAnswers().length;
                             int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
                             String randomAnswerId = question.getAnswers()[selectedAnswerIndex].getId();
                             signalRService.postAnswer(question.getGameId(), question.getId(), randomAnswerId);
+                            calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
+                            questionAndAnswersRoot.setVisibility(View.GONE);
+                            lblRandomAnswerAcceptedMessageTextView.setVisibility(View.VISIBLE);
                         }
                     }
                 }.start();
@@ -243,22 +250,27 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         // this parameter will be null if the user does not answer
         answerId = questionAnswered.getAnswerId();
         signalRService.postAnswer(gameId, questionId, answerId);
+        calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
+        questionAndAnswersRoot.setVisibility(View.GONE);
 
     }
 
     //event fires when the server approved it got the user answer
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onIsAnswerAcceptedEvent(IsAnswerAcceptedEvent answerAcceptedEvent) {
+
+//        if(isRandomAnswer){
+//            Toast.makeText(context, getString(R.string.lbl_random_answer_accepted_message), Toast.LENGTH_LONG).show();
+//        }
+//
+//        else
         if (answerAcceptedEvent.getIsAnswerAccepted())
             Toast.makeText(context, getString(R.string.lbl_answer_accepted_message), Toast.LENGTH_LONG).show();
         else
             Toast.makeText(context, getString(R.string.lbl_answer_not_accepted_message), Toast.LENGTH_LONG).show();
 
-//        Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
-//        startActivity(intent);
-
-        calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
-        questionAndAnswersRoot.setVisibility(View.GONE);
+        //calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
+        //questionAndAnswersRoot.setVisibility(View.GONE);
         isAnswered = true;
 
     }

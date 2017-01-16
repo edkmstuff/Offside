@@ -84,7 +84,8 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     private LinearLayout currentQuestionTimerRoot;
     private LinearLayout nextQuestionTimerRoot;
     private TextView nextQuestionTimeLeftTextView;
-
+    private TextView lblTimeLeftToCurrentQuestionAnswerTextView;
+    private TextView lblTimeLeftToNextQuestionTextView;
 
     private CountDownTimer timeLeftToCurrentOrNextQuestionTimer;
     private ImageView controlAlertsImageView;
@@ -156,6 +157,8 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         currentQuestionTimerRoot = (LinearLayout) findViewById(R.id.current_question_timer_root);
         nextQuestionTimerRoot = (LinearLayout) findViewById(R.id.next_question_timer_root);
         nextQuestionTimeLeftTextView = (TextView) findViewById(R.id.next_question_time_left_text_view);
+        lblTimeLeftToCurrentQuestionAnswerTextView = (TextView) findViewById(R.id.lbl_time_left_to_current_question_answer);
+        lblTimeLeftToNextQuestionTextView =  (TextView) findViewById(R.id.lbl_time_left_to_next_question);
 
         loadingRoot = (LinearLayout) findViewById(R.id.vps_loading_root);
         contentRoot = (LinearLayout) findViewById(R.id.vps_content_root);
@@ -235,19 +238,6 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-       // questionEventsHandler.register();
-       // EventBus.getDefault().register(context);
-//        Intent intent = getIntent();
-//        currentQuestionText = intent.getStringExtra("questionText");
-//        currentQuestionAnswerText = intent.getStringExtra("answerText");
-//        timeLeftToAnswer = intent.getIntExtra("timeToAnswer",0);
-//        if (currentQuestionText != null && currentQuestionAnswerText != null) {
-//            currentQuestionTimeLeftTextView.setText("מסתיימת בעוד מספר דקות");
-//            currentQuestionTextView.setText(currentQuestionText);
-//            currentQuestionAnswerTextView.setText(currentQuestionAnswerText);
-//            currentQuestionText = null;
-//            currentQuestionAnswerText = null;
-//        }
 
     }
 
@@ -395,7 +385,9 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
                 @Override
                 public void onFinish() {
-                    currentQuestionTimeLeftTextView.setText(R.string.lbl_few_moments);
+                    lblTimeLeftToCurrentQuestionAnswerTextView.setVisibility(View.GONE);
+                    currentQuestionTimeLeftTextView.setText(R.string.lbl_answer_on_its_way);
+
                 }
             }.start();
 
@@ -437,7 +429,8 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
                 @Override
                 public void onFinish() {
-                    nextQuestionTimeLeftTextView.setText(R.string.lbl_few_moments);
+                    lblTimeLeftToNextQuestionTextView.setVisibility(View.GONE);
+                    nextQuestionTimeLeftTextView.setText(R.string.lbl_question_on_its_way);
                 }
             }.start();
 
