@@ -42,6 +42,8 @@ public class ViewScoreboardActivity extends AppCompatActivity {
     private boolean isBoundToSignalRService = false;
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private Toolbar toolbar;
+    private LinearLayout loadingRoot;
+    private LinearLayout contentRoot;
 
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
@@ -89,6 +91,12 @@ public class ViewScoreboardActivity extends AppCompatActivity {
         totalPlayersTextView = (TextView) findViewById(R.id.sb_total_players_text_view);
         positionTextView.setText(position);
         totalPlayersTextView.setText(totalPlayers);
+
+        loadingRoot = (LinearLayout) findViewById(R.id.sb_loading_root);
+        contentRoot = (LinearLayout) findViewById(R.id.sb_content_root);
+
+        loadingRoot.setVisibility(View.VISIBLE);
+        contentRoot.setVisibility(View.GONE);
 
 
 
@@ -157,6 +165,8 @@ public class ViewScoreboardActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveScoreboard(ScoreboardEvent scoreboardEvent) {
+
+
         scoreboard = scoreboardEvent.getScoreboard();
         Score[] scores = scoreboard.getScores();
         if (scores == null || scores.length < 1){
@@ -167,6 +177,9 @@ public class ViewScoreboardActivity extends AppCompatActivity {
 
         ScoresFragment scoresFragment = (ScoresFragment) getSupportFragmentManager().findFragmentById(R.id.scores_fragment);
         scoresFragment.updateData(scoreboard);
+
+        loadingRoot.setVisibility(View.GONE);
+        contentRoot.setVisibility(View.VISIBLE);
 
 
     }

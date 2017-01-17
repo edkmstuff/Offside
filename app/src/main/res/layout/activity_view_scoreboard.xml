@@ -31,57 +31,85 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <LinearLayout
+            android:id="@+id/sb_loading_root"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layoutDirection="rtl"
-            android:padding="11dp"
-            android:layout_margin="10dp"
-            android:background="@color/colorPrimary"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone">
 
-            <TextView
+            <ProgressBar
+                android:layout_gravity="center"
+                style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/lbl_your_position"
-                android:textColor="@color/windowBackground"
-                android:textSize="@dimen/OffsideMediumText" />
+                android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/sb_position_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:textColor="@color/windowBackground"
-                android:textSize="@dimen/OffsideMediumText" />
+            </ProgressBar>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:text="@string/lbl_out_of"
-                android:textColor="@color/windowBackground"
-                android:textSize="@dimen/OffsideMediumText" />
 
-            <TextView
-                android:id="@+id/sb_total_players_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/windowBackground"
-                android:textSize="@dimen/OffsideMediumText" />
+
 
         </LinearLayout>
 
-
-        <fragment
-            android:id="@+id/scores_fragment"
-            android:name="com.offsidegame.offside.activities.fragments.ScoresFragment"
+        <LinearLayout
+            android:id="@+id/sb_content_root"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:layout="@layout/score_list_item"></fragment>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutDirection="rtl"
+                android:padding="11dp"
+                android:layout_margin="10dp"
+                android:background="@color/colorPrimary"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_your_position"
+                    android:textColor="@color/windowBackground"
+                    android:textSize="@dimen/OffsideMediumText" />
+
+                <TextView
+                    android:id="@+id/sb_position_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:textColor="@color/windowBackground"
+                    android:textSize="@dimen/OffsideMediumText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/lbl_out_of"
+                    android:textColor="@color/windowBackground"
+                    android:textSize="@dimen/OffsideMediumText" />
+
+                <TextView
+                    android:id="@+id/sb_total_players_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/windowBackground"
+                    android:textSize="@dimen/OffsideMediumText" />
+
+            </LinearLayout>
+
+
+            <fragment
+                android:id="@+id/scores_fragment"
+                android:name="com.offsidegame.offside.activities.fragments.ScoresFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:layout="@layout/score_list_item"></fragment>
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

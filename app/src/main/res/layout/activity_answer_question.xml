@@ -39,7 +39,7 @@
                 android:layout_weight="1"
                 android:textSize="@dimen/OffsideMediumText"
                 android:text="the text of the question"
-                android:visibility="gone"/>
+                android:visibility="visible"/>
 
             <LinearLayout
 

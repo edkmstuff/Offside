@@ -58,6 +58,8 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     private Button questionsBtn;
     private LinearLayout loadingRoot;
     private LinearLayout contentRoot;
+    private String currentGameEventText;
+
 
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
@@ -83,11 +85,12 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     private LinearLayout currentQuestionRoot;
     private LinearLayout currentQuestionTimerRoot;
     private LinearLayout nextQuestionTimerRoot;
-    private TextView nextQuestionTimeLeftTextView;
-    private TextView lblTimeLeftToCurrentQuestionAnswerTextView;
-    private TextView lblTimeLeftToNextQuestionTextView;
+    private TextView currentEventTimeLeftTextView;
 
-    private CountDownTimer timeLeftToCurrentOrNextQuestionTimer;
+    private TextView TimeLeftToCurrentEventTextView;
+    private TextView currentGameEventTextView;
+
+    private CountDownTimer timeLeftToCurrentGameEventTimer;
     private ImageView controlAlertsImageView;
 
 //    private String currentQuestionText;
@@ -106,7 +109,6 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
         questionEventsHandler.register();
         EventBus.getDefault().register(context);
-
 
 
         //ENABLE THIS WHEN YOU DO ENGLISH (OR ANY OTHER LTR LANG) VERSION
@@ -155,17 +157,17 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         currentQuestionAnswerTextView = (TextView) findViewById(R.id.current_question_answer_text_view);
         currentQuestionRoot = (LinearLayout) findViewById(R.id.current_question_root);
         currentQuestionTimerRoot = (LinearLayout) findViewById(R.id.current_question_timer_root);
-        nextQuestionTimerRoot = (LinearLayout) findViewById(R.id.next_question_timer_root);
-        nextQuestionTimeLeftTextView = (TextView) findViewById(R.id.next_question_time_left_text_view);
-        lblTimeLeftToCurrentQuestionAnswerTextView = (TextView) findViewById(R.id.lbl_time_left_to_current_question_answer);
-        lblTimeLeftToNextQuestionTextView =  (TextView) findViewById(R.id.lbl_time_left_to_next_question);
+        nextQuestionTimerRoot = (LinearLayout) findViewById(R.id.vps_current_event_timer_root);
+        currentEventTimeLeftTextView = (TextView) findViewById(R.id.vps_current_event_time_left_text_view);
+
+        TimeLeftToCurrentEventTextView = (TextView) findViewById(R.id.vps_current_event_text_view);
+        currentGameEventTextView = (TextView) findViewById(R.id.vps_current_event_text_view);
 
         loadingRoot = (LinearLayout) findViewById(R.id.vps_loading_root);
         contentRoot = (LinearLayout) findViewById(R.id.vps_content_root);
 
         loadingRoot.setVisibility(View.VISIBLE);
         contentRoot.setVisibility(View.GONE);
-
 
 
         currentQuestionRoot.setVisibility(View.GONE);
@@ -205,10 +207,10 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                 SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
                 boolean isAlertsOn = settings.getBoolean(getString(R.string.is_alerts_on_key), true);
                 SharedPreferences.Editor editor = settings.edit();
-                if (isAlertsOn){
+                if (isAlertsOn) {
                     editor.putBoolean(getString(R.string.is_alerts_on_key), false);
                     controlAlertsImageView.setImageResource(R.mipmap.ic_alerts_disabled);
-                }else{
+                } else {
                     editor.putBoolean(getString(R.string.is_alerts_on_key), true);
                     controlAlertsImageView.setImageResource(R.mipmap.ic_alerts_enabled);
                 }
@@ -224,7 +226,11 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         //bind or re-bind to signalRService
         Intent intent = new Intent();
         intent.setClass(context, SignalRService.class);
-        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+        if (!boundToSignalRService) {
+            bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+        } else {
+            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
+        }
 
 
         //resetting list height (workaround in array adapter)
@@ -251,9 +257,9 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
             //unbindService(signalRServiceConnection);
             //boundToSignalRService = false;
         }
-        if (timeLeftToCurrentOrNextQuestionTimer != null) {
-            timeLeftToCurrentOrNextQuestionTimer.cancel();
-            timeLeftToCurrentOrNextQuestionTimer = null;
+        if (timeLeftToCurrentGameEventTimer != null) {
+            timeLeftToCurrentGameEventTimer.cancel();
+            timeLeftToCurrentGameEventTimer = null;
         }
 
         isInBackground = true;
@@ -343,7 +349,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         String currentQuestionText = playerScore.getCurrentQuestionText();
         if (currentQuestionText != null && currentQuestionText.length() > 0) {
             currentQuestionRoot.setVisibility(View.VISIBLE);
-            nextQuestionTimeLeftTextView.setVisibility(View.GONE);
+            currentEventTimeLeftTextView.setVisibility(View.GONE);
             currentQuestionTimerRoot.setVisibility(View.VISIBLE);
             //currentQuestionTimeLeftTextView.setText(Integer.toString(playerScore.getCurrentQuestionTimeLeftToAnswer()));
             currentQuestionTextView.setText(playerScore.getCurrentQuestionText());
@@ -351,7 +357,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
             int currentQuestionExpirationInMilliseconds = playerScore.getCurrentQuestionExpirationInMilliseconds();
 
-            timeLeftToCurrentOrNextQuestionTimer = new CountDownTimer(currentQuestionExpirationInMilliseconds, 1000) {
+            timeLeftToCurrentGameEventTimer = new CountDownTimer(currentQuestionExpirationInMilliseconds, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
 
@@ -366,36 +372,27 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                         secString = "0" + secString;
 
                     currentQuestionTimeLeftTextView.setText(minString + ":" + secString);
-//                    if (millisUntilFinished < 30*1000)
-//                        currentQuestionTimeLeftTextView.setText("30 sec");
-//                    if (millisUntilFinished < 60*1000)
-//                        currentQuestionTimeLeftTextView.setText("1 min");
-//                    else if (millisUntilFinished < 2*60*1000)
-//                        currentQuestionTimeLeftTextView.setText("2 min");
-//                    else if (millisUntilFinished < 3*60*1000)
-//                        currentQuestionTimeLeftTextView.setText("3 min");
-//                    else if (millisUntilFinished < 4*60*1000)
-//                        currentQuestionTimeLeftTextView.setText("4 min");
-//                    else if (millisUntilFinished < 5*60*1000)
-//                        currentQuestionTimeLeftTextView.setText("5 min");
-//
-//                    else
-//                        currentQuestionTimeLeftTextView.setText("more than 5 min");
+
                 }
 
                 @Override
                 public void onFinish() {
-                    lblTimeLeftToCurrentQuestionAnswerTextView.setVisibility(View.GONE);
+
                     currentQuestionTimeLeftTextView.setText(R.string.lbl_answer_on_its_way);
 
                 }
             }.start();
 
-        } else if (playerScore.getTimeToNextQuestionInMilliseconds() > 0) {
+        } else if (playerScore.getTimeLeftToCurrentGameEventInMilliseconds() > 0) {
 
-            int timeLeftToNextQuestionInMilliseconds = playerScore.getTimeToNextQuestionInMilliseconds();
+            currentGameEventText = playerScore.getCurrentGameEvent();
+            if (currentGameEventText != null)
+                currentGameEventTextView.setText(currentGameEventText);
 
-            timeLeftToCurrentOrNextQuestionTimer = new CountDownTimer(timeLeftToNextQuestionInMilliseconds, 1000) {
+
+            int timeLeftToNextEventInMilliseconds = playerScore.getTimeLeftToCurrentGameEventInMilliseconds();
+
+            timeLeftToCurrentGameEventTimer = new CountDownTimer(timeLeftToNextEventInMilliseconds, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
 
@@ -409,34 +406,20 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                     if (sec < 10)
                         secString = "0" + secString;
 
-                    nextQuestionTimeLeftTextView.setText(minString + ":" + secString);
-//                    if (millisUntilFinished < 30*1000)
-//                        currentQuestionTimeLeftTextView.setText("30 sec");
-//                    if (millisUntilFinished < 60*1000)
-//                        currentQuestionTimeLeftTextView.setText("1 min");
-//                    else if (millisUntilFinished < 2*60*1000)
-//                        currentQuestionTimeLeftTextView.setText("2 min");
-//                    else if (millisUntilFinished < 3*60*1000)
-//                        currentQuestionTimeLeftTextView.setText("3 min");
-//                    else if (millisUntilFinished < 4*60*1000)
-//                        currentQuestionTimeLeftTextView.setText("4 min");
-//                    else if (millisUntilFinished < 5*60*1000)
-//                        currentQuestionTimeLeftTextView.setText("5 min");
-//
-//                    else
-//                        currentQuestionTimeLeftTextView.setText("more than 5 min");
+                    currentEventTimeLeftTextView.setText(minString + ":" + secString);
+
                 }
 
                 @Override
                 public void onFinish() {
-                    lblTimeLeftToNextQuestionTextView.setVisibility(View.GONE);
-                    nextQuestionTimeLeftTextView.setText(R.string.lbl_question_on_its_way);
+                    TimeLeftToCurrentEventTextView.setVisibility(View.GONE);
+                    currentEventTimeLeftTextView.setText(R.string.lbl_question_on_its_way);
                 }
             }.start();
 
 
             currentQuestionRoot.setVisibility(View.VISIBLE);
-            nextQuestionTimeLeftTextView.setVisibility(View.VISIBLE);
+            currentEventTimeLeftTextView.setVisibility(View.VISIBLE);
             currentQuestionTimerRoot.setVisibility(View.GONE);
         }
 

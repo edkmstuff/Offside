@@ -1,7 +1,5 @@
 package com.offsidegame.offside.models;
 
-import java.util.Date;
-
 /**
  * Created by KFIR on 11/14/2016.
  */
@@ -41,8 +39,12 @@ public class PlayerScore {
     @com.google.gson.annotations.SerializedName("CQEIM")
     private int currentQuestionExpirationInMilliseconds;
 
-    @com.google.gson.annotations.SerializedName("TTNQIM")
-    private int timeToNextQuestionInMilliseconds;
+    @com.google.gson.annotations.SerializedName("TLTCGEIM")
+    private int timeLeftToCurrentGameEventInMilliseconds;
+
+
+    @com.google.gson.annotations.SerializedName("CGE")
+    private String currentGameEvent;
 
 
     public String getGameTitle() {
@@ -118,12 +120,20 @@ public class PlayerScore {
         this.currentQuestionExpirationInMilliseconds = currentQuestionExpirationInMilliseconds;
     }
 
-    public int getTimeToNextQuestionInMilliseconds() {
-        return timeToNextQuestionInMilliseconds;
+    public int getTimeLeftToCurrentGameEventInMilliseconds() {
+        return timeLeftToCurrentGameEventInMilliseconds;
     }
 
-    public void setTimeToNextQuestionInMilliseconds(int timeToNextQuestionInMilliseconds) {
-        this.timeToNextQuestionInMilliseconds = timeToNextQuestionInMilliseconds;
+    public void setTimeLeftToCurrentGameEventInMilliseconds(int timeLeftToCurrentGameEventInMilliseconds) {
+        this.timeLeftToCurrentGameEventInMilliseconds = timeLeftToCurrentGameEventInMilliseconds;
+    }
+
+    public String getCurrentGameEvent() {
+        return currentGameEvent;
+    }
+
+    public void setCurrentGameEvent(String currentGameEvent) {
+        this.currentGameEvent = currentGameEvent;
     }
 }
 

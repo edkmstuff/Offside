@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
@@ -42,6 +43,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private boolean isBoundToSignalRService = false;
     EditText email;
     Button login;
+    private LinearLayout loadingRoot;
+    private LinearLayout contentRoot;
 
     private Toolbar toolbar;
 
@@ -107,6 +110,11 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             }
 
         });
+
+        loadingRoot = (LinearLayout) findViewById(R.id.l_loading_root);
+        contentRoot= (LinearLayout) findViewById(R.id.l_content_root);
+        loadingRoot.setVisibility(View.GONE);
+        contentRoot.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -147,7 +155,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLogin(LoginEvent loginEvent) {
-
+        loadingRoot.setVisibility(View.VISIBLE);
+        contentRoot.setVisibility(View.GONE);
         boolean isFacebookLogin = loginEvent.getIsFacebookLogin();
         String id = loginEvent.getId();
         String name = loginEvent.getName();
