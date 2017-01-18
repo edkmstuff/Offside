@@ -156,7 +156,21 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     }
 
     private void showQuestion(/*final boolean doProcess*/) {
+        //reset state
+        if(timeToNextQuestionTimer != null)
+            timeToNextQuestionTimer.cancel();
+        if (timeToAnswerTimer != null)
+            timeToAnswerTimer.cancel();
+
+        timeToNextQuestionTextView.setText("");
+        timeToAnswerTextView.setText("");
         isAnswered = false;
+
+        timeToNextQuestionRoot.setVisibility(View.VISIBLE);
+        questionAndAnswersRoot.setVisibility(View.GONE);
+        answerId = null;
+        //end of reset
+
         questionTextView.setText(question.getQuestionText());
         statQuestionTextView.setText(question.getQuestionText());
         AnswersFragment answersFragment = (AnswersFragment) getSupportFragmentManager().findFragmentById(R.id.activity_answers_fragment);
