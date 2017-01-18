@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.activities.fragments.AnswersFragment;
+import com.offsidegame.offside.activities.fragments.QuestionsFragment;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.DateHelper;
@@ -32,6 +34,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class AnswerQuestionActivity extends AppCompatActivity implements IQuestionHolder {
 
     //<editor-fold desc="Class members">
@@ -40,6 +46,9 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
     private Question question;
+    private Question[] batchedQuestions;
+    private Queue<Question> batchedQuestionsQueue;
+    private boolean isBatch;
     private String questionState;
     private TextView questionTextView;
     private TextView statQuestionTextView;
@@ -112,7 +121,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_answer_question);
 
-        final SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        //final SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
         questionAndAnswersRoot = (LinearLayout) findViewById(R.id.question_and_answers_root);
         calcQuestionStatisticsRoot = (LinearLayout) findViewById(R.id.calc_question_statistics_root);
@@ -127,18 +136,34 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         questionAndAnswersRoot.setVisibility(View.GONE);
         timeToNextQuestionRoot.setVisibility(View.VISIBLE);
 
-        //get the question
+        //get the question / batched questions
         Bundle bundle = getIntent().getExtras();
         question = (Question) bundle.getSerializable("question");
+        batchedQuestions = (Question[]) bundle.getSerializable("batchedQuestions");
+        batchedQuestionsQueue = new LinkedList<>();
+        if (batchedQuestions != null) {
+            for (int i = 0; i < batchedQuestions.length; i++)
+                batchedQuestionsQueue.add(batchedQuestions[i]);
+        }
+
+        isBatch = bundle.getBoolean("isBatch");
         questionState = bundle.getString("questionState");
-        questionTextView.setText(question.getQuestionText());
-        statQuestionTextView.setText(question.getQuestionText());
+        question = isBatch ? batchedQuestionsQueue.remove() : question;
+
         callingContext = ((OffsideApplication) getApplicationContext()).getContext();
 
+        showQuestion();
+    }
+
+    private void showQuestion(/*final boolean doProcess*/) {
+        isAnswered = false;
+        questionTextView.setText(question.getQuestionText());
+        statQuestionTextView.setText(question.getQuestionText());
+        AnswersFragment answersFragment = (AnswersFragment) getSupportFragmentManager().findFragmentById(R.id.activity_answers_fragment);
+        answersFragment.updateData(question, questionState, context);
+
         //run timer
-
         timeToQuestionToPop = question.getTimeToQuestionToPop();
-
         timeToNextQuestionTimer = new CountDownTimer(timeToQuestionToPop, 100) {
             public void onTick(long millisUntilFinished) {
                 if (Math.round((float) millisUntilFinished / 1000.0f) != secondsLeft) {
@@ -164,23 +189,25 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
                                 timeToAnswerTextView.setBackgroundColor(Color.parseColor("#FFAB00"));
                             if (secondsLeft < 4)
                                 timeToAnswerTextView.setBackgroundColor(Color.RED);
-
                         }
-
                     }
 
                     @Override
                     public void onFinish() {
                         //user did not answer this question, we select random answer
                         if (answerId == null) {
-                            isRandomAnswer= true;
+                            isRandomAnswer = true;
                             int answersCount = question.getAnswers().length;
                             int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
                             String randomAnswerId = question.getAnswers()[selectedAnswerIndex].getId();
-                            signalRService.postAnswer(question.getGameId(), question.getId(), randomAnswerId);
-                            calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
-                            questionAndAnswersRoot.setVisibility(View.GONE);
-                            lblRandomAnswerAcceptedMessageTextView.setVisibility(View.VISIBLE);
+                            QuestionAnsweredEvent questionAnsweredEvent = new QuestionAnsweredEvent(question.getGameId(), question.getId(), randomAnswerId, true);
+                            EventBus.getDefault().post(questionAnsweredEvent);
+                            //signalRService.postAnswer(question.getGameId(), question.getId(), randomAnswerId);
+//                            if (doProcess){
+//                                calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
+//                                questionAndAnswersRoot.setVisibility(View.GONE);
+//                                lblRandomAnswerAcceptedMessageTextView.setVisibility(View.VISIBLE);
+//                            }
                         }
                     }
                 }.start();
@@ -246,12 +273,27 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     public void onQuestionAnsweredEvent(QuestionAnsweredEvent questionAnswered) {
         String gameId = questionAnswered.getGameId();
         String questionId = questionAnswered.getQuestionId();
+        boolean isRandomAnswer = questionAnswered.isRandomAnswer();
 
         // this parameter will be null if the user does not answer
         answerId = questionAnswered.getAnswerId();
         signalRService.postAnswer(gameId, questionId, answerId);
-        calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
-        questionAndAnswersRoot.setVisibility(View.GONE);
+        if (!isBatch) {
+            calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
+            questionAndAnswersRoot.setVisibility(View.GONE);
+            if (isRandomAnswer)
+                lblRandomAnswerAcceptedMessageTextView.setVisibility(View.VISIBLE);
+        } else {
+            if (batchedQuestionsQueue.isEmpty()) {
+                calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
+                questionAndAnswersRoot.setVisibility(View.GONE);
+                if (isRandomAnswer)
+                    lblRandomAnswerAcceptedMessageTextView.setVisibility(View.VISIBLE);
+            } else {
+                question = batchedQuestionsQueue.remove();
+                showQuestion();
+            }
+        }
 
     }
 

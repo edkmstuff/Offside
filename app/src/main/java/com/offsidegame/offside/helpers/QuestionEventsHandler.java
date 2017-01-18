@@ -41,6 +41,8 @@ public class QuestionEventsHandler {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveQuestion(QuestionEvent questionEvent) {
         Question question = questionEvent.getQuestion();
+        Question[] batchedQuestions = questionEvent.getBatchedQuestions();
+        boolean isBatch = questionEvent.isBatch();
         String questionState = questionEvent.getQuestionState();
 
         // NEW_QUESTION is default
@@ -79,24 +81,20 @@ public class QuestionEventsHandler {
         if (shouldStartAllQuestionActivities || shouldStartAnswerQuestionActivity || shouldStartProcessedQuestionActivity) {
             Intent intent = new Intent(context, activityClass);
             Bundle bundle = new Bundle();
+            bundle.putSerializable("batchedQuestions", batchedQuestions);
+            bundle.putBoolean("isBatch", isBatch);
             bundle.putSerializable("question", question);
             bundle.putString("questionState", questionState);
             intent.putExtras(bundle);
+
+            // clean up if we were in background
             ((OffsideApplication)context.getApplicationContext()).setContext(context);
-
             if (context.getClass() == ViewPlayerScoreActivity.class && ((ViewPlayerScoreActivity) context).isInBackground) {
-
                 EventBus.getDefault().unregister(context);
                 EventBus.getDefault().unregister(this);
-                //context.unbindService(((ViewPlayerScoreActivity) context).signalRServiceConnection);
-                //context = null;
             }
 
-
-
             context.startActivity(intent);
-
-
         }
     }
 

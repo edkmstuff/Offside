@@ -39,20 +39,20 @@ public class AnswersFragment extends ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Activity parentActivity = getActivity();
-
-        IQuestionHolder activity = (IQuestionHolder) parentActivity;
-        context = parentActivity;
-
-
-        question = activity.getQuestion();
-        questionState = activity.getQuestionState();
-        answers = question.getAnswers();
-
-        ArrayList<Answer> values = new ArrayList<Answer>(Arrays.asList(answers));
-        Context context = getActivity();
-        AnswerAdapter answerAdapter = new AnswerAdapter(context, values, questionState, question.getId());
-        setListAdapter(answerAdapter);
+//        Activity parentActivity = getActivity();
+//
+//        IQuestionHolder activity = (IQuestionHolder) parentActivity;
+//        context = parentActivity;
+//
+//
+//        question = activity.getQuestion();
+//        questionState = activity.getQuestionState();
+//        answers = question.getAnswers();
+//
+//        ArrayList<Answer> values = new ArrayList<Answer>(Arrays.asList(answers));
+//        Context context = getActivity();
+//        AnswerAdapter answerAdapter = new AnswerAdapter(context, values, questionState, question.getId());
+//        setListAdapter(answerAdapter);
     }
 
     @Override
@@ -74,9 +74,9 @@ public class AnswersFragment extends ListFragment {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId));
+                    EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, false));
                 }
-            }, 1200);
+            }, 500);
 
 
         }
@@ -102,6 +102,16 @@ public class AnswersFragment extends ListFragment {
 
             }
         });
+    }
+
+    public void  updateData(Question question, String questionState, Context context){
+        this.question = question;
+        this.questionState = questionState;
+        this.context = context;
+        answers = question.getAnswers();
+        ArrayList<Answer> values = new ArrayList<Answer>(Arrays.asList(answers));
+        AnswerAdapter answerAdapter = new AnswerAdapter(context, values, questionState, question.getId());
+        setListAdapter(answerAdapter);
     }
 }
 

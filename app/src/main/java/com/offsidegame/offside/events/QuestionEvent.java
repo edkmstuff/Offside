@@ -7,7 +7,11 @@ import com.offsidegame.offside.models.Question;
  */
 public class QuestionEvent {
     private Question question;
+    private Question[] batchedQuestions;
     private String questionState;
+    private boolean isBatch = false;
+
+
 
 
     public class QuestionStates {
@@ -16,15 +20,42 @@ public class QuestionEvent {
         public static final String CLOSED_QUESTION = "CLOSED_QUESTION";
     }
 
+    public QuestionEvent(Question[] batchedQuestions, String questionState) {
+        this.batchedQuestions = batchedQuestions;
+        this.question = null;
+        this.questionState = questionState;
+        isBatch = true;
+    }
+
     public QuestionEvent(Question question, String questionState) {
         this.question = question;
-        this.questionState=questionState;
+        this.batchedQuestions = null;
+        this.questionState = questionState;
+        isBatch = false;
     }
 
     public Question getQuestion() {
         return question;
     }
 
-    public String getQuestionState() {return questionState;}
+    public String getQuestionState() {
+        return questionState;
+    }
+
+    public Question[] getBatchedQuestions() {
+        return batchedQuestions;
+    }
+
+    public void setBatchedQuestions(Question[] batchedQuestions) {
+        this.batchedQuestions = batchedQuestions;
+    }
+
+    public boolean isBatch() {
+        return isBatch;
+    }
+
+    public void setBatch(boolean batch) {
+        isBatch = batch;
+    }
 }
 

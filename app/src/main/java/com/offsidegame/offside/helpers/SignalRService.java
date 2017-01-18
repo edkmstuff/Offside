@@ -167,6 +167,12 @@ public class SignalRService extends Service {
 
     //<editor-fold desc="subscribeToServer">
     public void subscribeToServer() {
+        hub.on("AskBatchedQuestions", new SubscriptionHandler1<Question[]>() {
+            @Override
+            public void run(Question[] batchedQuestions) {
+                EventBus.getDefault().post(new QuestionEvent(batchedQuestions, QuestionEvent.QuestionStates.NEW_QUESTION));
+            }
+        }, Question[].class);
         hub.on("AskQuestion", new SubscriptionHandler1<Question>() {
             @Override
             public void run(Question question) {
