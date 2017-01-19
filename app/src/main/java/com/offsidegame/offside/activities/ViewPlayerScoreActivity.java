@@ -84,10 +84,10 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     private TextView currentQuestionAnswerTextView;
     private LinearLayout currentQuestionRoot;
     private LinearLayout currentQuestionTimerRoot;
-    private LinearLayout nextQuestionTimerRoot;
+    private LinearLayout currentEventTimerRoot;
     private TextView currentEventTimeLeftTextView;
 
-    private TextView TimeLeftToCurrentEventTextView;
+    //private TextView TimeLeftToCurrentEventTextView;
     private TextView currentGameEventTextView;
 
     private CountDownTimer timeLeftToCurrentGameEventTimer;
@@ -157,10 +157,10 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         currentQuestionAnswerTextView = (TextView) findViewById(R.id.current_question_answer_text_view);
         currentQuestionRoot = (LinearLayout) findViewById(R.id.current_question_root);
         currentQuestionTimerRoot = (LinearLayout) findViewById(R.id.current_question_timer_root);
-        nextQuestionTimerRoot = (LinearLayout) findViewById(R.id.vps_current_event_timer_root);
+        currentEventTimerRoot = (LinearLayout) findViewById(R.id.vps_current_event_timer_root);
         currentEventTimeLeftTextView = (TextView) findViewById(R.id.vps_current_event_time_left_text_view);
 
-        TimeLeftToCurrentEventTextView = (TextView) findViewById(R.id.vps_current_event_text_view);
+        //TimeLeftToCurrentEventTextView = (TextView) findViewById(R.id.vps_current_event_text_view);
         currentGameEventTextView = (TextView) findViewById(R.id.vps_current_event_text_view);
 
         loadingRoot = (LinearLayout) findViewById(R.id.vps_loading_root);
@@ -355,8 +355,9 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
             currentQuestionTextView.setText(playerScore.getCurrentQuestionText());
             currentQuestionAnswerTextView.setText(playerScore.getCurrentQuestionAnswerText());
 
-            int currentQuestionExpirationInMilliseconds = playerScore.getCurrentQuestionExpirationInMilliseconds();
 
+            resetTimers();
+            int currentQuestionExpirationInMilliseconds = playerScore.getCurrentQuestionExpirationInMilliseconds();
             timeLeftToCurrentGameEventTimer = new CountDownTimer(currentQuestionExpirationInMilliseconds, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
@@ -389,31 +390,34 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
             if (currentGameEventText != null)
                 currentGameEventTextView.setText(currentGameEventText);
 
-
+            resetTimers();
             int timeLeftToNextEventInMilliseconds = playerScore.getTimeLeftToCurrentGameEventInMilliseconds();
-
             timeLeftToCurrentGameEventTimer = new CountDownTimer(timeLeftToNextEventInMilliseconds, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
-
-                    int min = (int) Math.floor(millisUntilFinished / 1000 / 60);
+                    int days = (int) Math.floor(millisUntilFinished / 1000 / 60 / 60 / 24);
+                    int hours = (int) Math.floor(millisUntilFinished / (1000 * 60 * 60) % 24);
+                    int min = (int) Math.floor(millisUntilFinished / (1000 * 60) % 60);
                     int sec = ((int) Math.floor(millisUntilFinished / 1000) % 60);
+                    String daysString = Integer.toString(days);
+                    String hoursString = Integer.toString(hours);
                     String minString = Integer.toString(min);
                     String secString = Integer.toString(sec);
 
-                    if (min < 10)
-                        minString = "0" + minString;
-                    if (sec < 10)
-                        secString = "0" + secString;
+                    daysString = days > 0 ? daysString + ":" : "";
+                    hoursString = hours < 10 ? "0" + hoursString + ":" : hoursString + ":";
+                    minString = min < 10 ? "0" + minString + ":" : minString + ":";
+                    secString = sec < 10 ? "0" + secString : secString;
 
-                    currentEventTimeLeftTextView.setText(minString + ":" + secString);
+
+                    currentEventTimeLeftTextView.setText(daysString + hoursString + minString + secString);
 
                 }
 
                 @Override
                 public void onFinish() {
-                    TimeLeftToCurrentEventTextView.setVisibility(View.GONE);
-                    currentEventTimeLeftTextView.setText(R.string.lbl_question_on_its_way);
+                    currentEventTimeLeftTextView.setVisibility(View.GONE);
+                    currentGameEventTextView.setText(R.string.lbl_question_on_its_way);
                 }
             }.start();
 
@@ -423,6 +427,13 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
             currentQuestionTimerRoot.setVisibility(View.GONE);
         }
 
+    }
+
+    private void resetTimers() {
+        if (timeLeftToCurrentGameEventTimer != null)
+            timeLeftToCurrentGameEventTimer.cancel();
+        if (timeLeftToCurrentGameEventTimer != null)
+            timeLeftToCurrentGameEventTimer.cancel();
     }
 
 
