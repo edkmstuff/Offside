@@ -51,7 +51,7 @@
                 </TextView>
 
                 <TextView
-                    android:id="@+id/timeToStartQuestionText"
+                    android:id="@+id/vpq_time_to_go_back_to_player_score_text_view"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"

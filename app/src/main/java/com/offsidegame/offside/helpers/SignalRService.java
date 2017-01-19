@@ -179,7 +179,12 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(new QuestionEvent(question, QuestionEvent.QuestionStates.NEW_QUESTION));
             }
         }, Question.class);
-
+        hub.on("SendBatchedProcessedQuestions", new SubscriptionHandler1<Question[]>() {
+            @Override
+            public void run(Question[] batchedQuestions) {
+                EventBus.getDefault().post(new QuestionEvent(batchedQuestions, QuestionEvent.QuestionStates.PROCESSED_QUESTION));
+            }
+        }, Question[].class);
         hub.on("SendProcessedQuestion", new SubscriptionHandler1<Question>() {
             @Override
             public void run(Question question) {

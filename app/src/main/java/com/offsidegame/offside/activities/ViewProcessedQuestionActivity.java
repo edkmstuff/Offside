@@ -14,17 +14,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.activities.fragments.AnswersFragment;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.SignalRService;
-import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.models.Question;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class ViewProcessedQuestionActivity extends AppCompatActivity implements IQuestionHolder {
 
@@ -33,15 +36,17 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
     private Question question;
+    private Question[] batchedQuestions;
+    private Queue<Question> batchedQuestionsQueue;
+    private boolean isBatch = false;
     private String questionState;
     private TextView questionTextView;
-    private TextView timeToStartQuestionText;
+    private TextView timeToGoBackToPlayerScoreTextView;
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private int timeToGoBackToPlayerScore;
 
 
-    private Handler delayHandler;
-    private Runnable goToViewPlayerScore;
+
 
     private CountDownTimer timer;
 
@@ -87,64 +92,74 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_processed_question);
 
-        final SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
         //get the question
         Bundle bundle = getIntent().getExtras();
         question = (Question) bundle.getSerializable("question");
-        questionState = bundle.getString("questionState");
+        batchedQuestions = (Question[]) bundle.getSerializable("batchedQuestions");
+        batchedQuestionsQueue = new LinkedList<>();
+        if (batchedQuestions != null) {
+            for (int i = 0; i < batchedQuestions.length; i++)
+                batchedQuestionsQueue.add(batchedQuestions[i]);
+        }
 
+        isBatch = bundle.getBoolean("isBatch");
+        questionState = bundle.getString("questionState");
+        question = isBatch ? batchedQuestionsQueue.remove() : question;
+        timeToGoBackToPlayerScoreTextView = (TextView) findViewById(R.id.vpq_time_to_go_back_to_player_score_text_view);
         questionTextView = (TextView) findViewById(R.id.question_text);
+
+        showQuestion(!isBatch);
+    }
+
+    private void showQuestion(final boolean goToPlayerScore) {
+        //reset
+        if (timer != null)
+            timer.cancel();
+
+        timeToGoBackToPlayerScoreTextView.setText("");
+        questionTextView.setText("");
+        //end of rest
+
+
+        final SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+
         String questionText = question.getQuestionText();
         questionTextView.setText(questionText);
 
-        timeToStartQuestionText = (TextView) findViewById(R.id.timeToStartQuestionText);
+
 
         final String countDownLabel = getString(R.string.lbl_question_starts_in);
-        timeToStartQuestionText.setText(countDownLabel);
+        timeToGoBackToPlayerScoreTextView.setText(countDownLabel);
 
+        AnswersFragment answersFragment = (AnswersFragment) getSupportFragmentManager().findFragmentById(R.id.activity_answers_fragment);
+        answersFragment.updateData(question, questionState, context);
 
-
-
-
-//        // to go back to view player score
-//        delayHandler = new Handler();
-//        goToViewPlayerScore = new Runnable() {
-//            @Override
-//            public void run() {
-//                Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
-//                startActivity(intent);
-//            }
-//        };
-//
-//        delayHandler.postDelayed(goToViewPlayerScore, 10000);
-
-
-        timeToGoBackToPlayerScore = settings.getInt(getString(R.string.time_to_go_back_to_player_score_key),15000);
+        timeToGoBackToPlayerScore = settings.getInt(getString(R.string.time_to_go_back_to_player_score_key), 15000);
         timer = new CountDownTimer(timeToGoBackToPlayerScore, 1000) {
 
             public void onTick(long millisUntilFinished) {
-                timeToStartQuestionText.setText(Integer.toString( (int)Math.floor(millisUntilFinished / 1000)));
+                timeToGoBackToPlayerScoreTextView.setText(Integer.toString((int) Math.floor(millisUntilFinished / 1000)));
             }
 
             public void onFinish() {
-                timeToStartQuestionText.setText(getString(R.string.lbl_go));
-                Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
-                startActivity(intent);
+
+                if (goToPlayerScore) {
+                    timeToGoBackToPlayerScoreTextView.setText(getString(R.string.lbl_go));
+                    Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
+                    startActivity(intent);
+                } else {
+                    if (!batchedQuestionsQueue.isEmpty()) {
+                        question = batchedQuestionsQueue.remove();
+                        EventBus.getDefault().post(question);
+                    }
+                }
             }
         }.start();
-
-
-
-
-
-
-
-
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         Intent intent = new Intent();
         intent.setClass(context, SignalRService.class);
@@ -200,42 +215,10 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         }
     }
 
-
-    //</editor-fold>
-//ToDo: ?? add subscriber to QuestionEvent (ask) on each activity?
-    //<editor-fold desc="Subscribers">
-
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onReceiveQuestion(QuestionEvent questionEvent) {
-//        Question question = questionEvent.getQuestion();
-//        String questionState = questionEvent.getQuestionState();
-//        if (questionState.equals(QuestionEvent.QuestionStates.NEW_QUESTION)) {
-//            Intent intent = new Intent(context, AnswerQuestionActivity.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("question", question);
-//            bundle.putString("questionState", questionState);
-//            intent.putExtras(bundle);
-//            startActivity(intent);
-//        } else if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
-//            Intent intent = new Intent(context, ViewProcessedQuestionActivity.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("question", question);
-//            bundle.putString("questionState", questionState);
-//            intent.putExtras(bundle);
-//            startActivity(intent);
-//        } else if (questionState.equals(QuestionEvent.QuestionStates.CLOSED_QUESTION)) {
-//            Intent intent = new Intent(context, ViewClosedQuestionActivity.class);
-//            Bundle bundle = new Bundle();
-//            bundle.putSerializable("question", question);
-//            bundle.putString("questionState", questionState);
-//            intent.putExtras(bundle);
-//            startActivity(intent);
-//        }
-//
-//
-//    }
-
-    //</editor-fold>
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onBatchedQuestionPosted(Question batchedQuestion) {
+        showQuestion(batchedQuestionsQueue.isEmpty());
+    }
 
 
 }
