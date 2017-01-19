@@ -21,6 +21,7 @@
         android:layout_height="match_parent"
         android:padding="5dp">
 
+        <!--calc statistics-->
         <LinearLayout
             android:id="@+id/calc_question_statistics_root"
             android:layout_width="match_parent"
@@ -28,7 +29,9 @@
             android:background="@drawable/white_background_border"
             android:weightSum="4"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:gravity="center"
+            android:visibility="gone"
+            >
             <TextView
                 android:id="@+id/stat_question_text_view"
                 android:textStyle="bold"
@@ -39,7 +42,7 @@
                 android:layout_weight="1"
                 android:textSize="@dimen/OffsideMediumText"
                 android:text="the text of the question"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
             <LinearLayout
 
@@ -51,13 +54,13 @@
 
                 <TextView
                     android:id="@+id/lbl_random_answer_accepted_message"
-                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:gravity="center"
                     android:text="@string/lbl_random_answer_accepted_message"
-                    android:textSize="@dimen/OffsideMediumText" />
+                    android:textSize="@dimen/OffsideMediumText"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -79,7 +82,7 @@
             </LinearLayout>
 
         </LinearLayout>
-
+        <!--question and answer root-->
         <LinearLayout
             android:id="@+id/question_and_answers_root"
             android:tag="question_and_answers_root"
@@ -143,7 +146,7 @@
 
 
         </LinearLayout>
-
+        <!--time to question to pop root-->
         <LinearLayout
             android:id="@+id/time_to_next_question_root"
             android:layout_width="match_parent"

@@ -384,11 +384,14 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                 }
             }.start();
 
-        } else if (playerScore.getTimeLeftToCurrentGameEventInMilliseconds() > 0) {
+        } else if (playerScore.getTimeLeftToCurrentGameEventInMilliseconds() >= 0) {
 
             currentGameEventText = playerScore.getCurrentGameEvent();
-            if (currentGameEventText != null)
+            currentGameEventTextView.setVisibility(View.VISIBLE);
+            if (currentGameEventText != null) {
                 currentGameEventTextView.setText(currentGameEventText);
+                currentGameEventTextView.setVisibility(View.VISIBLE);
+            }
 
             resetTimers();
             int timeLeftToNextEventInMilliseconds = playerScore.getTimeLeftToCurrentGameEventInMilliseconds();
@@ -417,7 +420,9 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                 @Override
                 public void onFinish() {
                     currentEventTimeLeftTextView.setVisibility(View.GONE);
-                    currentGameEventTextView.setText(R.string.lbl_question_on_its_way);
+                    if (currentGameEventText.compareTo("Game Over")!=0)
+                        currentGameEventTextView.setText(R.string.lbl_question_on_its_way);
+
                 }
             }.start();
 

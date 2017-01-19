@@ -66,7 +66,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     private final DateHelper dateHelper = new DateHelper();
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private boolean isRandomAnswer = false;
-    private TextView lblRandomAnswerAcceptedMessageTextView;
+    //private TextView lblRandomAnswerAcceptedMessageTextView;
 
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
@@ -130,7 +130,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         statQuestionTextView = (TextView) findViewById(R.id.stat_question_text_view);
         timeToNextQuestionTextView = (TextView) findViewById(R.id.time_to_next_question);
         timeToAnswerTextView = (TextView) findViewById(R.id.time_to_answer_text_view);
-        lblRandomAnswerAcceptedMessageTextView = (TextView) findViewById(R.id.lbl_random_answer_accepted_message);
+        //lblRandomAnswerAcceptedMessageTextView = (TextView) findViewById(R.id.lbl_random_answer_accepted_message);
 
         //show timer first
         questionAndAnswersRoot.setVisibility(View.GONE);
@@ -295,14 +295,14 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         if (!isBatch) {
             calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
             questionAndAnswersRoot.setVisibility(View.GONE);
-            if (isRandomAnswer)
-                lblRandomAnswerAcceptedMessageTextView.setVisibility(View.VISIBLE);
+//            if (isRandomAnswer)
+//                lblRandomAnswerAcceptedMessageTextView.setVisibility(View.VISIBLE);
         } else {
             if (batchedQuestionsQueue.isEmpty()) {
                 calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
                 questionAndAnswersRoot.setVisibility(View.GONE);
-                if (isRandomAnswer)
-                    lblRandomAnswerAcceptedMessageTextView.setVisibility(View.VISIBLE);
+//                if (isRandomAnswer)
+//                    lblRandomAnswerAcceptedMessageTextView.setVisibility(View.VISIBLE);
             } else {
                 question = batchedQuestionsQueue.remove();
                 showQuestion();

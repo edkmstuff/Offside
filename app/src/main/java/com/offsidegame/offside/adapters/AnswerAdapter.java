@@ -12,6 +12,7 @@ import android.view.ViewParent;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
@@ -58,11 +59,11 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
         public ImageView processedQuestionUserAnswerImageView;
 
         public TextView processedQuestionAnswerTextView;
-        public TextView processedQuestionAnsweredByTextView;
+        //public TextView processedQuestionAnsweredByTextView;
         public TextView processedQuestionPercentUsersAnsweredTextView;
-        public TextView processedQuestionYouCanEarnTextView;
-        public TextView processedQuestionScoreTextView;
-        public TextView processedQuestionPointsTextView;
+        //public TextView processedQuestionYouCanEarnTextView;
+        //public TextView processedQuestionScoreTextView;
+        //public TextView processedQuestionPointsTextView;
         public ImageView closedQuestionUserAnswerImageView;
         public ImageView closedQuestionRightWrongAnswerIndicatorImageView;
         public TextView closedQuestionAnswerTextView;
@@ -71,6 +72,7 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
         //public TextView closedQuestionYouCanEarnTextView;
         public TextView closedQuestionScoreTextView;
         public TextView closedQuestionPointsTextView;
+        public ProgressBar percentUserAnsweredProgressBar;
 
 //        public ImageView rightWrongAnswerIndicator;
 //        public ImageView fbPicture;
@@ -111,11 +113,12 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
             else if (questionState.equals(QuestionEvent.QuestionStates.PROCESSED_QUESTION)) {
                 viewHolder.processedQuestionUserAnswerImageView = (ImageView) convertView.findViewById(R.id.processed_question_user_answer_image_view);
                 viewHolder.processedQuestionAnswerTextView = (TextView) convertView.findViewById(R.id.processed_question_answer_text_view);
-                viewHolder.processedQuestionAnsweredByTextView = (TextView) convertView.findViewById(R.id.processed_question_answered_by_text_view);
+                //viewHolder.processedQuestionAnsweredByTextView = (TextView) convertView.findViewById(R.id.processed_question_answered_by_text_view);
                 viewHolder.processedQuestionPercentUsersAnsweredTextView = (TextView) convertView.findViewById(R.id.processed_question_percent_users_answered_text_view);
-                viewHolder.processedQuestionYouCanEarnTextView = (TextView) convertView.findViewById(R.id.processed_question_you_can_earn_text_view);
-                viewHolder.processedQuestionScoreTextView = (TextView) convertView.findViewById(R.id.processed_question_score_text_view);
-                viewHolder.processedQuestionPointsTextView = (TextView) convertView.findViewById(R.id.processed_question_points_text_view);
+                viewHolder.percentUserAnsweredProgressBar = (ProgressBar) convertView.findViewById(R.id.ali_percent_user_answered_progress_bar);
+                //viewHolder.processedQuestionYouCanEarnTextView = (TextView) convertView.findViewById(R.id.processed_question_you_can_earn_text_view);
+               // viewHolder.processedQuestionScoreTextView = (TextView) convertView.findViewById(R.id.processed_question_score_text_view);
+                //viewHolder.processedQuestionPointsTextView = (TextView) convertView.findViewById(R.id.processed_question_points_text_view);
             }
             //closed question elements
             else if (questionState.equals(QuestionEvent.QuestionStates.CLOSED_QUESTION)) {
@@ -155,13 +158,18 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
             viewHolder.processedQuestionRoot.setVisibility(View.VISIBLE);
             viewHolder.processedQuestionAnswerTextView.setText(answer.getAnswerText());
             viewHolder.processedQuestionPercentUsersAnsweredTextView.setText(Long.toString(Math.round(answer.getPercentUsersAnswered())) + "%");
-            viewHolder.processedQuestionScoreTextView.setText(Long.toString(Math.round(answer.getScore())));
+            //viewHolder.processedQuestionScoreTextView.setText(Long.toString(Math.round(answer.getScore())));
 
             viewHolder.processedQuestionUserAnswerImageView.setAlpha(0.0f);
 
             if (answer.isTheAnswerOfTheUser()) {
                 loadFbImage(viewHolder.processedQuestionUserAnswerImageView);
             }
+
+            viewHolder.percentUserAnsweredProgressBar.setProgress((int)answer.getPercentUsersAnswered());
+
+
+
 
 
 //            viewHolder.fbPicture.setAlpha(0.0f);

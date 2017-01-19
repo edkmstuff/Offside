@@ -16,7 +16,7 @@
         android:padding="10dp"
         android:text="Am i a  very very very long question?"
         android:textColor="@color/windowBackground"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorSecondary"
         android:gravity="center"
         android:textSize="@dimen/OffsideMediumText"
         />
