@@ -389,7 +389,9 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
             currentGameEventText = playerScore.getCurrentGameEvent();
             currentGameEventTextView.setVisibility(View.VISIBLE);
             if (currentGameEventText != null) {
-                currentGameEventTextView.setText(currentGameEventText);
+                int gameEventResourceId= getResources().getIdentifier(currentGameEventText, "string", getPackageName());
+                String gameEventTranslatedText = getString(gameEventResourceId);
+                currentGameEventTextView.setText(gameEventTranslatedText);
                 currentGameEventTextView.setVisibility(View.VISIBLE);
             }
 
