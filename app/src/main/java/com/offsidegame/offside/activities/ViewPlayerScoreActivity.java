@@ -384,7 +384,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                 }
             }.start();
 
-        } else if (playerScore.getTimeLeftToCurrentGameEventInMilliseconds() >= 0) {
+        } else if (playerScore.getTimeLeftToCurrentGameEventInMilliseconds() > 0) {
 
             currentGameEventText = playerScore.getCurrentGameEvent();
             currentGameEventTextView.setVisibility(View.VISIBLE);
