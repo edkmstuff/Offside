@@ -6,10 +6,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,11 +46,11 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private int timeToGoBackToPlayerScore;
 
-
-
-
-    private CountDownTimer timer;
-
+    private CountDownTimer goBackToPlayerScoreTimer;
+    private CountDownTimer promoNoteTimer;
+    private LinearLayout questionAndAnswersRoot;
+    private LinearLayout processedQuestionNotePromoRoot;
+    private int secondsLeft = 0;
 
     //</editor-fold>
 
@@ -92,6 +93,10 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_processed_question);
 
+        questionAndAnswersRoot = (LinearLayout)findViewById(R.id.vpq_question_and_answers_root);
+        questionAndAnswersRoot.setVisibility(View.GONE);
+        processedQuestionNotePromoRoot = (LinearLayout)findViewById(R.id.vpq_processed_question_note_promo_root);
+        processedQuestionNotePromoRoot.setVisibility(View.VISIBLE);
 
         //get the question
         Bundle bundle = getIntent().getExtras();
@@ -114,48 +119,69 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
 
     private void showQuestion(final boolean goToPlayerScore) {
         //reset
-        if (timer != null)
-            timer.cancel();
+        if (goBackToPlayerScoreTimer != null)
+            goBackToPlayerScoreTimer.cancel();
+        if (promoNoteTimer != null)
+            promoNoteTimer.cancel();
 
         timeToGoBackToPlayerScoreTextView.setText("");
         questionTextView.setText("");
         //end of rest
-
 
         final SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
         String questionText = question.getQuestionText();
         questionTextView.setText(questionText);
 
-
-
-        final String countDownLabel = getString(R.string.lbl_question_starts_in);
-        timeToGoBackToPlayerScoreTextView.setText(countDownLabel);
-
-        AnswersFragment answersFragment = (AnswersFragment) getSupportFragmentManager().findFragmentById(R.id.activity_answers_fragment);
-        answersFragment.updateData(question, questionState, context);
-
-        timeToGoBackToPlayerScore = settings.getInt(getString(R.string.time_to_go_back_to_player_score_key), 15000);
-        timer = new CountDownTimer(timeToGoBackToPlayerScore, 1000) {
+        final int timeToShowProcessedQuestionPromoNote = question.getTimeToQuestionToPop();
+        promoNoteTimer = new CountDownTimer(timeToShowProcessedQuestionPromoNote, 100) {
 
             public void onTick(long millisUntilFinished) {
-                timeToGoBackToPlayerScoreTextView.setText(Integer.toString((int) Math.floor(millisUntilFinished / 1000)));
+                if (Math.round((float) millisUntilFinished / 1000.0f) != secondsLeft) {
+                    secondsLeft = Math.round((float) millisUntilFinished / 1000.0f);
+
+                }
             }
 
             public void onFinish() {
+                //goBackToPlayerScoreTimer is done now we show question
+                processedQuestionNotePromoRoot.setVisibility(View.GONE);
+                questionAndAnswersRoot.setVisibility(View.VISIBLE);
+                secondsLeft = 0;
 
-                if (goToPlayerScore) {
-                    timeToGoBackToPlayerScoreTextView.setText(getString(R.string.lbl_go));
-                    Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
-                    startActivity(intent);
-                } else {
-                    if (!batchedQuestionsQueue.isEmpty()) {
-                        question = batchedQuestionsQueue.remove();
-                        EventBus.getDefault().post(question);
+                AnswersFragment answersFragment = (AnswersFragment) getSupportFragmentManager().findFragmentById(R.id.activity_answers_fragment);
+                answersFragment.updateData(question, questionState, context);
+
+                timeToGoBackToPlayerScore = settings.getInt(getString(R.string.time_to_go_back_to_player_score_key), 15000) - timeToShowProcessedQuestionPromoNote;
+                goBackToPlayerScoreTimer = new CountDownTimer(timeToGoBackToPlayerScore, 1000) {
+
+                    public void onTick(long millisUntilFinished) {
+                        timeToGoBackToPlayerScoreTextView.setText(Integer.toString((int) Math.floor(millisUntilFinished / 1000)));
                     }
-                }
+
+                    public void onFinish() {
+
+                        if (goToPlayerScore) {
+                            timeToGoBackToPlayerScoreTextView.setText(getString(R.string.lbl_go));
+                            Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
+                            startActivity(intent);
+                        } else {
+                            if (!batchedQuestionsQueue.isEmpty()) {
+                                question = batchedQuestionsQueue.remove();
+                                EventBus.getDefault().post(question);
+                            }
+                        }
+                    }
+                }.start();
+
+
             }
+
         }.start();
+
+
+
+
     }
 
     @Override
@@ -186,8 +212,8 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
 
         //delayHandler.removeCallbacks(goToViewPlayerScore);
 
-        timer.cancel();
-        timer = null;
+        goBackToPlayerScoreTimer.cancel();
+        goBackToPlayerScoreTimer = null;
 
         super.onStop();
     }

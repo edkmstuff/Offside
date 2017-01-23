@@ -86,6 +86,8 @@
     <string name="is_alerts_on_key">is_alert_on</string>
     <string name="saved_list_view_height_key">savedListViewHeight</string>
     <string name="lbl_random_answer_accepted_message">תם הזמן, בחרנו תשובה עבורך</string>
+    <string name="game_created_event">יש משחק</string>
+    <string name="lbl_statistics_collection_completed_for_question">התפלגות התשובות לשאלה</string>
 
     <string name="lbl_game_created_event">המשחק יתחיל בעוד</string>
     <string name="lbl_game_started">המשחק התחיל! שאלה הבאה בעוד</string>

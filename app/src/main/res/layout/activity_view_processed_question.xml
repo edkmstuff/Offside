@@ -19,13 +19,15 @@
         android:layout_height="match_parent"
         android:padding="5dp">
 
+        <!--Questions and answer root-->
         <LinearLayout
+            android:id="@+id/vpq_question_and_answers_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/white_background_border"
             android:orientation="vertical"
             android:tag="question_and_answers_root"
-            android:visibility="visible">
+            android:visibility="gone">
 
 
             <LinearLayout
@@ -75,6 +77,67 @@
 
             </fragment>
         </LinearLayout>
+
+        <!-- before answer processed pop up -->
+        <LinearLayout
+            android:id="@+id/vpq_processed_question_note_promo_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/white_background_border"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:layoutDirection="rtl"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/lbl_statistics_collection_completed_for_question"
+                    android:textSize="@dimen/OffsideMediumText" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Question text"
+                    android:textSize="@dimen/OffsideLargeText" />
+
+
+            </LinearLayout>
+
+
+            <!--Sponsered by-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lbl_sponsored_by" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:padding="50dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/heineken" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
 
     </FrameLayout>
 </LinearLayout>
