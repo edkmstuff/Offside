@@ -69,6 +69,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     //private TextView lblRandomAnswerAcceptedMessageTextView;
 
 
+
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
 
         @Override

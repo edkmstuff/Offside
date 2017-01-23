@@ -87,6 +87,7 @@
     <string name="saved_list_view_height_key">savedListViewHeight</string>
     <string name="lbl_random_answer_accepted_message">תם הזמן, בחרנו תשובה עבורך</string>
     <string name="game_created_event">יש משחק</string>
+    <string name="lbl_statistics_collection_completed_for_question">התפלגות התשובות לשאלה</string>
 
 
 </resources>
