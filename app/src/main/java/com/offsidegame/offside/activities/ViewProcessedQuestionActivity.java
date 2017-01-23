@@ -217,8 +217,13 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
 
         //delayHandler.removeCallbacks(goToViewPlayerScore);
 
-        goBackToPlayerScoreTimer.cancel();
+        if (goBackToPlayerScoreTimer != null)
+            goBackToPlayerScoreTimer.cancel();
+        if (promoNoteTimer != null)
+            promoNoteTimer.cancel();
+
         goBackToPlayerScoreTimer = null;
+        promoNoteTimer = null;
 
         super.onStop();
     }
