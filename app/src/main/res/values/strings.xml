@@ -86,7 +86,16 @@
     <string name="is_alerts_on_key">is_alert_on</string>
     <string name="saved_list_view_height_key">savedListViewHeight</string>
     <string name="lbl_random_answer_accepted_message">תם הזמן, בחרנו תשובה עבורך</string>
-    <string name="game_created_event">יש משחק</string>
+
+    <string name="lbl_game_created_event">המשחק יתחיל בעוד</string>
+    <string name="lbl_game_started">המשחק התחיל! שאלה הבאה בעוד</string>
+    <string name="lbl_game_half_time_started">הפסקת מחצית, המשחק יתחדש בעוד</string>
+    <string name="lbl_game_second_half_started">המחצית שניה התחילה! שאלה הבאה בעוד</string>
+    <string name="lbl_game_full_time_reached">תם הזמן החוקי</string>
+    <string name="lbl_game_over_time_started">מתחילים את ההארכה</string>
+    <string name="lbl_game_penalty_time_started">מתחילים את שלב בעיטות העונשין</string>
+    <string name="lbl_game_over">תם המשחק, נתראה במשחק הבא!</string>
+    <string name="lbl_in_game_active_question">שאלה פעילה</string>
 
 
 </resources>
