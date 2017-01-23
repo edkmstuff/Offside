@@ -105,11 +105,8 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:layoutDirection="rtl"
-                android:orientation="vertical">
-
-
-
-
+                android:orientation="vertical"
+                >
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -121,7 +118,9 @@
                     android:id="@+id/question_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Question text"
+                    android:text="ב 5 דקות הקרובות מי הקבוצה שתבצע עבירה ראשונה"
+                    android:gravity="center"
+                    android:padding="15dp"
                     android:textSize="@dimen/OffsideLargeText" />
 
 
