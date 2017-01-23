@@ -45,7 +45,7 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
     private TextView timeToGoBackToPlayerScoreTextView;
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private int timeToGoBackToPlayerScore;
-
+    private TextView timeToShowProcessedQuestionTextView;
     private CountDownTimer goBackToPlayerScoreTimer;
     private CountDownTimer promoNoteTimer;
     private LinearLayout questionAndAnswersRoot;
@@ -94,9 +94,9 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         setContentView(R.layout.activity_view_processed_question);
 
         questionAndAnswersRoot = (LinearLayout)findViewById(R.id.vpq_question_and_answers_root);
-        questionAndAnswersRoot.setVisibility(View.GONE);
+
         processedQuestionNotePromoRoot = (LinearLayout)findViewById(R.id.vpq_processed_question_note_promo_root);
-        processedQuestionNotePromoRoot.setVisibility(View.VISIBLE);
+
 
         //get the question
         Bundle bundle = getIntent().getExtras();
@@ -113,6 +113,7 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         question = isBatch ? batchedQuestionsQueue.remove() : question;
         timeToGoBackToPlayerScoreTextView = (TextView) findViewById(R.id.vpq_time_to_go_back_to_player_score_text_view);
         questionTextView = (TextView) findViewById(R.id.question_text);
+        timeToShowProcessedQuestionTextView = (TextView) findViewById(R.id.vpq_time_to_show_processed_question_text_view);
 
         showQuestion(!isBatch);
     }
@@ -126,6 +127,10 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
 
         timeToGoBackToPlayerScoreTextView.setText("");
         questionTextView.setText("");
+        questionAndAnswersRoot.setVisibility(View.GONE);
+        processedQuestionNotePromoRoot.setVisibility(View.VISIBLE);
+        timeToShowProcessedQuestionTextView.setText("");
+
         //end of rest
 
         final SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
@@ -139,7 +144,7 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
             public void onTick(long millisUntilFinished) {
                 if (Math.round((float) millisUntilFinished / 1000.0f) != secondsLeft) {
                     secondsLeft = Math.round((float) millisUntilFinished / 1000.0f);
-
+                    timeToShowProcessedQuestionTextView.setText(Integer.toString(secondsLeft));
                 }
             }
 
