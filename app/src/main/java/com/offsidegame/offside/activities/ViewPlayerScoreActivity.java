@@ -389,7 +389,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
             currentGameEventText = playerScore.getCurrentGameEvent();
             currentGameEventTextView.setVisibility(View.VISIBLE);
             if (currentGameEventText != null) {
-                int gameEventResourceId= getResources().getIdentifier(currentGameEventText, "string", getPackageName());
+                int gameEventResourceId = getResources().getIdentifier(currentGameEventText, "string", getPackageName());
                 String gameEventTranslatedText = getString(gameEventResourceId);
                 currentGameEventTextView.setText(gameEventTranslatedText);
                 currentGameEventTextView.setVisibility(View.VISIBLE);
@@ -422,8 +422,11 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                 @Override
                 public void onFinish() {
                     currentEventTimeLeftTextView.setVisibility(View.GONE);
-                    if (currentGameEventText.compareTo("Game Over")!=0)
+                    String gameOver = getString(R.string.lbl_game_over);
+
+                    if (!gameOver.equals(currentGameEventText))
                         currentGameEventTextView.setText(R.string.lbl_question_on_its_way);
+
 
                 }
             }.start();

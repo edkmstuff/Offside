@@ -96,6 +96,8 @@
     <string name="lbl_game_penalty_time_started">מתחילים את שלב בעיטות העונשין</string>
     <string name="lbl_game_over">תם המשחק, נתראה במשחק הבא!</string>
     <string name="lbl_in_game_active_question">שאלה פעילה</string>
+    <string name="lbl_game_waiting_to_next_question">שאלה הבאה בעוד</string>
+
 
 
 </resources>
