@@ -51,6 +51,7 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
     private LinearLayout questionAndAnswersRoot;
     private LinearLayout processedQuestionNotePromoRoot;
     private int secondsLeft = 0;
+    private boolean isActivityPaused =false ;
 
     //</editor-fold>
 
@@ -192,9 +193,19 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
     @Override
     public void onResume() {
         super.onResume();
-        Intent intent = new Intent();
-        intent.setClass(context, SignalRService.class);
-        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+        if(isActivityPaused){
+            isActivityPaused=false;
+            Intent intent = new Intent();
+            intent.setClass(context, ViewPlayerScoreActivity.class);
+            startActivity(intent);
+        }
+        else{
+            Intent intent = new Intent();
+            intent.setClass(context, SignalRService.class);
+            bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+
+        }
+
     }
 
     @Override
@@ -203,6 +214,12 @@ public class ViewProcessedQuestionActivity extends AppCompatActivity implements 
         questionEventsHandler.register();
         EventBus.getDefault().register(context);
 
+    }
+
+    @Override
+    public void onPause(){
+        isActivityPaused = true;
+        super.onPause();
     }
 
     @Override

@@ -126,13 +126,13 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
         questionTextView.setText(question.getQuestionText());
         correctAnswerTextView.setText(correctAnswer != null ? correctAnswer.getAnswerText() : "error: no correct answer");
         loadPlayerImage(playerAnswerImageView);
-        if (playerAnswer.isCorrect())
+        if (playerAnswer != null && playerAnswer.isCorrect())
             playerAnswerRightWrongIndicatorImageView.setImageResource(R.drawable.ic_done_white_24dp);
         else
             playerAnswerRightWrongIndicatorImageView.setImageResource(R.drawable.ic_clear_red_24dp);
 
-        playerAnswerTextView.setText(playerAnswer.getAnswerText());
-        if (playerAnswer.isCorrect()) {
+        playerAnswerTextView.setText(playerAnswer != null ? playerAnswer.getAnswerText(): "");
+        if (playerAnswer != null && playerAnswer.isCorrect()) {
             youEarnedRoot.setVisibility(View.VISIBLE);
             earnedPointsTextView.setText(Integer.toString((int) playerAnswer.getScore()));
         } else {
