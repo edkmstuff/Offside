@@ -56,6 +56,7 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     private TextView playerAnswerTextView;
     private LinearLayout youEarnedRoot;
     private TextView earnedPointsTextView;
+    private boolean isActivityPaused =false ;
 
 
     //</editor-fold>
@@ -183,9 +184,18 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     @Override
     public void onResume() {
         super.onResume();
-        Intent intent = new Intent();
-        intent.setClass(context, SignalRService.class);
-        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+        if(isActivityPaused){
+            isActivityPaused=false;
+            Intent intent = new Intent();
+            intent.setClass(context, ViewPlayerScoreActivity.class);
+            startActivity(intent);
+        }
+        else{
+            Intent intent = new Intent();
+            intent.setClass(context, SignalRService.class);
+            bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+        }
+
     }
 
     @Override
@@ -219,6 +229,12 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
     }
 
     @Override
+    public void onPause(){
+        isActivityPaused = true;
+        super.onPause();
+    }
+
+    @Override
     public void onStop() {
         questionEventsHandler.unregister();
         EventBus.getDefault().unregister(context);
@@ -229,7 +245,8 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
         }
 
         //delayHandler.removeCallbacks(goToViewPlayerScore);
-        timer.cancel();
+        if(timer!=null)
+            timer.cancel();
         timer = null;
 
         super.onStop();

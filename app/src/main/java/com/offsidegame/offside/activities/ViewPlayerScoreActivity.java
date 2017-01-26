@@ -266,6 +266,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         super.onStop();
     }
 
+
     //disable back button (option 1)
     @Override
     public void onBackPressed() {

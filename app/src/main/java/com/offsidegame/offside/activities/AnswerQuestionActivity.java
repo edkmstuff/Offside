@@ -66,7 +66,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     private final DateHelper dateHelper = new DateHelper();
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private boolean isRandomAnswer = false;
-    //private TextView lblRandomAnswerAcceptedMessageTextView;
+    private boolean isActivityPaused =false ;
 
 
 
@@ -233,9 +233,19 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     @Override
     public void onResume() {
         super.onResume();
-        Intent intent = new Intent();
-        intent.setClass(context, SignalRService.class);
-        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+        if(isActivityPaused){
+            isActivityPaused=false;
+            Intent intent = new Intent();
+            intent.setClass(context, ViewPlayerScoreActivity.class);
+            startActivity(intent);
+        }
+
+        else {
+            Intent intent = new Intent();
+            intent.setClass(context, SignalRService.class);
+            bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+        }
+
     }
 
     @Override
@@ -253,6 +263,12 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     }
 
     @Override
+    public void onPause(){
+        isActivityPaused = true;
+        super.onPause();
+    }
+
+    @Override
     public void onStop() {
         questionEventsHandler.unregister();
         EventBus.getDefault().unregister(context);
@@ -263,7 +279,8 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         }
 
         //clear stuff
-        timeToNextQuestionTimer.cancel();
+        if(timeToNextQuestionTimer != null)
+            timeToNextQuestionTimer.cancel();
         timeToNextQuestionTimer = null;
 
         super.onStop();
