@@ -57,8 +57,8 @@ public class SignalRService extends Service {
     private Date startReconnectiong = null;
 
     //public final String ip = new String("192.168.1.140:8080");
-    public final String ip = new String("10.0.0.17:8080");
-    //public final String ip = new String("offside.somee.com");
+    //public final String ip = new String("10.0.0.17:8080");
+    public final String ip = new String("offside.somee.com");
 
 
     //<editor-fold desc="constructors">
