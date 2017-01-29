@@ -27,11 +27,12 @@
             android:name=".activities.LoginActivity"
             android:label="Offside"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
         <activity

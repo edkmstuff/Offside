@@ -48,6 +48,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     private SignalRService signalRService;
     private boolean boundToSignalRService = false;
     private TextView gameTitle;
+    private String gameTitleString;
     private TextView score;
     private TextView position;
     private TextView totalPlayers;
@@ -345,6 +346,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
 
         gameTitle.setText(playerScore.getGameTitle().toString());
+        gameTitleString = playerScore.getGameTitle().toString();
         score.setText(playerScore.getScore().toString());
         position.setText(playerScore.getPosition().toString());
         totalPlayers.setText(playerScore.getTotalPlayers().toString());
@@ -461,10 +463,11 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_whatsapp:
-                // User chose the "Settings" item, show the app settings UI...
+
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "Join me on this game");
+                String inviteMessage = "I am playing offside at " + gameTitleString  + " wanna join me [gameCode]?";
+                sendIntent.putExtra(Intent.EXTRA_TEXT, inviteMessage);
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
                 return true;

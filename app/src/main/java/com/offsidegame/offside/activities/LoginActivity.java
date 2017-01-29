@@ -46,6 +46,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private LinearLayout loadingRoot;
     private LinearLayout contentRoot;
 
+    private String gameCodeFromNotification="";
+
     private Toolbar toolbar;
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
@@ -70,8 +72,18 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        startup();
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
+    }
+
+    public void startup(){
+
+
+
+        if(!FacebookSdk.isInitialized()){
+            FacebookSdk.sdkInitialize(getApplicationContext());
+        }
+
         AppEventsLogger.activateApp(getApplication());
 
         toolbar = (Toolbar) findViewById((R.id.app_bar));
@@ -90,8 +102,12 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             loginExpirationTime = dateHelper.getCurrentDate();
 
         Date current = dateHelper.getCurrentDate();
+
+
         if (isLoggedIn  /*|| current.after(loginExpirationTime)*/) {
+
             Intent intent = new Intent(context, JoinGameActivity.class);
+            intent.putExtra("gameCodeFromNotification",gameCodeFromNotification);
             startActivity(intent);
             return;
         }
@@ -115,6 +131,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         contentRoot= (LinearLayout) findViewById(R.id.l_content_root);
         loadingRoot.setVisibility(View.GONE);
         contentRoot.setVisibility(View.VISIBLE);
+
     }
 
     @Override
@@ -188,7 +205,16 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         editor.commit();
 
         Intent intent = new Intent(context, JoinGameActivity.class);
+        intent.putExtra("gameCodeFromNotification",gameCodeFromNotification);
         startActivity(intent);
+
+    }
+
+    protected void onNewIntent(Intent intent) {
+        gameCodeFromNotification = intent.getExtras().getString("gameCode");
+        startup();
+
+
 
     }
 

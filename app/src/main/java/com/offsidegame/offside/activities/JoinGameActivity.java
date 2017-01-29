@@ -133,11 +133,6 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
         loadingGameRoot.setVisibility(View.VISIBLE);
         joinGameRoot.setVisibility(View.GONE);
 
-
-
-
-
-
     }
 
     @Override
@@ -146,12 +141,14 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
         Intent intent = new Intent();
         intent.setClass(context, SignalRService.class);
         bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(context);
+
     }
 
     @Override
@@ -171,6 +168,8 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
         GameInfo gameInfo = joinGameEvent.getGameInfo();
         if (gameInfo == null || gameInfo.getGameId() == null){
             Toast.makeText(context, R.string.lbl_no_such_game, Toast.LENGTH_LONG).show();
+            loadingGameRoot.setVisibility(View.GONE);
+            joinGameRoot.setVisibility(View.VISIBLE);
             return;
         }
         String gameId = gameInfo.getGameId();
@@ -202,18 +201,30 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
         Context eventContext = signalRServiceBoundEvent.getContext();
 
 
-            if (eventContext == null){
+        if (eventContext == null){
                 Intent intent = new Intent(context, JoinGameActivity.class);
                 context.startActivity(intent);
                 return;
+        }
+
+        if (eventContext == context) {
+            Intent intent = getIntent();
+            String gameCodeFromNotification = intent.getExtras().getString("gameCodeFromNotification");
+            if(!(gameCodeFromNotification.equals("") || gameCodeFromNotification ==null)){
+
+                signalRService.joinGame(gameCodeFromNotification.toString());
+                loadingGameRoot.setVisibility(View.VISIBLE);
+                joinGameRoot.setVisibility(View.GONE);
+
+            }
+            else
+            {
+                SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+                String gameId = settings.getString(getString(R.string.game_id_key), "");
+                signalRService.isGameActive(gameId);
             }
 
 
-        if (eventContext == context) {
-            SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-            String gameId = settings.getString(getString(R.string.game_id_key), "");
-
-            signalRService.isGameActive(gameId);
         }
     }
 

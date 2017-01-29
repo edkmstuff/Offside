@@ -278,7 +278,6 @@ public class SignalRService extends Service {
         });
     }
 
-
     public void postAnswer(String gameId, String questionId, String answerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;

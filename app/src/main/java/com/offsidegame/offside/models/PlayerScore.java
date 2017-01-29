@@ -11,8 +11,6 @@ public class PlayerScore {
     @com.google.gson.annotations.SerializedName("GT")
     private String gameTitle;
 
-
-
     @com.google.gson.annotations.SerializedName("S")
     private Integer score;
 
@@ -21,8 +19,6 @@ public class PlayerScore {
 
     @com.google.gson.annotations.SerializedName("TP")
     private Integer totalPlayers;
-
-
 
     @com.google.gson.annotations.SerializedName("TOQ")
     private Integer totalOpenQuestions;
@@ -41,7 +37,6 @@ public class PlayerScore {
 
     @com.google.gson.annotations.SerializedName("TLTCGEIM")
     private int timeLeftToCurrentGameEventInMilliseconds;
-
 
     @com.google.gson.annotations.SerializedName("CGE")
     private String currentGameEvent;
