@@ -41,7 +41,7 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
 
-    EditText gameCode;
+    EditText gameCodeEditText;
     Button join;
     //Button createGame;
     TextView userName;
@@ -76,7 +76,7 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
         toolbar = (Toolbar) findViewById((R.id.app_bar));
         setSupportActionBar(toolbar);
 
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        final SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
 //        if(Profile.getCurrentProfile()==null){
 //            SharedPreferences.Editor editor = settings.edit();
@@ -111,14 +111,15 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
             });
 
 
-            gameCode = (EditText) findViewById(R.id.gameCode);
+            gameCodeEditText = (EditText) findViewById(R.id.gameCode);
             join = (Button) findViewById(R.id.join_button);
 
             join.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (isBoundToSignalRService) {
-                        signalRService.joinGame(gameCode.getText().toString());
+                        String gameCodeString = gameCodeEditText.getText().toString();
+                        signalRService.joinGame(gameCodeString);
                         loadingGameRoot.setVisibility(View.VISIBLE);
                         joinGameRoot.setVisibility(View.GONE);
 
@@ -173,11 +174,13 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
             return;
         }
         String gameId = gameInfo.getGameId();
+        String gameCode = gameInfo.getGameCode();
         int timeToGoBackToPlayerScore = gameInfo.getTimeToGoBackToPlayerScore();
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
 
         editor.putString(getString(R.string.game_id_key), gameId);
+        editor.putString(getString(R.string.game_code_key), gameCode);
         editor.putInt(getString(R.string.time_to_go_back_to_player_score_key),timeToGoBackToPlayerScore);
 
 
@@ -211,11 +214,10 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
             Intent intent = getIntent();
             String gameCodeFromNotification = intent.getExtras().getString("gameCodeFromNotification");
             if(!(gameCodeFromNotification.equals("") || gameCodeFromNotification ==null)){
-
-                signalRService.joinGame(gameCodeFromNotification.toString());
+                String gameCodeString = gameCodeFromNotification.toString();
+                signalRService.joinGame(gameCodeString);
                 loadingGameRoot.setVisibility(View.VISIBLE);
                 joinGameRoot.setVisibility(View.GONE);
-
             }
             else
             {

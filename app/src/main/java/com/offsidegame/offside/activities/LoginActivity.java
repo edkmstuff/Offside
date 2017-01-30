@@ -72,6 +72,10 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Intent callingIntent = getIntent();
+        if (callingIntent != null && callingIntent.getExtras() != null)
+            gameCodeFromNotification = callingIntent.getExtras().getString("gameCodeEditText");
+
         startup();
 
     }
@@ -211,7 +215,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     }
 
     protected void onNewIntent(Intent intent) {
-        gameCodeFromNotification = intent.getExtras().getString("gameCode");
+        gameCodeFromNotification = intent.getExtras().getString(getString(R.string.game_code_key));
         startup();
 
 

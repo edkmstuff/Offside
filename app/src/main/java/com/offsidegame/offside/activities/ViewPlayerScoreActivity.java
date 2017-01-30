@@ -463,10 +463,11 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_whatsapp:
-
+                SharedPreferences settings =  getSharedPreferences(getString(R.string.preference_name), 0);
+                String gameCode = settings.getString(getString(R.string.game_code_key),"");
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                String inviteMessage = "I am playing offside at " + gameTitleString  + " wanna join me [gameCode]?";
+                String inviteMessage = "I am playing offside while watching " + gameTitleString  + "! wanna join me?  connect using this game code: " + gameCode;
                 sendIntent.putExtra(Intent.EXTRA_TEXT, inviteMessage);
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);

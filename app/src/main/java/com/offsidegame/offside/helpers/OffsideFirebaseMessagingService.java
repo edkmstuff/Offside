@@ -42,7 +42,7 @@ public class OffsideFirebaseMessagingService extends FirebaseMessagingService {
             gameCode = remoteMessage.getData().get("gameCode").toString();
 
             Intent intent = new Intent(this, LoginActivity.class);
-            intent.putExtra("gameCode",gameCode);
+            intent.putExtra(getString(R.string.game_code_key),gameCode);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent pendingIntent= PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT);
             //PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, Intent.FILL_IN_ACTION);
