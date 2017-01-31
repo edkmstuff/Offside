@@ -30,6 +30,7 @@ import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerScore;
 import com.offsidegame.offside.events.PlayerScoreEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
@@ -124,8 +125,6 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById((R.id.app_bar));
         setSupportActionBar(toolbar);
 
-
-
         profilePictureImageView = (ImageView) findViewById(R.id.fbPictureImageView);
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
@@ -145,7 +144,6 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
             }
         });
-
 
         gameTitle = (TextView) findViewById(R.id.game_title);
         score = (TextView) findViewById(R.id.score);
@@ -309,7 +307,6 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         }
         if (eventContext == context) {
 
-
             getPlayerScore();
         }
     }
@@ -332,7 +329,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         PlayerScore playerScore = playerScoreEvent.getPlayerScore();
         updatePlayerScoreInUi(playerScore);
 
-        Toast.makeText(context, getString(R.string.lbl_data_updated), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, getString(R.string.lbl_data_updated), Toast.LENGTH_SHORT).show();
     }
 
 
@@ -461,9 +458,11 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        SharedPreferences settings =  getSharedPreferences(getString(R.string.preference_name), 0);
+
         switch (item.getItemId()) {
             case R.id.action_whatsapp:
-                SharedPreferences settings =  getSharedPreferences(getString(R.string.preference_name), 0);
                 String gameCode = settings.getString(getString(R.string.game_code_key),"");
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
@@ -473,6 +472,16 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
                 startActivity(sendIntent);
                 return true;
 
+            case R.id.action_quit:
+                String gameId = settings.getString(getString(R.string.game_id_key), "");
+                signalRService.quitGame(gameId);
+                OffsideApplication.setIsPlayerQuitGame(true);
+                Intent intent = new Intent();
+                intent.setClass(context,JoinGameActivity.class);
+                startActivity(intent);
+
+                return true;
+
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -480,6 +489,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
         }
     }
+
 
 
     //</editor-fold>

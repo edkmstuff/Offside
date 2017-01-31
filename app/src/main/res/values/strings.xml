@@ -63,11 +63,12 @@
     <string name="lbl_sponsored_by">בחסות</string>
     <string name="lbl_current_question">שאלה נוכחית</string>
     <string name="lbl_your_answer">התשובה שלך</string>
-    <string name="lbl_question_on_its_way">השאלה בדרך...</string>
-    <string name="lbl_answer_on_its_way">התשובה בדרך...</string>
+    <string name="lbl_question_on_its_way">השאלה תישאל בעוד מספר שניות</string>
+    <string name="lbl_answer_on_its_way">התשובה תינתן בעוד מספר שניות</string>
     <string name="time_left">זמן שנותר</string>
     <string name="lbl_position_outof">מיקום</string>
-    <string name="lbl_next_question_in">השאלה הבאה בעוד</string>
+    <string name="lbl_next_question_in">השאלה הבאה בעוד </string>
+    <string name="lbl_next_survey_question_in">סקר מהיר בעוד </string>
     <string name="lbl_seconds">שניות</string>
     <string name="disconnect">התנתק</string>
     <string name="refresh">רענן</string>

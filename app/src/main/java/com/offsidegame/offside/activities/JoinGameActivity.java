@@ -27,6 +27,7 @@ import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.GameInfo;
+import com.offsidegame.offside.models.OffsideApplication;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -119,6 +120,7 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
                 public void onClick(View view) {
                     if (isBoundToSignalRService) {
                         String gameCodeString = gameCodeEditText.getText().toString();
+                        OffsideApplication.setIsPlayerQuitGame(false);
                         signalRService.joinGame(gameCodeString);
                         loadingGameRoot.setVisibility(View.VISIBLE);
                         joinGameRoot.setVisibility(View.GONE);
@@ -211,6 +213,13 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
         }
 
         if (eventContext == context) {
+            if(OffsideApplication.isPlayerQuitGame()){
+                loadingGameRoot.setVisibility(View.GONE);
+                joinGameRoot.setVisibility(View.VISIBLE);
+                return;
+            }
+
+
             Intent intent = getIntent();
             String gameCodeFromNotification = intent.getExtras().getString("gameCodeFromNotification");
             if(!(gameCodeFromNotification.equals("") || gameCodeFromNotification ==null)){

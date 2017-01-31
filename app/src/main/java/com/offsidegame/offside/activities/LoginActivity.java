@@ -25,6 +25,7 @@ import com.offsidegame.offside.helpers.DateHelper;
 import com.offsidegame.offside.helpers.OffsideFirebaseInstanceIdService;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.events.LoginEvent;
+import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.User;
 
 import org.greenrobot.eventbus.EventBus;
@@ -215,6 +216,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     }
 
     protected void onNewIntent(Intent intent) {
+        OffsideApplication.setIsPlayerQuitGame(false);
         gameCodeFromNotification = intent.getExtras().getString(getString(R.string.game_code_key));
         startup();
 

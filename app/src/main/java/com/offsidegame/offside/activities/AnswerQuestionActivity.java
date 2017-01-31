@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.fragments.AnswersFragment;
-import com.offsidegame.offside.activities.fragments.QuestionsFragment;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.DateHelper;
@@ -34,7 +33,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -67,6 +65,8 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private boolean isRandomAnswer = false;
     private boolean isActivityPaused =false ;
+    private TextView timeToNextQuestionPromoText;
+
 
 
 
@@ -131,7 +131,8 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         statQuestionTextView = (TextView) findViewById(R.id.stat_question_text_view);
         timeToNextQuestionTextView = (TextView) findViewById(R.id.time_to_next_question);
         timeToAnswerTextView = (TextView) findViewById(R.id.time_to_answer_text_view);
-        //lblRandomAnswerAcceptedMessageTextView = (TextView) findViewById(R.id.lbl_random_answer_accepted_message);
+        timeToNextQuestionPromoText =  (TextView) findViewById(R.id.time_to_next_question_promo_text);
+
 
         //show timer first
         questionAndAnswersRoot.setVisibility(View.GONE);
@@ -167,6 +168,8 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         timeToAnswerTextView.setText("");
         isAnswered = false;
 
+        String nextQuestionPromoMessage = question.isHasPointsValue() ? getString(R.string.lbl_next_question_in): getString(R.string.lbl_next_survey_question_in);
+        timeToNextQuestionPromoText.setText(nextQuestionPromoMessage) ;
         timeToNextQuestionRoot.setVisibility(View.VISIBLE);
         questionAndAnswersRoot.setVisibility(View.GONE);
         answerId = null;
@@ -257,7 +260,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
         boolean isAlertsOn = settings.getBoolean(getString(R.string.is_alerts_on_key), true);
         if (isAlertsOn) {
             MediaPlayer player;
-            player = MediaPlayer.create(context, R.raw.referee_short_whistle);
+            player = MediaPlayer.create(context, R.raw.human_whisle);
             player.start();
         }
     }

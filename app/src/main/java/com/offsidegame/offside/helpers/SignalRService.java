@@ -57,8 +57,8 @@ public class SignalRService extends Service {
     private Date startReconnectiong = null;
 
     //public final String ip = new String("192.168.1.140:8080");
-    //public final String ip = new String("10.0.0.17:8080");
-    public final String ip = new String("offside.somee.com");
+    public final String ip = new String("10.0.0.17:8080");
+    //public final String ip = new String("offside.somee.com");
 
 
     //<editor-fold desc="constructors">
@@ -250,6 +250,15 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(new JoinGameEvent(gameInfo));
             }
         });
+    }
+
+    public void quitGame(String gameId) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        String userId = settings.getString(getString(R.string.user_id_key), "");
+
+        hub.invoke(Boolean.class, "QuitGame", gameId, userId);
     }
 
     public void isGameActive(String gameId) {

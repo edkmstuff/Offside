@@ -10,6 +10,7 @@ import android.content.Context;
 public class OffsideApplication extends Application
 {
     private  Context context;
+    private static boolean isPlayerQuitGame= false;
 
     public  Context getContext() {
         return context;
@@ -20,5 +21,11 @@ public class OffsideApplication extends Application
     }
 
 
+    public static boolean isPlayerQuitGame() {
+        return isPlayerQuitGame;
+    }
 
+    public  static  void setIsPlayerQuitGame(boolean playerQuitGame) {
+        isPlayerQuitGame = playerQuitGame;
+    }
 }

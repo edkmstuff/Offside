@@ -1,8 +1,6 @@
 package com.offsidegame.offside.models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by USER on 11/21/2016.
@@ -24,6 +22,8 @@ public class Question implements Serializable {
     private int timeToAnswerQuestion;
     @com.google.gson.annotations.SerializedName("TTQTP")
     private int timeToQuestionToPop;
+    @com.google.gson.annotations.SerializedName("HPV")
+    private boolean hasPointsValue;
 
 
     public String getQuestionText() {
@@ -80,5 +80,14 @@ public class Question implements Serializable {
 
     public void setTimeToQuestionToPop(int timeToQuestionToPop) {
         this.timeToQuestionToPop = timeToQuestionToPop;
+    }
+
+
+    public boolean isHasPointsValue() {
+        return hasPointsValue;
+    }
+
+    public void setHasPointsValue(boolean hasPointsValue) {
+        this.hasPointsValue = hasPointsValue;
     }
 }
