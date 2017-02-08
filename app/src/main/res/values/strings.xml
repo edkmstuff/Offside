@@ -1,4 +1,15 @@
 <resources>
+
+    <string-array name="avail_games_demo_array">
+        <item>Hapoel Tel Aviv v Macabi Tel Aviv</item>
+        <item>Hapoel Jaljulia v Macabi Jaljulia</item>
+        <item>Hapoel Tel Aviv1 v Macabi Tel Aviv1</item>
+        <item>Hapoel Jaljulia2 v Macabi Jaljulia2</item>
+    </string-array>
+
+
+
+
     <string name="app_name">Offside</string>
     <string name="lbl_points">נקודות</string>
     <string name="lbl_position">מיקום</string>

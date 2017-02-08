@@ -11,12 +11,15 @@ import android.util.Log;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ActiveGameEvent;
+import com.offsidegame.offside.events.AvailableGamesEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.LoginEvent;
+import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.QuestionsEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.LoginInfo;
 import com.offsidegame.offside.models.PlayerScore;
@@ -56,9 +59,9 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnectiong = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("192.168.1.140:8080");
     //public final String ip = new String("10.0.0.17:8080");
-    public final String ip = new String("offside.somee.com");
+    //public final String ip = new String("offside.somee.com");
 
 
     //<editor-fold desc="constructors">
@@ -269,6 +272,31 @@ public class SignalRService extends Service {
             @Override
             public void run(Boolean isGameActive) throws Exception {
                 EventBus.getDefault().post(new ActiveGameEvent(isGameActive));
+            }
+        });
+    }
+
+
+    public void getAvailableGames(){
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke(AvailableGame[].class, "GetAvailableGames").done(new Action<AvailableGame[]>() {
+
+            @Override
+            public void run(AvailableGame[] availableGames) throws Exception {
+                EventBus.getDefault().post(new AvailableGamesEvent(availableGames));
+            }
+        });
+    }
+
+    public void generatePrivateGame(String gameId, String groupName) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke(String.class, "GeneratePrivateGame", gameId, groupName).done(new Action<String>() {
+
+            @Override
+            public void run(String privateGameCode) throws Exception {
+                EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameCode));
             }
         });
     }

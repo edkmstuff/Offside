@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_join_game"
@@ -9,17 +10,15 @@
     android:orientation="vertical"
     tools:context="com.offsidegame.offside.activities.JoinGameActivity">
 
-    <include
-        android:id="@+id/app_bar"
-        layout="@layout/app_bar" />
 
 
+<!-- Progress bar -->
     <LinearLayout
         android:id="@+id/jg_loading_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
@@ -31,13 +30,15 @@
 
     </LinearLayout>
 
+    <!-- Content -->
     <LinearLayout
         android:id="@+id/jg_join_game_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
+        <!-- Greeting -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -102,6 +103,63 @@
             android:layout_height="wrap_content"
 
             android:text="Join" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Or"/>
+
+
+
+
+        <Button
+            android:id="@+id/jg_create_private_game_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create a private game" />
+
+
+        <LinearLayout
+            android:id="@+id/jg_create_private_game_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:visibility="gone">
+
+            <Spinner
+                android:id="@+id/jg_available_games_spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+            <EditText
+
+                android:id="@+id/jg_private_game_name_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Group name"
+                android:inputType="textEmailAddress"
+                android:textDirection="rtl" />
+
+            <Button
+                android:id="@+id/jg_generate_private_game_code_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Get Code" />
+
+            <TextView
+                android:id="@+id/jg_private_game_code_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/OffsideLargeText"
+                android:text="12345"/>
+
+
+
+
+        </LinearLayout>
 
 
     </LinearLayout>

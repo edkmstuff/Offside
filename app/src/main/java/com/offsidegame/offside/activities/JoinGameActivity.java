@@ -12,20 +12,26 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.AvailableGamesEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.models.Answer;
+import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.squareup.picasso.Picasso;
@@ -35,6 +41,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class JoinGameActivity extends AppCompatActivity implements  Serializable{
 
@@ -51,6 +59,20 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
     private LinearLayout loadingGameRoot;
 
     private Toolbar toolbar;
+
+
+
+
+    private Button createPrivateGameButton;
+    private LinearLayout createPrivateGameRoot;
+    private Spinner availableGamesSpinner;
+    private EditText privateGameNameEditText;
+    private Button generatePrivateGameCodeButton;
+    private TextView privateGameCodeTextView;
+    private String[] gameTitles;
+    private String[] gameIds;
+
+
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
@@ -79,16 +101,7 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
 
         final SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
-//        if(Profile.getCurrentProfile()==null){
-//            SharedPreferences.Editor editor = settings.edit();
-//            editor.putBoolean(getString(R.string.is_logged_in_key), false);
-//            editor.commit();
-//            Intent intent = new Intent();
-//            intent.setClass(context, LoginActivity.class);
-//            startActivity(intent);
-//            return;
-//        }
-//        else{
+
 
 
             userName = (TextView) findViewById(R.id.join_game_user_name_text_view);
@@ -133,9 +146,48 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
         joinGameRoot = (LinearLayout) findViewById(R.id.jg_join_game_root);
         loadingGameRoot = (LinearLayout) findViewById(R.id.jg_loading_root);
 
+
+        createPrivateGameButton = (Button) findViewById(R.id.jg_create_private_game_button);
+        createPrivateGameRoot = (LinearLayout) findViewById(R.id.jg_create_private_game_root);
+        availableGamesSpinner = (Spinner)  findViewById(R.id.jg_available_games_spinner);
+        privateGameNameEditText = (EditText) findViewById(R.id.jg_private_game_name_edit_text);
+        generatePrivateGameCodeButton = (Button) findViewById(R.id.jg_generate_private_game_code_button);
+        privateGameCodeTextView = (TextView) findViewById(R.id.jg_private_game_code_text_view);
+
         loadingGameRoot.setVisibility(View.VISIBLE);
         joinGameRoot.setVisibility(View.GONE);
+        createPrivateGameRoot.setVisibility(View.GONE);
+        privateGameCodeTextView.setVisibility(View.GONE);
 
+        createPrivateGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isBoundToSignalRService)
+                    signalRService.getAvailableGames();
+
+                createPrivateGameRoot.setVisibility(View.VISIBLE);
+            }
+        });
+
+        generatePrivateGameCodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //get game id
+                int selectedGamePosition = availableGamesSpinner.getSelectedItemPosition();
+                String gameId = getGameId(selectedGamePosition);
+                //get group name
+                String groupName = privateGameNameEditText.getText().toString();
+
+                if (isBoundToSignalRService)
+                    signalRService.generatePrivateGame(gameId,groupName);
+
+            }
+        });
+
+    }
+
+    private String getGameId(int selectedGamePosition) {
+        return gameIds[selectedGamePosition];
     }
 
     @Override
@@ -233,6 +285,7 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
                 SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
                 String gameId = settings.getString(getString(R.string.game_id_key), "");
                 signalRService.isGameActive(gameId);
+
             }
 
 
@@ -251,6 +304,34 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
             joinGameRoot.setVisibility(View.VISIBLE);
         }
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveAvailableGames(AvailableGamesEvent availableGamesEvent) {
+        AvailableGame[] availableGames = availableGamesEvent.getAvailableGames();
+        gameTitles = new String[availableGames.length];
+        gameIds = new String[availableGames.length];
+        for (int i=0; i < availableGames.length; i++)
+        {
+            gameIds[i] = availableGames[i].getGameId();
+            gameTitles[i] = availableGames[i].getGameTitle();
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context,android.R.layout.simple_spinner_item, gameTitles );
+// Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        availableGamesSpinner.setAdapter(adapter);
+    }
+
+    //PrivateGameGeneratedEvent
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
+        String privateGameCode = privateGameGeneratedEvent.getPrivateGameCode();
+        privateGameCodeTextView.setText(privateGameCode);
+        privateGameCodeTextView.setVisibility(View.VISIBLE);
+    }
+
 
 
 }
