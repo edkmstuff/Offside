@@ -16,6 +16,9 @@ public class Score {
     @com.google.gson.annotations.SerializedName("PO")
     private int points;
 
+    @com.google.gson.annotations.SerializedName("PGC")
+    private String privateGameCode;
+
     public int getPosition() {
         return position;
     }
@@ -46,5 +49,13 @@ public class Score {
 
     public void setPoints(int points) {
         this.points = points;
+    }
+
+    public String getPrivateGameCode() {
+        return privateGameCode;
+    }
+
+    public void setPrivateGameCode(String privateGameCode) {
+        this.privateGameCode = privateGameCode;
     }
 }

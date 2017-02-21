@@ -324,11 +324,12 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
         availableGamesSpinner.setAdapter(adapter);
     }
 
-    //PrivateGameGeneratedEvent
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
         String privateGameCode = privateGameGeneratedEvent.getPrivateGameCode();
         privateGameCodeTextView.setText(privateGameCode);
+        gameCodeEditText.setText(privateGameCode);
         privateGameCodeTextView.setVisibility(View.VISIBLE);
     }
 
