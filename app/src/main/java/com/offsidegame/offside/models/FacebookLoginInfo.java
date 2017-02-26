@@ -11,16 +11,16 @@ import com.facebook.Profile;
 public class FacebookLoginInfo  {
     private String firstName;
     private String lastName;
-    private String name;
+    private String messageText;
     private String id;
     private String linkUri;
 
     public FacebookLoginInfo(){}
 
-    public FacebookLoginInfo(String firstName, String lastName, String name, String id, String linkUri ){
+    public FacebookLoginInfo(String firstName, String lastName, String messageText, String id, String linkUri ){
         this.firstName = firstName;
         this.lastName = lastName;
-        this.name= name;
+        this.messageText= messageText;
         this.id= id;
         this.linkUri = linkUri;
     }
@@ -30,7 +30,7 @@ public class FacebookLoginInfo  {
     }
 
     public String getName() {
-        return name;
+        return messageText;
     }
 
     public String getId() {
@@ -47,7 +47,7 @@ public class FacebookLoginInfo  {
 
 
 
-    //":"Eran","id":"10153837762934596","lastName":"Dagan Bokobza","linkUri":{"cachedFsi":-2,"cachedSsi":-2,"scheme":"NOT CACHED","uriString":"https://www.facebook.com/app_scoped_user_id/10153837762934596/","host":"NOT CACHED","port":-2},"middleName":"","name":"Eran Dagan Bokobza"}
+    //":"Eran","id":"10153837762934596","lastName":"Dagan Bokobza","linkUri":{"cachedFsi":-2,"cachedSsi":-2,"scheme":"NOT CACHED","uriString":"https://www.facebook.com/app_scoped_user_id/10153837762934596/","host":"NOT CACHED","port":-2},"middleName":"","messageText":"Eran Dagan Bokobza"}
 
 }
 */

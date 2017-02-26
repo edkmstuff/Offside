@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_view_scoreboard"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:layoutDirection="ltr"
+    android:orientation="vertical"
+
+    tools:context="com.offsidegame.offside.activities.PlayActivity">
+
+
+    <LinearLayout
+        android:id="@+id/p_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--Loading indicator-->
+        <LinearLayout
+            android:id="@+id/p_loading_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_gravity="center"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </ProgressBar>
+
+
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/p_content_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <ListView
+                android:id="@+id/p_chat_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </ListView>
+
+            <!--<fragment-->
+                <!--android:id="@+id/scores_fragment"-->
+                <!--android:messageText="com.offsidegame.offside.activities.fragments.ChatFragment"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--tools:layout="@layout/chat_message_list_item"></fragment>-->
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

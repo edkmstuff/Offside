@@ -175,7 +175,7 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
                 //get game id
                 int selectedGamePosition = availableGamesSpinner.getSelectedItemPosition();
                 String gameId = getGameId(selectedGamePosition);
-                //get group name
+                //get group messageText
                 String groupName = privateGameNameEditText.getText().toString();
 
                 if (isBoundToSignalRService)
