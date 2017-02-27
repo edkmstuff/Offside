@@ -19,6 +19,14 @@
     <color name="colorOrangeBackground">#B3E5FC</color>
     <color name="colorBlack">#000000</color>
 
+    <color name="chatPrimary">#333333</color>
+    <color name="chatIncoming">#F6F3F2</color>
+    <color name="chatOutgoing">#F6F3F2</color>
+    <color name="chatActions">#E64C66</color>
+    <color name="chatText">#5B5B5B</color>
+
+
+
 </resources>
 
 

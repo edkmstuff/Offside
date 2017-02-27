@@ -7,8 +7,10 @@
     android:keepScreenOn="true"
     android:layoutDirection="ltr"
     android:orientation="vertical"
+    android:background="@color/chatPrimary"
+    tools:context="com.offsidegame.offside.activities.PlayActivity"
+    >
 
-    tools:context="com.offsidegame.offside.activities.PlayActivity">
 
 
     <LinearLayout
@@ -47,9 +49,40 @@
             <ListView
                 android:id="@+id/p_chat_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:listSelector="@android:color/transparent"
+                android:dividerHeight="0dp"
+                android:transcriptMode="alwaysScroll">
 
             </ListView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/p_chat_message_edit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@+id/chatSendButton"
+                    android:inputType="textMultiLine"
+                    android:hint="type message" />
+
+                <Button
+                    android:id="@+id/chatSendButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:background="@mipmap/ic_send"
+                    android:textColor="@color/background_material_light"
+                    android:text="send"/>
+
+
+
+                
+            </LinearLayout>
 
             <!--<fragment-->
                 <!--android:id="@+id/scores_fragment"-->

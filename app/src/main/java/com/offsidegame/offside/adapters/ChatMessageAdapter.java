@@ -37,6 +37,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         public ImageView fbPicture;
         public TextView messageText;
+        public String layout;
 
     }
 
@@ -47,25 +48,46 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         ViewHolder viewHolder;
 
         if (convertView == null) {
-            if(chatMessage.isIncoming())
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_list_item, parent, false);
-            else
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_rtl_list_item, parent, false);
-
             viewHolder = new ViewHolder();
+            if(chatMessage.isIncoming()) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_list_item, parent, false);
+                viewHolder.layout = "chat_message_list_item";
+
+            }
+            else {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_rtl_list_item, parent, false);
+                viewHolder.layout = "chat_message_rtl_list_item";
+            }
 
             viewHolder.fbPicture = (ImageView) convertView.findViewById(R.id.cm_fb_picture);
             viewHolder.messageText = (TextView) convertView.findViewById(R.id.cm_message_text);
 
-
-
             convertView.setTag(viewHolder);
         } else {
-            viewHolder = (ViewHolder) convertView.getTag();
 
+            viewHolder = (ViewHolder) convertView.getTag();
+            if(chatMessage.isIncoming() && viewHolder.layout != "chat_message_list_item" ) {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_list_item, parent, false);
+                viewHolder.layout = "chat_message_list_item";
+
+                viewHolder.fbPicture = (ImageView) convertView.findViewById(R.id.cm_fb_picture);
+                viewHolder.messageText = (TextView) convertView.findViewById(R.id.cm_message_text);
+
+                convertView.setTag(viewHolder);
+            }
+            else if ( !chatMessage.isIncoming() && viewHolder.layout != "chat_message_rtl_list_item") {
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_rtl_list_item, parent, false);
+                viewHolder.layout = "chat_message_rtl_list_item";
+
+                viewHolder.fbPicture = (ImageView) convertView.findViewById(R.id.cm_fb_picture);
+                viewHolder.messageText = (TextView) convertView.findViewById(R.id.cm_message_text);
+
+                convertView.setTag(viewHolder);
+            }
 
         }
-
 
         Uri fbImageUri = Uri.parse(chatMessage.getImageUrl());
         final ImageView fbProfilePicture  = viewHolder.fbPicture;

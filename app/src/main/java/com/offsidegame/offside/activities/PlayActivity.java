@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -68,21 +69,22 @@ public class PlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
-        ChatMessage [] chatMessages = new ChatMessage[]{
-                new ChatMessage("message1",true),
-                new ChatMessage("this is message short1",true),
-                new ChatMessage("this is longgggggggggggggggggggggggggggggggg message3 what are you doiing stop i will kill you", false),
-                new ChatMessage("message1",true),
-                new ChatMessage("message1",true),
-                new ChatMessage("this is message short1",false),
-                new ChatMessage("this is longgggggggggggggggggggggggggggggggg message3 what are you doiing stop i will kill you", false),
-                new ChatMessage("message1",true),
-                new ChatMessage("message1",true),
-                new ChatMessage("this is message short1",true),
-                new ChatMessage("this is longgggggggggggggggggggggggggggggggg message3 what are you doiing stop i will kill you", false),
-                new ChatMessage("message1",true)
-
+        int j=10;
+        ChatMessage [] chatMessages = new ChatMessage[j];
+        String[] msgs = new String []{
+                "Hi kfir , you are super gay",
+                "Hi Eran, I know what s up",
+                " Hi As usual, we use ViewHolder pattern for efficiency when recreating each items in the Listview. LayoutParams are for designing the Layout left or right aligned according to the Chat Message Send or Received. A dummy boolean value is used as the property to check whether ",
+                " Hi  we use ViewHolder pattern for efficiency when recreating each items in the Listview. LayoutParams are for designing the Layout left or right al"
         };
+
+        for(int i=0;i<j;i++){
+
+            ChatMessage chat = new ChatMessage(msgs[i%4],i%3==0);
+            chatMessages[i] = chat;
+
+        }
+
         ArrayList messages = new ArrayList(Arrays.asList(chatMessages));
         ChatMessageAdapter chatMessageAdapter = new ChatMessageAdapter(context, messages);
 
