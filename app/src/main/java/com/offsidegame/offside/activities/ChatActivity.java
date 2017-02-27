@@ -11,8 +11,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
@@ -20,6 +23,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
+import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
@@ -44,7 +48,11 @@ public class ChatActivity extends AppCompatActivity {
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
     private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
-    private ImageView profilePictureImageView;
+    private TextView chatSendTextView;
+    private EditText chatMessageEditText;
+    private String gameId;
+    private String gameCode;
+    private Chat chat;
 
 
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
@@ -69,11 +77,24 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        questionEventsHandler.register();
-        EventBus.getDefault().register(context);
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        gameId = settings.getString(getString(R.string.game_id_key), "");
+        gameCode = settings.getString(getString(R.string.game_code_key), "");
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
+
+        chatSendTextView = (TextView) findViewById(R.id.c_chatSendTextView);
+        chatMessageEditText = (EditText) findViewById(R.id.c_chat_message_edit_text);
+        chatSendTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String message = chatMessageEditText.getText().toString();
+                signalRService.sendChatMessage(gameId, gameCode, message);
+
+            }
+        });
+
 
 //        profilePictureImageView = (ImageView) findViewById(R.id.fbPictureImageView);
 //
@@ -149,9 +170,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
         if (eventContext == context) {
-            SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-            String gameId = settings.getString(getString(R.string.game_id_key), "");
-            String gameCode = settings.getString(getString(R.string.game_code_key), "");
+
 
 
             if (gameId != null && !gameId.isEmpty())
@@ -162,16 +181,33 @@ public class ChatActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveChat(ChatEvent chatEvent) {
 
-        Chat chat = chatEvent.getChat();
+        chat = chatEvent.getChat();
 
         ArrayList messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
         ChatMessageAdapter chatMessageAdapter = new ChatMessageAdapter(context, messages);
 
-        ListView chatListView = (ListView)findViewById(R.id.p_chat_list_view);
+        ListView chatListView = (ListView)findViewById(R.id.c_chat_list_view);
         chatListView.setAdapter(chatMessageAdapter);
 
 
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveChatMessage(ChatMessageEvent chatMessageEvent) {
+
+        ChatMessage message = chatMessageEvent.getChatMessage();
+        chat.addMessage(message);
+
+        ArrayList messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
+        ChatMessageAdapter chatMessageAdapter = new ChatMessageAdapter(context, messages);
+
+        ListView chatListView = (ListView)findViewById(R.id.c_chat_list_view);
+        chatListView.setAdapter(chatMessageAdapter);
+
+
+    }
+
+
     //ToDo: delete sometime
     public void dummyChatMessages() {
 
@@ -195,7 +231,7 @@ public class ChatActivity extends AppCompatActivity {
         ArrayList messages = new ArrayList(Arrays.asList(chatMessages));
         ChatMessageAdapter chatMessageAdapter = new ChatMessageAdapter(context, messages);
 
-        ListView chatListView = (ListView)findViewById(R.id.p_chat_list_view);
+        ListView chatListView = (ListView)findViewById(R.id.c_chat_list_view);
         chatListView.setAdapter(chatMessageAdapter);
     }
 

@@ -10,6 +10,7 @@ import android.util.Log;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.AvailableGamesEvent;
+import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
@@ -20,6 +21,7 @@ import com.offsidegame.offside.events.QuestionsEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.Chat;
+import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.LoginInfo;
 import com.offsidegame.offside.models.PlayerScore;
@@ -59,8 +61,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnectiong = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
-    public final String ip = new String("10.0.0.8:8080");
+    public final String ip = new String("192.168.1.140:8080");
+    //public final String ip = new String("10.0.0.8:8080");
     //public final String ip = new String("offside.somee.com");
 
 
@@ -218,6 +220,13 @@ public class SignalRService extends Service {
             }
         }, String.class);
 
+        hub.on("AddChatMessage", new SubscriptionHandler1<ChatMessage>() {
+            @Override
+            public void run(ChatMessage chatMessage) {
+                EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
+            }
+        }, ChatMessage.class);
+
 
     }
     //</editor-fold>
@@ -351,6 +360,21 @@ public class SignalRService extends Service {
             }
         });
     }
+
+    public void sendChatMessage(String gameId, String gameCode, String message) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke(ChatMessage.class, "SendChatMessage", gameId, gameCode, message).done(new Action<ChatMessage>() {
+            @Override
+            public void run(ChatMessage chatMessage) throws Exception {
+                //EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
+            }
+
+        });
+
+    }
+
+
 
     public void getQuestions(String gameId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))

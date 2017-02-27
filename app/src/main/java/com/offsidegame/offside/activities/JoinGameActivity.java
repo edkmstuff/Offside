@@ -240,7 +240,8 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
 
         editor.commit();
 
-        Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
+        //Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
+        Intent intent = new Intent(context, ChatActivity.class);
         startActivity(intent);
     }
 
@@ -297,7 +298,8 @@ public class JoinGameActivity extends AppCompatActivity implements  Serializable
         Boolean isGameActive = activeGameEvent.getIsGameActive();
 
         if(isGameActive){
-            Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
+            //Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
+            Intent intent = new Intent(context, ChatActivity.class);
             startActivity(intent);
         }else{
             loadingGameRoot.setVisibility(View.GONE);

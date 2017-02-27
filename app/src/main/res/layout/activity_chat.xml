@@ -14,14 +14,14 @@
 
 
     <LinearLayout
-        android:id="@+id/p_root"
+        android:id="@+id/c_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <!--Loading indicator-->
         <LinearLayout
-            android:id="@+id/p_loading_root"
+            android:id="@+id/c_loading_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -37,13 +37,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/p_content_root"
+            android:id="@+id/c_content_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:weightSum="8">
             <ListView
-                android:id="@+id/p_chat_list_view"
+                android:id="@+id/c_chat_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="7"
@@ -63,7 +63,7 @@
                 android:gravity="center_vertical"
                 android:weightSum="7">
                 <TextView
-                    android:id="@+id/p_chatActionsButton"
+                    android:id="@+id/c_chatActionsButton"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
                     android:text="+"
                     android:textSize="@dimen/OffsideLargeText"/>
                 <EditText
-                    android:id="@+id/p_chat_message_edit"
+                    android:id="@+id/c_chat_message_edit_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="5"
@@ -83,7 +83,7 @@
                     android:hint="type message" />
 
                 <TextView
-                    android:id="@+id/p_chatSendButton"
+                    android:id="@+id/c_chatSendTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
