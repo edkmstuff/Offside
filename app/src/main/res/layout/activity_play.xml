@@ -32,69 +32,70 @@
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-
             </ProgressBar>
 
-
-
-
         </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/p_content_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:weightSum="8">
             <ListView
                 android:id="@+id/p_chat_list_view"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="7"
                 android:divider="@null"
                 android:listSelector="@android:color/transparent"
                 android:dividerHeight="0dp"
+                android:stackFromBottom="true"
                 android:transcriptMode="alwaysScroll">
 
             </ListView>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:background="@color/colorAccent"
+                android:gravity="center_vertical"
+                android:weightSum="7">
+                <TextView
+                    android:id="@+id/p_chatActionsButton"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorAccent"
+                    android:textColor="@color/background_material_light"
+                    android:gravity="center"
+                    android:text="+"
+                    android:textSize="@dimen/OffsideLargeText"/>
                 <EditText
                     android:id="@+id/p_chat_message_edit"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
+                    android:layout_weight="5"
                     android:layout_toLeftOf="@+id/chatSendButton"
                     android:inputType="textMultiLine"
+                    style="@style/editTextClassic"
                     android:hint="type message" />
 
-                <Button
-                    android:id="@+id/chatSendButton"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/p_chatSendButton"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:background="@mipmap/ic_send"
+                    android:layout_weight="1"
+                    android:background="@color/colorAccent"
                     android:textColor="@color/background_material_light"
-                    android:text="send"/>
+                    android:gravity="center"
+                    android:text="SEND"
+                    android:textStyle="bold"
 
+                    />
 
-
-                
             </LinearLayout>
-
-            <!--<fragment-->
-                <!--android:id="@+id/scores_fragment"-->
-                <!--android:messageText="com.offsidegame.offside.activities.fragments.ChatFragment"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--tools:layout="@layout/chat_message_list_item"></fragment>-->
-
         </LinearLayout>
-
-
     </LinearLayout>
-
-
 </LinearLayout>

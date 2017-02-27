@@ -69,7 +69,7 @@ public class PlayActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
-        int j=10;
+        int j=50;
         ChatMessage [] chatMessages = new ChatMessage[j];
         String[] msgs = new String []{
                 "Hi kfir , you are super gay",
@@ -80,7 +80,7 @@ public class PlayActivity extends AppCompatActivity {
 
         for(int i=0;i<j;i++){
 
-            ChatMessage chat = new ChatMessage(msgs[i%4],i%3==0);
+            ChatMessage chat = new ChatMessage( "--" + i +"--" +msgs[i%4],i%3==0);
             chatMessages[i] = chat;
 
         }
