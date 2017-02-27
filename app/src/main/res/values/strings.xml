@@ -110,6 +110,9 @@
     <string name="lbl_in_game_active_question">שאלה פעילה</string>
     <string name="lbl_game_waiting_to_next_question">שאלה הבאה בעוד</string>
     <string name="game_code_key">gameCode</string>
+    <string name="lbl_game_over_part_1_ended">הפסקה קצרה</string>
+    <string name="lbl_game_over_part_2_started">מתחילים את החלק השני של ההארכה</string>
+    <string name="lbl_game_over_part_2_ended">הגענו לסוף ההארכה</string>
 
 
 </resources>
