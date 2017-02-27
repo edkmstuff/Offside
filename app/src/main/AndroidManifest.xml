@@ -50,8 +50,8 @@
             android:label="@string/lbl_closed_question_title"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.PlayActivity"
-            android:label="Play"
+            android:name=".activities.ChatActivity"
+            android:label="Match field"
             android:screenOrientation="portrait">
 
             <intent-filter>

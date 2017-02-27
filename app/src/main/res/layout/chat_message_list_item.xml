@@ -7,7 +7,7 @@
     android:padding="2dp"
     android:weightSum="9"
     android:layoutDirection="ltr"
-    tools:context="com.offsidegame.offside.activities.PlayActivity">
+    tools:context="com.offsidegame.offside.activities.ChatActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

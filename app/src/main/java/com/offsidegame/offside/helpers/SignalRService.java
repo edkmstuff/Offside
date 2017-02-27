@@ -4,9 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.util.Log;
 
 import com.offsidegame.offside.R;
@@ -16,10 +14,12 @@ import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.LoginEvent;
+import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.QuestionsEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.AvailableGame;
+import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.LoginInfo;
 import com.offsidegame.offside.models.PlayerScore;
@@ -336,6 +336,18 @@ public class SignalRService extends Service {
             @Override
             public void run(Scoreboard scoreboard) throws Exception {
                 EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
+            }
+        });
+    }
+
+    public void getChatMessages(String gameId, String gameCode) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke(Chat.class, "GetChatMessages", gameId, gameCode ).done(new Action<Chat>() {
+
+            @Override
+            public void run(Chat chat) throws Exception {
+                EventBus.getDefault().post(new ChatEvent(chat));
             }
         });
     }

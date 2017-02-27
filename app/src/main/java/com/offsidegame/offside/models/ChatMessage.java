@@ -1,5 +1,7 @@
 package com.offsidegame.offside.models;
 
+import java.util.Date;
+
 /**
  * Created by KFIR on 12/7/2016.
  */
@@ -10,6 +12,10 @@ public class ChatMessage {
     @com.google.gson.annotations.SerializedName("IU")
     private String imageUrl;
 
+    @com.google.gson.annotations.SerializedName("ST")
+    private Date sentTime;
+
+    @com.google.gson.annotations.SerializedName("II")
     private boolean isIncoming;
 
 
@@ -44,5 +50,13 @@ public class ChatMessage {
 
     public void setIncoming(boolean incoming) {
         isIncoming = incoming;
+    }
+
+    public Date getSentTime() {
+        return sentTime;
+    }
+
+    public void setSentTime(Date sentTime) {
+        this.sentTime = sentTime;
     }
 }
