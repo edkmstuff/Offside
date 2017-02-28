@@ -171,8 +171,6 @@ public class ChatActivity extends AppCompatActivity {
 
         if (eventContext == context) {
 
-
-
             if (gameId != null && !gameId.isEmpty())
                 signalRService.getChatMessages(gameId, gameCode);
         }

@@ -61,7 +61,8 @@
                 android:orientation="horizontal"
                 android:background="@color/colorAccent"
                 android:gravity="center_vertical"
-                android:weightSum="7">
+                android:weightSum="7"
+                android:focusableInTouchMode="true">
                 <TextView
                     android:id="@+id/c_chatActionsButton"
                     android:layout_width="0dp"

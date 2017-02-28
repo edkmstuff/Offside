@@ -18,7 +18,10 @@ public class ChatMessage {
     @com.google.gson.annotations.SerializedName("II")
     private boolean isIncoming;
 
+    @com.google.gson.annotations.SerializedName("MTY")
+    private String messageType;
 
+//TodO: remove when remove dummy
     public ChatMessage(String messageText, boolean isIncoming){
         this.messageText=messageText + " - " + isIncoming;
         this.imageUrl = "http://offside.somee.com/images/defaultImage.jpg";
@@ -58,5 +61,13 @@ public class ChatMessage {
 
     public void setSentTime(Date sentTime) {
         this.sentTime = sentTime;
+    }
+
+    public String getMessageType() {
+        return messageType;
+    }
+
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
     }
 }
