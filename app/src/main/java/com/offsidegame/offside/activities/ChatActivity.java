@@ -25,6 +25,7 @@ import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.RoundImage;
@@ -53,6 +54,8 @@ public class ChatActivity extends AppCompatActivity {
     private String gameId;
     private String gameCode;
     private Chat chat;
+
+    private boolean isBatch=false;
 
 
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
@@ -205,32 +208,29 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onQuestionAnsweredEvent(QuestionAnsweredEvent questionAnswered) {
+        String gameId = questionAnswered.getGameId();
+        String questionId = questionAnswered.getQuestionId();
+        boolean isRandomAnswer = questionAnswered.isRandomAnswer();
 
-    //ToDo: delete sometime
-    public void dummyChatMessages() {
+        // this parameter will be null if the user does not answer
+        String answerId = questionAnswered.getAnswerId();
+        signalRService.postAnswer(gameId, questionId, answerId);
 
-        int j=10;
-        ChatMessage [] chatMessages = new ChatMessage[j];
+//        if (!isBatch) {
+//            calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
+//            questionAndAnswersRoot.setVisibility(View.GONE);
+//        } else {
+//            if (batchedQuestionsQueue.isEmpty()) {
+//                calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
+//                questionAndAnswersRoot.setVisibility(View.GONE);
+//            } else {
+//                question = batchedQuestionsQueue.remove();
+//                showQuestion();
+//            }
+//        }
 
-        String[] msgs = new String []{
-                "Hi kfir , you are super gay",
-                "Hi Eran, I know what s up",
-                " Hi As usual, we use ViewHolder pattern for efficiency when recreating each items in the Listview. LayoutParams are for designing the Layout left or right aligned according to the Chat Message Send or Received. A dummy boolean value is used as the property to check whether ",
-                " Hi  we use ViewHolder pattern for efficiency when recreating each items in the Listview. LayoutParams are for designing the Layout left or right al"
-        };
-
-        for(int i=0;i<j;i++){
-
-            ChatMessage chat = new ChatMessage(msgs[i%4],i%3==0);
-            chatMessages[i] = chat;
-
-        }
-
-        ArrayList messages = new ArrayList(Arrays.asList(chatMessages));
-        ChatMessageAdapter chatMessageAdapter = new ChatMessageAdapter(context, messages);
-
-        ListView chatListView = (ListView)findViewById(R.id.c_chat_list_view);
-        chatListView.setAdapter(chatMessageAdapter);
     }
 
 

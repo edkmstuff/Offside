@@ -14,13 +14,14 @@
         android:layout_height="match_parent"
         android:orientation="horizontal">
         <ImageView
-            android:id="@+id/cmaq_picture"
+            android:id="@+id/cmaq_profile_picture_image_view"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:scaleType="centerCrop"
             />
 
         <LinearLayout
+            android:id="@+id/cmaq_chat_message_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -37,7 +38,8 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp"
                 android:textColor="@color/chatText"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="visible">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -63,6 +65,7 @@
                         android:weightSum="2">
 
                         <LinearLayout
+                            android:id="@+id/cmaq_answers_1_root"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
@@ -89,6 +92,7 @@
 
 
                         <LinearLayout
+                            android:id="@+id/cmaq_answers_2_root"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
@@ -123,6 +127,7 @@
                         android:layout_weight="1">
 
                         <LinearLayout
+                            android:id="@+id/cmaq_answers_3_root"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
@@ -149,6 +154,7 @@
 
 
                         <LinearLayout
+                            android:id="@+id/cmaq_answers_4_root"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
@@ -188,12 +194,12 @@
                     />
 
                 <SeekBar
+                    android:id="@+id/cmaq_bet_size_seekBar"
                     style="@style/Widget.AppCompat.SeekBar.Discrete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:max="10"
                     android:progress="1"
-                    android:id="@+id/cmaq_bet_size_seekBar"
                     android:thumb="@mipmap/ic_offside_logo"
 
                     />
@@ -208,7 +214,72 @@
 
 
             </LinearLayout>
+
+            <!--processing question root-->
+            <LinearLayout
+                android:id="@+id/cmaq_processing_question_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_bg_incoming_bubble"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                android:textColor="@color/chatText"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/cmaq_you_think_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="You think"
+                    android:padding="10dp"
+                    android:gravity="center"
+
+                    />
+                <LinearLayout
+                    android:id="@+id/cmaq_selected_answer_root"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+
+                    android:minHeight="50dp">
+
+                    <TextView
+                        android:id="@+id/cmaq_selected_answer_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="answer 1  (x1.5)"
+                        android:gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/cmaq_selected_answer_return_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="to return"
+                        android:gravity="center"
+                        />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/cmaq_processing_question_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Stay tuned, to see your friends answers"
+                    android:padding="10dp"
+                    android:gravity="center"
+                    android:visibility="visible"
+
+                    />
+
+
+            </LinearLayout>
             <TextView
+                android:id="@+id/cmaq_time_sent_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="10:23"

@@ -21,7 +21,7 @@ public class ChatMessage {
     @com.google.gson.annotations.SerializedName("MTY")
     private String messageType;
 
-//TodO: remove when remove dummy
+//Todo: remove when remove dummy
     public ChatMessage(String messageText, boolean isIncoming){
         this.messageText=messageText + " - " + isIncoming;
         this.imageUrl = "http://offside.somee.com/images/defaultImage.jpg";
