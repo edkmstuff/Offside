@@ -30,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by KFIR on 11/21/2016.
@@ -39,21 +40,16 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     private Context context;
 
-    private Question question;
     private CountDownTimer timeToAnswerTimer;
     private int timeToAnswer;
     private int secondsLeft = 0;
-    private String answerId;
-    private boolean isRandomAnswer = false;
-    private TextView selectedAnswerTextView;
-    private TextView selectedAnswerReturnValueTextView ;
-    private LinearLayout processingQuestionRoot;
-    private LinearLayout questionRoot;
+    private Map<String, String> playerAnswers;
 
 
-    public ChatMessageAdapter(Context context, ArrayList<ChatMessage> chatMessages) {
+    public ChatMessageAdapter(Context context, ArrayList<ChatMessage> chatMessages, Map<String, String> playerAnswers) {
         super(context, 0, chatMessages);
         this.context = context;
+        this.playerAnswers = playerAnswers;
     }
 
 
@@ -63,139 +59,154 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         ChatMessage chatMessage = getItem(position);
         String chatMessageType = chatMessage.getMessageType();
 
-            if(chatMessage.isIncoming()) {
-                if(chatMessageType.equals("TEXT")){
+        //if (chatMessage.isIncoming()) {
+            if (chatMessageType.equals("TEXT")) {
 
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_list_item, parent, false);
-                    generateTextChatMessage(convertView,chatMessage);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_list_item, parent, false);
+                generateTextChatMessage(convertView, chatMessage, !chatMessage.isIncoming());
 
-                }
-                else if(chatMessageType.equals("ASKED_QUESTION")) {
+            } else if (chatMessageType.equals("ASKED_QUESTION")) {
 
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_asked_question_item, parent, false);
-                    generateAskQuestionChatMessage(convertView,chatMessage);
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_asked_question_item, parent, false);
+                generateAskQuestionChatMessage(convertView, chatMessage);
 
-                    //connect layour control to object propeties
-                    //add click events
-                    // take care of slider and update return text views
-                }
-
-                else if(chatMessageType.equals("PROCESSED_QUESTION")) {
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_asked_question_item, parent, false);
-                }
-
-                else if(chatMessageType.equals("CLOSED_QUESTION")) {
-                    convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_asked_question_item, parent, false);
-                }
-
-
+                //connect layour control to object propeties
+                //add click events
+                // take care of slider and update return text views
+            } else if (chatMessageType.equals("PROCESSED_QUESTION")) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_asked_question_item, parent, false);
+            } else if (chatMessageType.equals("CLOSED_QUESTION")) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_asked_question_item, parent, false);
             }
-            else {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_rtl_list_item, parent, false);
 
-                ImageView profilePictureImageView  = (ImageView) convertView.findViewById(R.id.cm_profile_picture_image_view);
-                TextView messageTextView = (TextView) convertView.findViewById(R.id.cm_message_text_view);
 
-                Uri profilePictureUri = Uri.parse(chatMessage.getImageUrl());
-
-                loadFbImage(profilePictureImageView, profilePictureUri);
-
-                messageTextView.setText(chatMessage.getMessageText());
-
-            }
+//        } else {
+//            convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_list_item, parent, false);
+//            generateTextChatMessage(convertView, chatMessage, true);
+//        }
 
 
         return convertView;
 
     }
 
-    private void generateTextChatMessage(View convertView, ChatMessage chatMessage) {
+    private void generateTextChatMessage(View convertView, ChatMessage chatMessage, boolean isRightToLeft) {
+        LinearLayout root = (LinearLayout) convertView.findViewById(R.id.cm_root);
+        ImageView profilePictureImageView = (ImageView) convertView.findViewById(R.id.cm_profile_picture_image_view);
+        TextView timeSentTextView = (TextView) convertView.findViewById(R.id.cm_time_sent_text_view);
 
-        ImageView profilePictureImageView  = (ImageView) convertView.findViewById(R.id.cm_profile_picture_image_view);
-        TextView messageTextView = (TextView) convertView.findViewById(R.id.cm_message_text_view);
+        root.setLayoutDirection(isRightToLeft? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR );
 
         Uri profilePictureUri = Uri.parse(chatMessage.getImageUrl());
-
         loadFbImage(profilePictureImageView, profilePictureUri);
-
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        timeSentTextView.setText(timeFormat.format(chatMessage.getSentTime()));
+        TextView messageTextView = (TextView) convertView.findViewById(R.id.cm_message_text_view);
         messageTextView.setText(chatMessage.getMessageText());
     }
 
-    private void generateAskQuestionChatMessage(View convertView, ChatMessage chatMessage){
+    private void generateAskQuestionChatMessage(View convertView, ChatMessage chatMessage) {
 
         //chat message properties
-        ImageView profilePictureImageView =(ImageView) convertView.findViewById(R.id.cmaq_profile_picture_image_view);
-        TextView timeSentTextView =(TextView) convertView.findViewById(R.id.cmaq_time_sent_text_view);
+        ImageView profilePictureImageView = (ImageView) convertView.findViewById(R.id.cmaq_profile_picture_image_view);
+        TextView timeSentTextView = (TextView) convertView.findViewById(R.id.cmaq_time_sent_text_view);
         Uri profilePictureUri = Uri.parse(chatMessage.getImageUrl());
         loadFbImage(profilePictureImageView, profilePictureUri);
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         timeSentTextView.setText(timeFormat.format(chatMessage.getSentTime()));
 
+        //bind Question object to the ui elements
+        Gson gson = new GsonBuilder().create();
+        final Question question = gson.fromJson(chatMessage.getMessageText(), Question.class);
+
+        String questionId = question.getId();
+        if (playerAnswers.containsKey(questionId)) {
+            String userAnswerId = playerAnswers.get(questionId);
+            Answer answerOfTheUser = new Answer();
+            for (Answer answer : question.getAnswers()) {
+                if (answer.getId().equals(userAnswerId) ) {
+                    answerOfTheUser = answer;
+                    break;
+                }
+            }
+
+            LinearLayout processingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cmaq_processing_question_root);
+            LinearLayout questionRoot = (LinearLayout) convertView.findViewById(R.id.cmaq_question_root);
+            TextView selectedAnswerTextView = (TextView) convertView.findViewById(R.id.cmaq_selected_answer_text_view);
+            TextView selectedAnswerReturnValueTextView = (TextView) convertView.findViewById(R.id.cmaq_selected_answer_return_text_view);
+
+            selectedAnswerTextView.setText(answerOfTheUser.getAnswerText());
+            selectedAnswerReturnValueTextView.setText("100");  //todo: update with the right one
+            processingQuestionRoot.setVisibility(View.VISIBLE);
+            questionRoot.setVisibility(View.GONE);
+
+            //set the user answer
+            return;
+        }
+
+
         //chat message content (asked question)  properties
-        TextView questionTextView =(TextView) convertView.findViewById(R.id.cmaq_question_text_view);
-        final TextView answer1TextView =(TextView) convertView.findViewById(R.id.cmaq_answer_1_text_view);
-        TextView answer1ReturnValueTextView =(TextView) convertView.findViewById(R.id.cmaq_answer_1_return_text_view);
-        final TextView answer2TextView =(TextView) convertView.findViewById(R.id.cmaq_answer_2_text_view);
-        TextView answer2ReturnValueTextView =(TextView) convertView.findViewById(R.id.cmaq_answer_2_return_text_view);
-        final TextView answer3TextView =(TextView) convertView.findViewById(R.id.cmaq_answer_3_text_view);
-        TextView answer3ReturnValueTextView =(TextView) convertView.findViewById(R.id.cmaq_answer_3_return_text_view);
-        final TextView answer4TextView =(TextView) convertView.findViewById(R.id.cmaq_answer_4_text_view);
-        TextView answer4ReturnValueTextView =(TextView) convertView.findViewById(R.id.cmaq_answer_4_return_text_view);
-        TextView betSizeTextView =(TextView) convertView.findViewById(R.id.cmaq_bet_size_text_view);
-        SeekBar betSizeSeekBar =(SeekBar) convertView.findViewById(R.id.cmaq_bet_size_seekBar);
-        final TextView timeToAnswerTextView =(TextView) convertView.findViewById(R.id.cmaq_time_to_answer_text_view);
+        TextView questionTextView = (TextView) convertView.findViewById(R.id.cmaq_question_text_view);
+        final TextView answer1TextView = (TextView) convertView.findViewById(R.id.cmaq_answer_1_text_view);
+        TextView answer1ReturnValueTextView = (TextView) convertView.findViewById(R.id.cmaq_answer_1_return_text_view);
+        final TextView answer2TextView = (TextView) convertView.findViewById(R.id.cmaq_answer_2_text_view);
+        TextView answer2ReturnValueTextView = (TextView) convertView.findViewById(R.id.cmaq_answer_2_return_text_view);
+        final TextView answer3TextView = (TextView) convertView.findViewById(R.id.cmaq_answer_3_text_view);
+        TextView answer3ReturnValueTextView = (TextView) convertView.findViewById(R.id.cmaq_answer_3_return_text_view);
+        final TextView answer4TextView = (TextView) convertView.findViewById(R.id.cmaq_answer_4_text_view);
+        TextView answer4ReturnValueTextView = (TextView) convertView.findViewById(R.id.cmaq_answer_4_return_text_view);
+        TextView betSizeTextView = (TextView) convertView.findViewById(R.id.cmaq_bet_size_text_view);
+        SeekBar betSizeSeekBar = (SeekBar) convertView.findViewById(R.id.cmaq_bet_size_seekBar);
+        final TextView timeToAnswerTextView = (TextView) convertView.findViewById(R.id.cmaq_time_to_answer_text_view);
 
         final LinearLayout answer1Root = (LinearLayout) convertView.findViewById(R.id.cmaq_answers_1_root);
         final LinearLayout answer2Root = (LinearLayout) convertView.findViewById(R.id.cmaq_answers_2_root);
         final LinearLayout answer3Root = (LinearLayout) convertView.findViewById(R.id.cmaq_answers_3_root);
         final LinearLayout answer4Root = (LinearLayout) convertView.findViewById(R.id.cmaq_answers_4_root);
 
-        processingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cmaq_processing_question_root);
-        questionRoot = (LinearLayout) convertView.findViewById(R.id.cmaq_question_root);
-        selectedAnswerTextView =(TextView) convertView.findViewById(R.id.cmaq_selected_answer_text_view);
-        selectedAnswerReturnValueTextView =(TextView) convertView.findViewById(R.id.cmaq_selected_answer_return_text_view);
+        final LinearLayout processingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cmaq_processing_question_root);
+        final LinearLayout questionRoot = (LinearLayout) convertView.findViewById(R.id.cmaq_question_root);
+        final TextView selectedAnswerTextView = (TextView) convertView.findViewById(R.id.cmaq_selected_answer_text_view);
+        final TextView selectedAnswerReturnValueTextView = (TextView) convertView.findViewById(R.id.cmaq_selected_answer_return_text_view);
 
-        questionRoot.setVisibility(View.GONE);
+        questionRoot.setVisibility(View.VISIBLE);
         processingQuestionRoot.setVisibility(View.GONE);
 
-        //bind Question object to view elements
-        Gson gson = new GsonBuilder().create();
-        question = gson.fromJson(chatMessage.getMessageText(), Question.class);
-
-//        if(question.isActive()){
-//            questionRoot.setVisibility(View.VISIBLE);
-//            processingQuestionRoot.setVisibility(View.GONE);
-//        }
-//        else {
-//            questionRoot.setVisibility(View.GONE);
-//            processingQuestionRoot.setVisibility(View.VISIBLE);
-//
-//        }
-
         questionTextView.setText(question.getQuestionText());
-        Answer[] answers = question.getAnswers();
-        double [] multipliers = new double[]{1.5,2.5,3,5};
-        int minBetSize =10;
-        for(int i=0;i<answers.length;i++){
-            String answerText = answers[i].getAnswerText();
-            double defaultReturnValue = multipliers[i]*minBetSize;
 
-            if(i==0){
+        answer1Root.setVisibility(View.INVISIBLE);
+        answer2Root.setVisibility(View.INVISIBLE);
+        answer3Root.setVisibility(View.INVISIBLE);
+        answer4Root.setVisibility(View.INVISIBLE);
+
+
+        Answer[] answers = question.getAnswers();
+        double[] multipliers = new double[]{1.5, 2.5, 3, 5};
+        int minBetSize = 10;
+        for (int i = 0; i < answers.length; i++) {
+            String answerText = answers[i].getAnswerText();
+            double defaultReturnValue = multipliers[i] * minBetSize;
+
+            if (i == 0) {
                 answer1TextView.setText(answerText);
                 answer1ReturnValueTextView.setText(String.valueOf(defaultReturnValue));  //ToDO to be changed once user update seekbar bet size, default to minimum 10 (minValue*Multiplier, e.g. 10*1)
                 answer1TextView.setTag(answers[i]);
-            } else if(i==1){
+                answer1Root.setVisibility(View.VISIBLE);
+            } else if (i == 1) {
                 answer2TextView.setText(answerText);
                 answer2ReturnValueTextView.setText(String.valueOf(defaultReturnValue));  //ToDO to be changed once user update seekbar bet size, default to minimum 10 (minValue*Multiplier, e.g. 10*1)
                 answer2TextView.setTag(answers[i]);
-            } else if(i==2){
+                answer2Root.setVisibility(View.VISIBLE);
+            } else if (i == 2) {
                 answer3TextView.setText(answerText);
                 answer3ReturnValueTextView.setText(String.valueOf(defaultReturnValue));  //ToDO to be changed once user update seekbar bet size, default to minimum 10 (minValue*Multiplier, e.g. 10*1)
                 answer3TextView.setTag(answers[i]);
-            } else if(i==3){
+                answer3Root.setVisibility(View.VISIBLE);
+            } else if (i == 3) {
                 answer4TextView.setText(answerText);
                 answer4ReturnValueTextView.setText(String.valueOf(defaultReturnValue));  //ToDO to be changed once user update seekbar bet size, default to minimum 10 (minValue*Multiplier, e.g. 10*1)
                 answer4TextView.setTag(answers[i]);
+                answer4Root.setVisibility(View.VISIBLE);
             }
 
             betSizeTextView.setText(String.valueOf(minBetSize));
@@ -221,14 +232,18 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             @Override
             public void onFinish() {
                 //user did not answer this question, we select random answer
-                if (answerId == null) {
-                    isRandomAnswer = true;
+                boolean isAnswered = false;
+                for (Answer answer:question.getAnswers()){
+                    if (answer.isTheAnswerOfTheUser()){
+                        isAnswered = true;
+                        break;
+                    }
+                }
+                if (!isAnswered) {
                     int answersCount = question.getAnswers().length;
                     int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
-                    String randomAnswerId = question.getAnswers()[selectedAnswerIndex].getId();
-                    QuestionAnsweredEvent questionAnsweredEvent = new QuestionAnsweredEvent(question.getGameId(), question.getId(), randomAnswerId, true);
-                    EventBus.getDefault().post(questionAnsweredEvent);
-
+                    Answer randomAnswer = question.getAnswers()[selectedAnswerIndex];
+                    postAnswer(question, randomAnswer, null, selectedAnswerTextView,  selectedAnswerReturnValueTextView, processingQuestionRoot, questionRoot);
                 }
             }
         }.start();
@@ -238,7 +253,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             @Override
             public void onClick(View view) {
                 Answer answer = (Answer) answer1TextView.getTag();
-                postAnswer(answer,view);
+                postAnswer(question, answer, view, selectedAnswerTextView,  selectedAnswerReturnValueTextView, processingQuestionRoot, questionRoot);
 
             }
         });
@@ -247,7 +262,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             @Override
             public void onClick(View view) {
                 Answer answer = (Answer) answer2TextView.getTag();
-                postAnswer(answer,view);
+                postAnswer(question, answer, view, selectedAnswerTextView,  selectedAnswerReturnValueTextView, processingQuestionRoot, questionRoot);
             }
         });
 
@@ -255,7 +270,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             @Override
             public void onClick(View view) {
                 Answer answer = (Answer) answer3TextView.getTag();
-                postAnswer(answer,view);
+                postAnswer(question,answer, view, selectedAnswerTextView,  selectedAnswerReturnValueTextView, processingQuestionRoot, questionRoot);
             }
         });
 
@@ -263,15 +278,15 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             @Override
             public void onClick(View view) {
                 Answer answer = (Answer) answer4TextView.getTag();
-                postAnswer(answer,view);
+                postAnswer(question, answer, view, selectedAnswerTextView,  selectedAnswerReturnValueTextView, processingQuestionRoot, questionRoot);
             }
         });
 
 
     }
 
-    private void postAnswer(Answer answer, View view){
-
+    private void postAnswer(Question question, Answer answer, View view,TextView selectedAnswerTextView, TextView selectedAnswerReturnValueTextView, LinearLayout processingQuestionRoot, LinearLayout questionRoot) {
+        answer.setTheAnswerOfTheUser(true);
         selectedAnswerTextView.setText(answer.getAnswerText());
         selectedAnswerReturnValueTextView.setText("100");  //todo: update with the right one
         processingQuestionRoot.setVisibility(View.VISIBLE);
@@ -280,8 +295,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         final String gameId = question.getGameId();
         final String questionId = question.getId();
 
-        answerId = answer.getId();
-        view.animate().rotationX(360.0f).setDuration(200).start();
+        final String answerId = answer.getId();
+        playerAnswers.put(questionId, answerId);
+        if (view != null) //null when random answer was selected
+            view.animate().rotationX(360.0f).setDuration(200).start();
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
