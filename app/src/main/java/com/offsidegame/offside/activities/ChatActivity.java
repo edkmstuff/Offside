@@ -112,7 +112,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String message = chatMessageEditText.getText().toString();
-                signalRService.sendChatMessage(gameId, gameCode, message);
+                signalRService.sendChatMessage(gameId, gameCode, message, playerId);
                 //clear text
                 chatMessageEditText.setText("");
                 //hide keypad

@@ -61,8 +61,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnectiong = null;
 
-    public final String ip = new String("192.168.1.140:8080");
-    //public final String ip = new String("10.0.0.8:8080");
+    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
 
 
@@ -361,13 +361,13 @@ public class SignalRService extends Service {
         });
     }
 
-    public void sendChatMessage(String gameId, String gameCode, String message) {
+    public void sendChatMessage(String gameId, String gameCode, String message, String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(ChatMessage.class, "SendChatMessage", gameId, gameCode, message).done(new Action<ChatMessage>() {
+        hub.invoke(ChatMessage.class, "SendChatMessage", gameId, gameCode, message, playerId).done(new Action<ChatMessage>() {
             @Override
             public void run(ChatMessage chatMessage) throws Exception {
-                //EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
+      //          EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
             }
 
         });

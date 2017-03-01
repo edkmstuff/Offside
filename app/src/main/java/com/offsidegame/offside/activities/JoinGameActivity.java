@@ -292,8 +292,10 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
         if (isGameActive) {
             //Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
-            Intent intent = new Intent(context, ChatActivity.class);
-            startActivity(intent);
+            SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+            String gameCode = settings.getString(getString(R.string.game_code_key), "");
+            signalRService.joinGame(gameCode);
+
         } else {
             loadingGameRoot.setVisibility(View.GONE);
             joinGameRoot.setVisibility(View.VISIBLE);
