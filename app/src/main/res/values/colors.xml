@@ -18,12 +18,21 @@
     <color name="colorDivider">#BDBDBD</color>
     <color name="colorOrangeBackground">#B3E5FC</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+
 
     <color name="chatPrimary">#333333</color>
     <color name="chatIncoming">#F6F3F2</color>
     <color name="chatOutgoing">#F6F3F2</color>
     <color name="chatActions">#E64C66</color>
     <color name="chatText">#5B5B5B</color>
+
+
+    <color name="answerTextColor">#FFFFFF</color>
+    <color name="answer1backgroundColor">#DE1831</color>
+    <color name="answer2backgroundColor">#1F57A5</color>
+    <color name="answer3backgroundColor">#D89E00</color>
+    <color name="answer4backgroundColor">#60991F</color>
 
 
 

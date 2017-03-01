@@ -12,14 +12,20 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
@@ -40,6 +46,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -53,9 +60,14 @@ public class ChatActivity extends AppCompatActivity {
     private EditText chatMessageEditText;
     private String gameId;
     private String gameCode;
+    private String playerId;
     private Chat chat;
+    private ArrayList messages;
+    private ChatMessageAdapter chatMessageAdapter;
+    private Map<String, String> playerAnswers;
+    private LinearLayout root;
 
-    private boolean isBatch=false;
+    private boolean isBatch = false;
 
 
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
@@ -74,6 +86,11 @@ public class ChatActivity extends AppCompatActivity {
             isBoundToSignalRService = false;
         }
     };
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +100,12 @@ public class ChatActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         gameId = settings.getString(getString(R.string.game_id_key), "");
         gameCode = settings.getString(getString(R.string.game_code_key), "");
+        playerId = settings.getString(getString(R.string.user_id_key), "");
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
 
+        root = (LinearLayout) findViewById(R.id.c_root);
         chatSendTextView = (TextView) findViewById(R.id.c_chatSendTextView);
         chatMessageEditText = (EditText) findViewById(R.id.c_chat_message_edit_text);
         chatSendTextView.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +113,11 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String message = chatMessageEditText.getText().toString();
                 signalRService.sendChatMessage(gameId, gameCode, message);
+                //clear text
+                chatMessageEditText.setText("");
+                //hide keypad
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(root.getWindowToken(), 0);
 
             }
         });
@@ -119,6 +143,9 @@ public class ChatActivity extends AppCompatActivity {
 //            }
 //        });
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     @Override
@@ -133,8 +160,13 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public void onStart() {
-        super.onStart();
+        super.onStart();// ATTENTION: This was auto-generated to implement the App Indexing API.
+// See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
     }
 
     @Override
@@ -147,7 +179,12 @@ public class ChatActivity extends AppCompatActivity {
             isBoundToSignalRService = false;
         }
 
-        super.onStop();
+        super.onStop();// ATTENTION: This was auto-generated to implement the App Indexing API.
+// See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.disconnect();
     }
 
 
@@ -165,17 +202,17 @@ public class ChatActivity extends AppCompatActivity {
         Context eventContext = signalRServiceBoundEvent.getContext();
 
 
-            if (eventContext == null){
-                Intent intent = new Intent(context, JoinGameActivity.class);
-                context.startActivity(intent);
-                return;
-            }
+        if (eventContext == null) {
+            Intent intent = new Intent(context, JoinGameActivity.class);
+            context.startActivity(intent);
+            return;
+        }
 
 
         if (eventContext == context) {
 
             if (gameId != null && !gameId.isEmpty())
-                signalRService.getChatMessages(gameId, gameCode);
+                signalRService.getChatMessages(gameId, gameCode,playerId );
         }
     }
 
@@ -183,14 +220,12 @@ public class ChatActivity extends AppCompatActivity {
     public void onReceiveChat(ChatEvent chatEvent) {
 
         chat = chatEvent.getChat();
+        messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
+        playerAnswers = chat.getPlayerAnswers();
 
-        ArrayList messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
-        ChatMessageAdapter chatMessageAdapter = new ChatMessageAdapter(context, messages);
-
-        ListView chatListView = (ListView)findViewById(R.id.c_chat_list_view);
+        chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
+        ListView chatListView = (ListView) findViewById(R.id.c_chat_list_view);
         chatListView.setAdapter(chatMessageAdapter);
-
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -199,10 +234,15 @@ public class ChatActivity extends AppCompatActivity {
         ChatMessage message = chatMessageEvent.getChatMessage();
         chat.addMessage(message);
 
-        ArrayList messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
-        ChatMessageAdapter chatMessageAdapter = new ChatMessageAdapter(context, messages);
+        if (messages != null && chatMessageAdapter != null) {
+            messages.add(message);
+            chatMessageAdapter.notifyDataSetChanged();
+            return;
+        }
 
-        ListView chatListView = (ListView)findViewById(R.id.c_chat_list_view);
+        messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
+        chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
+        ListView chatListView = (ListView) findViewById(R.id.c_chat_list_view);
         chatListView.setAdapter(chatMessageAdapter);
 
 
@@ -217,6 +257,8 @@ public class ChatActivity extends AppCompatActivity {
         // this parameter will be null if the user does not answer
         String answerId = questionAnswered.getAnswerId();
         signalRService.postAnswer(gameId, questionId, answerId);
+        if (!playerAnswers.containsKey(questionId))
+            playerAnswers.put(questionId, answerId);
 
 //        if (!isBatch) {
 //            calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
@@ -234,5 +276,19 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Chat Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
 }

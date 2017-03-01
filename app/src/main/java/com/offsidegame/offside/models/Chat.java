@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by KFIR on 12/7/2016.
@@ -11,6 +12,8 @@ import java.util.List;
 public class Chat {
     @com.google.gson.annotations.SerializedName("CM")
     private ChatMessage[] chatMessages;
+    @com.google.gson.annotations.SerializedName("PA")
+    private Map<String,String> playerAnswers;
 
 
     public ChatMessage[] getChatMessages() {
@@ -29,5 +32,13 @@ public class Chat {
         list.add(chatMessage);
         chatMessages = list.toArray(chatMessages);
 
+    }
+
+    public Map<String, String> getPlayerAnswers() {
+        return playerAnswers;
+    }
+
+    public void setPlayerAnswers(Map<String, String> playerAnswers) {
+        this.playerAnswers = playerAnswers;
     }
 }

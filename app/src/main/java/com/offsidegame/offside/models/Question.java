@@ -24,6 +24,10 @@ public class Question implements Serializable {
     private int timeToQuestionToPop;
     @com.google.gson.annotations.SerializedName("HPV")
     private boolean hasPointsValue;
+    @com.google.gson.annotations.SerializedName("IWFA")
+    private boolean isWaitingForAnswers;
+
+
 
 
     public String getQuestionText() {
@@ -89,5 +93,13 @@ public class Question implements Serializable {
 
     public void setHasPointsValue(boolean hasPointsValue) {
         this.hasPointsValue = hasPointsValue;
+    }
+
+    public boolean isWaitingForAnswers() {
+        return isWaitingForAnswers;
+    }
+
+    public void setWaitingForAnswers(boolean waitingForAnswers) {
+        isWaitingForAnswers = waitingForAnswers;
     }
 }

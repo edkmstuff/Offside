@@ -45,7 +45,13 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/cmaq_question_text_view"
                     android:text="which team will score next?"
-                    android:padding="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_margin="1dp"
+                    android:textColor="@color/colorBlack"
+                    android:background="@color/colorWhite"
+                    android:textSize="@dimen/OffsideMediumText"
+
 
                     />
                 <!--answers-->
@@ -54,7 +60,9 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/cmaq_answers_root"
                     android:orientation="vertical"
-                    android:weightSum="2">
+                    android:weightSum="2"
+                    android:background="@color/colorWhite"
+                    >
 
                     <LinearLayout
                         android:id="@+id/cmaq_answers_1_2_root"
@@ -70,22 +78,39 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:layout_weight="1"
-                            android:minHeight="50dp">
+                            android:minHeight="50dp"
+                            android:background="@color/answer1backgroundColor"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+
+                            >
 
                             <TextView
                                 android:id="@+id/cmaq_answer_1_text_view"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="answer 1  (x1.5)"
-                                android:gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="answer 1"
+                                android:textColor="@color/answerTextColor"
                                 />
 
                             <TextView
+                                android:visibility="gone"
                                 android:id="@+id/cmaq_answer_1_return_text_view"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text="to return"
-                                android:gravity="center"
+                                android:gravity="center_horizontal"
+                                android:textColor="@color/answerTextColor"
+                                />
+                            <TextView
+                                android:id="@+id/cmaq_answer_1_percent_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="20%"
+                                android:gravity="center_horizontal"
+                                android:textColor="@color/answerTextColor"
+                                android:textSize="@dimen/OffsideMediumText"
+                                android:textStyle="bold"
                                 />
 
                         </LinearLayout>
@@ -97,22 +122,36 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:layout_weight="1"
-                            android:minHeight="50dp">
+                            android:minHeight="50dp"
+                            android:background="@color/answer2backgroundColor"
+                            android:gravity="center"
+                            android:layout_margin="1dp">
 
                             <TextView
+
                                 android:id="@+id/cmaq_answer_2_text_view"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="answer 2 (x1.5)"
-
-                                android:gravity="center"/>
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="answer 2"
+                                android:textColor="@color/answerTextColor"
+                                />
 
                             <TextView
+                                android:visibility="gone"
                                 android:id="@+id/cmaq_answer_2_return_text_view"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text="to return"
-                                android:gravity="center"
+                                android:textColor="@color/answerTextColor"
+                                />
+                            <TextView
+                                android:id="@+id/cmaq_answer_2_percent_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="30%"
+                                android:textColor="@color/answerTextColor"
+                                android:textSize="@dimen/OffsideMediumText"
+                                android:textStyle="bold"
                                 />
 
                         </LinearLayout>
@@ -124,6 +163,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:orientation="horizontal"
+
                         android:layout_weight="1">
 
                         <LinearLayout
@@ -132,22 +172,36 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:layout_weight="1"
-                            android:minHeight="50dp">
+                            android:minHeight="50dp"
+                            android:background="@color/answer3backgroundColor"
+                            android:layout_margin="1dp"
+                            android:gravity="center">
 
                             <TextView
                                 android:id="@+id/cmaq_answer_3_text_view"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="answer 3  (x1.5)"
-                                android:gravity="center"
+                                android:textColor="@color/answerTextColor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="answer 3"
+
                                 />
 
                             <TextView
+                                android:visibility="gone"
                                 android:id="@+id/cmaq_answer_3_return_text_view"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text="to return"
-                                android:gravity="center"
+                                android:textColor="@color/answerTextColor"
+                                />
+                            <TextView
+                                android:id="@+id/cmaq_answer_3_percent_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="15%"
+                                android:textColor="@color/answerTextColor"
+                                android:textSize="@dimen/OffsideMediumText"
+                                android:textStyle="bold"
                                 />
 
                         </LinearLayout>
@@ -159,22 +213,35 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:layout_weight="1"
-                            android:minHeight="50dp">
+                            android:minHeight="50dp"
+                            android:background="@color/answer4backgroundColor"
+                            android:layout_margin="1dp"
+                            android:gravity="center">
 
                             <TextView
                                 android:id="@+id/cmaq_answer_4_text_view"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:text="answer 4 (x2.5)"
-
-                                android:gravity="center"/>
+                                android:textColor="@color/answerTextColor"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="answer 4"
+                                />
 
                             <TextView
+                                android:visibility="gone"
                                 android:id="@+id/cmaq_answer_4_return_text_view"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:text="to return"
-                                android:gravity="center"
+                                android:textColor="@color/answerTextColor"
+                                />
+                            <TextView
+                                android:id="@+id/cmaq_answer_4_percent_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="25%"
+                                android:textColor="@color/answerTextColor"
+                                android:textSize="@dimen/OffsideMediumText"
+                                android:textStyle="bold"
                                 />
 
                         </LinearLayout>
@@ -184,6 +251,12 @@
 
 
                 </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/bet_panel_root"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"></LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -294,7 +367,6 @@
 
 
     </LinearLayout>
-
 
 
 </LinearLayout>

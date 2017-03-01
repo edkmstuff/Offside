@@ -61,8 +61,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnectiong = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
-    public final String ip = new String("10.0.0.8:8080");
+    public final String ip = new String("192.168.1.140:8080");
+    //public final String ip = new String("10.0.0.8:8080");
     //public final String ip = new String("offside.somee.com");
 
 
@@ -273,10 +273,10 @@ public class SignalRService extends Service {
         hub.invoke(Boolean.class, "QuitGame", gameId, userId);
     }
 
-    public void isGameActive(String gameId) {
+    public void isGameActive(String gameId, String gameCode) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Boolean.class, "IsGameActive", gameId).done(new Action<Boolean>() {
+        hub.invoke(Boolean.class, "IsGameActive", gameId, gameCode).done(new Action<Boolean>() {
 
             @Override
             public void run(Boolean isGameActive) throws Exception {
@@ -349,10 +349,10 @@ public class SignalRService extends Service {
         });
     }
 
-    public void getChatMessages(String gameId, String gameCode) {
+    public void getChatMessages(String gameId, String gameCode, String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Chat.class, "GetChatMessages", gameId, gameCode ).done(new Action<Chat>() {
+        hub.invoke(Chat.class, "GetChatMessages", gameId, gameCode, playerId ).done(new Action<Chat>() {
 
             @Override
             public void run(Chat chat) throws Exception {
