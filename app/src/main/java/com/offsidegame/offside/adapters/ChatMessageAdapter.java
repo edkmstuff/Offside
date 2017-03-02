@@ -3,6 +3,7 @@ package com.offsidegame.offside.adapters;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -121,7 +122,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         final Question question = gson.fromJson(chatMessage.getMessageText(), Question.class);
 
         String questionId = question.getId();
-        if (playerAnswers.containsKey(questionId) && chatMessage.getMessageType().equals(OffsideApplication.getMessageTypeAskedQuestion())) {
+
+        boolean isAskedQuestion= chatMessage.getMessageType().equals(OffsideApplication.getMessageTypeAskedQuestion());
+        boolean isProcessedQuestion= chatMessage.getMessageType().equals(OffsideApplication.getMessageTypeProcessedQuestion());
+
+        if (playerAnswers.containsKey(questionId) && isAskedQuestion) {
             String userAnswerId = playerAnswers.get(questionId);
             Answer answerOfTheUser = new Answer();
             for (Answer answer : question.getAnswers()) {
@@ -143,9 +148,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             questionRoot.setVisibility(View.GONE);
             return;
         }
-
-        boolean isAskedQuestion= chatMessage.getMessageType().equals(OffsideApplication.getMessageTypeAskedQuestion());
-        boolean isProcessedQuestion= chatMessage.getMessageType().equals(OffsideApplication.getMessageTypeProcessedQuestion());
 
         //ASKED_QUESTION elements
 
@@ -193,13 +195,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         answer2Root.setVisibility(View.INVISIBLE);
         answer3Root.setVisibility(View.INVISIBLE);
         answer4Root.setVisibility(View.INVISIBLE);
-
-//        if(isProcessedQuestion){
-//            answer1PercentTextView.setVisibility(View.GONE);
-//            answer2PercentTextView.setVisibility(View.GONE);
-//            answer3PercentTextView.setVisibility(View.GONE);
-//            answer4PercentTextView.setVisibility(View.GONE);
-//        }
 
         Answer[] answers = question.getAnswers();
         double[] multipliers = new double[]{1.5, 2.5, 3, 5};
@@ -346,20 +341,40 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         }
 
         //PROCESSED_QUESTION SECTION
-
-        if(isProcessedQuestion){
+        if(isProcessedQuestion) {
             processingQuestionRoot.setVisibility(View.GONE);
             questionRoot.setVisibility(View.VISIBLE);
             betPanelRoot.setVisibility(View.GONE);
 
+            answer1Root.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+            answer2Root.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+            answer3Root.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+            answer4Root.getBackground().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
 
-            answer2Root.getBackground().setAlpha(90);
-            answer3Root.getBackground().setAlpha(90);
-            answer4Root.getBackground().setAlpha(90);
-
-
+            if (playerAnswers.containsKey(questionId)) {
+                String userAnswerId = playerAnswers.get(questionId);
+                for (int i = 0; i < answers.length; i++) {
+                    if (answers[i].getId().equals(userAnswerId)) {
+                        if (i == 0) {
+                            answer1Root.setBackgroundResource(R.color.answer1backgroundColor);
+                            break;
+                        }
+                        if (i == 1) {
+                            answer2Root.setBackgroundResource(R.color.answer2backgroundColor);
+                            break;
+                        }
+                        if (i == 2) {
+                            answer3Root.setBackgroundResource(R.color.answer3backgroundColor);
+                            break;
+                        }
+                        if (i == 3) {
+                            answer4Root.setBackgroundResource(R.color.answer4backgroundColor);
+                            break;
+                        }
+                    }
+                }
+            }
         }
-
 
     }
 
