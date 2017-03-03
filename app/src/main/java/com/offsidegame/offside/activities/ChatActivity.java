@@ -36,6 +36,7 @@ import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.squareup.picasso.Picasso;
@@ -64,7 +65,7 @@ public class ChatActivity extends AppCompatActivity {
     private Chat chat;
     private ArrayList messages;
     private ChatMessageAdapter chatMessageAdapter;
-    private Map<String, String> playerAnswers;
+    private Map<String, AnswerIdentifier> playerAnswers;
     private LinearLayout root;
 
     private boolean isBatch = false;
@@ -86,11 +87,7 @@ public class ChatActivity extends AppCompatActivity {
             isBoundToSignalRService = false;
         }
     };
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +142,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
     }
 
     @Override
@@ -158,16 +155,7 @@ public class ChatActivity extends AppCompatActivity {
         bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();// ATTENTION: This was auto-generated to implement the App Indexing API.
-// See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
-    }
 
     @Override
     public void onStop() {
@@ -179,12 +167,7 @@ public class ChatActivity extends AppCompatActivity {
             isBoundToSignalRService = false;
         }
 
-        super.onStop();// ATTENTION: This was auto-generated to implement the App Indexing API.
-// See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.disconnect();
+        super.onStop();
     }
 
 
@@ -256,9 +239,9 @@ public class ChatActivity extends AppCompatActivity {
 
         // this parameter will be null if the user does not answer
         String answerId = questionAnswered.getAnswerId();
-        signalRService.postAnswer(gameId, questionId, answerId);
+        signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer );
         if (!playerAnswers.containsKey(questionId))
-            playerAnswers.put(questionId, answerId);
+            playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer));
 
 //        if (!isBatch) {
 //            calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
@@ -276,19 +259,5 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("Chat Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
+
 }

@@ -312,7 +312,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
 
         // this parameter will be null if the user does not answer
         answerId = questionAnswered.getAnswerId();
-        signalRService.postAnswer(gameId, questionId, answerId);
+        signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer);
         if (!isBatch) {
             calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
             questionAndAnswersRoot.setVisibility(View.GONE);

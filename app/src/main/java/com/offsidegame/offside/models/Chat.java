@@ -9,11 +9,13 @@ import java.util.Map;
 /**
  * Created by KFIR on 12/7/2016.
  */
+
+
 public class Chat {
     @com.google.gson.annotations.SerializedName("CM")
     private ChatMessage[] chatMessages;
     @com.google.gson.annotations.SerializedName("PA")
-    private Map<String,String> playerAnswers;
+    private Map<String,AnswerIdentifier> playerAnswers;
 
 
     public ChatMessage[] getChatMessages() {
@@ -34,11 +36,11 @@ public class Chat {
 
     }
 
-    public Map<String, String> getPlayerAnswers() {
+    public Map<String, AnswerIdentifier> getPlayerAnswers() {
         return playerAnswers;
     }
 
-    public void setPlayerAnswers(Map<String, String> playerAnswers) {
+    public void setPlayerAnswers(Map<String, AnswerIdentifier> playerAnswers) {
         this.playerAnswers = playerAnswers;
     }
 }
