@@ -74,7 +74,7 @@
                         android:weightSum="2">
 
                         <LinearLayout
-                            android:id="@+id/cmaq_answers_1_root"
+                            android:id="@+id/cmaq_answer_1_root"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="1dp"
@@ -118,7 +118,7 @@
 
 
                         <LinearLayout
-                            android:id="@+id/cmaq_answers_2_root"
+                            android:id="@+id/cmaq_answer_2_root"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="1dp"
@@ -169,7 +169,7 @@
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:id="@+id/cmaq_answers_3_root"
+                            android:id="@+id/cmaq_answer_3_root"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="1dp"
@@ -209,7 +209,7 @@
 
 
                         <LinearLayout
-                            android:id="@+id/cmaq_answers_4_root"
+                            android:id="@+id/cmaq_answer_4_root"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="1dp"
