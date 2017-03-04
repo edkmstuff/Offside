@@ -365,6 +365,7 @@
 
             <!--closed question root-->
             <LinearLayout
+
                 android:id="@+id/cmaq_closed_question_root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -386,7 +387,7 @@
                     android:background="@color/colorWhite"
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp"
-                    android:text="You are correct"
+                    android:text="Correct :)"
                     android:textColor="@color/colorBlack"
                     android:textSize="@dimen/OffsideMediumText"
                     android:gravity="center"/>
@@ -410,7 +411,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:textColor="@color/colorBlack"
-                    android:text="You can earn 100 points"
+                    android:text="You earned 100 points"
                     android:layout_marginTop="10dp"/>
 
 
@@ -421,7 +422,7 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:textColor="@color/colorBlack"
-                    android:text="Good job"
+                    android:text="Good job!"
                     android:visibility="visible"
 
                     />

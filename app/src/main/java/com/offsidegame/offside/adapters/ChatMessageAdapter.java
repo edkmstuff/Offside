@@ -79,6 +79,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         } else if (chatMessageType.equals(OffsideApplication.getMessageTypeClosedQuestion())) { //"CLOSED_QUESTION"
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_asked_question_item, parent, false);
+            generateQuestionChatMessage(convertView, chatMessage);
         }
 
 
@@ -139,6 +140,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             //find elements
             final LinearLayout processingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cmaq_processing_question_root);
             final LinearLayout questionRoot = (LinearLayout) convertView.findViewById(R.id.cmaq_question_root);
+            final LinearLayout closedQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cmaq_closed_question_root);
             final TextView processedQuestionTextView = (TextView) convertView.findViewById(R.id.cmaq_processed_question_text_view);
             final TextView selectedAnswerTextView = (TextView) convertView.findViewById(R.id.cmaq_selected_answer_text_view);
             final TextView selectedAnswerReturnValueTextView = (TextView) convertView.findViewById(R.id.cmaq_selected_answer_return_text_view);
@@ -159,6 +161,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             //show relevant layout
             processingQuestionRoot.setVisibility(View.VISIBLE);
             questionRoot.setVisibility(View.GONE);
+            closedQuestionRoot.setVisibility(View.GONE);
 
             return;
         }
@@ -178,6 +181,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         final TextView questionTextView = (TextView) convertView.findViewById(R.id.cmaq_question_text_view);
         final LinearLayout processingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cmaq_processing_question_root);
         final LinearLayout questionRoot = (LinearLayout) convertView.findViewById(R.id.cmaq_question_root);
+        final LinearLayout closedQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cmaq_closed_question_root);
+
 
         final TextView[] answerReturnTextViews = new TextView[4];
         final TextView[] answerPercentTextViews = new TextView[4];
@@ -201,8 +206,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         }
 
         //set values
-        questionRoot.setVisibility(View.VISIBLE);
+        questionRoot.setVisibility(View.GONE);
         processingQuestionRoot.setVisibility(View.GONE);
+        closedQuestionRoot.setVisibility(View.GONE);
+        betPanelRoot.setVisibility(View.GONE);
         questionTextView.setText(question.getQuestionText());
         processedQuestionTextView.setText(question.getQuestionText());
 
@@ -232,6 +239,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         //ASKED_QUESTION SECTION
         if (isAskedQuestion) {
+            questionRoot.setVisibility(View.VISIBLE);
 
             betSizeTextView.setText(String.valueOf(minBetSize));
             betSizeSeekBar.setProgress(minBetSize);
@@ -286,13 +294,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         //PROCESSED_QUESTION SECTION
         if (isProcessedQuestion) {
-            processingQuestionRoot.setVisibility(View.GONE);
             questionRoot.setVisibility(View.VISIBLE);
-            betPanelRoot.setVisibility(View.GONE);
 
             for (int i = 0; i < 4; i++)
                 answerRoots[i].getBackground().mutate().setAlpha(90);
-
 
             if (playerAnswers.containsKey(questionId)) {
                 String userAnswerId = playerAnswers.get(questionId).getAnswerId();
@@ -312,12 +317,31 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         //CLOSED_QUESTION SECTION
         if (isClosedQuestion) {
+            closedQuestionRoot.setVisibility(View.VISIBLE);
+            Answer correctAnswer = null;
+            for (Answer answer:question.getAnswers() ){
+                if (answer.isCorrect())
+                    correctAnswer = answer;
+            }
+            if (correctAnswer == null)
+                return;
 
-            LinearLayout closedQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cmaq_closed_question_root);
-            TextView correctWrongTitleTextView = (TextView) convertView.findViewById(R.id.cmaq_correct_wrong_title_text_view);
-            TextView correctAnswerTextView = (TextView) convertView.findViewById(R.id.cmaq_correct_answer_text_view);
-            TextView correctAnswerReturnTextView = (TextView) convertView.findViewById(R.id.cmaq_correct_answer_return_text_view);
-            TextView feedbackPlayerTextView = (TextView) convertView.findViewById(R.id.cmaq_feedback_player_text_view);
+            boolean isUserAnswerCorrect = correctAnswer.isTheAnswerOfTheUser();
+            int answerNumber = getAnswerNumber(question, correctAnswer.getId());
+            final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
+
+
+            final TextView correctWrongTitleTextView = (TextView) convertView.findViewById(R.id.cmaq_correct_wrong_title_text_view);
+            final TextView correctAnswerTextView = (TextView) convertView.findViewById(R.id.cmaq_correct_answer_text_view);
+            final TextView correctAnswerReturnTextView = (TextView) convertView.findViewById(R.id.cmaq_correct_answer_return_text_view);
+            final TextView feedbackPlayerTextView = (TextView) convertView.findViewById(R.id.cmaq_feedback_player_text_view);
+
+
+            correctWrongTitleTextView.setText(isUserAnswerCorrect? "Correct :)" : "Wrong :-(");
+            correctAnswerTextView.setText(correctAnswer.getAnswerText());
+            correctAnswerTextView.setBackgroundResource(backgroundColorResourceId);
+            correctAnswerReturnTextView.setText(isUserAnswerCorrect? "you earned " + correctAnswer.getScore() + " points" : "You didn't earn points");
+            feedbackPlayerTextView.setText(isUserAnswerCorrect? "Good job!" : "Don't worry, you'll nail it next time!");
 
             return;
 
