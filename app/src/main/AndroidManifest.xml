@@ -39,21 +39,21 @@
         <activity
             android:name=".activities.JoinGameActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.ViewPlayerScoreActivity"
-            android:screenOrientation="portrait"
-            android:showOnLockScreen="true"/>
-        <activity
-            android:name=".activities.AnswerQuestionActivity"
-            android:label="@string/ask_question" />
-        <activity
-            android:name=".activities.ViewProcessedQuestionActivity"
-            android:label="@string/lbl_processed_question_title"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.ViewClosedQuestionActivity"
-            android:label="@string/lbl_closed_question_title"
-            android:screenOrientation="portrait" />
+        <!--<activity-->
+            <!--android:name=".activities.ViewPlayerScoreActivity"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:showOnLockScreen="true"/>-->
+        <!--<activity-->
+            <!--android:name=".activities.AnswerQuestionActivity"-->
+            <!--android:label="@string/ask_question" />-->
+        <!--<activity-->
+            <!--android:name=".activities.ViewProcessedQuestionActivity"-->
+            <!--android:label="@string/lbl_processed_question_title"-->
+            <!--android:screenOrientation="portrait" />-->
+        <!--<activity-->
+            <!--android:name=".activities.ViewClosedQuestionActivity"-->
+            <!--android:label="@string/lbl_closed_question_title"-->
+            <!--android:screenOrientation="portrait" />-->
         <activity
             android:name=".activities.ChatActivity"
             android:label="Match field"

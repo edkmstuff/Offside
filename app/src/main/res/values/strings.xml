@@ -115,6 +115,8 @@
     <string name="lbl_game_over_part_2_ended">הגענו לסוף ההארכה</string>
     <string name="lbl_randomly_selected_answer_title">We randomly selected for you</string>
     <string name="lbl_user_selected_answer_title">You think</string>
+    <string name="offside_coins_key">offsideCoins</string>
+    <string name="balance_key">balance</string>
 
 
 </resources>

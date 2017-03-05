@@ -215,22 +215,26 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onJoinGame(JoinGameEvent joinGameEvent) {
         GameInfo gameInfo = joinGameEvent.getGameInfo();
-        if (gameInfo == null || gameInfo.getGameId() == null) {
+        if (gameInfo == null || gameInfo.getPlayer() == null || gameInfo.getPlayer().getGameId() == null) {
             Toast.makeText(context, R.string.lbl_no_such_game, Toast.LENGTH_LONG).show();
             loadingGameRoot.setVisibility(View.GONE);
             joinGameRoot.setVisibility(View.VISIBLE);
             return;
         }
-        String gameId = gameInfo.getGameId();
-        String gameCode = gameInfo.getGameCode();
+        String gameId = gameInfo.getPlayer().getGameId();
+        String gameCode = gameInfo.getPlayer().getPrivateGameCode();
         int timeToGoBackToPlayerScore = gameInfo.getTimeToGoBackToPlayerScore();
+        int offsideCoins = gameInfo.getPlayer().getOffsideCoins();
+        int balance = gameInfo.getPlayer().getBalance();
+
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
 
         editor.putString(getString(R.string.game_id_key), gameId);
         editor.putString(getString(R.string.game_code_key), gameCode);
         editor.putInt(getString(R.string.time_to_go_back_to_player_score_key), timeToGoBackToPlayerScore);
-
+        editor.putInt(getString(R.string.offside_coins_key), offsideCoins);
+        editor.putInt(getString(R.string.balance_key), balance);
 
         editor.commit();
 

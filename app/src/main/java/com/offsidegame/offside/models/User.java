@@ -17,6 +17,8 @@ public class User {
     private String password;
     @com.google.gson.annotations.SerializedName("DeviceToken")
     private String deviceToken;
+    @com.google.gson.annotations.SerializedName("offsideCoins")
+    private int offsideCoins;
 
 
     public User(){}
@@ -28,6 +30,7 @@ public class User {
         this.profilePictureUri=profilePictureUri;
         this.password= password;
         this.deviceToken = deviceToken;
+
     }
 
     public String getId() {
@@ -77,4 +80,6 @@ public class User {
     public void setDeviceToken(String deviceToken) {
         this.deviceToken = deviceToken;
     }
+
+
 }

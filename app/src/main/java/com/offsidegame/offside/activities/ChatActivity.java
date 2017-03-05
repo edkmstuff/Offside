@@ -156,7 +156,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     public void onStop() {
         questionEventsHandler.unregister();
@@ -169,6 +168,8 @@ public class ChatActivity extends AppCompatActivity {
 
         super.onStop();
     }
+
+
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -204,7 +205,7 @@ public class ChatActivity extends AppCompatActivity {
 
         chat = chatEvent.getChat();
         messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
-        playerAnswers = chat.getPlayerAnswers();
+        playerAnswers = chat.getPlayer()!=null ? chat.getPlayer().getPlayerAnswers(): null ;
 
         chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
         ListView chatListView = (ListView) findViewById(R.id.c_chat_list_view);
@@ -236,12 +237,13 @@ public class ChatActivity extends AppCompatActivity {
         String gameId = questionAnswered.getGameId();
         String questionId = questionAnswered.getQuestionId();
         boolean isRandomAnswer = questionAnswered.isRandomAnswer();
+        int betSize = questionAnswered.getBetSize();
 
         // this parameter will be null if the user does not answer
         String answerId = questionAnswered.getAnswerId();
-        signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer );
+        signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer, betSize );
         if (!playerAnswers.containsKey(questionId))
-            playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer));
+            playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize));
 
 //        if (!isBatch) {
 //            calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);

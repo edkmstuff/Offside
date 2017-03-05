@@ -21,6 +21,11 @@ public class Answer implements Serializable {
     @com.google.gson.annotations.SerializedName("ITAOTU")
     private boolean isTheAnswerOfTheUser;
 
+    @com.google.gson.annotations.SerializedName("PM")
+    private double pointsMultiplier;
+
+
+
     public String getId() {
         return id;
     }
@@ -67,5 +72,13 @@ public class Answer implements Serializable {
 
     public void setCorrect(boolean correct) {
         isCorrect = correct;
+    }
+
+    public double getPointsMultiplier() {
+        return pointsMultiplier;
+    }
+
+    public void setPointsMultiplier(double pointsMultiplier) {
+        this.pointsMultiplier = pointsMultiplier;
     }
 }

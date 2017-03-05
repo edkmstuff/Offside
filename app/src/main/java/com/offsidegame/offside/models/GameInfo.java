@@ -6,23 +6,12 @@ package com.offsidegame.offside.models;
 
 public class GameInfo {
 
-
-    @com.google.gson.annotations.SerializedName("GI")
-    private String gameId;
-
-    @com.google.gson.annotations.SerializedName("GC")
-    private String gameCode;
+    @com.google.gson.annotations.SerializedName("P")
+    private Player player;
 
     @com.google.gson.annotations.SerializedName("TTGBTP")
     private int timeToGoBackToPlayerScore;
 
-    public String getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(String gameId) {
-        this.gameId = gameId;
-    }
 
     public int getTimeToGoBackToPlayerScore() {
         return timeToGoBackToPlayerScore;
@@ -32,11 +21,11 @@ public class GameInfo {
         this.timeToGoBackToPlayerScore = timeToGoBackToPlayerScore;
     }
 
-    public String getGameCode() {
-        return gameCode;
+    public Player getPlayer() {
+        return player;
     }
 
-    public void setGameCode(String gameCode) {
-        this.gameCode = gameCode;
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }

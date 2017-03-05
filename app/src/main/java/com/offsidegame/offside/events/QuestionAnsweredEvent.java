@@ -10,13 +10,15 @@ public class QuestionAnsweredEvent {
     private String questionId;
     private String answerId;
     private boolean isRandomAnswer;
+    private int betSize;
 
 
-    public QuestionAnsweredEvent(String gameId, String questionId, String answerId, boolean isRandomAnswer) {
+    public QuestionAnsweredEvent(String gameId, String questionId, String answerId, boolean isRandomAnswer, int betSize) {
         this.gameId = gameId;
         this.questionId = questionId;
         this.answerId = answerId;
         this.isRandomAnswer = isRandomAnswer;
+        this.betSize= betSize;
     }
 
 
@@ -38,5 +40,13 @@ public class QuestionAnsweredEvent {
 
     public void setRandomAnswer(boolean randomAnswer) {
         isRandomAnswer = randomAnswer;
+    }
+
+    public int getBetSize() {
+        return betSize;
+    }
+
+    public void setBetSize(int betSize) {
+        this.betSize = betSize;
     }
 }

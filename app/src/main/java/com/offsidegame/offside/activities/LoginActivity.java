@@ -187,6 +187,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         String profilePictureUrl = isFacebookLogin ? Profile.getCurrentProfile().getProfilePictureUri(150, 150).toString() : "http://offside.somee.com/images/defaultImage.jpg";
         String password = isFacebookLogin ? null : loginEvent.getPassword();
 
+
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
         String recentToken = settings.getString(getString(R.string.recent_token_key), "");
@@ -201,6 +202,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         editor.putString(getString(R.string.user_id_key), id);
         editor.putString(getString(R.string.user_name_key), name);
         editor.putString(getString(R.string.user_profile_picture_url_key), profilePictureUrl);
+
 
         DateHelper dateHelper = new DateHelper();
         Date current = dateHelper.getCurrentDate();

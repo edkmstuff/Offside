@@ -74,7 +74,7 @@ public class AnswersFragment extends ListFragment {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, false));
+                    EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, false,0));
                 }
             }, 500);
 

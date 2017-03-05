@@ -14,8 +14,8 @@ import java.util.Map;
 public class Chat {
     @com.google.gson.annotations.SerializedName("CM")
     private ChatMessage[] chatMessages;
-    @com.google.gson.annotations.SerializedName("PA")
-    private Map<String,AnswerIdentifier> playerAnswers;
+    @com.google.gson.annotations.SerializedName("P")
+    private Player player;
 
 
     public ChatMessage[] getChatMessages() {
@@ -36,11 +36,11 @@ public class Chat {
 
     }
 
-    public Map<String, AnswerIdentifier> getPlayerAnswers() {
-        return playerAnswers;
+    public Player getPlayer() {
+        return player;
     }
 
-    public void setPlayerAnswers(Map<String, AnswerIdentifier> playerAnswers) {
-        this.playerAnswers = playerAnswers;
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }

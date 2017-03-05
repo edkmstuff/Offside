@@ -218,7 +218,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
                             int answersCount = question.getAnswers().length;
                             int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
                             String randomAnswerId = question.getAnswers()[selectedAnswerIndex].getId();
-                            QuestionAnsweredEvent questionAnsweredEvent = new QuestionAnsweredEvent(question.getGameId(), question.getId(), randomAnswerId, true);
+                            QuestionAnsweredEvent questionAnsweredEvent = new QuestionAnsweredEvent(question.getGameId(), question.getId(), randomAnswerId, true,0);
                             EventBus.getDefault().post(questionAnsweredEvent);
                             //signalRService.postAnswer(question.getGameId(), question.getId(), randomAnswerId);
 //                            if (doProcess){
@@ -312,7 +312,7 @@ public class AnswerQuestionActivity extends AppCompatActivity implements IQuesti
 
         // this parameter will be null if the user does not answer
         answerId = questionAnswered.getAnswerId();
-        signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer);
+        signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer,0);
         if (!isBatch) {
             calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
             questionAndAnswersRoot.setVisibility(View.GONE);

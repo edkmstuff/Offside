@@ -1,6 +1,7 @@
 package com.offsidegame.offside.adapters;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -131,6 +132,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         //open question but user already answered it
         if (isAskedQuestion && isPlayerAnsweredQuestion) {
             final String userAnswerId = playerAnswers.get(questionId).getAnswerId();
+            int betSize = playerAnswers.get(questionId).getBetSize();
             int answerNumber = getAnswerNumber(question, userAnswerId);
             if (answerNumber == 0)
                 return;
@@ -149,7 +151,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             //set values to elements
             processedQuestionTextView.setText(question.getQuestionText());
             selectedAnswerTextView.setText(answerOfTheUser.getAnswerText());
-            selectedAnswerReturnValueTextView.setText("You can earn 100 points");  //todo: update with the right one
+
+            int returnValue = (int) (betSize*answerOfTheUser.getPointsMultiplier());
+            selectedAnswerReturnValueTextView.setText(String.valueOf(returnValue));
+
             final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
             selectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
 
@@ -213,14 +218,13 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         questionTextView.setText(question.getQuestionText());
         processedQuestionTextView.setText(question.getQuestionText());
 
-
         final Answer[] answers = question.getAnswers();
-        final double[] multipliers = new double[]{1.5, 2.5, 3, 5};
-        final int minBetSize = 10;
+        final int minBetSize = 100;
+        int maxBetSize = 4;
         for (int i = 0; i < answers.length; i++) {
             final String answerText = answers[i].getAnswerText();
             final String percentUserAnswered = String.valueOf((int) answers[i].getPercentUsersAnswered()) + "%";
-            final double defaultReturnValue = multipliers[i] * minBetSize;
+            final double defaultReturnValue = answers[i].getPointsMultiplier() * minBetSize;
 
             answerTextViews[i].setText(answerText);
             //answerTextViews[i].setTag(answers[i]);
@@ -228,6 +232,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 answerReturnTextViews[i].setText(String.valueOf(defaultReturnValue));
                 answerReturnTextViews[i].setVisibility(View.VISIBLE);
                 answerPercentTextViews[i].setVisibility(View.GONE);
+
             } else if (isProcessedQuestion) {
                 answerPercentTextViews[i].setText(percentUserAnswered);
                 answerPercentTextViews[i].setVisibility(View.VISIBLE);
@@ -239,10 +244,42 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         //ASKED_QUESTION SECTION
         if (isAskedQuestion) {
-            questionRoot.setVisibility(View.VISIBLE);
+            SharedPreferences settings = context.getSharedPreferences(context.getString(R.string.preference_name), 0);
+            int balance = settings.getInt(context.getString(R.string.balance_key), 0);
+
+            int maxSeekBarValue = (int) (Math.floor(balance/100)-1);
+            maxBetSize = maxSeekBarValue > 4 ? 4: maxSeekBarValue < 0 ? 0 : maxSeekBarValue; //limit range to 0-4
 
             betSizeTextView.setText(String.valueOf(minBetSize));
-            betSizeSeekBar.setProgress(minBetSize);
+
+            betSizeSeekBar.setProgress(0);
+            betSizeSeekBar.setMax(maxBetSize);
+            betSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    int adjustedProgress = 100 + progress*100;
+                    betSizeTextView.setText(String.valueOf(adjustedProgress));
+                    for (int i = 0; i < answers.length; i++) {
+                        final double defaultReturnValue = answers[i].getPointsMultiplier() * adjustedProgress;
+                        answerReturnTextViews[i].setText(String.valueOf(defaultReturnValue));
+
+                    }
+
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+
 
             //set the timeToAskQuestion timer
             timeToAnswer = question.getTimeToAnswerQuestion();
@@ -273,7 +310,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         int answersCount = question.getAnswers().length;
                         int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
                         Answer randomAnswer = question.getAnswers()[selectedAnswerIndex];
-                        postAnswer(question, randomAnswer, null, selectedAnswerTextView, selectedAnswerReturnValueTextView, processingQuestionRoot, questionRoot, selectedAnswerTitleTextView, processedQuestionTextView);
+                        postAnswer(question, randomAnswer, null, selectedAnswerTextView, selectedAnswerReturnValueTextView, processingQuestionRoot, questionRoot, selectedAnswerTitleTextView, processedQuestionTextView, betSizeTextView);
                     }
                 }
             }.start();
@@ -284,10 +321,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 answerRoots[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        postAnswer(question, clickedAnswer, view, selectedAnswerTextView, selectedAnswerReturnValueTextView, processingQuestionRoot, questionRoot, selectedAnswerTitleTextView, processedQuestionTextView);
+                        postAnswer(question, clickedAnswer, view, selectedAnswerTextView, selectedAnswerReturnValueTextView, processingQuestionRoot, questionRoot, selectedAnswerTitleTextView, processedQuestionTextView, betSizeTextView);
                     }
                 });
             }
+
+            questionRoot.setVisibility(View.VISIBLE);
+            betPanelRoot.setVisibility(View.VISIBLE);
+            timeToAnswerTextView.setVisibility(View.VISIBLE);
 
 
         }
@@ -301,6 +342,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             if (playerAnswers.containsKey(questionId)) {
                 String userAnswerId = playerAnswers.get(questionId).getAnswerId();
+
                 for (int i = 0; i < answers.length; i++) {
                     if (answers[i].getId().equals(userAnswerId)) {
                         final int answerNumber = i + 1;
@@ -350,8 +392,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     }
 
-    private void postAnswer(Question question, Answer answer, View view, TextView selectedAnswerTextView, TextView selectedAnswerReturnValueTextView, LinearLayout processingQuestionRoot, LinearLayout questionRoot, TextView selectedAnswerTitleTextView, TextView processingQuestionTextView) {
-        boolean isRandomlySelected = view == null;
+    private void postAnswer(Question question, Answer answer, View view, TextView selectedAnswerTextView, TextView selectedAnswerReturnValueTextView, LinearLayout processingQuestionRoot, LinearLayout questionRoot, TextView selectedAnswerTitleTextView, TextView processingQuestionTextView, TextView betSizeTextView) {
+        final boolean isRandomlySelected = view == null;
         if (isRandomlySelected)
             selectedAnswerTitleTextView.setText(R.string.lbl_randomly_selected_answer_title);
         else
@@ -366,22 +408,25 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
         selectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
 
-        selectedAnswerReturnValueTextView.setText("You can earn 100 points");  //todo: update with the right one
         processingQuestionRoot.setVisibility(View.VISIBLE);
         questionRoot.setVisibility(View.GONE);
 
         final String gameId = question.getGameId();
         final String questionId = question.getId();
-
         final String answerId = answer.getId();
-        playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomlySelected));
+        final int betSize = Integer.parseInt(betSizeTextView.getText().toString());
+
+        int returnValue = (int) (betSize*answer.getPointsMultiplier());
+        selectedAnswerReturnValueTextView.setText(String.valueOf(returnValue));
+
+        playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomlySelected, betSize));
         if (view != null) //null when random answer was selected
             view.animate().rotationX(360.0f).setDuration(200).start();
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, false));
+                EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, isRandomlySelected, betSize));
             }
         }, 500);
 

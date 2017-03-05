@@ -271,8 +271,6 @@
                         style="@style/Widget.AppCompat.SeekBar.Discrete"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:max="10"
-                        android:progress="1"
                         android:thumb="@mipmap/ic_offside_logo"
 
                         />
@@ -301,7 +299,7 @@
                 android:paddingRight="10dp"
                 android:paddingTop="5dp"
                 android:textColor="@color/chatText"
-                android:visibility="gone">
+                android:visibility="visible">
 
 
                 <TextView
@@ -338,14 +336,38 @@
                     android:textColor="@color/colorWhite"
                     android:text="no" />
 
-                <TextView
-                    android:id="@+id/cmaq_selected_answer_return_text_view"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textColor="@color/colorBlack"
-                    android:text="You can earn 100 points"
-                    android:layout_marginTop="10dp"/>
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlack"
+                        android:text="You can earn "
+                        android:layout_marginTop="10dp"/>
+
+                    <TextView
+                        android:id="@+id/cmaq_selected_answer_return_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlack"
+                        android:text="100"
+                        android:layout_marginTop="10dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="@color/colorBlack"
+                        android:text=" points"
+                        android:layout_marginTop="10dp"/>
+
+                </LinearLayout>
 
 
                 <TextView
@@ -376,7 +398,7 @@
                 android:paddingRight="10dp"
                 android:paddingTop="5dp"
                 android:textColor="@color/chatText"
-                android:visibility="visible">
+                android:visibility="gone">
 
 
                 <TextView

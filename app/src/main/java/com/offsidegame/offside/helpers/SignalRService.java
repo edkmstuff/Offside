@@ -61,8 +61,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnectiong = null;
 
-    public final String ip = new String("192.168.1.140:8080");
-    //public final String ip = new String("10.0.0.17:8080");
+    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
 
 
@@ -324,10 +324,10 @@ public class SignalRService extends Service {
         });
     }
 
-    public void postAnswer(String gameId, String questionId, String answerId, boolean isRandomlySelected) {
+    public void postAnswer(String gameId, String questionId, String answerId, boolean isRandomlySelected, int betSize) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Boolean.class, "PostAnswer", gameId, questionId, answerId, isRandomlySelected).done(new Action<Boolean>() {
+        hub.invoke(Boolean.class, "PostAnswer", gameId, questionId, answerId, isRandomlySelected, betSize).done(new Action<Boolean>() {
             @Override
             public void run(Boolean isAnswerAccepted) throws Exception {
                 EventBus.getDefault().post(new IsAnswerAcceptedEvent(isAnswerAccepted));

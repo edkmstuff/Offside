@@ -13,6 +13,7 @@ public class LoginEvent {
     private String name;
     private String password;
     private boolean isFacebookLogin;
+    private int offsideCoins;
 
 
 
@@ -21,6 +22,7 @@ public class LoginEvent {
         this.name = name;
         this.password= password;
         this.isFacebookLogin = isFacebookLogin;
+
     }
 
     public String getId() {
@@ -36,4 +38,6 @@ public class LoginEvent {
     public String getPassword() {
         return password;
     }
+
+
 }
