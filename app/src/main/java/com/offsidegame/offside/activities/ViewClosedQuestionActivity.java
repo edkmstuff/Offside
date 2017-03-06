@@ -108,12 +108,12 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
         question = (Question) bundle.getSerializable("question");
         questionState = bundle.getString("questionState");
 
-        for (Answer ans : question.getAnswers()) {
-            if (ans.isTheAnswerOfTheUser())
-                playerAnswer = ans;
-            if (ans.isCorrect())
-                correctAnswer = ans;
-        }
+//        for (Answer ans : question.getAnswers()) {
+//            if (ans.isTheAnswerOfTheUser())
+//                playerAnswer = ans;
+//            if (ans.isCorrect())
+//                correctAnswer = ans;
+//        }
 
 
         questionTextView = (TextView) findViewById(R.id.vcq_question_text_view);
@@ -215,9 +215,9 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
                 }
             }
             if (correctAnswer != null) {
-                if (correctAnswer.isTheAnswerOfTheUser())
-                    player = MediaPlayer.create(context, R.raw.hooray);
-                else
+//                if (correctAnswer.isTheAnswerOfTheUser())
+//                    player = MediaPlayer.create(context, R.raw.hooray);
+//                else
                     player = MediaPlayer.create(context, R.raw.aww);
 
                 player.start();

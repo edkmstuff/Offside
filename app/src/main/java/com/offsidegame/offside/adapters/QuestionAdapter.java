@@ -60,8 +60,8 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
         Answer answer = new Answer();
         for (Answer ans: question.getAnswers())
         {
-            if (ans.isTheAnswerOfTheUser())
-                answer = ans;
+//            if (ans.isTheAnswerOfTheUser())
+//                answer = ans;
         }
 
         ViewHolder viewHolder;

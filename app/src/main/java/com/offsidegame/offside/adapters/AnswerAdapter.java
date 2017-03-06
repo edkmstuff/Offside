@@ -162,9 +162,9 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
 
             viewHolder.processedQuestionUserAnswerImageView.setAlpha(0.0f);
 
-            if (answer.isTheAnswerOfTheUser()) {
-                loadFbImage(viewHolder.processedQuestionUserAnswerImageView);
-            }
+//            if (answer.isTheAnswerOfTheUser()) {
+//                loadFbImage(viewHolder.processedQuestionUserAnswerImageView);
+//            }
 
             viewHolder.percentUserAnsweredProgressBar.setProgress((int)answer.getPercentUsersAnswered());
 
@@ -192,9 +192,9 @@ public class AnswerAdapter extends ArrayAdapter<Answer> {
             viewHolder.closedQuestionUserAnswerImageView.setAlpha(0.0f);
 
 
-            if (answer.isTheAnswerOfTheUser()) {
-                loadFbImage(viewHolder.closedQuestionUserAnswerImageView);
-            }
+//            if (answer.isTheAnswerOfTheUser()) {
+//                loadFbImage(viewHolder.closedQuestionUserAnswerImageView);
+//            }
 
             viewHolder.closedQuestionRightWrongAnswerIndicatorImageView.setVisibility(View.VISIBLE);
             if (answer.isCorrect())

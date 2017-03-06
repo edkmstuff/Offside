@@ -299,13 +299,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 @Override
                 public void onFinish() {
                     //user did not answer this question, we select random answer
-                    boolean isAnswered = false;
-                    for (Answer answer : question.getAnswers()) {
-                        if (answer.isTheAnswerOfTheUser()) {
-                            isAnswered = true;
-                            break;
-                        }
-                    }
+                    boolean isAnswered = playerAnswers.containsKey(question.getId());
                     if (!isAnswered) {
                         int answersCount = question.getAnswers().length;
                         int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
@@ -368,7 +362,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             if (correctAnswer == null)
                 return;
 
-            boolean isUserAnswerCorrect = correctAnswer.isTheAnswerOfTheUser();
+            boolean isUserAnswerCorrect = playerAnswers.containsKey(question.getId()) && correctAnswer.getId().equals( playerAnswers.get(question.getId()).getAnswerId());
             int answerNumber = getAnswerNumber(question, correctAnswer.getId());
             final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
 
@@ -400,7 +394,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             selectedAnswerTitleTextView.setText(R.string.lbl_user_selected_answer_title);
 
 
-        answer.setTheAnswerOfTheUser(true);
+        //answer.setTheAnswerOfTheUser(true);
         processingQuestionTextView.setText(question.getQuestionText());
         selectedAnswerTextView.setText(answer.getAnswerText());
 

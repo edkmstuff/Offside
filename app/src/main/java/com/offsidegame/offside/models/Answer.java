@@ -18,8 +18,7 @@ public class Answer implements Serializable {
     private double score;
     @com.google.gson.annotations.SerializedName("IC")
     private boolean isCorrect;
-    @com.google.gson.annotations.SerializedName("ITAOTU")
-    private boolean isTheAnswerOfTheUser;
+
 
     @com.google.gson.annotations.SerializedName("PM")
     private double pointsMultiplier;
@@ -50,13 +49,7 @@ public class Answer implements Serializable {
         this.percentUsersAnswered = percentUsersAnswered;
     }
 
-    public boolean isTheAnswerOfTheUser() {
-        return isTheAnswerOfTheUser;
-    }
 
-    public void setTheAnswerOfTheUser(boolean theAnswerOfTheUser) {
-        isTheAnswerOfTheUser = theAnswerOfTheUser;
-    }
 
     public double getScore() {
         return score;
