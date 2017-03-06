@@ -12,7 +12,7 @@
     <!--INCOMING MESSAGES-->
     <LinearLayout
         android:id="@+id/cm_incoming_messages_root"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
