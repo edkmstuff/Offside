@@ -41,6 +41,7 @@ import java.util.Map;
 
 public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
+
     private Context context;
 
     private CountDownTimer timeToAnswerTimer;
@@ -55,9 +56,138 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         this.playerAnswers = playerAnswers;
     }
 
+    private class ViewHolder {
+
+        public LinearLayout incomingMessagesRoot;
+        public ImageView incomingProfilePictureImageView;
+        public TextView incomingTextMessageTextView;
+
+        public LinearLayout incomingQuestionRoot;
+        public LinearLayout incomingAnswersRoot;
+        public LinearLayout IncomingAnswers12Root;
+        public LinearLayout incomingAnswer1Root;
+        public TextView incomingAnswer1TextView;
+        public TextView incomingAnswer1ReturnTextView;
+        public TextView incomingAnswer1PercentTextView;
+
+
+        public LinearLayout incomingAnswer2Root;
+        public TextView incomingAnswer2TextView;
+        public TextView incomingAnswer2ReturnTextView;
+        public TextView incomingAnswer2PercentTextView;
+
+
+        public LinearLayout incomingAnswers34Root;
+        public LinearLayout incomingAnswer3Root;
+        public TextView incomingAnswer3TextView;
+        public TextView incomingAnswer3ReturnTextView;
+        public TextView incomingAnswer3PercentTextView;
+
+
+        public LinearLayout incomingAnswer4Root;
+        public TextView incomingAnswer4TextView;
+        public TextView incomingAnswer4ReturnTextView;
+        public TextView incomingAnswer4PercentTextView;
+
+        public LinearLayout incomingBetPanelRoot;
+        public TextView incomingBetSizeTextView;
+        public SeekBar incomingBetSizeSeekBar;
+        public TextView incomingTimeToAnswerTextView;
+
+        public LinearLayout incomingProcessingQuestionRoot;
+        public TextView incomingProcessedQuestionTextView;
+        public TextView incomingSelectedAnswerTitleTextView;
+        public TextView incomingSelectedAnswerTextView;
+        public TextView incomingSelectedAnswerReturnTextView;
+        public TextView incomingProcessingQuestionTitleTextView;
+
+        public LinearLayout incomingClosedQuestionRoot;
+        public TextView incomingCorrectWrongTitleTextView;
+        public TextView incomingCorrectAnswerTextView;
+        public TextView incomingCorrectAnswerReturnTextView;
+        public TextView incomingFeedbackPlayerTextView;
+
+        public TextView incomingTimeSentTextView;
+
+        public LinearLayout outgoingMessagesRoot;
+        public ImageView outgoingProfilePictureImageView;
+        public TextView outgoingTextMessageTextView;
+        public TextView outgoingTimeSentTextView;
+
+
+    }
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ChatMessageAdapter.ViewHolder viewHolder;
+        if (convertView == null) {
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_item, parent, false);
+            viewHolder = new ChatMessageAdapter.ViewHolder();
+
+            viewHolder.incomingMessagesRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_messages_root);
+            viewHolder.incomingProfilePictureImageView = (ImageView) convertView.findViewById(R.id.cm_incoming_profile_picture_image_view);
+            viewHolder.incomingTextMessageTextView = (TextView) convertView.findViewById(R.id.cm_incoming_text_message_text_view);
+            viewHolder.incomingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_question_root);
+            viewHolder.incomingAnswersRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answers_root);
+            viewHolder.IncomingAnswers12Root = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answers_1_2_root);
+            viewHolder.incomingAnswer1Root = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answer_1_root);
+            viewHolder.incomingAnswer1TextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_1_text_view);
+            viewHolder.incomingAnswer1ReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_1_return_text_view);
+            viewHolder.incomingAnswer1PercentTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_1_percent_text_view);
+            viewHolder.incomingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_question_root);
+            viewHolder.incomingAnswersRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answers_root);
+            viewHolder.IncomingAnswers12Root = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answers_1_2_root);
+            viewHolder.incomingAnswer2Root = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answer_2_root);
+            viewHolder.incomingAnswer2TextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_2_text_view);
+            viewHolder.incomingAnswer2ReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_2_return_text_view);
+            viewHolder.incomingAnswer2PercentTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_2_percent_text_view);
+            viewHolder.incomingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_question_root);
+            viewHolder.incomingAnswersRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answers_root);
+            viewHolder.incomingAnswers34Root = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answers_3_4_root);
+            viewHolder.incomingAnswer3Root = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answer_3_root);
+            viewHolder.incomingAnswer3TextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_3_text_view);
+            viewHolder.incomingAnswer3ReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_3_return_text_view);
+            viewHolder.incomingAnswer3PercentTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_3_percent_text_view);
+
+            viewHolder.incomingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_question_root);
+            viewHolder.incomingAnswersRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answers_root);
+            viewHolder.incomingAnswers34Root = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answers_3_4_root);
+            viewHolder.incomingAnswer4Root = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answer_4_root);
+            viewHolder.incomingAnswer4TextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_4_text_view);
+            viewHolder.incomingAnswer4ReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_4_return_text_view);
+            viewHolder.incomingAnswer4PercentTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_4_percent_text_view);
+
+            viewHolder.incomingBetPanelRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_bet_panel_root);
+            viewHolder.incomingBetSizeTextView = (TextView) convertView.findViewById(R.id.cm_incoming_bet_size_text_view);
+            viewHolder.incomingBetSizeSeekBar = (SeekBar) convertView.findViewById(R.id.cm_incoming_bet_size_seekBar);
+            viewHolder.incomingTimeToAnswerTextView = (TextView) convertView.findViewById(R.id.cm_incoming_time_to_answer_text_view);
+
+            viewHolder.incomingProcessingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_processing_question_root);
+            viewHolder.incomingProcessedQuestionTextView = (TextView) convertView.findViewById(R.id.cm_incoming_processed_question_text_view);
+            viewHolder.incomingSelectedAnswerTitleTextView = (TextView) convertView.findViewById(R.id.cm_incoming_selected_answer_title_text_view);
+            viewHolder.incomingSelectedAnswerTextView = (TextView) convertView.findViewById(R.id.cm_incoming_selected_answer_text_view);
+            viewHolder.incomingSelectedAnswerReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_selected_answer_return_text_view);
+            viewHolder.incomingProcessingQuestionTitleTextView = (TextView) convertView.findViewById(R.id.cm_incoming_processing_question_title_text_view);
+
+            viewHolder.incomingClosedQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_closed_question_root);
+            viewHolder.incomingCorrectWrongTitleTextView = (TextView) convertView.findViewById(R.id.cm_incoming_correct_wrong_title_text_view);
+            viewHolder.incomingCorrectAnswerTextView = (TextView) convertView.findViewById(R.id.cm_incoming_correct_answer_text_view);
+            viewHolder.incomingCorrectAnswerReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_correct_answer_return_text_view);
+            viewHolder.incomingFeedbackPlayerTextView = (TextView) convertView.findViewById(R.id.cm_incoming_feedback_player_text_view);
+
+            viewHolder.incomingTimeSentTextView = (TextView) convertView.findViewById(R.id.cm_incoming_time_sent_text_view);
+
+            viewHolder.outgoingMessagesRoot = (LinearLayout) convertView.findViewById(R.id.cm_outgoing_messages_root);
+            viewHolder.outgoingProfilePictureImageView = (ImageView) convertView.findViewById(R.id.cm_outgoing_profile_picture_image_view);
+            viewHolder.outgoingTextMessageTextView = (TextView) convertView.findViewById(R.id.cm_outgoing_text_message_text_view);
+            viewHolder.outgoingTimeSentTextView = (TextView) convertView.findViewById(R.id.cm_outgoing_time_sent_text_view);
+
+
+        } else {
+            viewHolder = (ChatMessageAdapter.ViewHolder) convertView.getTag();
+        }
+
 
         ChatMessage chatMessage = getItem(position);
         String chatMessageType = chatMessage.getMessageType();
@@ -65,21 +195,22 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         //if (chatMessage.isIncoming()) {
         if (chatMessageType.equals(OffsideApplication.getMessageTypeText())) { //"TEXT"
 
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_list_item, parent, false);
-            generateTextChatMessage(convertView, chatMessage, !chatMessage.isIncoming());
+            //convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_list_item, parent, false);
+
+            generateTextChatMessage(viewHolder, chatMessage, chatMessage.isIncoming());
 
         } else if (chatMessageType.equals(OffsideApplication.getMessageTypeAskedQuestion())) { //"ASKED_QUESTION"
 
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_asked_question_item, parent, false);
+            //convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_asked_question_item, parent, false);
             generateQuestionChatMessage(convertView, chatMessage);
 
         } else if (chatMessageType.equals(OffsideApplication.getMessageTypeProcessedQuestion())) { //"PROCESSED_QUESTION"
 
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_asked_question_item, parent, false);
+            //convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_asked_question_item, parent, false);
             generateQuestionChatMessage(convertView, chatMessage);
 
         } else if (chatMessageType.equals(OffsideApplication.getMessageTypeClosedQuestion())) { //"CLOSED_QUESTION"
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_asked_question_item, parent, false);
+            //convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_asked_question_item, parent, false);
             generateQuestionChatMessage(convertView, chatMessage);
         }
 
@@ -94,19 +225,49 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     }
 
-    private void generateTextChatMessage(View convertView, ChatMessage chatMessage, boolean isRightToLeft) {
-        LinearLayout root = (LinearLayout) convertView.findViewById(R.id.cm_root);
-        ImageView profilePictureImageView = (ImageView) convertView.findViewById(R.id.cm_profile_picture_image_view);
-        TextView timeSentTextView = (TextView) convertView.findViewById(R.id.cm_time_sent_text_view);
+    private void generateTextChatMessage(ViewHolder viewHolder, ChatMessage chatMessage, boolean isIncoming) {
 
-        root.setLayoutDirection(isRightToLeft ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
-
-        Uri profilePictureUri = Uri.parse(chatMessage.getImageUrl());
-        loadFbImage(profilePictureImageView, profilePictureUri);
         SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        timeSentTextView.setText(timeFormat.format(chatMessage.getSentTime()));
-        TextView messageTextView = (TextView) convertView.findViewById(R.id.cm_message_text_view);
-        messageTextView.setText(chatMessage.getMessageText());
+        Uri profilePictureUri = Uri.parse(chatMessage.getImageUrl());
+        if (isIncoming){
+            loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
+            viewHolder.incomingTimeSentTextView.setText(timeFormat.format(chatMessage.getSentTime()));
+            viewHolder.incomingTextMessageTextView.setText(chatMessage.getMessageText());
+
+            //visibility
+            viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
+            viewHolder.outgoingMessagesRoot.setVisibility(View.GONE);
+
+        }else{
+
+            loadFbImage(viewHolder.outgoingProfilePictureImageView, profilePictureUri);
+
+            viewHolder.outgoingTimeSentTextView.setText(timeFormat.format(chatMessage.getSentTime()));
+            viewHolder.outgoingTextMessageTextView.setText(chatMessage.getMessageText());
+
+            //visibility
+            viewHolder.incomingMessagesRoot.setVisibility(View.GONE);
+            viewHolder.outgoingMessagesRoot.setVisibility(View.VISIBLE);
+
+        }
+
+
+
+
+
+
+//        LinearLayout root = (LinearLayout) convertView.findViewById(R.id.cm_root);
+//        ImageView profilePictureImageView = (ImageView) convertView.findViewById(R.id.cm_profile_picture_image_view);
+//        TextView timeSentTextView = (TextView) convertView.findViewById(R.id.cm_time_sent_text_view);
+//
+//        root.setLayoutDirection(isOutgoing ? View.LAYOUT_DIRECTION_RTL : View.LAYOUT_DIRECTION_LTR);
+//
+//        Uri profilePictureUri = Uri.parse(chatMessage.getImageUrl());
+//        loadFbImage(profilePictureImageView, profilePictureUri);
+//        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+//        timeSentTextView.setText(timeFormat.format(chatMessage.getSentTime()));
+//        TextView messageTextView = (TextView) convertView.findViewById(R.id.cm_message_text_view);
+//        messageTextView.setText(chatMessage.getMessageText());
     }
 
     private void generateQuestionChatMessage(View convertView, ChatMessage chatMessage) {
@@ -152,7 +313,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             processedQuestionTextView.setText(question.getQuestionText());
             selectedAnswerTextView.setText(answerOfTheUser.getAnswerText());
 
-            int returnValue = (int) (betSize*answerOfTheUser.getPointsMultiplier());
+            int returnValue = (int) (betSize * answerOfTheUser.getPointsMultiplier());
             selectedAnswerReturnValueTextView.setText(String.valueOf(returnValue));
 
             final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
@@ -247,18 +408,18 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             SharedPreferences settings = context.getSharedPreferences(context.getString(R.string.preference_name), 0);
             int balance = settings.getInt(context.getString(R.string.balance_key), 0);
 
-            int maxSeekBarValue = (int) (Math.floor(balance/100)-1);
-            maxBetSize = maxSeekBarValue > 4 ? 4: maxSeekBarValue < 0 ? 0 : maxSeekBarValue; //limit range to 0-4
+            int maxSeekBarValue = (int) (Math.floor(balance / 100) - 1);
+            maxBetSize = maxSeekBarValue > 4 ? 4 : maxSeekBarValue < 0 ? 0 : maxSeekBarValue; //limit range to 0-4
 
             betSizeTextView.setText(String.valueOf(minBetSize));
 
             betSizeSeekBar.setProgress(0);
             betSizeSeekBar.setMax(maxBetSize);
-            betSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+            betSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    int adjustedProgress = 100 + progress*100;
+                    int adjustedProgress = 100 + progress * 100;
                     betSizeTextView.setText(String.valueOf(adjustedProgress));
                     for (int i = 0; i < answers.length; i++) {
                         final double defaultReturnValue = answers[i].getPointsMultiplier() * adjustedProgress;
@@ -278,7 +439,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 }
             });
-
 
 
             //set the timeToAskQuestion timer
@@ -355,14 +515,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         if (isClosedQuestion) {
             closedQuestionRoot.setVisibility(View.VISIBLE);
             Answer correctAnswer = null;
-            for (Answer answer:question.getAnswers() ){
+            for (Answer answer : question.getAnswers()) {
                 if (answer.isCorrect())
                     correctAnswer = answer;
             }
             if (correctAnswer == null)
                 return;
 
-            boolean isUserAnswerCorrect = playerAnswers.containsKey(question.getId()) && correctAnswer.getId().equals( playerAnswers.get(question.getId()).getAnswerId());
+            boolean isUserAnswerCorrect = playerAnswers.containsKey(question.getId()) && correctAnswer.getId().equals(playerAnswers.get(question.getId()).getAnswerId());
             int answerNumber = getAnswerNumber(question, correctAnswer.getId());
             final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
 
@@ -373,11 +533,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             final TextView feedbackPlayerTextView = (TextView) convertView.findViewById(R.id.cmaq_feedback_player_text_view);
 
 
-            correctWrongTitleTextView.setText(isUserAnswerCorrect? "Correct :)" : "Wrong :-(");
+            correctWrongTitleTextView.setText(isUserAnswerCorrect ? "Correct :)" : "Wrong :-(");
             correctAnswerTextView.setText(correctAnswer.getAnswerText());
             correctAnswerTextView.setBackgroundResource(backgroundColorResourceId);
-            correctAnswerReturnTextView.setText(isUserAnswerCorrect? "you earned " + correctAnswer.getScore() + " points" : "You didn't earn points");
-            feedbackPlayerTextView.setText(isUserAnswerCorrect? "Good job!" : "Don't worry, you'll nail it next time!");
+            correctAnswerReturnTextView.setText(isUserAnswerCorrect ? "you earned " + correctAnswer.getScore() + " points" : "You didn't earn points");
+            feedbackPlayerTextView.setText(isUserAnswerCorrect ? "Good job!" : "Don't worry, you'll nail it next time!");
 
             return;
 
@@ -410,7 +570,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         final String answerId = answer.getId();
         final int betSize = Integer.parseInt(betSizeTextView.getText().toString());
 
-        int returnValue = (int) (betSize*answer.getPointsMultiplier());
+        int returnValue = (int) (betSize * answer.getPointsMultiplier());
         selectedAnswerReturnValueTextView.setText(String.valueOf(returnValue));
 
         playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomlySelected, betSize));
