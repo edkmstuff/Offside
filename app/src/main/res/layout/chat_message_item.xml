@@ -2,179 +2,276 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
     android:gravity="center"
     android:layoutDirection="ltr"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:padding="2dp"
-    android:layout_marginBottom="20dp"
     tools:context="com.offsidegame.offside.activities.ChatActivity">
 
-    <!--INCOMING MESSAGES-->
     <LinearLayout
-        android:id="@+id/cm_incoming_messages_root"
-        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
 
-
-        >
-
-        <ImageView
-
-            android:id="@+id/cm_incoming_profile_picture_image_view"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:scaleType="centerCrop" />
-
-
-
+        <!--INCOMING MESSAGES-->
         <LinearLayout
+            android:id="@+id/cm_incoming_messages_root"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:visibility="visible"
 
 
-            <!-- Text messages-->
-            <TextView
-                android:id="@+id/cm_incoming_text_message_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_bg_incoming_bubble"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textColor="@color/chatText"
-                />
+            >
 
-            <!--Asked or Processed question root-->
+            <ImageView
+
+                android:id="@+id/cm_incoming_profile_picture_image_view"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="centerCrop" />
+
+
             <LinearLayout
-                android:id="@+id/cm_incoming_question_root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_bg_incoming_bubble"
-                android:orientation="vertical"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
-                android:textColor="@color/chatText"
-                android:visibility="gone">
+                android:layout_marginRight="5dp"
+                android:orientation="vertical">
 
+
+                <!-- Text messages-->
                 <TextView
-                    android:id="@+id/cm_incoming_question_text_view"
-                    android:layout_width="match_parent"
+                    android:id="@+id/cm_incoming_text_message_text_view"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="1dp"
-                    android:background="@color/colorWhite"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    android:text="which team will score next?"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/OffsideMediumText"
+                    android:background="@drawable/shape_bg_incoming_bubble"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/chatText" />
 
-
-                    />
-                <!--answers-->
+                <!--Asked or Processed question root-->
                 <LinearLayout
-                    android:id="@+id/cm_incoming_answers_root"
+                    android:id="@+id/cm_incoming_question_root"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorWhite"
+                    android:background="@drawable/shape_bg_incoming_bubble"
                     android:orientation="vertical"
-                    android:weightSum="2">
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/chatText"
+                    android:visibility="gone">
 
-                    <LinearLayout
-                        android:id="@+id/cm_incoming_answers_1_2_root"
+                    <TextView
+                        android:id="@+id/cm_incoming_question_text_view"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:orientation="horizontal"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
+                        android:background="@color/colorWhite"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="which team will score next?"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/OffsideMediumText"
+
+
+                        />
+                    <!--answers-->
+                    <LinearLayout
+                        android:id="@+id/cm_incoming_answers_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorWhite"
+                        android:orientation="vertical"
                         android:weightSum="2">
 
                         <LinearLayout
-                            android:id="@+id/cm_incoming_answer_1_root"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="1dp"
+                            android:id="@+id/cm_incoming_answers_1_2_root"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:background="@color/answer1backgroundColor"
-                            android:gravity="center"
-                            android:minHeight="50dp"
-                            android:orientation="vertical"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
 
-                            >
-
-                            <TextView
-                                android:id="@+id/cm_incoming_answer_1_text_view"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:id="@+id/cm_incoming_answer_1_root"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:text="answer 1"
-                                android:textColor="@color/answerTextColor"
-                                android:layout_marginLeft="1dp"
-                                android:layout_marginRight="1dp"/>
+                                android:layout_margin="1dp"
+                                android:layout_weight="1"
+                                android:background="@color/answer1backgroundColor"
+                                android:gravity="center"
+                                android:minHeight="50dp"
+                                android:orientation="vertical"
 
-                            <TextView
-                                android:id="@+id/cm_incoming_answer_1_return_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center_horizontal"
-                                android:text="to return"
-                                android:textColor="@color/answerTextColor"
-                                android:visibility="gone" />
+                                >
 
-                            <TextView
-                                android:id="@+id/cm_incoming_answer_1_percent_text_view"
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    android:id="@+id/cm_incoming_answer_1_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="1dp"
+                                    android:layout_marginRight="1dp"
+                                    android:text="answer 1"
+                                    android:textColor="@color/answerTextColor" />
+
+                                <TextView
+                                    android:id="@+id/cm_incoming_answer_1_return_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_horizontal"
+                                    android:text="to return"
+                                    android:textColor="@color/answerTextColor"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/cm_incoming_answer_1_percent_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_horizontal"
+                                    android:text="20%"
+                                    android:textColor="@color/answerTextColor"
+                                    android:textSize="@dimen/OffsideMediumText"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/cm_incoming_answer_2_root"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:gravity="center_horizontal"
-                                android:text="20%"
-                                android:textColor="@color/answerTextColor"
-                                android:textSize="@dimen/OffsideMediumText"
-                                android:textStyle="bold" />
+                                android:layout_margin="1dp"
+                                android:layout_weight="1"
+                                android:background="@color/answer2backgroundColor"
+                                android:gravity="center"
+                                android:minHeight="50dp"
+                                android:orientation="vertical">
+
+                                <TextView
+
+                                    android:id="@+id/cm_incoming_answer_2_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="1dp"
+                                    android:layout_marginRight="1dp"
+                                    android:text="answer 2"
+                                    android:textColor="@color/answerTextColor" />
+
+                                <TextView
+                                    android:id="@+id/cm_incoming_answer_2_return_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="to return"
+                                    android:textColor="@color/answerTextColor"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/cm_incoming_answer_2_percent_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="30%"
+                                    android:textColor="@color/answerTextColor"
+                                    android:textSize="@dimen/OffsideMediumText"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
 
                         </LinearLayout>
 
-
                         <LinearLayout
-                            android:id="@+id/cm_incoming_answer_2_root"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="1dp"
+                            android:id="@+id/cm_incoming_answers_3_4_root"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
                             android:layout_weight="1"
-                            android:background="@color/answer2backgroundColor"
-                            android:gravity="center"
-                            android:minHeight="50dp"
-                            android:orientation="vertical">
 
-                            <TextView
+                            android:orientation="horizontal">
 
-                                android:id="@+id/cm_incoming_answer_2_text_view"
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:id="@+id/cm_incoming_answer_3_root"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:text="answer 2"
-                                android:textColor="@color/answerTextColor"
-                                android:layout_marginLeft="1dp"
-                                android:layout_marginRight="1dp"/>
+                                android:layout_margin="1dp"
+                                android:layout_weight="1"
+                                android:background="@color/answer3backgroundColor"
+                                android:gravity="center"
+                                android:minHeight="50dp"
+                                android:orientation="vertical">
 
-                            <TextView
-                                android:id="@+id/cm_incoming_answer_2_return_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="to return"
-                                android:textColor="@color/answerTextColor"
-                                android:visibility="gone" />
+                                <TextView
+                                    android:id="@+id/cm_incoming_answer_3_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="1dp"
+                                    android:layout_marginRight="1dp"
+                                    android:text="answer 3"
+                                    android:textColor="@color/answerTextColor" />
 
-                            <TextView
-                                android:id="@+id/cm_incoming_answer_2_percent_text_view"
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    android:id="@+id/cm_incoming_answer_3_return_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="to return"
+                                    android:textColor="@color/answerTextColor"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/cm_incoming_answer_3_percent_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="15%"
+                                    android:textColor="@color/answerTextColor"
+                                    android:textSize="@dimen/OffsideMediumText"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:id="@+id/cm_incoming_answer_4_root"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:text="30%"
-                                android:textColor="@color/answerTextColor"
-                                android:textSize="@dimen/OffsideMediumText"
-                                android:textStyle="bold" />
+                                android:layout_margin="1dp"
+                                android:layout_weight="1"
+                                android:background="@color/answer4backgroundColor"
+                                android:gravity="center"
+                                android:minHeight="50dp"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/cm_incoming_answer_4_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="1dp"
+                                    android:layout_marginRight="1dp"
+                                    android:text="answer 4"
+                                    android:textColor="@color/answerTextColor" />
+
+                                <TextView
+                                    android:id="@+id/cm_incoming_answer_4_return_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="to return"
+                                    android:textColor="@color/answerTextColor"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/cm_incoming_answer_4_percent_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="25%"
+                                    android:textColor="@color/answerTextColor"
+                                    android:textSize="@dimen/OffsideMediumText"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
 
                         </LinearLayout>
 
@@ -182,371 +279,270 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:id="@+id/cm_incoming_answers_3_4_root"
+                        android:id="@+id/cm_incoming_bet_panel_root"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:id="@+id/cm_incoming_answer_3_root"
-                            android:layout_width="0dp"
+                        <TextView
+                            android:id="@+id/cm_incoming_bet_size_text_view"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:background="@color/answer3backgroundColor"
                             android:gravity="center"
-                            android:minHeight="50dp"
-                            android:orientation="vertical">
+                            android:text="100" />
 
-                            <TextView
-                                android:id="@+id/cm_incoming_answer_3_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="answer 3"
-                                android:textColor="@color/answerTextColor"
-                                android:layout_marginLeft="1dp"
-                                android:layout_marginRight="1dp" />
-
-                            <TextView
-                                android:id="@+id/cm_incoming_answer_3_return_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="to return"
-                                android:textColor="@color/answerTextColor"
-                                android:visibility="gone" />
-
-                            <TextView
-                                android:id="@+id/cm_incoming_answer_3_percent_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="15%"
-                                android:textColor="@color/answerTextColor"
-                                android:textSize="@dimen/OffsideMediumText"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
-
-
-                        <LinearLayout
-                            android:id="@+id/cm_incoming_answer_4_root"
-                            android:layout_width="0dp"
+                        <SeekBar
+                            android:id="@+id/cm_incoming_bet_size_seekBar"
+                            style="@style/Widget.AppCompat.SeekBar.Discrete"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:background="@color/answer4backgroundColor"
+                            android:thumb="@mipmap/ic_offside_logo"
+
+                            />
+
+                        <TextView
+                            android:id="@+id/cm_incoming_time_to_answer_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:minHeight="50dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/cm_incoming_answer_4_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="answer 4"
-                                android:textColor="@color/answerTextColor"
-                                android:layout_marginLeft="1dp"
-                                android:layout_marginRight="1dp"/>
-
-                            <TextView
-                                android:id="@+id/cm_incoming_answer_4_return_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="to return"
-                                android:textColor="@color/answerTextColor"
-                                android:visibility="gone" />
-
-                            <TextView
-                                android:id="@+id/cm_incoming_answer_4_percent_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="25%"
-                                android:textColor="@color/answerTextColor"
-                                android:textSize="@dimen/OffsideMediumText"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
-
+                            android:text="20 sec" />
 
                     </LinearLayout>
 
 
                 </LinearLayout>
 
+                <!--processing question root-->
                 <LinearLayout
-                    android:id="@+id/cm_incoming_bet_panel_root"
+                    android:id="@+id/cm_incoming_processing_question_root"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:background="@drawable/shape_bg_incoming_bubble"
+                    android:orientation="vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/chatText"
+                    android:visibility="gone">
+
 
                     <TextView
-                        android:id="@+id/cm_incoming_bet_size_text_view"
+                        android:id="@+id/cm_incoming_processing_question_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
+                        android:background="@color/colorWhite"
+                        android:gravity="center"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="which team will score next?"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/OffsideMediumText" />
+
+                    <TextView
+                        android:id="@+id/cm_incoming_selected_answer_title_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:padding="10dp"
+                        android:text="You think"
+                        android:textColor="@color/colorBlack" />
+
+                    <TextView
+                        android:id="@+id/cm_incoming_selected_answer_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:minHeight="50dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="no"
+                        android:textColor="@color/colorWhite" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:text="You can earn "
+                            android:textColor="@color/colorBlack" />
+
+                        <TextView
+                            android:id="@+id/cm_incoming_selected_answer_return_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:text="100"
+                            android:textColor="@color/colorBlack" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:text=" points"
+                            android:textColor="@color/colorBlack" />
+
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:id="@+id/cm_incoming_processing_question_title_text_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="100" />
-
-                    <SeekBar
-                        android:id="@+id/cm_incoming_bet_size_seekBar"
-                        style="@style/Widget.AppCompat.SeekBar.Discrete"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:thumb="@mipmap/ic_offside_logo"
+                        android:padding="10dp"
+                        android:text="Stay tuned to see your friends answers"
+                        android:textColor="@color/colorBlack"
+                        android:visibility="visible"
 
                         />
 
+
+                </LinearLayout>
+
+                <!--closed question root-->
+                <LinearLayout
+
+                    android:id="@+id/cm_incoming_closed_question_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_bg_incoming_bubble"
+                    android:orientation="vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/chatText"
+                    android:visibility="gone">
+
+
                     <TextView
-                        android:id="@+id/cm_incoming_time_to_answer_text_view"
+                        android:id="@+id/cm_incoming_correct_wrong_title_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
+                        android:background="@color/colorWhite"
+                        android:gravity="center"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="Correct :)"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/OffsideMediumText" />
+
+
+                    <TextView
+                        android:id="@+id/cm_incoming_correct_answer_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center"
+                        android:minHeight="50dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text="no"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:id="@+id/cm_incoming_correct_answer_return_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="You earned 100 points"
+                        android:textColor="@color/colorBlack" />
+
+
+                    <TextView
+                        android:id="@+id/cm_incoming_feedback_player_text_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="20 sec" />
+                        android:padding="10dp"
+                        android:text="Good job!"
+                        android:textColor="@color/colorBlack"
+                        android:visibility="visible"
+
+                        />
 
                 </LinearLayout>
 
 
-            </LinearLayout>
-
-            <!--processing question root-->
-            <LinearLayout
-                android:id="@+id/cm_incoming_processing_question_root"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_bg_incoming_bubble"
-                android:orientation="vertical"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
-                android:textColor="@color/chatText"
-                android:visibility="gone">
-
-
+                <!--Time msg sent-->
                 <TextView
-                    android:id="@+id/cm_incoming_processing_question_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="1dp"
-                    android:background="@color/colorWhite"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    android:text="which team will score next?"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/OffsideMediumText"
-                    android:gravity="center"/>
-
-                <TextView
-                    android:id="@+id/cm_incoming_selected_answer_title_text_view"
+                    android:id="@+id/cm_incoming_time_sent_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:textColor="@color/colorBlack"
-                    android:text="You think" />
-
-                <TextView
-                    android:id="@+id/cm_incoming_selected_answer_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:minHeight="50dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:textColor="@color/colorWhite"
-                    android:text="no" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center_horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textColor="@color/colorBlack"
-                        android:text="You can earn "
-                        android:layout_marginTop="10dp"/>
-
-                    <TextView
-                        android:id="@+id/cm_incoming_selected_answer_return_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textColor="@color/colorBlack"
-                        android:text="100"
-                        android:layout_marginTop="10dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:textColor="@color/colorBlack"
-                        android:text=" points"
-                        android:layout_marginTop="10dp"/>
-
-                </LinearLayout>
-
-
-                <TextView
-                    android:id="@+id/cm_incoming_processing_question_title_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:textColor="@color/colorBlack"
-                    android:text="Stay tuned to see your friends answers"
-                    android:visibility="visible"
-
-                    />
-
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="5dp"
+                    android:text="10:23"
+                    android:textColor="@color/chatActions"
+                    android:textSize="12dp" />
 
             </LinearLayout>
 
-            <!--closed question root-->
-            <LinearLayout
-
-                android:id="@+id/cm_incoming_closed_question_root"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/shape_bg_incoming_bubble"
-                android:orientation="vertical"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
-                android:textColor="@color/chatText"
-                android:visibility="gone">
-
-
-                <TextView
-                    android:id="@+id/cm_incoming_correct_wrong_title_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="1dp"
-                    android:background="@color/colorWhite"
-                    android:paddingBottom="10dp"
-                    android:paddingTop="10dp"
-                    android:text="Correct :)"
-                    android:textColor="@color/colorBlack"
-                    android:textSize="@dimen/OffsideMediumText"
-                    android:gravity="center"/>
-
-
-                <TextView
-                    android:id="@+id/cm_incoming_correct_answer_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:minHeight="50dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:textColor="@color/colorWhite"
-                    android:text="no" />
-
-                <TextView
-                    android:id="@+id/cm_incoming_correct_answer_return_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textColor="@color/colorBlack"
-                    android:text="You earned 100 points"
-                    android:layout_marginTop="10dp"/>
-
-
-                <TextView
-                    android:id="@+id/cm_incoming_feedback_player_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:textColor="@color/colorBlack"
-                    android:text="Good job!"
-                    android:visibility="visible"
-
-                    />
-
-            </LinearLayout>
-
-
-
-            <!--Time msg sent-->
-            <TextView
-                android:id="@+id/cm_incoming_time_sent_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginLeft="5dp"
-                android:text="10:23"
-                android:textColor="@color/chatActions"
-                android:textSize="12dp" />
 
         </LinearLayout>
 
-
-
-
-    </LinearLayout>
-
-    <!-- OUTGOING -->
-    <LinearLayout
-        android:visibility="gone"
-        android:id="@+id/cm_outgoing_messages_root"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layoutDirection="rtl"
-        >
-
-        <ImageView
-            android:id="@+id/cm_outgoing_profile_picture_image_view"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:scaleType="centerCrop"
-            />
-
+        <!-- OUTGOING -->
         <LinearLayout
+            android:id="@+id/cm_outgoing_messages_root"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="20dp"
-            android:layout_marginLeft="5dp">
+            android:layout_height="match_parent"
+            android:layoutDirection="rtl"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
+            <ImageView
+                android:id="@+id/cm_outgoing_profile_picture_image_view"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:scaleType="centerCrop" />
 
-
-            <TextView
-                android:id="@+id/cm_outgoing_text_message_text_view"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/shape_bg_outgoing_bubble"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textColor="@color/chatText"
-                android:text="This is a sample text"
-
-                />
-
-
-
-            <TextView
-                android:id="@+id/cm_outgoing_time_sent_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10:23"
-                android:textSize="12dp"
                 android:layout_marginLeft="5dp"
-                android:textColor="@color/chatActions"
-                />
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/cm_outgoing_text_message_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_bg_outgoing_bubble"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:text="This is a sample text"
+                    android:textColor="@color/chatText"
+
+                    />
+
+
+                <TextView
+                    android:id="@+id/cm_outgoing_time_sent_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="10:23"
+                    android:textColor="@color/chatActions"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
-
-
 
     </LinearLayout>
 
