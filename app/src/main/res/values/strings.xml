@@ -117,6 +117,10 @@
     <string name="lbl_user_selected_answer_title">You think</string>
     <string name="offside_coins_key">offsideCoins</string>
     <string name="balance_key">balance</string>
+    <string name="private_game_title_key">privateGameTitle</string>
+    <string name="home_team_key">homeTeam</string>
+    <string name="away_team_key">awayTeam</string>
+    <string name="total_players_key">totalPlayers</string>
 
 
 </resources>

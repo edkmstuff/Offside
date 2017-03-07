@@ -28,6 +28,9 @@ public class Player {
     @com.google.gson.annotations.SerializedName("B")
     private int balance;
 
+    @com.google.gson.annotations.SerializedName("POS")
+    private int position;
+
 //    @com.google.gson.annotations.SerializedName("P")
 //    private int position;
 //
@@ -126,5 +129,13 @@ public class Player {
 
     public void setBalance(int balance) {
         this.balance = balance;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

@@ -8,7 +8,7 @@
 <resources>
     <color name="colorPrimary">#4CAF50</color>
     <color name="colorSecondary">#388E3C</color>
-    <color name="colorPrimaryDark">#1B5E20</color>
+    <color name="colorPrimaryDark">#333333</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="colorPrimaryLight">#C8E6C9</color>
     <color name="colorAccent">#80D8FF</color>
@@ -21,7 +21,7 @@
     <color name="colorWhite">#FFFFFF</color>
 
 
-    <color name="chatPrimary">#333333</color>
+    <color name="chatPrimary">#404040</color>
     <color name="chatIncoming">#F6F3F2</color>
     <color name="chatOutgoing">#F6F3F2</color>
     <color name="chatActions">#E64C66</color>

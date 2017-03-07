@@ -35,6 +35,87 @@
             </ProgressBar>
 
         </LinearLayout>
+        <!--chat title root-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="22"
+            android:background="@color/colorPrimaryDark"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="5"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Score"
+                    android:textColor="@color/colorWhite"
+                    />
+                <TextView
+                    android:id="@+id/c_score_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:textColor="@color/colorWhite"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="12"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/c_private_game_name_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:textColor="@color/colorWhite"
+                    />
+                <TextView
+                    android:id="@+id/c_game_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:textColor="@color/colorWhite"
+                    />
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_weight="5"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rank"
+                    android:textColor="@color/colorWhite"
+                    />
+                <TextView
+                    android:id="@+id/c_position_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1000/20000"
+                    android:textColor="@color/colorWhite"
+                    />
+
+
+            </LinearLayout>
+            
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/c_content_root"

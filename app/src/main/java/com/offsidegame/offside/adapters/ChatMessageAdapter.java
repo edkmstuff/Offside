@@ -292,7 +292,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             for (int i = 0; i < answers.length; i++) {
                 final String answerText = answers[i].getAnswerText();
                 final String percentUserAnswered = String.valueOf((int) answers[i].getPercentUsersAnswered()) + "%";
-                final double initialReturnValue = answers[i].getPointsMultiplier() * seekBarMinValue * betSizeUnit;
+                final int initialReturnValue = (int) answers[i].getPointsMultiplier() * seekBarMinValue * betSizeUnit;
 
                 viewHolder.answerTextViews[i].setText(answerText);
                 if (isAskedQuestion) {
@@ -329,7 +329,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         int adjustedProgress = betSizeUnit + progress * betSizeUnit;
                         viewHolder.incomingBetSizeTextView.setText(String.valueOf(adjustedProgress));
                         for (int i = 0; i < answers.length; i++) {
-                            final double defaultReturnValue = answers[i].getPointsMultiplier() * adjustedProgress;
+                            final int defaultReturnValue = (int)answers[i].getPointsMultiplier() * adjustedProgress;
                             viewHolder.answerReturnTextViews[i].setText(String.valueOf(defaultReturnValue));
                         }
                     }
@@ -392,8 +392,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             //PROCESSED_QUESTION SECTION
             if (isProcessedQuestion) {
 
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 4; i++) {
                     viewHolder.answerRoots[i].getBackground().mutate().setAlpha(90);
+                    viewHolder.answerRoots[i].setOnClickListener(null);
+                }
 
                 if (playerAnswers.containsKey(questionId)) {
                     String userAnswerId = playerAnswers.get(questionId).getAnswerId();
@@ -409,6 +411,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                     }
                 }
+
+
 
 
             }
@@ -437,12 +441,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             boolean isUserAnswerCorrect = correctAnswer.getId().equals(userAnswerIdentifier.getAnswerId());
             int userBetSize = userAnswerIdentifier.getBetSize();
             int answerNumber = getAnswerNumber(question, correctAnswer.getId());
+            int userReturnValue = (int) (correctAnswer.getPointsMultiplier()* userBetSize);
+
             final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
 
             viewHolder.incomingCorrectWrongTitleTextView.setText(isUserAnswerCorrect ? "Correct :)" : "Wrong :-(");
             viewHolder.incomingCorrectAnswerTextView.setText(correctAnswer.getAnswerText());
             viewHolder.incomingCorrectAnswerTextView.setBackgroundResource(backgroundColorResourceId);
-            viewHolder.incomingCorrectAnswerReturnTextView.setText(isUserAnswerCorrect ? "you earned " + (correctAnswer.getPointsMultiplier()* userBetSize) + " points" : "You didn't earn points");
+            viewHolder.incomingCorrectAnswerReturnTextView.setText(isUserAnswerCorrect ? "you earned " + userReturnValue + " points" : "You didn't earn points");
             viewHolder.incomingFeedbackPlayerTextView.setText(isUserAnswerCorrect ? "Good job!" : "Don't worry, you'll nail it next time!");
 
             viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
@@ -462,8 +468,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_user_selected_answer_title);
 
 
-        //answer.setTheAnswerOfTheUser(true);
-        //viewHolder.incomingProcessingQuestionTitleTextView.setText(question.getQuestionText());
+        viewHolder.incomingProcessingQuestionTextView.setText(question.getQuestionText());
         viewHolder.incomingSelectedAnswerTextView.setText(answer.getAnswerText());
 
         int answerNumber = getAnswerNumber(question, answer.getId());

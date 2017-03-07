@@ -39,6 +39,7 @@ import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
+import com.offsidegame.offside.models.Player;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -70,6 +71,18 @@ public class ChatActivity extends AppCompatActivity {
 
     private boolean isBatch = false;
 
+    String privateGameTitle;
+    String homeTeam;
+    String awayTeam;
+    int offsideCoins;
+    int balance ;
+    private Player player;
+    int totalPlayers;
+
+    private TextView scoreTextView;
+    private TextView privateGameNameTextView;
+    private TextView gameTitleTextView;
+    private TextView positionTextView;
 
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
@@ -79,6 +92,7 @@ public class ChatActivity extends AppCompatActivity {
             SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
             signalRService = binder.getService();
             isBoundToSignalRService = true;
+            chatSendTextView.setBackgroundResource(R.color.colorAccent);
             EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
         }
 
@@ -99,12 +113,31 @@ public class ChatActivity extends AppCompatActivity {
         gameCode = settings.getString(getString(R.string.game_code_key), "");
         playerId = settings.getString(getString(R.string.user_id_key), "");
 
+        privateGameTitle = settings.getString(getString(R.string.private_game_title_key),"");
+        homeTeam = settings.getString(getString(R.string.home_team_key), "");
+        awayTeam = settings.getString(getString(R.string.away_team_key), "");
+        offsideCoins = settings.getInt(getString(R.string.offside_coins_key), 0);
+        balance = settings.getInt(getString(R.string.balance_key), 0);
+        totalPlayers = settings.getInt(getString(R.string.total_players_key),0);
+
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
 
         root = (LinearLayout) findViewById(R.id.c_root);
         chatSendTextView = (TextView) findViewById(R.id.c_chatSendTextView);
         chatMessageEditText = (EditText) findViewById(R.id.c_chat_message_edit_text);
+        scoreTextView = (TextView) findViewById(R.id.c_score_text_view);
+        privateGameNameTextView = (TextView) findViewById(R.id.c_private_game_name_text_view);
+        gameTitleTextView = (TextView) findViewById(R.id.c_game_title_text_view);
+        positionTextView = (TextView) findViewById(R.id.c_position_text_view);
+
+        privateGameNameTextView.setText(privateGameTitle);
+        gameTitleTextView.setText(homeTeam+" vs " +awayTeam);
+
+
+        chatSendTextView.setBackgroundResource(R.color.colorDivider);
+
         chatSendTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,30 +151,6 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-
-
-//        profilePictureImageView = (ImageView) findViewById(R.id.fbPictureImageView);
-//
-//        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-//        String userPictureUrl = settings.getString(getString(R.string.user_profile_picture_url_key), "");
-//        Uri fbImageUrl = Uri.parse(userPictureUrl);
-//
-//        Picasso.with(context).load(fbImageUrl).into(profilePictureImageView, new com.squareup.picasso.Callback() {
-//            @Override
-//            public void onSuccess() {
-//                Bitmap bm = ((BitmapDrawable) profilePictureImageView.getDrawable()).getBitmap();
-//                RoundImage roundedImage = new RoundImage(bm);
-//                profilePictureImageView.setImageDrawable(roundedImage);
-//            }
-//
-//            @Override
-//            public void onError() {
-//
-//            }
-//        });
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
 
     }
 
@@ -165,6 +174,7 @@ public class ChatActivity extends AppCompatActivity {
             unbindService(signalRServiceConnection);
             isBoundToSignalRService = false;
         }
+        chatSendTextView.setBackgroundResource(R.color.colorDivider);
 
         super.onStop();
     }
@@ -175,18 +185,23 @@ public class ChatActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onConnectionEvent(ConnectionEvent connectionEvent) {
         boolean isConnected = connectionEvent.getConnected();
-        if (isConnected)
+        if (isConnected){
             Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
-        else
+
+        }
+
+        else{
             Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
+
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
         Context eventContext = signalRServiceBoundEvent.getContext();
-
-
         if (eventContext == null) {
+
             Intent intent = new Intent(context, JoinGameActivity.class);
             context.startActivity(intent);
             return;
@@ -196,7 +211,7 @@ public class ChatActivity extends AppCompatActivity {
         if (eventContext == context) {
 
             if (gameId != null && !gameId.isEmpty())
-                signalRService.getChatMessages(gameId, gameCode,playerId );
+                signalRService.getChatMessages(gameId, gameCode, playerId);
         }
     }
 
@@ -205,7 +220,17 @@ public class ChatActivity extends AppCompatActivity {
 
         chat = chatEvent.getChat();
         messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
-        playerAnswers = chat.getPlayer()!=null ? chat.getPlayer().getPlayerAnswers(): null ;
+
+        player = chat.getPlayer();
+        if(player==null)
+            return;
+        playerAnswers = player.getPlayerAnswers();
+
+        scoreTextView.setText(String.valueOf((int)player.getPoints()));
+
+        positionTextView.setText(player.getPosition()+"/"+ totalPlayers );
+        //todo: create ongameChangeEvent to update position and totalplayers
+
 
         chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
         ListView chatListView = (ListView) findViewById(R.id.c_chat_list_view);
