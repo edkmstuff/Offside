@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.events.LoginEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.Answer;
@@ -65,7 +64,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public TextView incomingTextMessageTextView;
 
         public LinearLayout incomingQuestionRoot;
-        public TextView  incomingQuestionTextView;
+        public TextView incomingQuestionTextView;
         public LinearLayout incomingAnswersRoot;
 
         public LinearLayout IncomingAnswers12Root;
@@ -75,35 +74,13 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public TextView[] answerTextViews = new TextView[4];
         public LinearLayout[] answerRoots = new LinearLayout[4];
 
-//        public LinearLayout incomingAnswer1Root;
-//        public TextView incomingAnswer1TextView;
-//        public TextView incomingAnswer1ReturnTextView;
-//        public TextView incomingAnswer1PercentTextView;
-
-//        public LinearLayout incomingAnswer2Root;
-//        public TextView incomingAnswer2TextView;
-//        public TextView incomingAnswer2ReturnTextView;
-//        public TextView incomingAnswer2PercentTextView;
-
-//        public LinearLayout incomingAnswers34Root;
-
-//        public LinearLayout incomingAnswer3Root;
-//        public TextView incomingAnswer3TextView;
-//        public TextView incomingAnswer3ReturnTextView;
-//        public TextView incomingAnswer3PercentTextView;
-
-//        public LinearLayout incomingAnswer4Root;
-//        public TextView incomingAnswer4TextView;
-//        public TextView incomingAnswer4ReturnTextView;
-//        public TextView incomingAnswer4PercentTextView;
-
         public LinearLayout incomingBetPanelRoot;
         public TextView incomingBetSizeTextView;
         public SeekBar incomingBetSizeSeekBar;
         public TextView incomingTimeToAnswerTextView;
 
         public LinearLayout incomingProcessingQuestionRoot;
-        public TextView incomingProcessedQuestionTextView;
+        public TextView incomingProcessingQuestionTextView;
         public TextView incomingSelectedAnswerTitleTextView;
         public TextView incomingSelectedAnswerTextView;
         public TextView incomingSelectedAnswerReturnTextView;
@@ -161,27 +138,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 }
 
-//            viewHolder.incomingAnswer1Root = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answer_1_root);
-//            viewHolder.incomingAnswer1TextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_1_text_view);
-//            viewHolder.incomingAnswer1ReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_1_return_text_view);
-//            viewHolder.incomingAnswer1PercentTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_1_percent_text_view);
-
-//            viewHolder.incomingAnswer2Root = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answer_2_root);
-//            viewHolder.incomingAnswer2TextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_2_text_view);
-//            viewHolder.incomingAnswer2ReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_2_return_text_view);
-//            viewHolder.incomingAnswer2PercentTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_2_percent_text_view);
-
-//            viewHolder.incomingAnswers34Root = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answers_3_4_root);
-
-//            viewHolder.incomingAnswer3Root = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answer_3_root);
-//            viewHolder.incomingAnswer3TextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_3_text_view);
-//            viewHolder.incomingAnswer3ReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_3_return_text_view);
-//            viewHolder.incomingAnswer3PercentTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_3_percent_text_view);
-
-//            viewHolder.incomingAnswer4Root = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answer_4_root);
-//            viewHolder.incomingAnswer4TextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_4_text_view);
-//            viewHolder.incomingAnswer4ReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_4_return_text_view);
-//            viewHolder.incomingAnswer4PercentTextView = (TextView) convertView.findViewById(R.id.cm_incoming_answer_4_percent_text_view);
 
                 viewHolder.incomingBetPanelRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_bet_panel_root);
                 viewHolder.incomingBetSizeTextView = (TextView) convertView.findViewById(R.id.cm_incoming_bet_size_text_view);
@@ -194,7 +150,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingSelectedAnswerReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_selected_answer_return_text_view);
                 viewHolder.incomingProcessingQuestionTitleTextView = (TextView) convertView.findViewById(R.id.cm_incoming_processing_question_title_text_view);
 
-                viewHolder.incomingProcessedQuestionTextView = (TextView) convertView.findViewById(R.id.cm_incoming_processed_question_text_view);
+                viewHolder.incomingProcessingQuestionTextView = (TextView) convertView.findViewById(R.id.cm_incoming_processing_question_text_view);
 
                 viewHolder.incomingClosedQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_closed_question_root);
                 viewHolder.incomingCorrectWrongTitleTextView = (TextView) convertView.findViewById(R.id.cm_incoming_correct_wrong_title_text_view);
@@ -232,9 +188,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             }
 
             return convertView;
-        }
-        catch (Exception ex){
-            Log.e("OFFSIDE",ex.getMessage());
+        } catch (Exception ex) {
+            Log.e("OFFSIDE", ex.getMessage());
 
         }
 
@@ -257,6 +212,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             //visibility set
             viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
+            viewHolder.incomingTextMessageTextView.setVisibility(View.VISIBLE);
 
         } else {
             loadFbImage(viewHolder.outgoingProfilePictureImageView, profilePictureUri);
@@ -299,7 +255,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             final Answer answerOfTheUser = question.getAnswers()[answerNumber - 1];
 
             //set values to widgets
-            viewHolder.incomingProcessedQuestionTextView.setText(question.getQuestionText());
+            viewHolder.incomingProcessingQuestionTextView.setText(question.getQuestionText());
             viewHolder.incomingSelectedAnswerTextView.setText(answerOfTheUser.getAnswerText());
 
             int returnValue = (int) (betSize * answerOfTheUser.getPointsMultiplier());
@@ -324,137 +280,140 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         //ASKED_QUESTION elements
 
-        //set values
-        viewHolder.incomingQuestionTextView.setText(question.getQuestionText());
-        viewHolder.incomingProcessedQuestionTextView.setText(question.getQuestionText());
-
-        final Answer[] answers = question.getAnswers();
-        final int minBetSize = 100;
+        final int minBetSize = 1;
         int maxBetSize = 4;
-        for (int i = 0; i < answers.length; i++) {
-            final String answerText = answers[i].getAnswerText();
-            final String percentUserAnswered = String.valueOf((int) answers[i].getPercentUsersAnswered()) + "%";
-            final double defaultReturnValue = answers[i].getPointsMultiplier() * minBetSize;
+        final Answer[] answers = question.getAnswers();
+        if (isAskedQuestion || isProcessedQuestion) {
 
-            viewHolder.answerTextViews[i].setText(answerText);
-            if (isAskedQuestion) {
-                viewHolder.answerReturnTextViews[i].setText(String.valueOf(defaultReturnValue));
-                viewHolder.answerReturnTextViews[i].setVisibility(View.VISIBLE);
-                viewHolder.answerPercentTextViews[i].setVisibility(View.GONE);
+            viewHolder.incomingQuestionTextView.setText(question.getQuestionText());
 
-            } else if (isProcessedQuestion) {
-                viewHolder.answerPercentTextViews[i].setText(percentUserAnswered);
-                viewHolder.answerPercentTextViews[i].setVisibility(View.VISIBLE);
-                viewHolder.answerReturnTextViews[i].setVisibility(View.GONE);
+            for (int i = 0; i < answers.length; i++) {
+                final String answerText = answers[i].getAnswerText();
+                final String percentUserAnswered = String.valueOf((int) answers[i].getPercentUsersAnswered()) + "%";
+                final double initialReturnValue = answers[i].getPointsMultiplier() * minBetSize * 100; // 100 is min bet
+
+                viewHolder.answerTextViews[i].setText(answerText);
+                if (isAskedQuestion) {
+                    viewHolder.answerReturnTextViews[i].setText(String.valueOf(initialReturnValue));
+                    viewHolder.answerReturnTextViews[i].setVisibility(View.VISIBLE);
+                    viewHolder.answerPercentTextViews[i].setVisibility(View.GONE);
+
+                } else if (isProcessedQuestion) {
+                    viewHolder.answerPercentTextViews[i].setText(percentUserAnswered);
+                    viewHolder.answerReturnTextViews[i].setVisibility(View.GONE);
+                    viewHolder.answerPercentTextViews[i].setVisibility(View.VISIBLE);
+                }
+
+                viewHolder.answerRoots[i].setVisibility(View.VISIBLE);
             }
 
-            viewHolder.answerRoots[i].setVisibility(View.VISIBLE);
-        }
 
-        //ASKED_QUESTION SECTION
-        if (isAskedQuestion) {
-            SharedPreferences settings = context.getSharedPreferences(context.getString(R.string.preference_name), 0);
-            int balance = settings.getInt(context.getString(R.string.balance_key), 0);
+            //ASKED_QUESTION SECTION
+            if (isAskedQuestion) {
+                SharedPreferences settings = context.getSharedPreferences(context.getString(R.string.preference_name), 0);
+                int balance = settings.getInt(context.getString(R.string.balance_key), 0);
 
-            int maxSeekBarValue = (int) (Math.floor(balance / 100) - 1);
-            maxBetSize = maxSeekBarValue > 4 ? 4 : maxSeekBarValue < 0 ? 0 : maxSeekBarValue; //limit range to 0-4
+                int maxSeekBarValue = (int) (Math.floor(balance / 100) - 1);
+                maxBetSize = maxSeekBarValue > 4 ? 4 : maxSeekBarValue < 0 ? 0 : maxSeekBarValue; //limit range to 0-4
 
-            viewHolder.incomingBetSizeTextView.setText(String.valueOf(minBetSize));
+                viewHolder.incomingBetSizeTextView.setText(String.valueOf(minBetSize));
 
-            viewHolder.incomingBetSizeSeekBar.setProgress(0);
-            viewHolder.incomingBetSizeSeekBar.setMax(maxBetSize);
-            viewHolder.incomingBetSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                viewHolder.incomingBetSizeSeekBar.setProgress(0);
+                viewHolder.incomingBetSizeSeekBar.setMax(maxBetSize);
+                viewHolder.incomingBetSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    int adjustedProgress = 100 + progress * 100;
-                    viewHolder.incomingBetSizeTextView.setText(String.valueOf(adjustedProgress));
-                    for (int i = 0; i < answers.length; i++) {
-                        final double defaultReturnValue = answers[i].getPointsMultiplier() * adjustedProgress;
-                        viewHolder.answerReturnTextViews[i].setText(String.valueOf(defaultReturnValue));
-                    }
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                }
-            });
-
-            //set the timeToAskQuestion timer
-            timeToAnswer = question.getTimeToAnswerQuestion();
-            timeToAnswerTimer = new CountDownTimer(timeToAnswer, 100) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    if (Math.round((float) millisUntilFinished / 1000.0f) != secondsLeft) {
-                        secondsLeft = Math.round((float) millisUntilFinished / 1000.0f);
-                        viewHolder.incomingTimeSentTextView.setText(Integer.toString(secondsLeft));
-                        if (secondsLeft < 7 && secondsLeft > 3)
-                            viewHolder.incomingTimeToAnswerTextView.setBackgroundColor(Color.parseColor("#FFAB00"));
-                        if (secondsLeft < 4)
-                            viewHolder.incomingTimeToAnswerTextView.setBackgroundColor(Color.RED);
-                    }
-                }
-
-                @Override
-                public void onFinish() {
-                    //user did not answer this question, we select random answer
-                    boolean isAnswered = playerAnswers.containsKey(question.getId());
-                    if (!isAnswered) {
-                        int answersCount = question.getAnswers().length;
-                        int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
-                        Answer randomAnswer = question.getAnswers()[selectedAnswerIndex];
-                        postAnswer(question, randomAnswer, null, viewHolder);
-                    }
-                }
-            }.start();
-
-            //set on click event to answers
-            for (int i = 0; i < answers.length; i++) {
-                final Answer clickedAnswer = answers[i];
-                viewHolder.answerRoots[i].setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View view) {
-                        postAnswer(question, clickedAnswer, view, viewHolder);
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        int adjustedProgress = 100 + progress * 100;
+                        viewHolder.incomingBetSizeTextView.setText(String.valueOf(adjustedProgress));
+                        for (int i = 0; i < answers.length; i++) {
+                            final double defaultReturnValue = answers[i].getPointsMultiplier() * adjustedProgress;
+                            viewHolder.answerReturnTextViews[i].setText(String.valueOf(defaultReturnValue));
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
                     }
                 });
-            }
 
-            viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
-            viewHolder.incomingQuestionRoot.setVisibility(View.VISIBLE);
-            viewHolder.incomingBetPanelRoot.setVisibility(View.VISIBLE);
-            viewHolder.incomingTimeToAnswerTextView.setVisibility(View.VISIBLE);
-
-        }
-
-        //PROCESSED_QUESTION SECTION
-        if (isProcessedQuestion) {
-
-            for (int i = 0; i < 4; i++)
-                viewHolder.answerRoots[i].getBackground().mutate().setAlpha(90);
-
-            if (playerAnswers.containsKey(questionId)) {
-                String userAnswerId = playerAnswers.get(questionId).getAnswerId();
-
-                for (int i = 0; i < answers.length; i++) {
-                    if (answers[i].getId().equals(userAnswerId)) {
-                        final int answerNumber = i + 1;
-                        final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
-                        viewHolder.answerRoots[i].getBackground().mutate().setAlpha(255);
-                        viewHolder.answerRoots[i].setBackgroundResource(backgroundColorResourceId);
-                        break;
+                //set the timeToAskQuestion timer
+                timeToAnswer = question.getTimeToAnswerQuestion();
+                timeToAnswerTimer = new CountDownTimer(timeToAnswer, 100) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                        if (Math.round((float) millisUntilFinished / 1000.0f) != secondsLeft) {
+                            secondsLeft = Math.round((float) millisUntilFinished / 1000.0f);
+                            viewHolder.incomingTimeSentTextView.setText(Integer.toString(secondsLeft));
+                            if (secondsLeft < 7 && secondsLeft > 3)
+                                viewHolder.incomingTimeToAnswerTextView.setBackgroundColor(Color.parseColor("#FFAB00"));
+                            if (secondsLeft < 4)
+                                viewHolder.incomingTimeToAnswerTextView.setBackgroundColor(Color.RED);
+                        }
                     }
 
+                    @Override
+                    public void onFinish() {
+                        //user did not answer this question, we select random answer
+                        boolean isAnswered = playerAnswers.containsKey(question.getId());
+                        if (!isAnswered) {
+                            int answersCount = question.getAnswers().length;
+                            int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
+                            Answer randomAnswer = question.getAnswers()[selectedAnswerIndex];
+                            postAnswer(question, randomAnswer, null, viewHolder);
+                        }
+                    }
+                }.start();
+
+                //set on click event to answers
+                for (int i = 0; i < answers.length; i++) {
+                    final Answer clickedAnswer = answers[i];
+                    viewHolder.answerRoots[i].setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            postAnswer(question, clickedAnswer, view, viewHolder);
+                        }
+                    });
                 }
+
+                viewHolder.incomingBetPanelRoot.setVisibility(View.VISIBLE);
+                viewHolder.incomingTimeToAnswerTextView.setVisibility(View.VISIBLE);
+
+            }
+
+            //PROCESSED_QUESTION SECTION
+            if (isProcessedQuestion) {
+
+                for (int i = 0; i < 4; i++)
+                    viewHolder.answerRoots[i].getBackground().mutate().setAlpha(90);
+
+                if (playerAnswers.containsKey(questionId)) {
+                    String userAnswerId = playerAnswers.get(questionId).getAnswerId();
+
+                    for (int i = 0; i < answers.length; i++) {
+                        if (answers[i].getId().equals(userAnswerId)) {
+                            final int answerNumber = i + 1;
+                            final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
+                            viewHolder.answerRoots[i].getBackground().mutate().setAlpha(255);
+                            viewHolder.answerRoots[i].setBackgroundResource(backgroundColorResourceId);
+                            break;
+                        }
+
+                    }
+                }
+
+
             }
 
             viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
             viewHolder.incomingQuestionRoot.setVisibility(View.VISIBLE);
+
         }
 
 
@@ -526,23 +485,24 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     }
 
-    private void resetWidgetsVisibility(ViewHolder viewHolder){
+    private void resetWidgetsVisibility(ViewHolder viewHolder) {
 
         //reset all to gone
         viewHolder.incomingMessagesRoot.setVisibility(View.GONE);
         viewHolder.outgoingMessagesRoot.setVisibility(View.GONE);
+        viewHolder.incomingTextMessageTextView.setVisibility(View.GONE);
         viewHolder.incomingQuestionRoot.setVisibility(View.GONE);
         viewHolder.incomingProcessingQuestionRoot.setVisibility(View.GONE);
         viewHolder.incomingClosedQuestionRoot.setVisibility(View.GONE);
         viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
+        viewHolder.incomingTimeToAnswerTextView.setVisibility(View.GONE);
 
-        for(int i=0;i<4;i++){
+        for (int i = 0; i < 4; i++) {
             viewHolder.answerRoots[i].setVisibility(View.INVISIBLE);
             viewHolder.answerRoots[i].getBackground().mutate().setAlpha(255);
         }
 
     }
-
 
 
     private int getAnswerNumber(Question question, String answerId) {
