@@ -28,28 +28,11 @@ public class Player {
     @com.google.gson.annotations.SerializedName("B")
     private int balance;
 
-    @com.google.gson.annotations.SerializedName("POS")
-    private int position;
+    @com.google.gson.annotations.SerializedName("GP")
+    private int generalPosition;
 
-//    @com.google.gson.annotations.SerializedName("P")
-//    private int position;
-//
-
-//    public int getPosition() {
-//        return position;
-//    }
-//
-//    public void setPosition(int position) {
-//        this.position = position;
-//    }
-
-//    public String getName() {
-//        return name;
-//    }
-//
-//    public void setName(String name) {
-//        this.name = name;
-//    }
+    @com.google.gson.annotations.SerializedName("PGP")
+    private int privateGamePosition;
 
     public String getImageUrl() {
         return imageUrl;
@@ -131,11 +114,20 @@ public class Player {
         this.balance = balance;
     }
 
-    public int getPosition() {
-        return position;
+
+    public int getGeneralPosition() {
+        return generalPosition;
     }
 
-    public void setPosition(int position) {
-        this.position = position;
+    public void setGeneralPosition(int generalPosition) {
+        this.generalPosition = generalPosition;
+    }
+
+    public int getPrivateGamePosition() {
+        return privateGamePosition;
+    }
+
+    public void setPrivateGamePosition(int privateGamePosition) {
+        this.privateGamePosition = privateGamePosition;
     }
 }

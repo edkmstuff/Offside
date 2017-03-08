@@ -31,6 +31,7 @@ import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
@@ -40,6 +41,7 @@ import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.Player;
+import com.offsidegame.offside.models.Position;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
@@ -75,7 +77,7 @@ public class ChatActivity extends AppCompatActivity {
     String homeTeam;
     String awayTeam;
     int offsideCoins;
-    int balance ;
+    int balance;
     private Player player;
     int totalPlayers;
 
@@ -113,12 +115,12 @@ public class ChatActivity extends AppCompatActivity {
         gameCode = settings.getString(getString(R.string.game_code_key), "");
         playerId = settings.getString(getString(R.string.user_id_key), "");
 
-        privateGameTitle = settings.getString(getString(R.string.private_game_title_key),"");
+        privateGameTitle = settings.getString(getString(R.string.private_game_title_key), "");
         homeTeam = settings.getString(getString(R.string.home_team_key), "");
         awayTeam = settings.getString(getString(R.string.away_team_key), "");
         offsideCoins = settings.getInt(getString(R.string.offside_coins_key), 0);
         balance = settings.getInt(getString(R.string.balance_key), 0);
-        totalPlayers = settings.getInt(getString(R.string.total_players_key),0);
+        totalPlayers = settings.getInt(getString(R.string.total_players_key), 0);
 
 
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -133,7 +135,7 @@ public class ChatActivity extends AppCompatActivity {
         positionTextView = (TextView) findViewById(R.id.c_position_text_view);
 
         privateGameNameTextView.setText(privateGameTitle);
-        gameTitleTextView.setText(homeTeam+" vs " +awayTeam);
+        gameTitleTextView.setText(homeTeam + " vs " + awayTeam);
 
 
         chatSendTextView.setBackgroundResource(R.color.colorDivider);
@@ -180,17 +182,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onConnectionEvent(ConnectionEvent connectionEvent) {
         boolean isConnected = connectionEvent.getConnected();
-        if (isConnected){
+        if (isConnected) {
             Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
 
-        }
-
-        else{
+        } else {
             Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
 
         }
@@ -221,15 +219,14 @@ public class ChatActivity extends AppCompatActivity {
         chat = chatEvent.getChat();
         messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
 
+        EventBus.getDefault().post(new PositionEvent(chat.getPosition()));
+
         player = chat.getPlayer();
-        if(player==null)
+        if (player == null)
             return;
         playerAnswers = player.getPlayerAnswers();
 
-        scoreTextView.setText(String.valueOf((int)player.getPoints()));
-
-        positionTextView.setText(player.getPosition()+"/"+ totalPlayers );
-        //todo: create ongameChangeEvent to update position and totalplayers
+        scoreTextView.setText(String.valueOf((int) player.getPoints()));
 
 
         chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
@@ -241,6 +238,7 @@ public class ChatActivity extends AppCompatActivity {
     public void onReceiveChatMessage(ChatMessageEvent chatMessageEvent) {
 
         ChatMessage message = chatMessageEvent.getChatMessage();
+
         chat.addMessage(message);
 
         if (messages != null && chatMessageAdapter != null) {
@@ -266,7 +264,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // this parameter will be null if the user does not answer
         String answerId = questionAnswered.getAnswerId();
-        signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer, betSize );
+        signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer, betSize);
         if (!playerAnswers.containsKey(questionId))
             playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize));
 
@@ -285,6 +283,22 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePosition(PositionEvent positionEvent) {
+        Position position = positionEvent.getPosition();
+        String positionDisplay = Integer.toString(position.getPrivateGamePosition()) + "/" + Integer.toString(position.getPrivateGameTotalPlayers());
+        positionTextView.setText(positionDisplay);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePlayer(Player player) {
+        if (player == null)
+            return;
+
+        this.player = player;
+        this.playerAnswers = player.getPlayerAnswers();
+        scoreTextView.setText(Integer.toString((int)player.getPoints()));
+    }
 
 
 }

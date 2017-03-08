@@ -174,7 +174,17 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             }
 
             ChatMessage chatMessage = getItem(position);
+            if (chatMessage == null)
+                return convertView;
+
             String chatMessageType = chatMessage.getMessageType();
+
+            if (chatMessageType == null)
+                return convertView;
+
+
+
+
 
             if (chatMessageType.equals(OffsideApplication.getMessageTypeText()))  //"TEXT"
             {

@@ -16,6 +16,7 @@ import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.LoginEvent;
 import com.offsidegame.offside.events.ChatEvent;
+import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.QuestionsEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
@@ -24,8 +25,10 @@ import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.LoginInfo;
+import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.PlayerScore;
 import com.offsidegame.offside.events.PlayerScoreEvent;
+import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.events.QuestionEvent;
 import com.offsidegame.offside.models.Scoreboard;
@@ -61,8 +64,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnectiong = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
-    public final String ip = new String("10.0.0.17:8080");
+    public final String ip = new String("192.168.1.140:8080");
+    //public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
 
 
@@ -226,6 +229,19 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
             }
         }, ChatMessage.class);
+
+        hub.on("UpdatePosition", new SubscriptionHandler1<Position>() {
+            @Override
+            public void run(Position position) {
+                EventBus.getDefault().post(new PositionEvent(position));
+            }
+        }, Position.class);
+        hub.on("UpdatePlayer", new SubscriptionHandler1<Player>() {
+            @Override
+            public void run(Player player) {
+                EventBus.getDefault().post(player);
+            }
+        }, Player.class);
 
 
     }

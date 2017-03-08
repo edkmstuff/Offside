@@ -26,6 +26,8 @@
     <color name="chatOutgoing">#F6F3F2</color>
     <color name="chatActions">#E64C66</color>
     <color name="chatText">#5B5B5B</color>
+    <color name="privateGameTitle">#FFE418</color>
+
 
 
     <color name="answerTextColor">#FFFFFF</color>
