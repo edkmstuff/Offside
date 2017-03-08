@@ -37,8 +37,8 @@
     <string messageText="fb_login_protocol_scheme">fb1302214459813433</string>
     -->
     <!--Eran -->
-    <string name="facebook_app_id">523024471208542</string>
-    <string name="fb_login_protocol_scheme">fb523024471208542</string>
+    <string name="facebook_app_id" translatable="false">523024471208542</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb523024471208542</string>
     <string name="preference_name">OffsidePlayerPreferences</string>
     <string name="is_logged_in_key">isLoggedIn</string>
     <string name="user_id_key">userId</string>
