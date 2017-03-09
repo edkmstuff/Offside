@@ -264,6 +264,9 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
         Context eventContext = signalRServiceBoundEvent.getContext();
 
 
+
+
+
         if (eventContext == null) {
             Intent intent = new Intent(context, JoinGameActivity.class);
             context.startActivity(intent);
@@ -279,7 +282,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
 
             Intent intent = getIntent();
-            String gameCodeFromNotification = intent.getExtras().getString("gameCodeFromNotification");
+            String gameCodeFromNotification = "";
+            //String gameCodeFromNotification = intent.getExtras().getString("gameCodeFromNotification");
             if (!(gameCodeFromNotification.equals("") || gameCodeFromNotification == null)) {
                 String gameCodeString = gameCodeFromNotification.toString();
                 signalRService.joinGame(gameCodeString);

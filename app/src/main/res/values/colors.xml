@@ -9,7 +9,7 @@
     <color name="colorPrimary">#4CAF50</color>
     <color name="colorSecondary">#388E3C</color>
     <color name="colorPrimaryDark">#333333</color>
-    <color name="windowBackground">#FFFFFF</color>
+    <color name="windowBackground">#404040</color>
     <color name="colorPrimaryLight">#C8E6C9</color>
     <color name="colorAccent">#80D8FF</color>
     <color name="textColorPrimary">#1B5E20</color>
@@ -39,6 +39,16 @@
     <color name="fabPlus">#80D8FF</color>
     <color name="fabLeaders">#E64C66</color>
     <color name="fabStats">#E64C66</color>
+
+
+
+    <!-- login -->
+    <color name="material_green_50">#E8F5E9</color>
+    <color name="material_green_500">#4CAF50</color>
+    <color name="material_green_700">#388E3C</color>
+    <color name="material_green_a200">#69F0AE</color>
+    <color name="material_lime_a700">#AEEA00</color>
+    <color name="material_purple_a700">#AA00FF</color>
 
 
 
