@@ -8,6 +8,7 @@
     android:keepScreenOn="true"
     android:layoutDirection="ltr"
     android:orientation="vertical"
+    android:background="@color/chatPrimary"
     tools:context="com.offsidegame.offside.activities.JoinGameActivity">
 
 
@@ -30,13 +31,14 @@
 
     </LinearLayout>
 
-    <!-- Content -->
+
     <LinearLayout
+
         android:id="@+id/jg_join_game_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <!-- Greeting -->
         <LinearLayout
@@ -54,6 +56,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:text="@string/lbl_welcome"
+                android:textColor="@color/grayText"
                 android:textSize="@dimen/OffsideMediumText" />
 
             <TextView
@@ -62,7 +65,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
-                android:text="Danny Robust"
+                android:text="דני רובסט"
+                android:textColor="@color/grayText"
                 android:textSize="@dimen/OffsideMediumText"
 
                 />
@@ -71,6 +75,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="!"
+                android:textColor="@color/grayText"
                 android:textSize="@dimen/OffsideMediumText"
 
                 />
@@ -86,80 +91,139 @@
             android:layout_marginBottom="10dp"
             android:scaleType="centerCrop" />
 
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="יש לך קוד?"-->
+        <!---->
+        <!--android:textColor="@color/grayText"-->
+        <!--android:textSize="@dimen/OffsideMediumText"-->
 
-        <EditText
-
-            android:id="@+id/gameCode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Game code"
-            android:inputType="textEmailAddress"
-            android:textDirection="rtl" />
-
-        <Button
-            android:id="@+id/join_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-            android:text="Join" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Or"/>
-
-
-
-
-        <Button
-            android:id="@+id/jg_create_private_game_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Create a private game" />
+        <!--/>-->
 
 
         <LinearLayout
-            android:id="@+id/jg_create_private_game_root"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:visibility="gone">
-
-            <Spinner
-                android:id="@+id/jg_available_games_spinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
+            android:layoutDirection="rtl"
+            android:minHeight="50dp"
+            android:orientation="horizontal">
 
             <EditText
-
-                android:id="@+id/jg_private_game_name_edit_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:id="@+id/gameCode"
+                style="@style/editTextClassic"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@color/colorWhite"
                 android:ems="10"
-                android:hint="Group name"
+                android:hint=" קוד משחק"
                 android:inputType="textEmailAddress"
                 android:textDirection="rtl" />
 
-            <Button
-                android:id="@+id/jg_generate_private_game_code_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Get Code" />
-
             <TextView
-                android:id="@+id/jg_private_game_code_text_view"
+                android:id="@+id/join_text_view"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/OffsideLargeText"
-                android:text="12345"/>
+                android:layout_height="match_parent"
+                android:background="@color/chatText"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="הצטרף"
 
-
+                android:textColor="@color/grayText" />
 
 
         </LinearLayout>
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:text="Or"/>-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grayText"
+            android:text="אין לך קוד?"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+
+
+            ></TextView>
+
+        <TextView
+            android:id="@+id/jg_create_private_game_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:background="@color/chatText"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="צור משחק פרטי"
+
+            android:textColor="@color/grayText" />
+
+
+
+
+
+
+
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:id="@+id/jg_create_private_game_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <Spinner
+            android:id="@+id/jg_available_games_spinner"
+            android:layout_width="wrap_content"
+            android:background="@color/colorWhite"
+            android:minHeight="50dp"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            style="@style/editTextClassic"
+            android:id="@+id/jg_private_game_name_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Group name"
+            android:inputType="textEmailAddress"
+            android:textDirection="rtl" />
+
+        <TextView
+            android:id="@+id/jg_generate_private_game_code_text_view"
+            android:background="@color/chatText"
+            android:gravity="center"
+            android:textColor="@color/grayText"
+            android:layout_width="wrap_content"
+            android:padding="5dp"
+            android:minHeight="50dp"
+            android:minWidth="100dp"
+            android:layout_height="wrap_content"
+            android:textDirection="rtl"
+            android:text="צור משחק פרטי" />
+
+        <TextView
+            android:id="@+id/jg_private_game_code_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="12345"
+            android:textSize="@dimen/OffsideLargeText" />
 
 
     </LinearLayout>
