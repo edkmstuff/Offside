@@ -77,7 +77,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         String playerId = FirebaseAuth.getInstance().getCurrentUser().getProviderData().get(1).getUid();
         //String playerId = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         String playerDisplayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-        Uri playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+        String playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()==null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString() ;
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
@@ -85,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         editor.putString(getString(R.string.player_id_key), playerId);
         editor.putString(getString(R.string.player_display_name_key), playerDisplayName);
-        editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl.toString());
+        editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl);
 
         editor.commit();
 

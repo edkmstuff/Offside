@@ -120,6 +120,7 @@ public class ChatActivity extends AppCompatActivity {
         gameCode = settings.getString(getString(R.string.game_code_key), "");
         playerId = settings.getString(getString(R.string.player_id_key), "");
         //playerId = FirebaseAuth.getInstance().getCurrentUser().getProviderData().get(1).getUid();
+        //playerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
 
         privateGameTitle = settings.getString(getString(R.string.private_game_title_key), "");
