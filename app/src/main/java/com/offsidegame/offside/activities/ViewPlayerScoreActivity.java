@@ -128,7 +128,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
         profilePictureImageView = (ImageView) findViewById(R.id.fbPictureImageView);
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        String userPictureUrl = settings.getString(getString(R.string.user_profile_picture_url_key), "");
+        String userPictureUrl = settings.getString(getString(R.string.player_profile_picture_url_key), "");
         Uri fbImageUrl = Uri.parse(userPictureUrl);
 
         Picasso.with(context).load(fbImageUrl).into(profilePictureImageView, new com.squareup.picasso.Callback() {
@@ -314,8 +314,8 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     private void getPlayerScore() {
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         String gameId = settings.getString(getString(R.string.game_id_key), "");
-        String userId = settings.getString(getString(R.string.user_id_key), "");
-        String userName = settings.getString(getString(R.string.user_name_key), "");
+        String userId = settings.getString(getString(R.string.player_id_key), "");
+        String userName = settings.getString(getString(R.string.player_display_name_key), "");
 
         if (gameId != null && gameId != ""
                 && userId != null && userId != ""

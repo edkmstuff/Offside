@@ -2,6 +2,7 @@ package com.offsidegame.offside.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -72,6 +73,22 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     }
 
     private void handleSuccessfulLogin() {
+
+        String playerId = FirebaseAuth.getInstance().getCurrentUser().getProviderData().get(1).getUid();
+        //String playerId = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        String playerDisplayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+        Uri playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+
+        SharedPreferences.Editor editor = settings.edit();
+
+        editor.putString(getString(R.string.player_id_key), playerId);
+        editor.putString(getString(R.string.player_display_name_key), playerDisplayName);
+        editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl.toString());
+
+        editor.commit();
+
         Intent intent = new Intent(context, JoinGameActivity.class);
         // intent.putExtra("gameCodeFromNotification", gameCodeFromNotification);
         startActivity(intent);

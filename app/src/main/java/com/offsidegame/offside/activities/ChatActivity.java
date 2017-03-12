@@ -1,5 +1,6 @@
 package com.offsidegame.offside.activities;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +13,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,6 +29,7 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.auth.FirebaseAuth;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
@@ -70,6 +74,7 @@ public class ChatActivity extends AppCompatActivity {
     private ChatMessageAdapter chatMessageAdapter;
     private Map<String, AnswerIdentifier> playerAnswers;
     private LinearLayout root;
+    private ListView chatListView;
 
     private boolean isBatch = false;
 
@@ -113,7 +118,9 @@ public class ChatActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         gameId = settings.getString(getString(R.string.game_id_key), "");
         gameCode = settings.getString(getString(R.string.game_code_key), "");
-        playerId = settings.getString(getString(R.string.user_id_key), "");
+        playerId = settings.getString(getString(R.string.player_id_key), "");
+        //playerId = FirebaseAuth.getInstance().getCurrentUser().getProviderData().get(1).getUid();
+
 
         privateGameTitle = settings.getString(getString(R.string.private_game_title_key), "");
         homeTeam = settings.getString(getString(R.string.home_team_key), "");
@@ -123,10 +130,12 @@ public class ChatActivity extends AppCompatActivity {
         totalPlayers = settings.getInt(getString(R.string.total_players_key), 0);
 
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
+       // FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(getApplication());
 
         root = (LinearLayout) findViewById(R.id.c_root);
+        chatListView = (ListView) findViewById(R.id.c_chat_list_view);
+
         chatSendTextView = (TextView) findViewById(R.id.c_chatSendTextView);
         chatMessageEditText = (EditText) findViewById(R.id.c_chat_message_edit_text);
         scoreTextView = (TextView) findViewById(R.id.c_score_text_view);
@@ -148,11 +157,31 @@ public class ChatActivity extends AppCompatActivity {
                 //clear text
                 chatMessageEditText.setText("");
                 //hide keypad
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(root.getWindowToken(), 0);
+                hideKeypad();
 
             }
         });
+
+        chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //hide keypad
+                hideKeypad();
+            }
+        });
+
+        root.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //hide keypad
+                hideKeypad();
+            }
+
+
+        });
+
+
+
 
     }
 
@@ -164,6 +193,8 @@ public class ChatActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setClass(context, SignalRService.class);
         bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+        //hideKeypad();
+
     }
 
 
@@ -181,6 +212,10 @@ public class ChatActivity extends AppCompatActivity {
         super.onStop();
     }
 
+    private void hideKeypad() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(root.getWindowToken(), 0);
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onConnectionEvent(ConnectionEvent connectionEvent) {

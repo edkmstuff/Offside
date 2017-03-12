@@ -41,11 +41,11 @@
     <string name="facebook_login_protocol_scheme" translatable="false">fb523024471208542</string>
     <string name="preference_name">OffsidePlayerPreferences</string>
     <string name="is_logged_in_key">isLoggedIn</string>
-    <string name="user_id_key">userId</string>
+    <string name="player_id_key">userId</string>
     <string name="login_expiration_time_key">loginExpirationTime</string>
     <string name="date_format">EEEE, dd/MM/yyyy/hh:mm:ss</string>
     <string name="log_tag">OffsideLog</string>
-    <string name="user_name_key">userName</string>
+    <string name="player_display_name_key">userName</string>
     <string name="game_id_key">gameId</string>
 
 
@@ -68,7 +68,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="user_profile_picture_url_key">userProfilePictureUrl</string>
+    <string name="player_profile_picture_url_key">userProfilePictureUrl</string>
     <string name="lbl_game_did_not_start_yet">עוד לא התחלנו לשאול... </string>
     <string name="lbl_getting_answers_and_calculating_statistics">אוסף תשובות ומחשב סטטיסטיקה</string>
     <string name="lbl_sponsored_by">בחסות</string>

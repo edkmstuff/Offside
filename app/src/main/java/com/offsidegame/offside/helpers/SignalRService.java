@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.AvailableGamesEvent;
@@ -39,7 +39,6 @@ import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.ConnectionState;
@@ -65,8 +64,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    public final String ip = new String("192.168.1.140:8080");
-    //public final String ip = new String("10.0.0.17:8080");
+    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
 
 
@@ -213,8 +212,8 @@ public class SignalRService extends Service {
                 if (!userGameId.equals(gameId))
                     return;
 
-                String userId = settings.getString(getString(R.string.user_id_key), "");
-                String userName = settings.getString(getString(R.string.user_name_key), "");
+                String userId = settings.getString(getString(R.string.player_id_key), "");
+                String userName = settings.getString(getString(R.string.player_display_name_key), "");
 
                 getPlayerScore(gameId, userId, userName);
 
@@ -265,11 +264,12 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        String userId = settings.getString(getString(R.string.user_id_key), "");
-        String userName = settings.getString(getString(R.string.user_name_key), "");
-        String imageUrl = settings.getString(getString(R.string.user_profile_picture_url_key), "");
 
-        hub.invoke(GameInfo.class, "JoinGame", gameCode, userId, userName, imageUrl).done(new Action<GameInfo>() {
+        String playerId = settings.getString(getString(R.string.player_id_key), "");
+        String playerDisplayName = settings.getString(getString(R.string.player_display_name_key), "");
+        String playerProfilePictureUrl = settings.getString(getString(R.string.player_profile_picture_url_key), "");
+
+        hub.invoke(GameInfo.class, "JoinGame", gameCode, playerId, playerDisplayName, playerProfilePictureUrl).done(new Action<GameInfo>() {
 
             @Override
             public void run(GameInfo gameInfo) throws Exception {
@@ -282,7 +282,7 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        String userId = settings.getString(getString(R.string.user_id_key), "");
+        String userId = settings.getString(getString(R.string.player_id_key), "");
 
         hub.invoke(Boolean.class, "QuitGame", gameId, userId);
     }
@@ -328,7 +328,7 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        String imageUrl = settings.getString(getString(R.string.user_profile_picture_url_key), "");
+        String imageUrl = settings.getString(getString(R.string.player_profile_picture_url_key), "");
         hub.invoke(PlayerScore.class, "GetPlayerScore", gameId, userId, userName, imageUrl).done(new Action<PlayerScore>() {
 
             @Override

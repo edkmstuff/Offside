@@ -34,8 +34,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.Date;
-
 public class ViewClosedQuestionActivity extends AppCompatActivity implements IQuestionHolder {
 
     //<editor-fold desc="Class members">
@@ -161,7 +159,7 @@ public class ViewClosedQuestionActivity extends AppCompatActivity implements IQu
 
     private void loadPlayerImage(final ImageView imageView) {
         SharedPreferences settings = context.getSharedPreferences(context.getString(R.string.preference_name), 0);
-        String userPictureUrl = settings.getString(context.getString(R.string.user_profile_picture_url_key), "");
+        String userPictureUrl = settings.getString(context.getString(R.string.player_profile_picture_url_key), "");
         Uri imageUri = Uri.parse(userPictureUrl);
 
         Picasso.with(context).load(imageUri).into(imageView, new com.squareup.picasso.Callback() {

@@ -1,7 +1,6 @@
 package com.offsidegame.offside.activities.fragments;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -17,7 +16,6 @@ import android.widget.ListView;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.Answer;
-import com.offsidegame.offside.models.interfaces.IQuestionHolder;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.QuestionEvent;
@@ -84,7 +82,7 @@ public class AnswersFragment extends ListFragment {
 
     private void loadFbImage(final ImageView imageView) {
         SharedPreferences settings = context.getSharedPreferences(context.getString(R.string.preference_name), 0);
-        String userPictureUrl = settings.getString(context.getString(R.string.user_profile_picture_url_key), "");
+        String userPictureUrl = settings.getString(context.getString(R.string.player_profile_picture_url_key), "");
         Uri imageUri = Uri.parse(userPictureUrl);
 
         Picasso.with(context).load(imageUri).into(imageView, new com.squareup.picasso.Callback() {

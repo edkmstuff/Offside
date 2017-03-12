@@ -60,7 +60,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private TextView generatePrivateGameCodeButton;
     private String[] gameTitles;
     private String[] gameIds;
-    private String userName;
+    private String userDisplayName;
 
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
@@ -88,9 +88,9 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             toolbar = (Toolbar) findViewById((R.id.app_bar));
             setSupportActionBar(toolbar);
 
-            userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+            userDisplayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
             userNameTextView = (TextView) findViewById(R.id.join_game_user_name_text_view);
-            userNameTextView.setText(userName);
+            userNameTextView.setText(userDisplayName);
 
             profilePicture = (ImageView) findViewById(R.id.userPictureImageView);
             final Uri userPictureUri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
@@ -142,7 +142,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                     else
                         throw new RuntimeException(activityName + " - createPrivateGameButton - onClick - Error: SignalRIsNotBound");
 
-                    privateGameNameEditText.setText(userName.split(" ")[0] + "'s" + " gang");
+                    privateGameNameEditText.setText(userDisplayName.split(" ")[0] + "'s" + " gang");
                     joinGameRoot.setVisibility(View.GONE);
                     createPrivateGameRoot.setVisibility(View.VISIBLE);
                 }

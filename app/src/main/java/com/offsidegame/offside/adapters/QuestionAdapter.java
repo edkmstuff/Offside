@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.activities.ViewClosedQuestionActivity;
 import com.offsidegame.offside.activities.ViewQuestionsActivity;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.Answer;
@@ -123,7 +122,7 @@ public class QuestionAdapter extends ArrayAdapter<Question> {
 
     private void loadFbImage(final ImageView fbProfilePicture) {
         SharedPreferences settings = context.getSharedPreferences(context.getString(R.string.preference_name), 0);
-        String userPictureUrl = settings.getString(context.getString(R.string.user_profile_picture_url_key), "");
+        String userPictureUrl = settings.getString(context.getString(R.string.player_profile_picture_url_key), "");
         Uri imageUri = Uri.parse(userPictureUrl);
 
         //fbProfilePicture.setImageURI(imageUri);
