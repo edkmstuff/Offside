@@ -8,35 +8,32 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.AvailableGamesEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
+import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
-import com.offsidegame.offside.events.ActiveGameEvent;
-import com.offsidegame.offside.events.JoinGameEvent;
-import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.squareup.picasso.Picasso;
-
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,28 +42,22 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.Serializable;
 
 public class JoinGameActivity extends AppCompatActivity implements Serializable {
-    private String activityName = "JoinGameActivity";
+    private final String activityName = "JoinGameActivity";
     private final Context context = this;
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
-
-    EditText gameCodeEditText;
-    TextView join;
-    //Button createGame;
-    TextView userNameTextView;
-    ImageView profilePicture;
+    private EditText gameCodeEditText;
+    private TextView join;
+    private TextView userNameTextView;
+    private ImageView profilePicture;
     private LinearLayout joinGameRoot;
     private LinearLayout loadingGameRoot;
-
     private Toolbar toolbar;
-
-
     private TextView createPrivateGameButton;
     private LinearLayout createPrivateGameRoot;
     private Spinner availableGamesSpinner;
     private EditText privateGameNameEditText;
     private TextView generatePrivateGameCodeButton;
-    private TextView privateGameCodeTextView;
     private String[] gameTitles;
     private String[] gameIds;
     private String userName;
@@ -74,8 +65,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
+        public void onServiceConnected(ComponentName className, IBinder service) {
             // We've bound to SignalRService, cast the IBinder and get SignalRService instance
             SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
             signalRService = binder.getService();
@@ -98,17 +88,12 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             toolbar = (Toolbar) findViewById((R.id.app_bar));
             setSupportActionBar(toolbar);
 
-           // final SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-           // userName = settings.getString(getString(R.string.user_name_key), "");
             userName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
-
             userNameTextView = (TextView) findViewById(R.id.join_game_user_name_text_view);
             userNameTextView.setText(userName);
 
             profilePicture = (ImageView) findViewById(R.id.userPictureImageView);
-            //final String userPictureUrl = settings.getString(getString(R.string.user_profile_picture_url_key), "");
             final Uri userPictureUri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
-
 
             Picasso.with(context).load(userPictureUri).into(profilePicture, new com.squareup.picasso.Callback() {
                 @Override
@@ -139,19 +124,15 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
             joinGameRoot = (LinearLayout) findViewById(R.id.jg_join_game_root);
             loadingGameRoot = (LinearLayout) findViewById(R.id.jg_loading_root);
-
+            createPrivateGameRoot = (LinearLayout) findViewById(R.id.jg_create_private_game_root);
 
             createPrivateGameButton = (TextView) findViewById(R.id.jg_create_private_game_text_view);
-            createPrivateGameRoot = (LinearLayout) findViewById(R.id.jg_create_private_game_root);
             availableGamesSpinner = (Spinner) findViewById(R.id.jg_available_games_spinner);
             privateGameNameEditText = (EditText) findViewById(R.id.jg_private_game_name_edit_text);
             generatePrivateGameCodeButton = (TextView) findViewById(R.id.jg_generate_private_game_code_text_view);
-            privateGameCodeTextView = (TextView) findViewById(R.id.jg_private_game_code_text_view);
-
             loadingGameRoot.setVisibility(View.VISIBLE);
             joinGameRoot.setVisibility(View.GONE);
             createPrivateGameRoot.setVisibility(View.GONE);
-            privateGameCodeTextView.setVisibility(View.GONE);
 
             createPrivateGameButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -180,9 +161,6 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                         signalRService.generatePrivateGame(gameId, groupName);
                     else
                         throw new RuntimeException(activityName + " - generatePrivateGameCodeButton - onClick - Error: SignalRIsNotBound");
-
-
-
                 }
             });
 
@@ -376,6 +354,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 gameIds[i] = availableGames[i].getGameId();
                 gameTitles[i] = availableGames[i].getGameTitle();
             }
+
+            //CustomSpinnerAdapter adapter1 = new CustomSpinnerAdapter(context, new ArrayList<String>(Arrays.asList(gameTitles)));
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, gameTitles);
 // Specify the layout to use when the list of choices appears

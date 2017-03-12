@@ -38,6 +38,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:padding="5dp"
         android:visibility="gone">
 
         <!-- Greeting -->
@@ -45,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="20dp"
             android:layout_marginTop="10dp"
             android:layoutDirection="rtl"
             android:orientation="horizontal">
@@ -88,32 +89,27 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="40dp"
             android:scaleType="centerCrop" />
 
-        <!--<TextView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="יש לך קוד?"-->
-        <!---->
-        <!--android:textColor="@color/grayText"-->
-        <!--android:textSize="@dimen/OffsideMediumText"-->
-
-        <!--/>-->
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:layoutDirection="rtl"
             android:minHeight="50dp"
+            android:weightSum="5"
+
+            android:textDirection="rtl"
+            android:layout_marginBottom="50dp"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/gameCode"
                 style="@style/editTextClassic"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="4"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="5dp"
@@ -126,14 +122,15 @@
 
             <TextView
                 android:id="@+id/join_text_view"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:background="@color/chatText"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="הצטרף"
-
-                android:textColor="@color/grayText" />
+                android:textColor="@color/grayText"
+                />
 
 
         </LinearLayout>
@@ -149,21 +146,24 @@
             android:layout_height="wrap_content"
             android:textColor="@color/grayText"
             android:text="אין לך קוד?"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
+
+            android:layout_margin="5dp"
+
+            android:layout_gravity="right"
 
 
             ></TextView>
 
         <TextView
             android:id="@+id/jg_create_private_game_text_view"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
             android:background="@color/chatText"
             android:gravity="center"
             android:padding="5dp"
+            android:minHeight="50dp"
             android:text="צור משחק פרטי"
 
             android:textColor="@color/grayText" />
@@ -186,31 +186,72 @@
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:padding="10dp"
         android:visibility="visible">
 
-        <Spinner
-            android:id="@+id/jg_available_games_spinner"
-            android:layout_width="wrap_content"
-            android:background="@color/colorWhite"
-            android:minHeight="50dp"
-            android:layout_height="wrap_content" />
 
+
+        <!--<Spinner-->
+            <!--android:background="@drawable/spinner_rectangle_background"-->
+            <!--android:spinnerMode="dropdown"-->
+            <!--android:id="@+id/jg_available_games_spinner"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--/>-->
+
+        <ImageView
+            android:src="@drawable/friends_blue_transparent"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="40dp"
+            android:scaleType="centerCrop" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="בחר שם למועדון"
+            android:textColor="@color/grayText"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            />
         <EditText
             style="@style/editTextClassic"
             android:id="@+id/jg_private_game_name_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Group name"
+            android:minHeight="50dp"
+            android:hint="הכרישים"
             android:inputType="textEmailAddress"
-            android:textDirection="rtl" />
+            android:background="@color/colorWhite"
+            android:textDirection="rtl"
+            android:layout_marginBottom="20dp"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="בחר משחק"
+            android:textColor="@color/grayText"
+            android:layout_marginBottom="10dp"
+            />
+
+        <Spinner
+            android:id="@+id/jg_available_games_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            android:background="@color/colorWhite"
+            android:layout_marginBottom="20dp"
+            />
 
         <TextView
             android:id="@+id/jg_generate_private_game_code_text_view"
             android:background="@color/chatText"
             android:gravity="center"
             android:textColor="@color/grayText"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:padding="5dp"
             android:minHeight="50dp"
             android:minWidth="100dp"
@@ -218,12 +259,12 @@
             android:textDirection="rtl"
             android:text="צור משחק פרטי" />
 
-        <TextView
-            android:id="@+id/jg_private_game_code_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="12345"
-            android:textSize="@dimen/OffsideLargeText" />
+        <!--<TextView-->
+            <!--android:id="@+id/jg_private_game_code_text_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="12345"-->
+            <!--android:textSize="@dimen/OffsideLargeText" />-->
 
 
     </LinearLayout>

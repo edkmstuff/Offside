@@ -35,6 +35,7 @@ import com.offsidegame.offside.models.Scoreboard;
 import com.offsidegame.offside.events.ScoreboardEvent;
 import com.offsidegame.offside.models.User;
 
+import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
@@ -62,7 +63,7 @@ public class SignalRService extends Service {
     private HubProxy hub;
     //private Handler handler; // to display Toast message
     private final IBinder binder = new LocalBinder(); // Binder given to clients
-    private Date startReconnectiong = null;
+    private Date startReconnecting = null;
 
     public final String ip = new String("192.168.1.140:8080");
     //public final String ip = new String("10.0.0.17:8080");
@@ -117,32 +118,29 @@ public class SignalRService extends Service {
                 public void stateChanged(ConnectionState oldState, ConnectionState newState) {
                     try {
                         if (newState == ConnectionState.Disconnected) {
-                            EventBus.getDefault().post(new ConnectionEvent(false, "inner try 1"));
+                            EventBus.getDefault().post(new ConnectionEvent(false, ""));
                             //try reconnection for 10 min
-                            if (startReconnectiong == null) {
-                                startReconnectiong = new Date();
+                            if (startReconnecting == null) {
+                                startReconnecting = new Date();
                             } else
                                 return; // we are already trying to reconnect
                             Date now = new Date();
-                            while (startReconnectiong != null && now.getTime() - startReconnectiong.getTime() < 10 * 60 * 1000
+                            while (startReconnecting != null && now.getTime() - startReconnecting.getTime() < 10 * 60 * 1000
                                     && hubConnection.getState() == ConnectionState.Disconnected) {
-                                try {
-                                    startSignalR(true);
-                                    now = new Date();
-                                    Thread.sleep(20000);
 
-                                } catch (Exception ex) {
-                                    EventBus.getDefault().post(new ConnectionEvent(true, ex.getMessage()));
-                                    return;
-                                }
+                                startSignalR(true);
+                                now = new Date();
+                                Thread.sleep(20000);
+
+
                             }
                             if (hubConnection.getState() == ConnectionState.Connected) {
                                 EventBus.getDefault().post(new ConnectionEvent(true, "inner try 2"));
                             }
                         }
-                    }
-                    catch(Exception e1){
-                        EventBus.getDefault().post(new ConnectionEvent(false, e1.getMessage()));
+                    } catch (Exception ex) {
+                        ACRA.getErrorReporter().handleException(ex);
+                        EventBus.getDefault().post(new ConnectionEvent(false, ex.getMessage()));
                     }
 
                 }
@@ -151,23 +149,23 @@ public class SignalRService extends Service {
 
             SignalRFuture<Void> signalRFuture = hubConnection.start(clientTransport);
 
-            try {
-                signalRFuture.get();
-            } catch (InterruptedException | ExecutionException e) {
-                Log.e("SimpleSignalR", e.getMessage());
-                //return;
-            }
+            signalRFuture.get();
+//            try {
+//                signalRFuture.get();
+//            } catch (InterruptedException | ExecutionException e) {
+//                Log.e("SimpleSignalR", e.getMessage());
+//                //return;
+//            }
 
             if (notifyWhenConnected && hubConnection.getState() == ConnectionState.Connected) {
                 EventBus.getDefault().post(new SignalRServiceBoundEvent(null));
-                startReconnectiong = null;
+                startReconnecting = null;
             }
 
             if (hubConnection.getState() == ConnectionState.Connected)
                 subscribeToServer();
-        }
-        catch (Exception e){
-            EventBus.getDefault().post(new ConnectionEvent(false,e.toString()));
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleException(ex);
         }
     }
 
@@ -302,7 +300,7 @@ public class SignalRService extends Service {
     }
 
 
-    public void getAvailableGames(){
+    public void getAvailableGames() {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         hub.invoke(AvailableGame[].class, "GetAvailableGames").done(new Action<AvailableGame[]>() {
@@ -368,7 +366,7 @@ public class SignalRService extends Service {
     public void getChatMessages(String gameId, String gameCode, String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Chat.class, "GetChatMessages", gameId, gameCode, playerId ).done(new Action<Chat>() {
+        hub.invoke(Chat.class, "GetChatMessages", gameId, gameCode, playerId).done(new Action<Chat>() {
 
             @Override
             public void run(Chat chat) throws Exception {
@@ -383,7 +381,7 @@ public class SignalRService extends Service {
         hub.invoke(ChatMessage.class, "SendChatMessage", gameId, gameCode, message, playerId).done(new Action<ChatMessage>() {
             @Override
             public void run(ChatMessage chatMessage) throws Exception {
-      //          EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
+                //          EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
             }
 
         });
@@ -406,7 +404,7 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
-        hub.invoke(Boolean.class, "SaveUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri(), user.getPassword(),user.getDeviceToken()).done(new Action<Boolean>() {
+        hub.invoke(Boolean.class, "SaveUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri(), user.getPassword(), user.getDeviceToken()).done(new Action<Boolean>() {
             @Override
             public void run(Boolean isUserSaved) throws Exception {
                 EventBus.getDefault().post(new IsAnswerAcceptedEvent(isUserSaved));
