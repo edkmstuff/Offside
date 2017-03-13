@@ -21,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.AvailableGamesEvent;
@@ -39,6 +40,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.io.Serializable;
 
 public class JoinGameActivity extends AppCompatActivity implements Serializable {
@@ -50,6 +52,9 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private TextView join;
     private TextView userNameTextView;
     private ImageView profilePicture;
+
+
+
     private LinearLayout joinGameRoot;
     private LinearLayout loadingGameRoot;
     private Toolbar toolbar;
@@ -60,7 +65,10 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private TextView generatePrivateGameCodeButton;
     private String[] gameTitles;
     private String[] gameIds;
-    private String userDisplayName;
+
+    private String playerId;
+    private String playerDisplayName;
+    private String playerProfilePictureUrl;
 
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
@@ -88,14 +96,27 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             toolbar = (Toolbar) findViewById((R.id.app_bar));
             setSupportActionBar(toolbar);
 
-            userDisplayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+            FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
+            playerDisplayName = player.getDisplayName();
+            playerId = player.getUid();
+
+
+            playerProfilePictureUrl = player.getPhotoUrl() != null? player.getPhotoUrl().toString() : OffsideApplication.getProfileImageFileName();
+
             userNameTextView = (TextView) findViewById(R.id.join_game_user_name_text_view);
-            userNameTextView.setText(userDisplayName);
+            userNameTextView.setText(playerDisplayName);
 
             profilePicture = (ImageView) findViewById(R.id.userPictureImageView);
-            final Uri userPictureUri = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
 
-            Picasso.with(context).load(userPictureUri).into(profilePicture, new com.squareup.picasso.Callback() {
+File file = new File(playerProfilePictureUrl);
+            File file2 = new File(getFilesDir().getAbsolutePath() + "/" + playerProfilePictureUrl);
+
+
+
+
+           // Picasso.with(context).load()
+
+            Picasso.with(context).load(file2).into(profilePicture, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
                     Bitmap bm = ((BitmapDrawable) profilePicture.getDrawable()).getBitmap();
@@ -105,7 +126,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
                 @Override
                 public void onError() {
-                    throw new RuntimeException(activityName + " - onCreate - Error loading image with url: " + userPictureUri != null ? userPictureUri.toString() : "null");
+                    throw new RuntimeException(activityName + " - onCreate - Error loading image with url: " + playerProfilePictureUrl);
                 }
             });
 
@@ -142,7 +163,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                     else
                         throw new RuntimeException(activityName + " - createPrivateGameButton - onClick - Error: SignalRIsNotBound");
 
-                    privateGameNameEditText.setText(userDisplayName.split(" ")[0] + "'s" + " gang");
+                    privateGameNameEditText.setText(playerDisplayName.split(" ")[0] + "'s" + " gang");
                     joinGameRoot.setVisibility(View.GONE);
                     createPrivateGameRoot.setVisibility(View.VISIBLE);
                 }
@@ -170,21 +191,6 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
         }
 
 
-    }
-
-    private void joinGame( String privateGameCode) {
-        if (isBoundToSignalRService) {
-
-            OffsideApplication.setIsPlayerQuitGame(false);
-            signalRService.joinGame(privateGameCode);
-            loadingGameRoot.setVisibility(View.VISIBLE);
-            joinGameRoot.setVisibility(View.GONE);
-            createPrivateGameRoot.setVisibility(View.GONE);
-        }
-    }
-
-    private String getGameId(int selectedGamePosition) {
-        return gameIds[selectedGamePosition];
     }
 
     @Override
@@ -216,6 +222,23 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
         super.onStop();
     }
+
+    private void joinGame( String privateGameCode) {
+        if (isBoundToSignalRService) {
+
+            OffsideApplication.setIsPlayerQuitGame(false);
+            signalRService.joinGame(privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl );
+            loadingGameRoot.setVisibility(View.VISIBLE);
+            joinGameRoot.setVisibility(View.GONE);
+            createPrivateGameRoot.setVisibility(View.GONE);
+        }
+    }
+
+    private String getGameId(int selectedGamePosition) {
+        return gameIds[selectedGamePosition];
+    }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onJoinGame(JoinGameEvent joinGameEvent) {
@@ -300,7 +323,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 //String gameCodeFromNotification = intent.getExtras().getString("gameCodeFromNotification");
                 if (!(gameCodeFromNotification.equals("") || gameCodeFromNotification == null)) {
                     String gameCodeString = gameCodeFromNotification.toString();
-                    signalRService.joinGame(gameCodeString);
+                    joinGame(gameCodeString);
                     loadingGameRoot.setVisibility(View.VISIBLE);
                     joinGameRoot.setVisibility(View.GONE);
                 } else {
@@ -328,7 +351,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 //Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
                 SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
                 String gameCode = settings.getString(getString(R.string.game_code_key), "");
-                signalRService.joinGame(gameCode);
+                joinGame(gameCode);
 
             } else {
                 loadingGameRoot.setVisibility(View.GONE);

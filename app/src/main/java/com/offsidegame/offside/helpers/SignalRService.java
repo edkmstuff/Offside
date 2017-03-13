@@ -64,8 +64,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
-    public final String ip = new String("10.0.0.17:8080");
+    public final String ip = new String("192.168.1.140:8080");
+    //public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
 
 
@@ -212,10 +212,10 @@ public class SignalRService extends Service {
                 if (!userGameId.equals(gameId))
                     return;
 
-                String userId = settings.getString(getString(R.string.player_id_key), "");
+                String playerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 String userName = settings.getString(getString(R.string.player_display_name_key), "");
 
-                getPlayerScore(gameId, userId, userName);
+                getPlayerScore(gameId, playerId, userName);
 
             }
         }, String.class);
@@ -260,14 +260,9 @@ public class SignalRService extends Service {
         });
     }
 
-    public void joinGame(String gameCode) {
+    public void joinGame(String gameCode, String playerId, String playerDisplayName, String playerProfilePictureUrl ) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-
-        String playerId = settings.getString(getString(R.string.player_id_key), "");
-        String playerDisplayName = settings.getString(getString(R.string.player_display_name_key), "");
-        String playerProfilePictureUrl = settings.getString(getString(R.string.player_profile_picture_url_key), "");
 
         hub.invoke(GameInfo.class, "JoinGame", gameCode, playerId, playerDisplayName, playerProfilePictureUrl).done(new Action<GameInfo>() {
 
@@ -278,13 +273,13 @@ public class SignalRService extends Service {
         });
     }
 
-    public void quitGame(String gameId) {
+    public void quitGame(String gameId ,String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        String userId = settings.getString(getString(R.string.player_id_key), "");
 
-        hub.invoke(Boolean.class, "QuitGame", gameId, userId);
+        //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        hub.invoke(Boolean.class, "QuitGame", gameId, playerId);
     }
 
     public void isGameActive(String gameId, String gameCode) {

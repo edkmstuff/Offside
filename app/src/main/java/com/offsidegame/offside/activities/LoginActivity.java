@@ -3,9 +3,15 @@ package com.offsidegame.offside.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -15,11 +21,18 @@ import com.firebase.ui.auth.ResultCodes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.models.OffsideApplication;
 
 import org.acra.ACRA;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 //import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -74,16 +87,29 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     private void handleSuccessfulLogin() {
 
-        String playerId = FirebaseAuth.getInstance().getCurrentUser().getProviderData().get(1).getUid();
+
+
+
+        //String playerId = FirebaseAuth.getInstance().getCurrentUser().getProviderData().get(1).getUid();
+        String playerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         //String playerId = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         String playerDisplayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
         String playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()==null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString() ;
+
+        // in case user does not have profile picture, we generate image with Initials
+        if (playerProfilePictureUrl == null){
+            String initials = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().toUpperCase().substring(0,1);
+            Bitmap profilePicture = generateInitialsBasedProfileImage(initials);
+            storeImage(profilePicture);
+            playerProfilePictureUrl = OffsideApplication.getProfileImageFileName();
+        }
+
+
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
         SharedPreferences.Editor editor = settings.edit();
 
-        editor.putString(getString(R.string.player_id_key), playerId);
         editor.putString(getString(R.string.player_display_name_key), playerDisplayName);
         editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl);
 
@@ -93,6 +119,63 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         // intent.putExtra("gameCodeFromNotification", gameCodeFromNotification);
         startActivity(intent);
     }
+
+    private void storeImage(Bitmap image) {
+        String filename = OffsideApplication.getProfileImageFileName();
+        FileOutputStream outputStream;
+        try {
+            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            image.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
+            outputStream.close();
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleException(ex);
+        }
+
+
+
+
+
+
+
+
+    }
+
+    private Bitmap generateInitialsBasedProfileImage(String initials){
+        Bitmap b=Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(b);
+        Paint paint = new Paint();
+        paint.setColor(Color.WHITE);
+        paint.setStyle(Paint.Style.FILL);
+        c.drawText(initials, 25,25,paint);
+        return b;
+    }
+
+    /** Create a File for saving an image or video */
+//    private  File getOutputMediaFile(){
+//        // To be safe, you should check that the SDCard is mounted
+//        // using Environment.getExternalStorageState() before doing this.
+//        File mediaStorageDir = new File(Environment.get()
+//                + "/Android/data/"
+//                + getApplicationContext().getPackageName()
+//                + "/Files");
+//
+//        // This location works best if you want the created images to be shared
+//        // between applications and persist after your app has been uninstalled.
+//
+//        // Create the storage directory if it does not exist
+//        if (! mediaStorageDir.exists()){
+//            if (! mediaStorageDir.mkdirs()){
+//                return null;
+//            }
+//        }
+//        // Create a media file name
+//        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
+//        File mediaFile;
+//        String mImageName="MI_"+ timeStamp +".jpg";
+//        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
+//        return mediaFile;
+//    }
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

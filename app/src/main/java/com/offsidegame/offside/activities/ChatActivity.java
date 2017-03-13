@@ -118,7 +118,7 @@ public class ChatActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         gameId = settings.getString(getString(R.string.game_id_key), "");
         gameCode = settings.getString(getString(R.string.game_code_key), "");
-        playerId = settings.getString(getString(R.string.player_id_key), "");
+        playerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         //playerId = FirebaseAuth.getInstance().getCurrentUser().getProviderData().get(1).getUid();
         //playerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 

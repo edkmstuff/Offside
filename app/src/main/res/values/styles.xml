@@ -39,6 +39,7 @@
         <!--<item name="colorControlActivated">@color/material_lime_a700</item>-->
         <!--<item name="colorControlHighlight">@color/material_green_a200</item>-->
         <!--<item name="android:windowBackground">@color/material_green_50</item>-->
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
 

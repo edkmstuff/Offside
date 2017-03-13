@@ -21,6 +21,9 @@ public class ChatMessage {
     @com.google.gson.annotations.SerializedName("MTY")
     private String messageType;
 
+    @com.google.gson.annotations.SerializedName("TLTA")
+    private int timeLeftToAnswer;
+
 //Todo: remove when remove dummy
     public ChatMessage(String messageText, boolean isIncoming){
         this.messageText=messageText + " - " + isIncoming;
@@ -69,5 +72,13 @@ public class ChatMessage {
 
     public void setMessageType(String messageType) {
         this.messageType = messageType;
+    }
+
+    public int getTimeLeftToAnswer() {
+        return timeLeftToAnswer;
+    }
+
+    public void setTimeLeftToAnswer(int timeLeftToAnswer) {
+        this.timeLeftToAnswer = timeLeftToAnswer;
     }
 }

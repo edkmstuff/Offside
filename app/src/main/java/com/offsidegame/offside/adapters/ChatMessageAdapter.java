@@ -356,7 +356,16 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 });
 
                 //set the timeToAskQuestion timer
-                timeToAnswer = question.getTimeToAnswerQuestion();
+                //time to answer was attached to chat message and is updated in thge server using timer
+                timeToAnswer = chatMessage.getTimeLeftToAnswer();
+
+//                //in case user opened app in the middle of asked question
+//                // time to answer is taken from the chat
+//                int updatedTimeToAnswerFromChat = chatMessage.getTimeLeftToAnswer();
+//                if (updatedTimeToAnswerFromChat > 0)
+//                    timeToAnswer = updatedTimeToAnswerFromChat;
+
+
                 timeToAnswerTimer = new CountDownTimer(timeToAnswer, 100) {
                     @Override
                     public void onTick(long millisUntilFinished) {

@@ -24,6 +24,8 @@ public class OffsideApplication extends Application {
     private static String messageTypeProcessedQuestion = "PROCESSED_QUESTION";
     private static String messageTypeClosedQuestion = "CLOSED_QUESTION";
 
+    private static String profileImageFileName = "profileImage.png";
+
     public static String getMessageTypeText() {
         return messageTypeText;
     }
@@ -38,6 +40,10 @@ public class OffsideApplication extends Application {
 
     public static String getMessageTypeClosedQuestion() {
         return messageTypeClosedQuestion;
+    }
+
+    public static String getProfileImageFileName() {
+        return profileImageFileName;
     }
 
     public Context getContext() {

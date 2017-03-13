@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.auth.FirebaseAuth;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.helpers.QuestionEventsHandler;
@@ -314,7 +315,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
     private void getPlayerScore() {
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         String gameId = settings.getString(getString(R.string.game_id_key), "");
-        String userId = settings.getString(getString(R.string.player_id_key), "");
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String userName = settings.getString(getString(R.string.player_display_name_key), "");
 
         if (gameId != null && gameId != ""
@@ -474,7 +475,7 @@ public class ViewPlayerScoreActivity extends AppCompatActivity {
 
             case R.id.action_quit:
                 String gameId = settings.getString(getString(R.string.game_id_key), "");
-                signalRService.quitGame(gameId);
+                signalRService.quitGame(gameId, FirebaseAuth.getInstance().getCurrentUser().getUid());
                 OffsideApplication.setIsPlayerQuitGame(true);
                 Intent intent = new Intent();
                 intent.setClass(context,JoinGameActivity.class);
