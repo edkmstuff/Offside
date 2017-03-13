@@ -21,6 +21,7 @@ import com.firebase.ui.auth.ResultCodes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.OffsideApplication;
 
 import org.acra.ACRA;
@@ -98,9 +99,11 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         // in case user does not have profile picture, we generate image with Initials
         if (playerProfilePictureUrl == null){
-            String initials = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().toUpperCase().substring(0,1);
-            Bitmap profilePicture = generateInitialsBasedProfileImage(initials);
-            storeImage(profilePicture);
+            String displayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().toUpperCase();
+            String[] displayNameParts = displayName.trim().split(" ");
+            String initials = displayNameParts.length > 1? displayNameParts[0].substring(0,1) + displayNameParts[1].substring(0,1) : displayNameParts[0].substring(0,1);
+            Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context);
+            ImageHelper.storeImage(profilePicture, context);
             playerProfilePictureUrl = OffsideApplication.getProfileImageFileName();
         }
 
@@ -120,62 +123,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         startActivity(intent);
     }
 
-    private void storeImage(Bitmap image) {
-        String filename = OffsideApplication.getProfileImageFileName();
-        FileOutputStream outputStream;
-        try {
-            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-            image.compress(Bitmap.CompressFormat.PNG, 90, outputStream);
-            outputStream.close();
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleException(ex);
-        }
 
 
 
-
-
-
-
-
-    }
-
-    private Bitmap generateInitialsBasedProfileImage(String initials){
-        Bitmap b=Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(b);
-        Paint paint = new Paint();
-        paint.setColor(Color.WHITE);
-        paint.setStyle(Paint.Style.FILL);
-        c.drawText(initials, 25,25,paint);
-        return b;
-    }
-
-    /** Create a File for saving an image or video */
-//    private  File getOutputMediaFile(){
-//        // To be safe, you should check that the SDCard is mounted
-//        // using Environment.getExternalStorageState() before doing this.
-//        File mediaStorageDir = new File(Environment.get()
-//                + "/Android/data/"
-//                + getApplicationContext().getPackageName()
-//                + "/Files");
-//
-//        // This location works best if you want the created images to be shared
-//        // between applications and persist after your app has been uninstalled.
-//
-//        // Create the storage directory if it does not exist
-//        if (! mediaStorageDir.exists()){
-//            if (! mediaStorageDir.mkdirs()){
-//                return null;
-//            }
-//        }
-//        // Create a media file name
-//        String timeStamp = new SimpleDateFormat("ddMMyyyy_HHmm").format(new Date());
-//        File mediaFile;
-//        String mImageName="MI_"+ timeStamp +".jpg";
-//        mediaFile = new File(mediaStorageDir.getPath() + File.separator + mImageName);
-//        return mediaFile;
-//    }
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -24,7 +24,7 @@ public class OffsideApplication extends Application {
     private static String messageTypeProcessedQuestion = "PROCESSED_QUESTION";
     private static String messageTypeClosedQuestion = "CLOSED_QUESTION";
 
-    private static String profileImageFileName = "profileImage.png";
+    private static String profileImageFileName = "profileImage.jpg";
 
     public static String getMessageTypeText() {
         return messageTypeText;

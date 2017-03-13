@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
@@ -29,12 +26,13 @@ import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
-import com.offsidegame.offside.helpers.RoundImage;
+import com.offsidegame.offside.helpers.ImageHelper;
+
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.squareup.picasso.Picasso;
+
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -49,9 +47,9 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
     private EditText gameCodeEditText;
-    private TextView join;
+    private TextView joinTextView;
     private TextView userNameTextView;
-    private ImageView profilePicture;
+    private ImageView playerPictureImageView;
 
 
 
@@ -100,41 +98,25 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             playerDisplayName = player.getDisplayName();
             playerId = player.getUid();
 
-
-            playerProfilePictureUrl = player.getPhotoUrl() != null? player.getPhotoUrl().toString() : OffsideApplication.getProfileImageFileName();
-
-            userNameTextView = (TextView) findViewById(R.id.join_game_user_name_text_view);
+            userNameTextView = (TextView) findViewById(R.id.jg_user_name_text_view);
             userNameTextView.setText(playerDisplayName);
 
-            profilePicture = (ImageView) findViewById(R.id.userPictureImageView);
+            playerProfilePictureUrl = player.getPhotoUrl() != null? player.getPhotoUrl().toString() : null;
 
-File file = new File(playerProfilePictureUrl);
-            File file2 = new File(getFilesDir().getAbsolutePath() + "/" + playerProfilePictureUrl);
-
-
-
-
-           // Picasso.with(context).load()
-
-            Picasso.with(context).load(file2).into(profilePicture, new com.squareup.picasso.Callback() {
-                @Override
-                public void onSuccess() {
-                    Bitmap bm = ((BitmapDrawable) profilePicture.getDrawable()).getBitmap();
-                    RoundImage roundedImage = new RoundImage(bm);
-                    profilePicture.setImageDrawable(roundedImage);
-                }
-
-                @Override
-                public void onError() {
-                    throw new RuntimeException(activityName + " - onCreate - Error loading image with url: " + playerProfilePictureUrl);
-                }
-            });
+            playerPictureImageView = (ImageView) findViewById(R.id.jg_player_picture_image_view);
+            if (playerProfilePictureUrl != null) {
+                ImageHelper.loadImage(context, playerProfilePictureUrl, playerPictureImageView, activityName);
+            }
+            else {
+                File initialsProfilePicturesFile = new File(getFilesDir().getAbsolutePath() + "/" + OffsideApplication.getProfileImageFileName());
+                ImageHelper.loadImage(context, initialsProfilePicturesFile, playerPictureImageView, activityName);
+            }
 
 
-            gameCodeEditText = (EditText) findViewById(R.id.gameCode);
-            join = (TextView) findViewById(R.id.join_text_view);
+            gameCodeEditText = (EditText) findViewById(R.id.jg_game_code_edit_text);
+            joinTextView = (TextView) findViewById(R.id.jg_join_text_view);
 
-            join.setOnClickListener(new View.OnClickListener() {
+            joinTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     String gameCodeString = gameCodeEditText.getText().toString();
