@@ -7,12 +7,15 @@ import com.offsidegame.offside.R;
 
 import org.acra.*;
 import org.acra.annotation.*;
+import org.acra.sender.HttpSender;
 
 /**
  * Created by KFIR on 1/15/2017.
  */
 @ReportsCrashes(
-        mailTo = "edkm.stuff@gmail.com",
+        formUri = "http://192.168.1.140:8080/api/Offside/Test",
+        httpMethod = HttpSender.Method.POST,
+
         mode = ReportingInteractionMode.TOAST,
         resToastText = R.string.crash_toast_text
 )

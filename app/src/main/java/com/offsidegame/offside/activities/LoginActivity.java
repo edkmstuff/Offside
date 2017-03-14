@@ -59,6 +59,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private void login() {
         //taken from: https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md
         try {
+
+
             FirebaseAuth auth = FirebaseAuth.getInstance();
             if (auth == null)
                 throw new Exception("LoginActivity -> login: auth is null");
@@ -118,9 +120,10 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         editor.commit();
 
-        Intent intent = new Intent(context, JoinGameActivity.class);
-        // intent.putExtra("gameCodeFromNotification", gameCodeFromNotification);
-        startActivity(intent);
+//        Intent intent = new Intent(context, JoinGameActivity.class);
+//        // intent.putExtra("gameCodeFromNotification", gameCodeFromNotification);
+//        startActivity(intent);
+       // throw new RuntimeException("TEST EXCEPTION FROM KFIR");
     }
 
 
