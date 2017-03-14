@@ -27,10 +27,8 @@ public class Player {
     private int offsideCoins;
     @com.google.gson.annotations.SerializedName("B")
     private int balance;
-
     @com.google.gson.annotations.SerializedName("GP")
     private int generalPosition;
-
     @com.google.gson.annotations.SerializedName("PGP")
     private int privateGamePosition;
 

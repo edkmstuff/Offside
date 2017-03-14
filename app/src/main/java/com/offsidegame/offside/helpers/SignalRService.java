@@ -64,8 +64,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    public final String ip = new String("192.168.1.140:8080");
-    //public final String ip = new String("10.0.0.17:8080");
+    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
 
 
@@ -395,11 +395,11 @@ public class SignalRService extends Service {
         });
     }
 
-    public void saveUser(User user) {
+    public void saveLoggedInUser(User user) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
-        hub.invoke(Boolean.class, "SaveUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri(), user.getPassword(), user.getDeviceToken()).done(new Action<Boolean>() {
+        hub.invoke(Boolean.class, "SaveLoggedInUser", user.getId(), user.getName(), user.getEmail()).done(new Action<Boolean>() {
             @Override
             public void run(Boolean isUserSaved) throws Exception {
                 EventBus.getDefault().post(new IsAnswerAcceptedEvent(isUserSaved));

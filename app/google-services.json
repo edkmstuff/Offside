@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "199470228251-72cpd11gbfirkvvbik8ktqds4rdr035a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.offsidegame.offside",
+            "certificate_hash": "0d0e18dc7421117a572278f286271e676692259c"
+          }
+        },
+        {
+          "client_id": "199470228251-apc3atbob7stod3cva9eqcq95qdsppfc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.offsidegame.offside",
+            "certificate_hash": "20b5dcb45457debe95f2b3c4550dc16b24d0a715"
+          }
+        },
+        {
           "client_id": "199470228251-mtuv5gfh5b5m490ub98r1uih4j8ja2i5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

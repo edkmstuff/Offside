@@ -5,32 +5,29 @@ package com.offsidegame.offside.models;
  */
 
 public class User {
-    @com.google.gson.annotations.SerializedName("Id")
+    @com.google.gson.annotations.SerializedName("I")
     private String id;
-    @com.google.gson.annotations.SerializedName("Name")
+    @com.google.gson.annotations.SerializedName("N")
     private String name;
-    @com.google.gson.annotations.SerializedName("Email")
+    @com.google.gson.annotations.SerializedName("E")
     private String email;
-    @com.google.gson.annotations.SerializedName("ProfilePictureUri")
+    @com.google.gson.annotations.SerializedName("PPU")
     private String profilePictureUri;
-    @com.google.gson.annotations.SerializedName("Password")
-    private String password;
-    @com.google.gson.annotations.SerializedName("DeviceToken")
-    private String deviceToken;
-    @com.google.gson.annotations.SerializedName("offsideCoins")
+    @com.google.gson.annotations.SerializedName("PF")
+    private GameFeature[] premiumFeatures;
+    @com.google.gson.annotations.SerializedName("OC")
     private int offsideCoins;
 
 
     public User(){}
 
-    public User(String id,String name, String email, String profilePictureUri, String password, String deviceToken){
+    public User(String id,String name, String email, String profilePictureUri){
         this.id=id;
         this.name=name;
         this.email= email;
         this.profilePictureUri=profilePictureUri;
-        this.password= password;
-        this.deviceToken = deviceToken;
-
+        this.premiumFeatures = null;
+        this.offsideCoins = 0;
     }
 
     public String getId() {
@@ -65,21 +62,19 @@ public class User {
         this.profilePictureUri = profilePictureUri;
     }
 
-    public String getPassword() {
-        return password;
+    public GameFeature[] getPremiumFeatures() {
+        return premiumFeatures;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPremiumFeatures(GameFeature[] premiumFeatures) {
+        this.premiumFeatures = premiumFeatures;
     }
 
-    public String getDeviceToken() {
-        return deviceToken;
+    public int getOffsideCoins() {
+        return offsideCoins;
     }
 
-    public void setDeviceToken(String deviceToken) {
-        this.deviceToken = deviceToken;
+    public void setOffsideCoins(int offsideCoins) {
+        this.offsideCoins = offsideCoins;
     }
-
-
 }

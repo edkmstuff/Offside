@@ -4,7 +4,7 @@ package com.offsidegame.offside.models;
  * Created by user on 3/5/2017.
  */
 
-class GameFeature {
+public class GameFeature {
     @com.google.gson.annotations.SerializedName("N")
     private String name;
     @com.google.gson.annotations.SerializedName("C")

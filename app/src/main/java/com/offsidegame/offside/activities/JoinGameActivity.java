@@ -50,9 +50,6 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private TextView joinTextView;
     private TextView userNameTextView;
     private ImageView playerPictureImageView;
-
-
-
     private LinearLayout joinGameRoot;
     private LinearLayout loadingGameRoot;
     private Toolbar toolbar;
