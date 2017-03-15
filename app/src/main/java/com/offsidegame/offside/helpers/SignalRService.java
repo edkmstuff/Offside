@@ -261,7 +261,7 @@ public class SignalRService extends Service {
         });
     }
 
-    public void joinGame(String gameCode, String playerId, String playerDisplayName, String playerProfilePictureUrl ) {
+    public void joinGame(String gameCode, String playerId, String playerDisplayName, String playerProfilePictureUrl) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
@@ -274,7 +274,7 @@ public class SignalRService extends Service {
         });
     }
 
-    public void quitGame(String gameId ,String playerId) {
+    public void quitGame(String gameId, String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
@@ -396,9 +396,9 @@ public class SignalRService extends Service {
         });
     }
 
-    public void saveLoggedInUser(User user) {
+    public boolean saveLoggedInUser(User user) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
+            return false;
 
         hub.invoke(Boolean.class, "SaveLoggedInUser", user.getId(), user.getName(), user.getEmail()).done(new Action<Boolean>() {
             @Override
@@ -408,20 +408,21 @@ public class SignalRService extends Service {
 
         });
 
+        return true;
     }
 
-    public void saveImageInDatabase(String playerId, byte[] image) {
+    public boolean saveImageInDatabase(String playerId, String imageString) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
+            return false;
 
-        String imgString = Base64.encodeToString(image, Base64.NO_WRAP);
-        hub.invoke(Boolean.class, "SaveImageInDatabase", playerId, imgString).done(new Action<Boolean>() {
+        hub.invoke(Boolean.class, "SaveImageInDatabase", playerId, imageString).done(new Action<Boolean>() {
             @Override
             public void run(Boolean isImageSaved) throws Exception {
                 //EventBus.getDefault().post(new IsAnswerAcceptedEvent(isUserSaved));
             }
 
         });
+        return true;
 
     }
 

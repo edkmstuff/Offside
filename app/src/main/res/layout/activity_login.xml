@@ -3,87 +3,41 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layoutDirection="ltr"
-    android:keepScreenOn="true"
     android:background="@color/chatPrimary"
+    android:keepScreenOn="true"
+    android:layoutDirection="ltr"
     tools:context="com.offsidegame.offside.activities.LoginActivity">
 
 
+    <LinearLayout
+        android:id="@+id/l_loading_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
 
+        android:orientation="vertical"
+        android:visibility="visible">
 
-
-    <!--<include-->
-        <!--android:id="@+id/app_bar"-->
-        <!--layout="@layout/app_bar"-->
-        <!--/>-->
-<!--<LinearLayout-->
-    <!--android:id="@+id/l_loading_root"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:gravity="center"-->
-    <!--android:visibility="gone">-->
-
-    <!--<ProgressBar-->
-        <!--android:layout_gravity="center"-->
-        <!--style="?android:attr/progressBarStyleLarge"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content">-->
-
-    <!--</ProgressBar>-->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_25"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            />
 
 
 
 
-<!--</LinearLayout>-->
-<!--<LinearLayout-->
-    <!--android:id="@+id/l_content_root"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:orientation="vertical"-->
-    <!--android:padding="25sp">-->
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_gravity="center">
 
-    <!--<fragment-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:name="com.offsidegame.offside.activities.fragments.FacebookLoginFragment"-->
-        <!--android:id="@+id/fragment_facebook_login"-->
-        <!--tools:layout="@layout/fragment_facebook_login" />-->
+        </ProgressBar>
 
-    <!--<TextView-->
-        <!--android:text="OR"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:gravity="center"-->
-        <!--android:layout_marginTop="40dp"-->
-        <!--android:layout_marginBottom="20dp"-->
-        <!--android:textSize="@dimen/OffsideMediumText"-->
-        <!--/>-->
+    </LinearLayout>
 
-    <!--<EditText-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:inputType="textEmailAddress"-->
-        <!--android:ems="10"-->
-        <!--android:hint="Email"-->
-        <!--android:id="@+id/email" />-->
-
-    <!--<Button-->
-        <!--android:text="Login"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-
-        <!--android:id="@+id/email_login_button" />-->
-
-
-    <!--<Button-->
-        <!--android:text="Logout"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-
-        <!--android:id="@+id/logout_button" />-->
-
-
-
-<!--</LinearLayout>-->
 
 </LinearLayout>

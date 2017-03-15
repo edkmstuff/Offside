@@ -6,18 +6,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.util.Base64;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
@@ -29,23 +24,15 @@ import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.helpers.SignalRService;
-import com.offsidegame.offside.models.GameFeature;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.User;
-
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 
 
 public class LoginActivity extends AppCompatActivity implements Serializable {
@@ -55,6 +42,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
+    private LinearLayout loadingRoot;
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
@@ -78,7 +66,11 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
-            //login();
+
+            loadingRoot = (LinearLayout) findViewById(R.id.l_loading_root);
+            loadingRoot.setVisibility(View.VISIBLE);
+
+
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleException(ex);
         }
@@ -118,8 +110,12 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     public void onConnectionEvent(ConnectionEvent connectionEvent) {
         try {
             boolean isConnected = connectionEvent.getConnected();
-            if (isConnected)
+            if (isConnected){
                 Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
+                handleSuccessfulLogin();
+
+            }
+
             else
                 Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
@@ -138,7 +134,11 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             }
 
             if (eventContext == context) {
-               login();
+
+                loadingRoot.setVisibility(View.GONE);
+                login();
+
+
             }
         }
         catch (Exception ex){
@@ -187,6 +187,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         String playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
         String playerEmail = player.getEmail();
 
+        boolean isUserImageSaved= true;
+        boolean isUserDetailsSaved= true;
+
         // in case user does not have profile picture, we generate image with Initials
         if (playerProfilePictureUrl == null) {
             String displayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().toUpperCase();
@@ -194,7 +197,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
             Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context);
             byte [] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
-            signalRService.saveImageInDatabase(playerId,profilePictureToSave);
+            String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
+
+            isUserImageSaved =  signalRService.saveImageInDatabase(playerId, imageString);
             //ImageHelper.storeImage(profilePicture, context);
             playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl()+playerId;
 
@@ -206,10 +211,14 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         editor.commit();
 
         User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl);
-        signalRService.saveLoggedInUser(user);
+        isUserDetailsSaved = signalRService.saveLoggedInUser(user);
 
-        Intent intent = new Intent(context, JoinGameActivity.class);
-        startActivity(intent);
+        if(isUserDetailsSaved && isUserImageSaved){
+            Intent intent = new Intent(context, JoinGameActivity.class);
+            startActivity(intent);
+        }
+
+
 
     }
 
