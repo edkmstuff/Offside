@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Base64;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.offsidegame.offside.R;
@@ -409,6 +410,20 @@ public class SignalRService extends Service {
 
     }
 
+    public void saveImageInDatabase(String playerId, byte[] image) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+
+        String imgString = Base64.encodeToString(image, Base64.NO_WRAP);
+        hub.invoke(Boolean.class, "SaveImageInDatabase", playerId, imgString).done(new Action<Boolean>() {
+            @Override
+            public void run(Boolean isImageSaved) throws Exception {
+                //EventBus.getDefault().post(new IsAnswerAcceptedEvent(isUserSaved));
+            }
+
+        });
+
+    }
 
     //</editor-fold>
 

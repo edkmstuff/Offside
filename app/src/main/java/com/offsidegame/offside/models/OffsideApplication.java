@@ -30,6 +30,8 @@ public class OffsideApplication extends Application {
     private static String messageTypeClosedQuestion = "CLOSED_QUESTION";
 
     private static String profileImageFileName = "profileImage.jpg";
+    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
+    //private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
 
     public static String getMessageTypeText() {
         return messageTypeText;
@@ -49,6 +51,10 @@ public class OffsideApplication extends Application {
 
     public static String getProfileImageFileName() {
         return profileImageFileName;
+    }
+
+    public static String getInitialsProfilePictureUrl() {
+        return initialsProfilePictureUrl;
     }
 
     public Context getContext() {

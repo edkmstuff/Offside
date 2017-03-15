@@ -65,6 +65,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private String playerDisplayName;
     private String playerProfilePictureUrl;
 
+    private SharedPreferences settings;
+
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
@@ -88,6 +90,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_join_game);
 
+            settings = getSharedPreferences(getString(R.string.preference_name), 0);
+
             toolbar = (Toolbar) findViewById((R.id.app_bar));
             setSupportActionBar(toolbar);
 
@@ -98,16 +102,17 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             userNameTextView = (TextView) findViewById(R.id.jg_user_name_text_view);
             userNameTextView.setText(playerDisplayName);
 
-            playerProfilePictureUrl = player.getPhotoUrl() != null? player.getPhotoUrl().toString() : null;
+
+            playerProfilePictureUrl = settings.getString(getString(R.string.player_profile_picture_url_key),null);
 
             playerPictureImageView = (ImageView) findViewById(R.id.jg_player_picture_image_view);
             if (playerProfilePictureUrl != null) {
                 ImageHelper.loadImage(context, playerProfilePictureUrl, playerPictureImageView, activityName);
             }
-            else {
-                File initialsProfilePicturesFile = new File(getFilesDir().getAbsolutePath() + "/" + OffsideApplication.getProfileImageFileName());
-                ImageHelper.loadImage(context, initialsProfilePicturesFile, playerPictureImageView, activityName);
-            }
+//            else {
+//                File initialsProfilePicturesFile = new File(getFilesDir().getAbsolutePath() + "/" + OffsideApplication.getProfileImageFileName());
+//                ImageHelper.loadImage(context, initialsProfilePicturesFile, playerPictureImageView, activityName);
+//            }
 
 
             gameCodeEditText = (EditText) findViewById(R.id.jg_game_code_edit_text);
@@ -239,7 +244,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             int balance = gameInfo.getBalance();
             int totalPlayers = gameInfo.getTotalPlayers();
 
-            SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+
             SharedPreferences.Editor editor = settings.edit();
 
             editor.putString(getString(R.string.game_id_key), gameId);

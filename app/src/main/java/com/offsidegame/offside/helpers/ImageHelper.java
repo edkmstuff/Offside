@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 
 import org.acra.ACRA;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 
@@ -98,6 +99,13 @@ public class ImageHelper {
 
         canvas.drawText(initials, xPos, yPos, textPaint);
         return bitmap;
+    }
+
+    // convert from bitmap to byte array
+    public static byte[] getBytesFromBitmap(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
+        return stream.toByteArray();
     }
 
 

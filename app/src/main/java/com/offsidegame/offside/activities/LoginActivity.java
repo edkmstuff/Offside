@@ -168,7 +168,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                 new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
                                 new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
                         //.setTosUrl("https://superapp.example.com/terms-of-service.html")
-                        .setIsSmartLockEnabled(true)
+                        .setIsSmartLockEnabled(false)
                         //.setIsSmartLockEnabled(!BuildConfig.DEBUG)
                         .setTheme(R.style.GreenTheme)
                         .setLogo(R.drawable.logo)
@@ -193,10 +193,17 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             String[] displayNameParts = displayName.trim().split(" ");
             String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
             Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context);
-            ImageHelper.storeImage(profilePicture, context);
-            playerProfilePictureUrl = OffsideApplication.getProfileImageFileName();
+            byte [] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
+            signalRService.saveImageInDatabase(playerId,profilePictureToSave);
+            //ImageHelper.storeImage(profilePicture, context);
+            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl()+playerId;
+
         }
 
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(getString(R.string.player_profile_picture_url_key),playerProfilePictureUrl);
+        editor.commit();
 
         User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl);
         signalRService.saveLoggedInUser(user);
