@@ -113,9 +113,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             if (isConnected){
                 Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
                 handleSuccessfulLogin();
-
             }
-
             else
                 Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
@@ -128,17 +126,13 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         try {
             Context eventContext = signalRServiceBoundEvent.getContext();
 
-
             if (eventContext == null) {
                 return;
             }
-
             if (eventContext == context) {
 
                 loadingRoot.setVisibility(View.GONE);
                 login();
-
-
             }
         }
         catch (Exception ex){
@@ -150,7 +144,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private void login() {
         //taken from: https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md
         try {
-
 
             FirebaseAuth auth = FirebaseAuth.getInstance();
             if (auth == null)
@@ -224,47 +217,55 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // RC_SIGN_IN is the request code you passed into startActivityForResult(...) when starting the sign in flow.
-        if (requestCode == RC_SIGN_IN) {
-            IdpResponse response = IdpResponse.fromResultIntent(data);
 
-            // Successfully signed in
-            if (resultCode == ResultCodes.OK) {
-                handleSuccessfulLogin();
-                return;
+        try
+        {
+            super.onActivityResult(requestCode, resultCode, data);
+            // RC_SIGN_IN is the request code you passed into startActivityForResult(...) when starting the sign in flow.
 
-            } else if (resultCode == RESULT_CANCELED) {
+            if (requestCode == RC_SIGN_IN) {
+                IdpResponse response = IdpResponse.fromResultIntent(data);
 
-                Toast.makeText(context, "SIGN IN FAILED - CANCELLED", Toast.LENGTH_LONG);
-                return;
+                // Successfully signed in
+                if (resultCode == ResultCodes.OK) {
+                    handleSuccessfulLogin();
+                    return;
 
-            } else {
-                // Sign in failed
-                if (response == null) {
-                    // User pressed back button
+                } else if (resultCode == RESULT_CANCELED) {
+
                     Toast.makeText(context, "SIGN IN FAILED - CANCELLED", Toast.LENGTH_LONG);
                     return;
+
+                } else {
+                    // Sign in failed
+                    if (response == null) {
+                        // User pressed back button
+                        Toast.makeText(context, "SIGN IN FAILED - CANCELLED", Toast.LENGTH_LONG);
+                        return;
+                    }
+
+                    if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
+                        Toast.makeText(context, "SIGN IN FAILED - NO NETWORK", Toast.LENGTH_LONG);
+                        //showSnackbar(R.string.no_internet_connection);
+                        return;
+                    }
+
+                    if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
+                        Toast.makeText(context, "SIGN IN FAILED - UNKNOWN ERROR", Toast.LENGTH_LONG);
+                        return;
+                    }
                 }
 
-                if (response.getErrorCode() == ErrorCodes.NO_NETWORK) {
-                    Toast.makeText(context, "SIGN IN FAILED - NO NETWORK", Toast.LENGTH_LONG);
-                    //showSnackbar(R.string.no_internet_connection);
-                    return;
-                }
-
-                if (response.getErrorCode() == ErrorCodes.UNKNOWN_ERROR) {
-                    Toast.makeText(context, "SIGN IN FAILED - UNKNOWN ERROR", Toast.LENGTH_LONG);
-                    return;
-                }
+                Toast.makeText(context, "SIGN IN FAILED - UNKNOWN RESPONSE", Toast.LENGTH_LONG);
             }
 
-            Toast.makeText(context, "SIGN IN FAILED - UNKNOWN RESPONSE", Toast.LENGTH_LONG);
-
-
         }
-    }
+        catch (Exception ex)
+        {
+            ACRA.getErrorReporter().handleException(ex);
+        }
 
+    }
 
 }
 

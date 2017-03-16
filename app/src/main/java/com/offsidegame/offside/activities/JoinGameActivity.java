@@ -38,7 +38,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.File;
 import java.io.Serializable;
 
 public class JoinGameActivity extends AppCompatActivity implements Serializable {
@@ -60,13 +59,11 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private TextView generatePrivateGameCodeButton;
     private String[] gameTitles;
     private String[] gameIds;
-
     private String playerId;
     private String playerDisplayName;
     private String playerProfilePictureUrl;
-
     private SharedPreferences settings;
-
+    private AvailableGame[] availableGames ;
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
@@ -92,8 +89,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
             settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
-            toolbar = (Toolbar) findViewById((R.id.app_bar));
-            setSupportActionBar(toolbar);
+            //toolbar = (Toolbar) findViewById((R.id.app_bar));
+            //setSupportActionBar(toolbar);
 
             FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
             playerDisplayName = player.getDisplayName();
@@ -102,18 +99,11 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             userNameTextView = (TextView) findViewById(R.id.jg_user_name_text_view);
             userNameTextView.setText(playerDisplayName);
 
+            playerPictureImageView = (ImageView) findViewById(R.id.jg_player_picture_image_view);
 
             playerProfilePictureUrl = settings.getString(getString(R.string.player_profile_picture_url_key),null);
-
-            playerPictureImageView = (ImageView) findViewById(R.id.jg_player_picture_image_view);
-            if (playerProfilePictureUrl != null) {
-                ImageHelper.loadImage(context, playerProfilePictureUrl, playerPictureImageView, activityName);
-            }
-//            else {
-//                File initialsProfilePicturesFile = new File(getFilesDir().getAbsolutePath() + "/" + OffsideApplication.getProfileImageFileName());
-//                ImageHelper.loadImage(context, initialsProfilePicturesFile, playerPictureImageView, activityName);
-//            }
-
+            playerProfilePictureUrl = playerProfilePictureUrl== null ? OffsideApplication.getDefaultProfilePictureUrl()  : playerProfilePictureUrl;
+            ImageHelper.loadImage(context, playerProfilePictureUrl, playerPictureImageView, activityName);
 
             gameCodeEditText = (EditText) findViewById(R.id.jg_game_code_edit_text);
             joinTextView = (TextView) findViewById(R.id.jg_join_text_view);
@@ -122,7 +112,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 @Override
                 public void onClick(View view) {
                     String gameCodeString = gameCodeEditText.getText().toString();
-                    joinGame(gameCodeString);
+                    joinGame(gameCodeString,false);
                 }
             });
 
@@ -207,11 +197,13 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
         super.onStop();
     }
 
-    private void joinGame( String privateGameCode) {
+
+
+    private void joinGame( String privateGameCode, boolean isPrivateGameCreator) {
         if (isBoundToSignalRService) {
 
             OffsideApplication.setIsPlayerQuitGame(false);
-            signalRService.joinGame(privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl );
+            signalRService.joinGame(privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl,isPrivateGameCreator );
             loadingGameRoot.setVisibility(View.VISIBLE);
             joinGameRoot.setVisibility(View.GONE);
             createPrivateGameRoot.setVisibility(View.GONE);
@@ -222,7 +214,53 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
         return gameIds[selectedGamePosition];
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+        try {
+            Context eventContext = signalRServiceBoundEvent.getContext();
 
+            if (eventContext == null) {
+                Intent intent = new Intent(context, JoinGameActivity.class);
+                context.startActivity(intent);
+                return;
+            }
+
+            if (eventContext == context) {
+                if (OffsideApplication.isPlayerQuitGame()) {
+                    loadingGameRoot.setVisibility(View.GONE);
+                    joinGameRoot.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+                SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+                String gameId = settings.getString(getString(R.string.game_id_key), "");
+                String gameCode = settings.getString(getString(R.string.game_code_key), "");
+                signalRService.isGameActive(gameId, gameCode);
+                String [] emptyAvailableGames= new String[]{"לא נמצאו משחקים זמינים"};
+                setAvailableGamesSpinnerAdapter(emptyAvailableGames);
+
+
+
+            }
+        }
+        catch (Exception ex){
+            ACRA.getErrorReporter().handleException(ex);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectionEvent(ConnectionEvent connectionEvent) {
+        try {
+            boolean isConnected = connectionEvent.getConnected();
+            if (isConnected)
+                Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
+        }
+        catch(Exception ex){
+            ACRA.getErrorReporter().handleException(ex);
+        }
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onJoinGame(JoinGameEvent joinGameEvent) {
@@ -244,7 +282,6 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             int balance = gameInfo.getBalance();
             int totalPlayers = gameInfo.getTotalPlayers();
 
-
             SharedPreferences.Editor editor = settings.edit();
 
             editor.putString(getString(R.string.game_id_key), gameId);
@@ -252,76 +289,21 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             editor.putString(getString(R.string.private_game_title_key), privateGameTitle);
             editor.putString(getString(R.string.home_team_key), homeTeam);
             editor.putString(getString(R.string.away_team_key), awayTeam);
-            editor.putInt(getString(R.string.offside_coins_key), offsideCoins);
-            editor.putInt(getString(R.string.balance_key), balance);
             editor.putInt(getString(R.string.total_players_key), totalPlayers);
 
 
             editor.commit();
+
+            OffsideApplication.setBalance(balance);
+            OffsideApplication.setOffsideCoins(offsideCoins);
+
+
 
 
             Intent intent = new Intent(context, ChatActivity.class);
             startActivity(intent);
         }
         catch(Exception ex){
-            ACRA.getErrorReporter().handleException(ex);
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onConnectionEvent(ConnectionEvent connectionEvent) {
-        try {
-            boolean isConnected = connectionEvent.getConnected();
-            if (isConnected)
-                Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
-        }
-        catch(Exception ex){
-            ACRA.getErrorReporter().handleException(ex);
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
-        try {
-            Context eventContext = signalRServiceBoundEvent.getContext();
-
-
-            if (eventContext == null) {
-                Intent intent = new Intent(context, JoinGameActivity.class);
-                context.startActivity(intent);
-                return;
-            }
-
-            if (eventContext == context) {
-                if (OffsideApplication.isPlayerQuitGame()) {
-                    loadingGameRoot.setVisibility(View.GONE);
-                    joinGameRoot.setVisibility(View.VISIBLE);
-                    return;
-                }
-
-
-                Intent intent = getIntent();
-                String gameCodeFromNotification = "";
-                //String gameCodeFromNotification = intent.getExtras().getString("gameCodeFromNotification");
-                if (!(gameCodeFromNotification.equals("") || gameCodeFromNotification == null)) {
-                    String gameCodeString = gameCodeFromNotification.toString();
-                    joinGame(gameCodeString);
-                    loadingGameRoot.setVisibility(View.VISIBLE);
-                    joinGameRoot.setVisibility(View.GONE);
-                } else {
-                    SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-                    String gameId = settings.getString(getString(R.string.game_id_key), "");
-                    String gameCode = settings.getString(getString(R.string.game_code_key), "");
-                    signalRService.isGameActive(gameId, gameCode);
-
-                }
-
-
-            }
-        }
-        catch (Exception ex){
             ACRA.getErrorReporter().handleException(ex);
         }
     }
@@ -335,7 +317,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 //Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
                 SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
                 String gameCode = settings.getString(getString(R.string.game_code_key), "");
-                joinGame(gameCode);
+                joinGame(gameCode,false);
 
             } else {
                 loadingGameRoot.setVisibility(View.GONE);
@@ -347,11 +329,10 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
         }
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAvailableGames(AvailableGamesEvent availableGamesEvent) {
         try {
-            AvailableGame[] availableGames = availableGamesEvent.getAvailableGames();
+            availableGames = availableGamesEvent.getAvailableGames();
             if (availableGames.length == 0)
                 throw new Exception(activityName+ " - onReceiveAvailableGames - Error: available games is empty ");
 
@@ -362,18 +343,22 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 gameTitles[i] = availableGames[i].getGameTitle();
             }
 
-            //CustomSpinnerAdapter adapter1 = new CustomSpinnerAdapter(context, new ArrayList<String>(Arrays.asList(gameTitles)));
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, gameTitles);
-// Specify the layout to use when the list of choices appears
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-// Apply the adapter to the spinner
-            availableGamesSpinner.setAdapter(adapter);
-            availableGamesSpinner.setSelection(0);
+            setAvailableGamesSpinnerAdapter(gameTitles);
         }
         catch (Exception ex){
             ACRA.getErrorReporter().handleException(ex);
         }
+    }
+
+    private void setAvailableGamesSpinnerAdapter(String [] gameTitles) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, gameTitles);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        availableGamesSpinner.setAdapter(adapter);
+        if(gameTitles.length>0)
+            availableGamesSpinner.setSelection(0);
     }
 
 
@@ -381,7 +366,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
         try {
             String privateGameCode = privateGameGeneratedEvent.getPrivateGameCode();
-            joinGame(privateGameCode);
+            joinGame(privateGameCode, true);
             //privateGameCodeTextView.setText(privateGameCode);
             //gameCodeEditText.setText(privateGameCode);
             //privateGameCodeTextView.setVisibility(View.VISIBLE);

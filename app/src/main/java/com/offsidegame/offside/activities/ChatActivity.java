@@ -1,34 +1,22 @@
 package com.offsidegame.offside.activities;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.ChatMessageAdapter;
@@ -38,16 +26,14 @@ import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
-import com.offsidegame.offside.helpers.QuestionEventsHandler;
-import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.Position;
-import com.squareup.picasso.Picasso;
 
+import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -63,7 +49,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private SignalRService signalRService;
     private boolean isBoundToSignalRService = false;
-    private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
+    //private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private TextView chatSendTextView;
     private EditText chatMessageEditText;
     private String gameId;
@@ -112,74 +98,76 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
 
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        gameId = settings.getString(getString(R.string.game_id_key), "");
-        gameCode = settings.getString(getString(R.string.game_code_key), "");
-        playerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        //playerId = FirebaseAuth.getInstance().getCurrentUser().getProviderData().get(1).getUid();
-        //playerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        try{
 
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_chat);
 
-        privateGameTitle = settings.getString(getString(R.string.private_game_title_key), "");
-        homeTeam = settings.getString(getString(R.string.home_team_key), "");
-        awayTeam = settings.getString(getString(R.string.away_team_key), "");
-        offsideCoins = settings.getInt(getString(R.string.offside_coins_key), 0);
-        balance = settings.getInt(getString(R.string.balance_key), 0);
-        totalPlayers = settings.getInt(getString(R.string.total_players_key), 0);
+            SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+            gameId = settings.getString(getString(R.string.game_id_key), "");
+            gameCode = settings.getString(getString(R.string.game_code_key), "");
+            playerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
+            privateGameTitle = settings.getString(getString(R.string.private_game_title_key), "");
+            homeTeam = settings.getString(getString(R.string.home_team_key), "");
+            awayTeam = settings.getString(getString(R.string.away_team_key), "");
+            offsideCoins = settings.getInt(getString(R.string.offside_coins_key), 0);
+            balance = settings.getInt(getString(R.string.balance_key), 0);
+            totalPlayers = settings.getInt(getString(R.string.total_players_key), 0);
 
-       // FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(getApplication());
+            root = (LinearLayout) findViewById(R.id.c_root);
+            chatListView = (ListView) findViewById(R.id.c_chat_list_view);
 
-        root = (LinearLayout) findViewById(R.id.c_root);
-        chatListView = (ListView) findViewById(R.id.c_chat_list_view);
+            chatSendTextView = (TextView) findViewById(R.id.c_chatSendTextView);
+            chatMessageEditText = (EditText) findViewById(R.id.c_chat_message_edit_text);
+            scoreTextView = (TextView) findViewById(R.id.c_score_text_view);
+            privateGameNameTextView = (TextView) findViewById(R.id.c_private_game_name_text_view);
+            gameTitleTextView = (TextView) findViewById(R.id.c_game_title_text_view);
+            positionTextView = (TextView) findViewById(R.id.c_position_text_view);
 
-        chatSendTextView = (TextView) findViewById(R.id.c_chatSendTextView);
-        chatMessageEditText = (EditText) findViewById(R.id.c_chat_message_edit_text);
-        scoreTextView = (TextView) findViewById(R.id.c_score_text_view);
-        privateGameNameTextView = (TextView) findViewById(R.id.c_private_game_name_text_view);
-        gameTitleTextView = (TextView) findViewById(R.id.c_game_title_text_view);
-        positionTextView = (TextView) findViewById(R.id.c_position_text_view);
-
-        privateGameNameTextView.setText(privateGameTitle);
-        gameTitleTextView.setText(homeTeam + " vs " + awayTeam);
+            privateGameNameTextView.setText(privateGameTitle);
+            gameTitleTextView.setText(homeTeam + " vs " + awayTeam);
 
 
-        chatSendTextView.setBackgroundResource(R.color.colorDivider);
+            chatSendTextView.setBackgroundResource(R.color.colorDivider);
 
-        chatSendTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String message = chatMessageEditText.getText().toString();
-                signalRService.sendChatMessage(gameId, gameCode, message, playerId);
-                //clear text
-                chatMessageEditText.setText("");
-                //hide keypad
-                hideKeypad();
+            chatSendTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String message = chatMessageEditText.getText().toString();
+                    signalRService.sendChatMessage(gameId, gameCode, message, playerId);
+                    //clear text
+                    chatMessageEditText.setText("");
+                    //hide keypad
+                    hideKeypad();
 
-            }
-        });
+                }
+            });
 
-        chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //hide keypad
-                hideKeypad();
-            }
-        });
+            chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    //hide keypad
+                    hideKeypad();
+                }
+            });
 
-        root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //hide keypad
-                hideKeypad();
-            }
+            root.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //hide keypad
+                    hideKeypad();
+                }
 
 
-        });
+            });
+
+
+        } catch (Exception ex){
+            ACRA.getErrorReporter().handleException(ex);
+        }
+
 
 
 
@@ -188,29 +176,41 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        super.onResume();
-        questionEventsHandler.register();
-        EventBus.getDefault().register(context);
-        Intent intent = new Intent();
-        intent.setClass(context, SignalRService.class);
-        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
-        //hideKeypad();
+
+        try{
+            super.onResume();
+            EventBus.getDefault().register(context);
+            Intent intent = new Intent();
+            intent.setClass(context, SignalRService.class);
+            bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+
+        } catch(Exception ex ){
+            ACRA.getErrorReporter().handleException(ex);
+
+        }
 
     }
 
 
     @Override
     public void onStop() {
-        questionEventsHandler.unregister();
-        EventBus.getDefault().unregister(context);
-        // Unbind from the service
-        if (isBoundToSignalRService) {
-            unbindService(signalRServiceConnection);
-            isBoundToSignalRService = false;
-        }
-        chatSendTextView.setBackgroundResource(R.color.colorDivider);
 
-        super.onStop();
+        try{
+            EventBus.getDefault().unregister(context);
+            // Unbind from the service
+            if (isBoundToSignalRService) {
+                unbindService(signalRServiceConnection);
+                isBoundToSignalRService = false;
+            }
+            chatSendTextView.setBackgroundResource(R.color.colorDivider);
+
+            super.onStop();
+
+        } catch(Exception ex ){
+            ACRA.getErrorReporter().handleException(ex);
+
+        }
+
     }
 
     private void hideKeypad() {
@@ -252,57 +252,73 @@ public class ChatActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveChat(ChatEvent chatEvent) {
 
-        chat = chatEvent.getChat();
-        messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
+        try{
+            chat = chatEvent.getChat();
+            messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
 
-        EventBus.getDefault().post(new PositionEvent(chat.getPosition()));
+            EventBus.getDefault().post(new PositionEvent(chat.getPosition()));
 
-        player = chat.getPlayer();
-        if (player == null)
-            return;
-        playerAnswers = player.getPlayerAnswers();
+            player = chat.getPlayer();
+            if (player == null)
+                return;
+            playerAnswers = player.getPlayerAnswers();
 
-        scoreTextView.setText(String.valueOf((int) player.getPoints()));
+            scoreTextView.setText(String.valueOf((int) player.getPoints()));
 
 
-        chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
-        ListView chatListView = (ListView) findViewById(R.id.c_chat_list_view);
-        chatListView.setAdapter(chatMessageAdapter);
+            chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
+            ListView chatListView = (ListView) findViewById(R.id.c_chat_list_view);
+            chatListView.setAdapter(chatMessageAdapter);
+
+        } catch(Exception ex ){
+            ACRA.getErrorReporter().handleException(ex);
+
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveChatMessage(ChatMessageEvent chatMessageEvent) {
 
-        ChatMessage message = chatMessageEvent.getChatMessage();
+        try{
+            ChatMessage message = chatMessageEvent.getChatMessage();
 
-        chat.addMessage(message);
+            chat.addMessage(message);
 
-        if (messages != null && chatMessageAdapter != null) {
-            messages.add(message);
-            chatMessageAdapter.notifyDataSetChanged();
-            return;
+            if (messages != null && chatMessageAdapter != null) {
+                messages.add(message);
+                chatMessageAdapter.notifyDataSetChanged();
+                return;
+            }
+
+            messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
+            chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
+            ListView chatListView = (ListView) findViewById(R.id.c_chat_list_view);
+            chatListView.setAdapter(chatMessageAdapter);
+
+        } catch(Exception ex ){
+            ACRA.getErrorReporter().handleException(ex);
+
         }
 
-        messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
-        chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
-        ListView chatListView = (ListView) findViewById(R.id.c_chat_list_view);
-        chatListView.setAdapter(chatMessageAdapter);
 
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onQuestionAnsweredEvent(QuestionAnsweredEvent questionAnswered) {
-        String gameId = questionAnswered.getGameId();
-        String questionId = questionAnswered.getQuestionId();
-        boolean isRandomAnswer = questionAnswered.isRandomAnswer();
-        int betSize = questionAnswered.getBetSize();
 
-        // this parameter will be null if the user does not answer
-        String answerId = questionAnswered.getAnswerId();
-        signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer, betSize);
-        if (!playerAnswers.containsKey(questionId))
-            playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize));
+        try{
+            String gameId = questionAnswered.getGameId();
+            String questionId = questionAnswered.getQuestionId();
+            boolean isRandomAnswer = questionAnswered.isRandomAnswer();
+            int betSize = questionAnswered.getBetSize();
+
+            // this parameter will be null if the user does not answer
+            String answerId = questionAnswered.getAnswerId();
+            signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer, betSize);
+            if (!playerAnswers.containsKey(questionId))
+                playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize));
 
 //        if (!isBatch) {
 //            calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
@@ -317,23 +333,43 @@ public class ChatActivity extends AppCompatActivity {
 //            }
 //        }
 
+        } catch(Exception ex ){
+            ACRA.getErrorReporter().handleException(ex);
+
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePosition(PositionEvent positionEvent) {
-        Position position = positionEvent.getPosition();
-        String positionDisplay = Integer.toString(position.getPrivateGamePosition()) + "/" + Integer.toString(position.getPrivateGameTotalPlayers());
-        positionTextView.setText(positionDisplay);
+
+        try{
+            Position position = positionEvent.getPosition();
+            String positionDisplay = Integer.toString(position.getPrivateGamePosition()) + "/" + Integer.toString(position.getPrivateGameTotalPlayers());
+            positionTextView.setText(positionDisplay);
+
+        } catch(Exception ex ){
+            ACRA.getErrorReporter().handleException(ex);
+
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayer(Player player) {
-        if (player == null)
-            return;
+        try{
+            if (player == null)
+                return;
 
-        this.player = player;
-        this.playerAnswers = player.getPlayerAnswers();
-        scoreTextView.setText(Integer.toString((int)player.getPoints()));
+            this.player = player;
+            this.playerAnswers = player.getPlayerAnswers();
+            scoreTextView.setText(Integer.toString((int)player.getPoints()));
+
+        } catch(Exception ex ){
+            ACRA.getErrorReporter().handleException(ex);
+
+        }
+
     }
 
 

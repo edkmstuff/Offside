@@ -1,10 +1,10 @@
 package com.offsidegame.offside.adapters;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.InsetDrawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -75,8 +74,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public LinearLayout[] answerRoots = new LinearLayout[4];
 
         public LinearLayout incomingBetPanelRoot;
-        public TextView incomingBetSizeTextView;
-        public SeekBar incomingBetSizeSeekBar;
+
+        public TextView[] betSizeOptionsTextViews = new TextView[3];
+        public TextView incomingBalanceTextView;
+        //public TextView incomingBetSizeTextView;
+        //public SeekBar incomingBetSizeSeekBar;
         public TextView incomingTimeToAnswerTextView;
 
         public LinearLayout incomingProcessingQuestionRoot;
@@ -140,8 +142,17 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
 
                 viewHolder.incomingBetPanelRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_bet_panel_root);
-                viewHolder.incomingBetSizeTextView = (TextView) convertView.findViewById(R.id.cm_incoming_bet_size_text_view);
-                viewHolder.incomingBetSizeSeekBar = (SeekBar) convertView.findViewById(R.id.cm_incoming_bet_size_seekBar);
+
+                for (int i = 0; i < 3; i++) {
+                    final int optionNumber = i + 1;
+                    final int incomingBetOptionTextViewId = context.getResources().getIdentifier("cm_incoming_bet_option" + optionNumber + "_text_view", "id", context.getPackageName());
+                    viewHolder.betSizeOptionsTextViews[i] = (TextView) convertView.findViewById(incomingBetOptionTextViewId);
+
+                }
+
+                viewHolder.incomingBalanceTextView = (TextView) convertView.findViewById(R.id.cm_incoming_balance_text_view);
+
+
                 viewHolder.incomingTimeToAnswerTextView = (TextView) convertView.findViewById(R.id.cm_incoming_time_to_answer_text_view);
 
                 viewHolder.incomingProcessingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_processing_question_root);
@@ -181,9 +192,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             if (chatMessageType == null)
                 return convertView;
-
-
-
 
 
             if (chatMessageType.equals(OffsideApplication.getMessageTypeText()))  //"TEXT"
@@ -292,9 +300,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         //ASKED_QUESTION elements
         final int betSizeUnit = 100;
-        final int seekBarMinValue = 1;
+        final int minBetSize = 1;
         int seekBarMaxValue = 4;
         final Answer[] answers = question.getAnswers();
+
         if (isAskedQuestion || isProcessedQuestion) {
 
             viewHolder.incomingQuestionTextView.setText(question.getQuestionText());
@@ -302,7 +311,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             for (int i = 0; i < answers.length; i++) {
                 final String answerText = answers[i].getAnswerText();
                 final String percentUserAnswered = String.valueOf((int) answers[i].getPercentUsersAnswered()) + "%";
-                final int initialReturnValue = (int) answers[i].getPointsMultiplier() * seekBarMinValue * betSizeUnit;
+                final int initialReturnValue = (int) answers[i].getPointsMultiplier() * minBetSize * betSizeUnit;
 
                 viewHolder.answerTextViews[i].setText(answerText);
                 if (isAskedQuestion) {
@@ -322,38 +331,44 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             //ASKED_QUESTION SECTION
             if (isAskedQuestion) {
-                SharedPreferences settings = context.getSharedPreferences(context.getString(R.string.preference_name), 0);
-                int balance = settings.getInt(context.getString(R.string.balance_key), 0);
 
-                int maxSeekBarValue = (int) (Math.floor(balance / betSizeUnit) - 1);
-                seekBarMaxValue = maxSeekBarValue > 4 ? 4 : maxSeekBarValue < 0 ? 0 : maxSeekBarValue; //limit range to 0-4
 
-                viewHolder.incomingBetSizeTextView.setText(String.valueOf(seekBarMinValue*betSizeUnit));
+                //set on click event to bet options
+                for (int i = 0; i < viewHolder.betSizeOptionsTextViews.length; i++) {
+                    final int index = i;
+                    viewHolder.betSizeOptionsTextViews[i].setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //update answers return value based on betSize
+                            int betSize = minBetSize * (index + 1);
+                            for (int i = 0; i < answers.length; i++) {
+                                final int returnValue = (int) answers[i].getPointsMultiplier() * betSize;
+                                viewHolder.answerReturnTextViews[i].setText(String.valueOf(returnValue));
+                            }
 
-                viewHolder.incomingBetSizeSeekBar.setProgress(0);
-                viewHolder.incomingBetSizeSeekBar.setMax(seekBarMaxValue);
-                viewHolder.incomingBetSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            //update betSize button background
+                            for (int j = 0; j < viewHolder.betSizeOptionsTextViews.length; j++) {
+                                if (j == index)
+                                    viewHolder.betSizeOptionsTextViews[j].setBackgroundResource(R.drawable.shape_bg_circle_selected);
+                                else
+                                    viewHolder.betSizeOptionsTextViews[j].setBackgroundResource(R.drawable.shape_bg_circle);
+                            }
 
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        int adjustedProgress = betSizeUnit + progress * betSizeUnit;
-                        viewHolder.incomingBetSizeTextView.setText(String.valueOf(adjustedProgress));
-                        for (int i = 0; i < answers.length; i++) {
-                            final int defaultReturnValue = (int)answers[i].getPointsMultiplier() * adjustedProgress;
-                            viewHolder.answerReturnTextViews[i].setText(String.valueOf(defaultReturnValue));
+                            //update balance
+                            int newBalance = OffsideApplication.getBalance() - betSize;
+                            viewHolder.incomingBalanceTextView.setText(newBalance);
+
                         }
-                    }
+                    });
 
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
+                    viewHolder.betSizeOptionsTextViews[i].setVisibility(View.INVISIBLE);
 
-                    }
+                    if (OffsideApplication.getBalance() > (i + 1) * minBetSize)
+                        viewHolder.betSizeOptionsTextViews[i].setVisibility(View.VISIBLE);
+                }
 
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
+                viewHolder.betSizeOptionsTextViews[0].performClick();
 
-                    }
-                });
 
                 //set the timeToAskQuestion timer
                 //time to answer was attached to chat message and is updated in thge server using timer
@@ -403,6 +418,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     });
                 }
 
+
                 viewHolder.incomingBetPanelRoot.setVisibility(View.VISIBLE);
                 viewHolder.incomingTimeToAnswerTextView.setVisibility(View.VISIBLE);
 
@@ -432,8 +448,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 }
 
 
-
-
             }
 
             viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
@@ -460,7 +474,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             boolean isUserAnswerCorrect = correctAnswer.getId().equals(userAnswerIdentifier.getAnswerId());
             int userBetSize = userAnswerIdentifier.getBetSize();
             int answerNumber = getAnswerNumber(question, correctAnswer.getId());
-            int userReturnValue = (int) (correctAnswer.getPointsMultiplier()* userBetSize);
+            int userReturnValue = (int) (correctAnswer.getPointsMultiplier() * userBetSize);
 
             final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
 
@@ -495,11 +509,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         viewHolder.incomingSelectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
 
 
-
         final String gameId = question.getGameId();
         final String questionId = question.getId();
         final String answerId = answer.getId();
-        final int betSize = Integer.parseInt(viewHolder.incomingBetSizeTextView.getText().toString());
+
+        final int betSize = Integer.parseInt(viewHolder.incomingSelectedAnswerReturnTextView.getText());
 
         int returnValue = (int) (betSize * answer.getPointsMultiplier());
         viewHolder.incomingSelectedAnswerReturnTextView.setText(String.valueOf(returnValue));
@@ -518,6 +532,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         }, 500);
 
     }
+
 
     private void resetWidgetsVisibility(ViewHolder viewHolder) {
 

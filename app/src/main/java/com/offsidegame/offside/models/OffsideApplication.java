@@ -32,6 +32,11 @@ public class OffsideApplication extends Application {
     private static String profileImageFileName = "profileImage.jpg";
     private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
     //private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
+    private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";
+
+    private static int balance;
+    private static int offsideCoins;
+
 
     public static String getMessageTypeText() {
         return messageTypeText;
@@ -55,6 +60,26 @@ public class OffsideApplication extends Application {
 
     public static String getInitialsProfilePictureUrl() {
         return initialsProfilePictureUrl;
+    }
+
+    public static String getDefaultProfilePictureUrl() {
+        return defaultProfilePictureUrl;
+    }
+
+    public static int getOffsideCoins() {
+        return offsideCoins;
+    }
+
+    public static void setOffsideCoins(int offsideCoins) {
+        OffsideApplication.offsideCoins = offsideCoins;
+    }
+
+    public static int getBalance() {
+        return balance;
+    }
+
+    public static void setBalance(int balance) {
+        OffsideApplication.balance = balance;
     }
 
     public Context getContext() {

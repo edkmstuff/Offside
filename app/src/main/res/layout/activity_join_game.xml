@@ -18,13 +18,25 @@
         android:id="@+id/jg_loading_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:orientation="vertical"
         android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/logo_25"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            />
+
+
+
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
             android:layout_gravity="center">
 
         </ProgressBar>

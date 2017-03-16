@@ -43,6 +43,7 @@ import java.util.Date;
 
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.ConnectionState;
+import microsoft.aspnet.signalr.client.ErrorCallback;
 import microsoft.aspnet.signalr.client.Platform;
 import microsoft.aspnet.signalr.client.SignalRFuture;
 import microsoft.aspnet.signalr.client.StateChangedCallback;
@@ -118,7 +119,9 @@ public class SignalRService extends Service {
                 public void stateChanged(ConnectionState oldState, ConnectionState newState) {
                     try {
                         if (newState == ConnectionState.Disconnected) {
-                            EventBus.getDefault().post(new ConnectionEvent(false, ""));
+                            ACRA.getErrorReporter().handleSilentException(new Throwable("SignalR disconnected"));
+
+                            EventBus.getDefault().post(new ConnectionEvent(false, "disconnected"));
                             //try reconnection for 10 min
                             if (startReconnecting == null) {
                                 startReconnecting = new Date();
@@ -128,14 +131,14 @@ public class SignalRService extends Service {
                             while (startReconnecting != null && now.getTime() - startReconnecting.getTime() < 10 * 60 * 1000
                                     && hubConnection.getState() == ConnectionState.Disconnected) {
 
-                                startSignalR(true);
+                                startSignalR(true);  //sending true to identify a reconnection event
                                 now = new Date();
                                 Thread.sleep(20000);
 
-
                             }
                             if (hubConnection.getState() == ConnectionState.Connected) {
-                                EventBus.getDefault().post(new ConnectionEvent(true, "inner try 2"));
+                                startReconnecting = null;
+                                EventBus.getDefault().post(new ConnectionEvent(true, "connected"));
                             }
                         }
                     } catch (Exception ex) {
@@ -173,53 +176,6 @@ public class SignalRService extends Service {
 
     //<editor-fold desc="subscribeToServer">
     public void subscribeToServer() {
-        hub.on("AskBatchedQuestions", new SubscriptionHandler1<Question[]>() {
-            @Override
-            public void run(Question[] batchedQuestions) {
-                EventBus.getDefault().post(new QuestionEvent(batchedQuestions, QuestionEvent.QuestionStates.NEW_QUESTION));
-            }
-        }, Question[].class);
-        hub.on("AskQuestion", new SubscriptionHandler1<Question>() {
-            @Override
-            public void run(Question question) {
-                EventBus.getDefault().post(new QuestionEvent(question, QuestionEvent.QuestionStates.NEW_QUESTION));
-            }
-        }, Question.class);
-        hub.on("SendBatchedProcessedQuestions", new SubscriptionHandler1<Question[]>() {
-            @Override
-            public void run(Question[] batchedQuestions) {
-                EventBus.getDefault().post(new QuestionEvent(batchedQuestions, QuestionEvent.QuestionStates.PROCESSED_QUESTION));
-            }
-        }, Question[].class);
-        hub.on("SendProcessedQuestion", new SubscriptionHandler1<Question>() {
-            @Override
-            public void run(Question question) {
-                EventBus.getDefault().post(new QuestionEvent(question, QuestionEvent.QuestionStates.PROCESSED_QUESTION));
-            }
-        }, Question.class);
-
-        hub.on("CloseQuestion", new SubscriptionHandler1<Question>() {
-            @Override
-            public void run(Question question) {
-                EventBus.getDefault().post(new QuestionEvent(question, QuestionEvent.QuestionStates.CLOSED_QUESTION));
-            }
-        }, Question.class);
-
-        hub.on("UpdatePlayerScore", new SubscriptionHandler1<String>() {
-            @Override
-            public void run(String gameId) {
-                SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-                String userGameId = settings.getString(getString(R.string.game_id_key), "");
-                if (!userGameId.equals(gameId))
-                    return;
-
-                String playerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                String userName = settings.getString(getString(R.string.player_display_name_key), "");
-
-                getPlayerScore(gameId, playerId, userName);
-
-            }
-        }, String.class);
 
         hub.on("AddChatMessage", new SubscriptionHandler1<ChatMessage>() {
             @Override
@@ -247,29 +203,21 @@ public class SignalRService extends Service {
 
     //<editor-fold desc="methods for client activities">
 
-    public void login(String email) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
-        hub.invoke(LoginInfo.class, "LoginWithEmail", email).done(new Action<LoginInfo>() {
 
-            @Override
-            public void run(LoginInfo loginInfo) throws Exception {
-                boolean isFacebookLogin = false;
-                String password = loginInfo.getPassword();
-                EventBus.getDefault().post(new LoginEvent(loginInfo.getId(), loginInfo.getName(), password, isFacebookLogin));
-            }
-        });
-    }
-
-    public void joinGame(String gameCode, String playerId, String playerDisplayName, String playerProfilePictureUrl) {
+    public void joinGame(String gameCode, String playerId, String playerDisplayName, String playerProfilePictureUrl, boolean isPrivateGameCreator) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
-        hub.invoke(GameInfo.class, "JoinGame", gameCode, playerId, playerDisplayName, playerProfilePictureUrl).done(new Action<GameInfo>() {
+        hub.invoke(GameInfo.class, "JoinGame", gameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator).done(new Action<GameInfo>() {
 
             @Override
             public void run(GameInfo gameInfo) throws Exception {
                 EventBus.getDefault().post(new JoinGameEvent(gameInfo));
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleException(error);
             }
         });
     }
@@ -278,9 +226,12 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
-        //String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        hub.invoke(Boolean.class, "QuitGame", gameId, playerId);
+        hub.invoke(Boolean.class, "QuitGame", gameId, playerId).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleException(error);
+            }
+        });
     }
 
     public void isGameActive(String gameId, String gameCode) {
@@ -291,6 +242,11 @@ public class SignalRService extends Service {
             @Override
             public void run(Boolean isGameActive) throws Exception {
                 EventBus.getDefault().post(new ActiveGameEvent(isGameActive));
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleException(error);
             }
         });
     }
@@ -305,6 +261,11 @@ public class SignalRService extends Service {
             public void run(AvailableGame[] availableGames) throws Exception {
                 EventBus.getDefault().post(new AvailableGamesEvent(availableGames));
             }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleException(error);
+            }
         });
     }
 
@@ -317,22 +278,14 @@ public class SignalRService extends Service {
             public void run(String privateGameCode) throws Exception {
                 EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameCode));
             }
-        });
-    }
-
-    public void getPlayerScore(String gameId, String userId, String userName) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        String imageUrl = settings.getString(getString(R.string.player_profile_picture_url_key), "");
-        hub.invoke(PlayerScore.class, "GetPlayerScore", gameId, userId, userName, imageUrl).done(new Action<PlayerScore>() {
-
+        }).onError(new ErrorCallback() {
             @Override
-            public void run(PlayerScore playerScore) throws Exception {
-                EventBus.getDefault().post(new PlayerScoreEvent(playerScore));
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleException(error);
             }
         });
     }
+
 
     public void postAnswer(String gameId, String questionId, String answerId, boolean isRandomlySelected, int betSize) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
@@ -343,6 +296,11 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(new IsAnswerAcceptedEvent(isAnswerAccepted));
             }
 
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleException(error);
+            }
         });
 
     }
@@ -356,6 +314,11 @@ public class SignalRService extends Service {
             public void run(Scoreboard scoreboard) throws Exception {
                 EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
             }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleException(error);
+            }
         });
     }
 
@@ -367,6 +330,11 @@ public class SignalRService extends Service {
             @Override
             public void run(Chat chat) throws Exception {
                 EventBus.getDefault().post(new ChatEvent(chat));
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleException(error);
             }
         });
     }
@@ -380,6 +348,11 @@ public class SignalRService extends Service {
                 //          EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
             }
 
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleException(error);
+            }
         });
 
     }
@@ -392,6 +365,11 @@ public class SignalRService extends Service {
             @Override
             public void run(Question[] questions) throws Exception {
                 EventBus.getDefault().post(new QuestionsEvent(questions));
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleException(error);
             }
         });
     }
@@ -406,6 +384,11 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(new IsAnswerAcceptedEvent(isUserSaved));
             }
 
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleException(error);
+            }
         });
 
         return true;
@@ -421,6 +404,11 @@ public class SignalRService extends Service {
                 //EventBus.getDefault().post(new IsAnswerAcceptedEvent(isUserSaved));
             }
 
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleException(error);
+            }
         });
         return true;
 

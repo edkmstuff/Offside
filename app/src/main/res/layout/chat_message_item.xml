@@ -22,8 +22,6 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:visibility="visible"
-
-
             >
 
             <ImageView
@@ -65,7 +63,7 @@
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"
                     android:textColor="@color/chatText"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/cm_incoming_question_text_view"
@@ -284,28 +282,94 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/cm_incoming_bet_size_text_view"
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="100" />
+                            android:orientation="horizontal"
+                            android:layoutDirection="rtl"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="5dp">
 
-                        <SeekBar
-                            android:id="@+id/cm_incoming_bet_size_seekBar"
-                            style="@style/Widget.AppCompat.SeekBar.Discrete"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:thumb="@mipmap/ic_offside_logo"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="גובה הימור"
+                                />
+                            <TextView
+                                android:id="@+id/cm_incoming_bet_option1_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="100"
+                                android:background="@drawable/shape_bg_circle_selected"
+                                android:width="50dp"
+                                android:height="50dp"
+                                android:gravity="center"
+                                android:textColor="@color/privateGameTitle"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                />
+                            <TextView
+                                android:id="@+id/cm_incoming_bet_option2_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="200"
+                                android:background="@drawable/shape_bg_circle"
+                                android:width="50dp"
+                                android:height="50dp"
+                                android:gravity="center"
+                                android:textColor="@color/colorWhite"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"/>
+                            <TextView
+                                android:id="@+id/cm_incoming_bet_option3_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="300"
+                                android:background="@drawable/shape_bg_circle"
+                                android:width="50dp"
+                                android:height="50dp"
+                                android:gravity="center"
+                                android:textColor="@color/colorWhite"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="יתרה"
+                                    />
+                                <TextView
+                                    android:id="@+id/cm_incoming_balance_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="1500"
 
-                            />
+                                    />
+
+
+                            </LinearLayout>
+
+
+
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/cm_incoming_time_to_answer_text_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="20 sec" />
+                            android:text="25 sec"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/colorWhite"
+                            android:height="30dp"
+                            android:layout_marginTop="20dp"/>
 
                     </LinearLayout>
 

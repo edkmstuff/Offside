@@ -1,23 +1,7 @@
 <resources>
 
-    <string-array name="avail_games_demo_array">
-        <item>Hapoel Tel Aviv v Macabi Tel Aviv</item>
-        <item>Hapoel Jaljulia v Macabi Jaljulia</item>
-        <item>Hapoel Tel Aviv1 v Macabi Tel Aviv1</item>
-        <item>Hapoel Jaljulia2 v Macabi Jaljulia2</item>
-    </string-array>
-
-
-
 
     <string name="app_name">Offside</string>
-    <string name="lbl_points">נקודות</string>
-    <string name="lbl_position">מיקום</string>
-    <string name="lbl_leader_score">המוביל</string>
-    <string name="lbl_active_questions">שאלות פתוחות</string>
-    <string name="lbl_send">שלח</string>
-
-    <string name="lbl_data_updated">המידע עודכן</string>
 
 
     <!--<string-array messageText="answers">-->
@@ -27,10 +11,7 @@
     <!--</string-array>-->
 
 
-    <string name="ask_question">New Question</string>
-    <string name="answer_question">Answer Question</string>
     <string name="lbl_welcome">אהלן</string>
-    <string name="lbl_goto_player_score">אל עמוד הבית</string>
 
     <!--kfir -->
     <!--<string messageText="facebook_app_id">1302214459813433</string>
@@ -40,79 +21,18 @@
     <string name="facebook_application_id" translatable="false">523024471208542</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb523024471208542</string>
     <string name="preference_name">OffsidePlayerPreferences</string>
-    <string name="is_logged_in_key">isLoggedIn</string>
-    <string name="player_id_key">userId</string>
-    <string name="login_expiration_time_key">loginExpirationTime</string>
     <string name="date_format">EEEE, dd/MM/yyyy/hh:mm:ss</string>
     <string name="log_tag">OffsideLog</string>
-    <string name="player_display_name_key">userName</string>
     <string name="game_id_key">gameId</string>
 
 
-    <string name="lbl_answer_accepted_message">התשובה התקבלה</string>
-    <string name="lbl_answer_not_accepted_message">התשובה לא התקבלה</string>
-    <string name="lbl_processed_question_title">סטטיסטיקה</string>
-    <string name="close_question">שאלה פתורה</string>
-    <string name="lbl_closed_question_title">יש לנו תשובה</string>
-    <string name="lbl_go">יוצאים לדרך!</string>
-    <string name="lbl_question_starts_in">"השאלה תתחיל בעוד:"</string>
-    <string name="lbl_your_score">נקודות</string>
-    <string name="lbl_your_position">מיקומך:</string>
-    <string name="lbl_out_of">מתוך</string>
-    <string name="lbl_open_questions">שאלות פתוחות</string>
-    <string name="lbl_answered_by">ענו</string>
-    <string name="points_value">נקודות</string>
-    <string name="statistics">סטטיסטיקה:</string>
-       <string name="lbl_scoreboard">לוח תוצאות</string>
-    <string name="lbl_all_questions">כל השאלות</string>
-
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="player_profile_picture_url_key">userProfilePictureUrl</string>
-    <string name="lbl_game_did_not_start_yet">עוד לא התחלנו לשאול... </string>
-    <string name="lbl_getting_answers_and_calculating_statistics">אוסף תשובות ומחשב סטטיסטיקה</string>
-    <string name="lbl_sponsored_by">בחסות</string>
-    <string name="lbl_current_question">שאלה נוכחית</string>
-    <string name="lbl_your_answer">התשובה שלך</string>
-    <string name="lbl_question_on_its_way">השאלה תישאל בעוד מספר שניות</string>
-    <string name="lbl_answer_on_its_way">התשובה תינתן בעוד מספר שניות</string>
-    <string name="time_left">זמן שנותר</string>
-    <string name="lbl_position_outof">מיקום</string>
-    <string name="lbl_next_question_in">השאלה הבאה בעוד </string>
-    <string name="lbl_next_survey_question_in">סקר מהיר בעוד </string>
-    <string name="lbl_seconds">שניות</string>
-    <string name="disconnect">התנתק</string>
-    <string name="refresh">רענן</string>
-    <string name="back">back</string>
-    <string name="time_to_answer_question_key">timeToAnswerQuestion</string>
-    <string name="time_to_go_back_to_player_score_key">timeToGoBackToPlayerScore</string>
-    <string name="time_to_question_to_pop_key">timeToQuestionToPop</string>
     <string name="lbl_no_such_game">משחק לא קיים</string>
     <string name="recent_token_key">recentToken</string>
-    <string name="lbl_time_left_to_next_question">השאלה הבאה בעוד</string>
     <string name="lbl_you_are_connected">מחובר לשרת!</string>
     <string name="lbl_you_are_disconnected">מנותק מהשרת, מנסה להתחבר...</string>
-    <string name="lbl_we_have_an_answer">יש לנו תשובה!</string>
-    <string name="lbl_you_earned">הרווחת</string>
-    <string name="lbl_the_correct_answer">התשובה הנכונה</string>
-    <string name="is_alerts_on_key">is_alert_on</string>
-    <string name="saved_list_view_height_key">savedListViewHeight</string>
-    <string name="lbl_random_answer_accepted_message">תם הזמן, בחרנו תשובה עבורך</string>
-    <string name="lbl_statistics_collection_completed_for_question">התפלגות התשובות לשאלה</string>
-    <string name="lbl_game_created_event">המשחק יתחיל בעוד</string>
-    <string name="lbl_game_started">המשחק התחיל! שאלה הבאה בעוד</string>
-    <string name="lbl_game_half_time_started">הפסקת מחצית, המשחק יתחדש בעוד</string>
-    <string name="lbl_game_second_half_started">המחצית שניה התחילה! שאלה הבאה בעוד</string>
-    <string name="lbl_game_full_time_reached">תם הזמן החוקי</string>
-    <string name="lbl_game_over_time_started">מתחילים את ההארכה</string>
-    <string name="lbl_game_penalty_time_started">מתחילים את שלב בעיטות העונשין</string>
-    <string name="lbl_game_over">תם המשחק, נתראה במשחק הבא!</string>
-    <string name="lbl_in_game_active_question">שאלה פעילה</string>
-    <string name="lbl_game_waiting_to_next_question">שאלה הבאה בעוד</string>
     <string name="game_code_key">gameCode</string>
-    <string name="lbl_game_over_part_1_ended">הפסקה קצרה</string>
-    <string name="lbl_game_over_part_2_started">מתחילים את החלק השני של ההארכה</string>
-    <string name="lbl_game_over_part_2_ended">הגענו לסוף ההארכה</string>
     <string name="lbl_randomly_selected_answer_title">We randomly selected for you</string>
     <string name="lbl_user_selected_answer_title">You think</string>
     <string name="offside_coins_key">offsideCoins</string>
