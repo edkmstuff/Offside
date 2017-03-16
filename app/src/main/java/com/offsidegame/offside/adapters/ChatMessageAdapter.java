@@ -513,10 +513,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         final String questionId = question.getId();
         final String answerId = answer.getId();
 
-        final int betSize = Integer.parseInt(viewHolder.incomingSelectedAnswerReturnTextView.getText());
+        final int betSize = (int)(Integer.parseInt(viewHolder.incomingSelectedAnswerReturnTextView.getText().toString()) / answer.getPointsMultiplier());
 
-        int returnValue = (int) (betSize * answer.getPointsMultiplier());
-        viewHolder.incomingSelectedAnswerReturnTextView.setText(String.valueOf(returnValue));
+//        int returnValue = (int) (betSize * answer.getPointsMultiplier());
+//        viewHolder.incomingSelectedAnswerReturnTextView.setText(String.valueOf(returnValue));
 
         playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomlySelected, betSize));
         if (view != null) //null when random answer was selected
