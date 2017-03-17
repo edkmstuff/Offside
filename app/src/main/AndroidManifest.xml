@@ -13,7 +13,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-
+        android:name=".models.OffsideApplication"
         >
 
         <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.

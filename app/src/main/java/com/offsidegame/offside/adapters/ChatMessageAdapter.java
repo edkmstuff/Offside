@@ -8,6 +8,7 @@ import android.graphics.drawable.InsetDrawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +36,8 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Map;
+
+import static com.offsidegame.offside.R.color.privateGameTitle;
 
 /**
  * Created by KFIR on 11/21/2016.
@@ -218,7 +221,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     private void generateTextChatMessage(ViewHolder viewHolder, ChatMessage chatMessage, boolean isIncoming) {
 
-        try{
+        try {
 
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
             Uri profilePictureUri = Uri.parse(chatMessage.getImageUrl());
@@ -244,14 +247,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.outgoingMessagesRoot.setVisibility(View.VISIBLE);
             }
 
-        } catch(Exception ex ){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleException(ex);
         }
     }
 
     private void generateQuestionChatMessage(final ViewHolder viewHolder, ChatMessage chatMessage) {
 
-        try{
+        try {
 
             //chat message properties
             final Uri profilePictureUri = Uri.parse(chatMessage.getImageUrl());
@@ -319,7 +322,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 for (int i = 0; i < answers.length; i++) {
                     final String answerText = answers[i].getAnswerText();
                     final String percentUserAnswered = String.valueOf((int) answers[i].getPercentUsersAnswered()) + "%";
-                    final int initialReturnValue = (int) answers[i].getPointsMultiplier() * minBetSize ;
+                    final int initialReturnValue = (int) answers[i].getPointsMultiplier() * minBetSize;
 
                     viewHolder.answerTextViews[i].setText(answerText);
                     if (isAskedQuestion) {
@@ -356,15 +359,21 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                                 //update betSize button background
                                 for (int j = 0; j < viewHolder.betSizeOptionsTextViews.length; j++) {
-                                    if (j == index)
+                                    if (j == index){
                                         viewHolder.betSizeOptionsTextViews[j].setBackgroundResource(R.drawable.shape_bg_circle_selected);
-                                    else
+                                        viewHolder.betSizeOptionsTextViews[j].setTextColor(ContextCompat.getColor(context, R.color.privateGameTitle));
+                                    }
+
+                                    else{
                                         viewHolder.betSizeOptionsTextViews[j].setBackgroundResource(R.drawable.shape_bg_circle);
+                                        viewHolder.betSizeOptionsTextViews[j].setTextColor(ContextCompat.getColor(context, R.color.colorWhite));
+                                    }
+
                                 }
 
                                 //update balance
                                 int newBalance = OffsideApplication.getBalance() - betSize;
-                                viewHolder.incomingBalanceTextView.setText(newBalance);
+                                viewHolder.incomingBalanceTextView.setText(String.valueOf(newBalance));
 
                             }
                         });
@@ -486,11 +495,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
 
-                viewHolder.incomingCorrectWrongTitleTextView.setText(isUserAnswerCorrect ? "Correct :)" : "Wrong :-(");
+                viewHolder.incomingCorrectWrongTitleTextView.setText(isUserAnswerCorrect ? context.getString(R.string.lbl_correct_answer_feedback) : context.getString(R.string.lbl_wrong_answer_feedback));
                 viewHolder.incomingCorrectAnswerTextView.setText(correctAnswer.getAnswerText());
                 viewHolder.incomingCorrectAnswerTextView.setBackgroundResource(backgroundColorResourceId);
-                viewHolder.incomingCorrectAnswerReturnTextView.setText(isUserAnswerCorrect ? "you earned " + userReturnValue + " points" : "You didn't earn points");
-                viewHolder.incomingFeedbackPlayerTextView.setText(isUserAnswerCorrect ? "Good job!" : "Don't worry, you'll nail it next time!");
+                viewHolder.incomingCorrectAnswerReturnTextView.setText(isUserAnswerCorrect ? context.getString(R.string.lbl_you_earned) +" "+ userReturnValue +" "+ context.getString(R.string.lbl_points) : context.getString(R.string.lbl_you_didnt_earn_points));
+                viewHolder.incomingFeedbackPlayerTextView.setText(isUserAnswerCorrect ? context.getString(R.string.lbl_correct_answer_feedback) :context.getString(R.string.lbl_wrong_answer_encourage_feedback) );
 
                 viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
                 viewHolder.incomingClosedQuestionRoot.setVisibility(View.VISIBLE);
@@ -499,7 +508,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             }
 
 
-        } catch(Exception ex ){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleException(ex);
 
         }
@@ -509,7 +518,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     private void postAnswer(Question question, Answer answer, View view, ViewHolder viewHolder) {
 
-        try{
+        try {
             final ViewHolder myViewHolder = viewHolder;
             final boolean isRandomlySelected = view == null;
             if (isRandomlySelected)
@@ -530,10 +539,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             final String questionId = question.getId();
             final String answerId = answer.getId();
 
-            final int betSize = (int)(Integer.parseInt(viewHolder.incomingSelectedAnswerReturnTextView.getText().toString()) / answer.getPointsMultiplier());
 
-//        int returnValue = (int) (betSize * answer.getPointsMultiplier());
-//        viewHolder.incomingSelectedAnswerReturnTextView.setText(String.valueOf(returnValue));
+            final int betSize = (int) (Integer.parseInt(viewHolder.incomingSelectedAnswerReturnTextView.getText().toString()) / answer.getPointsMultiplier());
+
+            final int returnValue = Integer.parseInt(viewHolder.incomingSelectedAnswerReturnTextView.getText().toString());
+
+            viewHolder.incomingSelectedAnswerReturnTextView.setText(String.valueOf(returnValue));
+
+
 
             playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomlySelected, betSize));
             if (view != null) //null when random answer was selected
@@ -544,11 +557,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 public void run() {
                     myViewHolder.incomingQuestionRoot.setVisibility(View.GONE);
                     myViewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
-                    EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, isRandomlySelected, betSize));
+                    EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, isRandomlySelected, returnValue));
                 }
             }, 500);
 
-        } catch(Exception ex ){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleException(ex);
 
         }
@@ -559,7 +572,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     private void resetWidgetsVisibility(ViewHolder viewHolder) {
 
-        try{
+        try {
             //reset all to gone
             viewHolder.incomingMessagesRoot.setVisibility(View.GONE);
             viewHolder.outgoingMessagesRoot.setVisibility(View.GONE);
@@ -575,7 +588,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.answerRoots[i].getBackground().mutate().setAlpha(255);
             }
 
-        } catch(Exception ex ){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleException(ex);
 
         }
@@ -585,7 +598,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     private int getAnswerNumber(Question question, String answerId) {
 
-        try{
+        try {
             int answerNumber = 0;
             Answer[] answers = question.getAnswers();
             for (int i = 0; i < answers.length; i++) {
@@ -598,7 +611,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             }
             return answerNumber;
 
-        } catch(Exception ex ){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleException(ex);
 
         }

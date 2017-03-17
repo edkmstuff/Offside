@@ -14,8 +14,8 @@ import org.acra.sender.HttpSender;
  */
 @ReportsCrashes(
         //formUri = "http://192.168.1.140:8080/api/Offside/AcraCrashReport",
-        formUri = "http://10.0.0.17:8080/api/Offside/AcraCrashReport",
-        //formUri = "http://offside.somee.com/api/Offside/AcraCrashReport",
+        //formUri = "http://10.0.0.17:8080/api/Offside/AcraCrashReport",
+        formUri = "http://offside.somee.com/api/Offside/AcraCrashReport",
         httpMethod = HttpSender.Method.POST,
         mode = ReportingInteractionMode.TOAST,
         resToastText = R.string.crash_toast_text
@@ -30,9 +30,9 @@ public class OffsideApplication extends Application {
     private static String messageTypeClosedQuestion = "CLOSED_QUESTION";
 
     private static String profileImageFileName = "profileImage.jpg";
-    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
+    //private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
     //private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
-    //private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
+    private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
     private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";
 
     private static int balance;

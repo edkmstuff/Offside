@@ -33,8 +33,8 @@
     <string name="lbl_you_are_connected">מחובר לשרת!</string>
     <string name="lbl_you_are_disconnected">מנותק מהשרת, מנסה להתחבר...</string>
     <string name="game_code_key">gameCode</string>
-    <string name="lbl_randomly_selected_answer_title">We randomly selected for you</string>
-    <string name="lbl_user_selected_answer_title">You think</string>
+    <string name="lbl_randomly_selected_answer_title">נראה שלא הספקת לענות, אל דאגה בחרנו עבורך תשובה</string>
+    <string name="lbl_user_selected_answer_title">אתה חושב ש..</string>
     <string name="offside_coins_key">offsideCoins</string>
     <string name="balance_key">balance</string>
     <string name="private_game_title_key">privateGameTitle</string>
@@ -42,6 +42,16 @@
     <string name="away_team_key">awayTeam</string>
     <string name="total_players_key">totalPlayers</string>
     <string name="crash_toast_text">Something went wrong... we are sending email to the developers...</string>
+    <string name="lbl_you_can_earn">רווח אפשרי</string>
+    <string name="lbl_correct_answer_feedback">תותח!!!</string>
+    <string name="lbl_wrong_answer_feedback">איזו החמצה...</string>
+    <string name="lbl_you_earned">זכית ב-</string>
+    <string name="lbl_points">נקודות</string>
+    <string name="lbl_you_didnt_earn_points">הפעם לא זכית בנקודות</string>
+    <string name="lbl_bet_level">גובה הימור</string>
+    <string name="lbl_balance">יתרה</string>
+    <string name="lbl_wrong_answer_encourage_feedback">לא נורא אולי בשאלה הבאה</string>
+    <string name="lbl_stay_tuned_to_see_your_friends_answers">בעוד רגע אראה כאן מה כולם חושבים</string>
 
 
 </resources>

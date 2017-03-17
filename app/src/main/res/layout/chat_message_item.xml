@@ -75,10 +75,105 @@
                         android:paddingTop="10dp"
                         android:text="which team will score next?"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/OffsideMediumText"
+                        android:textSize="@dimen/OffsideMediumText"/>
+
+                    <!--bet panel-->
+                    <LinearLayout
+                        android:id="@+id/cm_incoming_bet_panel_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
 
-                        />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layoutDirection="rtl"
+                            android:gravity="center_vertical"
+                            android:layout_marginTop="5dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/lbl_bet_level"
+                                />
+                            <TextView
+                                android:id="@+id/cm_incoming_bet_option1_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="100"
+                                android:background="@drawable/shape_bg_circle_selected"
+                                android:width="50dp"
+                                android:height="50dp"
+                                android:gravity="center"
+                                android:textColor="@color/privateGameTitle"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                />
+                            <TextView
+                                android:id="@+id/cm_incoming_bet_option2_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="200"
+                                android:background="@drawable/shape_bg_circle"
+                                android:width="50dp"
+                                android:height="50dp"
+                                android:gravity="center"
+                                android:textColor="@color/colorWhite"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"/>
+                            <TextView
+                                android:id="@+id/cm_incoming_bet_option3_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="300"
+                                android:background="@drawable/shape_bg_circle"
+                                android:width="50dp"
+                                android:height="50dp"
+                                android:gravity="center"
+                                android:textColor="@color/colorWhite"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:gravity="center">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/lbl_balance"
+                                    />
+                                <TextView
+                                    android:id="@+id/cm_incoming_balance_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="1500"
+
+                                    />
+
+
+                            </LinearLayout>
+
+
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/cm_incoming_time_to_answer_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:text="25 sec"
+                            android:background="@color/colorPrimary"
+                            android:textColor="@color/colorWhite"
+                            android:height="30dp"
+                            android:layout_marginTop="20dp"/>
+
+                    </LinearLayout>
                     <!--answers-->
                     <LinearLayout
                         android:id="@+id/cm_incoming_answers_root"
@@ -86,7 +181,8 @@
                         android:layout_height="wrap_content"
                         android:background="@color/colorWhite"
                         android:orientation="vertical"
-                        android:weightSum="2">
+                        android:weightSum="2"
+                        android:layout_marginTop="5dp">
 
                         <LinearLayout
                             android:id="@+id/cm_incoming_answers_1_2_root"
@@ -276,102 +372,6 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/cm_incoming_bet_panel_root"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layoutDirection="rtl"
-                            android:gravity="center_vertical"
-                            android:layout_marginTop="5dp">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="גובה הימור"
-                                />
-                            <TextView
-                                android:id="@+id/cm_incoming_bet_option1_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="100"
-                                android:background="@drawable/shape_bg_circle_selected"
-                                android:width="50dp"
-                                android:height="50dp"
-                                android:gravity="center"
-                                android:textColor="@color/privateGameTitle"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginRight="5dp"
-                                />
-                            <TextView
-                                android:id="@+id/cm_incoming_bet_option2_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="200"
-                                android:background="@drawable/shape_bg_circle"
-                                android:width="50dp"
-                                android:height="50dp"
-                                android:gravity="center"
-                                android:textColor="@color/colorWhite"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginRight="5dp"/>
-                            <TextView
-                                android:id="@+id/cm_incoming_bet_option3_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="300"
-                                android:background="@drawable/shape_bg_circle"
-                                android:width="50dp"
-                                android:height="50dp"
-                                android:gravity="center"
-                                android:textColor="@color/colorWhite"
-                                android:layout_marginLeft="5dp"
-                                android:layout_marginRight="5dp"
-                                />
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:gravity="center">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="יתרה"
-                                    />
-                                <TextView
-                                    android:id="@+id/cm_incoming_balance_text_view"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="1500"
-
-                                    />
-
-
-                            </LinearLayout>
-
-
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/cm_incoming_time_to_answer_text_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="25 sec"
-                            android:background="@color/colorPrimary"
-                            android:textColor="@color/colorWhite"
-                            android:height="30dp"
-                            android:layout_marginTop="20dp"/>
-
-                    </LinearLayout>
 
 
                 </LinearLayout>
@@ -436,8 +436,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:gravity="center"
-                            android:text="You can earn "
-                            android:textColor="@color/colorBlack" />
+                            android:text="@string/lbl_you_can_earn"
+                            android:textColor="@color/colorBlack"
+                            />
 
                         <TextView
                             android:id="@+id/cm_incoming_selected_answer_return_text_view"
@@ -446,7 +447,9 @@
                             android:layout_marginTop="10dp"
                             android:gravity="center"
                             android:text="100"
-                            android:textColor="@color/colorBlack" />
+                            android:textColor="@color/colorBlack"
+                            android:layout_marginLeft="2dp"
+                            android:layout_marginRight="2dp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -465,7 +468,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:padding="10dp"
-                        android:text="Stay tuned to see your friends answers"
+                        android:text="@string/lbl_stay_tuned_to_see_your_friends_answers"
                         android:textColor="@color/colorBlack"
                         android:visibility="visible"
 
