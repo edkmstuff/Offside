@@ -68,6 +68,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         public LinearLayout incomingQuestionRoot;
         public TextView incomingQuestionTextView;
+        public TextView incomingQuestionProcessedQuestionTitleTextView;
         public LinearLayout incomingAnswersRoot;
 
         public LinearLayout IncomingAnswers12Root;
@@ -81,8 +82,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         public TextView[] betSizeOptionsTextViews = new TextView[3];
         public TextView incomingBalanceTextView;
-        //public TextView incomingBetSizeTextView;
-        //public SeekBar incomingBetSizeSeekBar;
         public TextView incomingTimeToAnswerTextView;
 
         public LinearLayout incomingProcessingQuestionRoot;
@@ -163,7 +162,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingSelectedAnswerTitleTextView = (TextView) convertView.findViewById(R.id.cm_incoming_selected_answer_title_text_view);
                 viewHolder.incomingSelectedAnswerTextView = (TextView) convertView.findViewById(R.id.cm_incoming_selected_answer_text_view);
                 viewHolder.incomingSelectedAnswerReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_selected_answer_return_text_view);
-                viewHolder.incomingProcessingQuestionTitleTextView = (TextView) convertView.findViewById(R.id.cm_incoming_processing_question_title_text_view);
+                viewHolder.incomingQuestionProcessedQuestionTitleTextView = (TextView) convertView.findViewById(R.id.cm_incoming_question_processed_question_title_text_view);
 
                 viewHolder.incomingProcessingQuestionTextView = (TextView) convertView.findViewById(R.id.cm_incoming_processing_question_text_view);
 
@@ -443,6 +442,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 //PROCESSED_QUESTION SECTION
                 if (isProcessedQuestion) {
+                    viewHolder.incomingQuestionProcessedQuestionTitleTextView.setVisibility(View.VISIBLE);
 
                     for (int i = 0; i < 4; i++) {
                         viewHolder.answerRoots[i].getBackground().mutate().setAlpha(90);
@@ -582,6 +582,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingClosedQuestionRoot.setVisibility(View.GONE);
             viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
             viewHolder.incomingTimeToAnswerTextView.setVisibility(View.GONE);
+            viewHolder.incomingQuestionProcessedQuestionTitleTextView.setVisibility(View.GONE);
 
             for (int i = 0; i < 4; i++) {
                 viewHolder.answerRoots[i].setVisibility(View.INVISIBLE);

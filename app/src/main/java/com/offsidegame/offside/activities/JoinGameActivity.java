@@ -52,11 +52,11 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private LinearLayout joinGameRoot;
     private LinearLayout loadingGameRoot;
     private Toolbar toolbar;
-    private TextView createPrivateGameButton;
+    private TextView createPrivateGameButtonTextView;
     private LinearLayout createPrivateGameRoot;
     private Spinner availableGamesSpinner;
     private EditText privateGameNameEditText;
-    private TextView generatePrivateGameCodeButton;
+    private TextView generatePrivateGameCodeButtonTextView;
     private String[] gameTitles;
     private String[] gameIds;
     private String playerId;
@@ -64,6 +64,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private String playerProfilePictureUrl;
     private SharedPreferences settings;
     private AvailableGame[] availableGames ;
+    private TextView noAvailableGamesReturnLaterTextView;
 
     private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
@@ -121,21 +122,20 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             loadingGameRoot = (LinearLayout) findViewById(R.id.jg_loading_root);
             createPrivateGameRoot = (LinearLayout) findViewById(R.id.jg_create_private_game_root);
 
-            createPrivateGameButton = (TextView) findViewById(R.id.jg_create_private_game_text_view);
+            createPrivateGameButtonTextView = (TextView) findViewById(R.id.jg_create_private_game_button_text_view);
             availableGamesSpinner = (Spinner) findViewById(R.id.jg_available_games_spinner);
             privateGameNameEditText = (EditText) findViewById(R.id.jg_private_game_name_edit_text);
-            generatePrivateGameCodeButton = (TextView) findViewById(R.id.jg_generate_private_game_code_text_view);
+            generatePrivateGameCodeButtonTextView = (TextView) findViewById(R.id.jg_generate_private_game_code_button_text_view);
+            noAvailableGamesReturnLaterTextView = (TextView) findViewById(R.id.jg_no_available_games_return_later_text_view);
             loadingGameRoot.setVisibility(View.VISIBLE);
             joinGameRoot.setVisibility(View.GONE);
             createPrivateGameRoot.setVisibility(View.GONE);
+            createPrivateGameButtonTextView.setVisibility(View.GONE);
+            noAvailableGamesReturnLaterTextView.setVisibility(View.GONE);
 
-            createPrivateGameButton.setOnClickListener(new View.OnClickListener() {
+            createPrivateGameButtonTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (isBoundToSignalRService)
-                        signalRService.getAvailableGames();
-                    else
-                        throw new RuntimeException(activityName + " - createPrivateGameButton - onClick - Error: SignalRIsNotBound");
 
                     privateGameNameEditText.setText(playerDisplayName.split(" ")[0] + "'s" + " gang");
                     joinGameRoot.setVisibility(View.GONE);
@@ -143,7 +143,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 }
             });
 
-            generatePrivateGameCodeButton.setOnClickListener(new View.OnClickListener() {
+            generatePrivateGameCodeButtonTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //get game id
@@ -155,7 +155,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                     if (isBoundToSignalRService)
                         signalRService.generatePrivateGame(gameId, groupName);
                     else
-                        throw new RuntimeException(activityName + " - generatePrivateGameCodeButton - onClick - Error: SignalRIsNotBound");
+                        throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
                 }
             });
 
@@ -235,10 +235,15 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
                 String gameId = settings.getString(getString(R.string.game_id_key), "");
                 String gameCode = settings.getString(getString(R.string.game_code_key), "");
-                signalRService.isGameActive(gameId, gameCode);
-                String [] emptyAvailableGames= new String[]{"לא נמצאו משחקים זמינים"};
-                setAvailableGamesSpinnerAdapter(emptyAvailableGames);
+                if (isBoundToSignalRService) {
+                    signalRService.isGameActive(gameId, gameCode);
+                    signalRService.getAvailableGames();
+                }
+                else
+                    throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");
 
+                String [] emptyAvailableGames= new String[]{getString(R.string.lbl_no_available_games)};
+                setAvailableGamesSpinnerAdapter(emptyAvailableGames);
 
 
             }
@@ -333,8 +338,13 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     public void onReceiveAvailableGames(AvailableGamesEvent availableGamesEvent) {
         try {
             availableGames = availableGamesEvent.getAvailableGames();
-            if (availableGames.length == 0)
+            if (availableGames.length == 0){
+                noAvailableGamesReturnLaterTextView.setVisibility(View.VISIBLE);
                 throw new Exception(activityName+ " - onReceiveAvailableGames - Error: available games is empty ");
+            }
+
+            createPrivateGameButtonTextView.setVisibility(View.VISIBLE);
+            noAvailableGamesReturnLaterTextView.setVisibility(View.GONE);
 
             gameTitles = new String[availableGames.length];
             gameIds = new String[availableGames.length];
@@ -343,11 +353,10 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 gameTitles[i] = availableGames[i].getGameTitle();
             }
 
-
             setAvailableGamesSpinnerAdapter(gameTitles);
         }
         catch (Exception ex){
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
@@ -373,7 +382,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
         }
         catch (Exception ex){
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
 
     }

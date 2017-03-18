@@ -32,7 +32,8 @@
                 android:layout_gravity="center"></ProgressBar>
 
         </LinearLayout>
-        <!--chat title root 1-->
+
+        <!--chat title root -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -115,224 +116,23 @@
         </LinearLayout>
 
 
-        <!--chat title root-->
-        <LinearLayout
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark"
-            android:orientation="vertical"
-            android:paddingBottom="4dp"
-            android:paddingTop="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:weightSum="10">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Home Team"
-                        android:textColor="@color/colorWhite"
-                        android:layout_marginLeft="5dp"
-                        />
-
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1"
-                        android:textColor="@color/answer3backgroundColor"
-                        android:background="@color/chatText"
-                        android:layout_margin="2dp"
-                        android:padding="5dp"
-                        />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/answer3backgroundColor"
-                        android:background="@color/chatText"
-                        android:padding="5dp"
-                        android:layout_margin="2dp"
-                        />
-
-
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Home Team"
-                        android:gravity="right"
-                        android:textColor="@color/colorWhite"
-                        android:layout_marginRight="5dp"
-                        />
-
-
-                </LinearLayout>
-
-
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:weightSum="2"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:text="Points: 123456"
-                    android:textColor="@color/colorWhite"
-                    android:layout_marginLeft="5dp"
-
-                    />
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="right"
-                    android:text="Position: 2348/87875"
-                    android:textColor="@color/colorWhite"
-                    android:layout_marginRight="5dp"
-
-                    />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-
-                    android:layout_height="wrap_content"
-                    android:gravity="left"
-                    android:text="Kfir's Gang!!!"
-                    android:textColor="@color/colorWhite"
-
-
-                    android:background="@color/chatText"
-
-                    />
-
-
-            </LinearLayout>
-
-
-
-
-
-
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="12"-->
-                <!--android:gravity="center"-->
-                <!--android:orientation="vertical">-->
-
-                <!--<TextView-->
-                    <!--android:id="@+id/c_private_game_name_text_view"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-
-                    <!--android:textColor="@color/colorWhite" />-->
-
-                <!--<TextView-->
-                    <!--android:id="@+id/c_game_title_text_view"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-
-                    <!--android:textColor="@color/colorWhite" />-->
-
-
-            <!--</LinearLayout>-->
-
-            <!--<LinearLayout-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_weight="5"-->
-                <!--android:gravity="center"-->
-                <!--android:orientation="vertical">-->
-
-                <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="Rank"-->
-                    <!--android:textColor="@color/colorWhite" />-->
-
-                <!--<TextView-->
-                    <!--android:id="@+id/c_position_text_view"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="1000/20000"-->
-                    <!--android:textColor="@color/colorWhite" />-->
-
-
-            <!--</LinearLayout>-->
-
-        </LinearLayout>
-
         <!--chat content root-->
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/c_content_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:weightSum="8">
-            <!--chat history-->
-            <ListView
-                android:id="@+id/c_chat_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="7"
-                android:divider="@null"
-                android:dividerHeight="0dp"
-                android:listSelector="@android:color/transparent"
-                android:stackFromBottom="true"
-                android:transcriptMode="alwaysScroll">
-
-            </ListView>
+            android:orientation="vertical">
 
             <!--chat input window-->
             <LinearLayout
+                android:id="@+id/c_chat_input_root"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 android:background="@color/colorAccent"
                 android:focusableInTouchMode="true"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:layout_alignParentBottom="true"
                 android:weightSum="7">
 
                 <TextView
@@ -353,8 +153,10 @@
                     android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/chatSendButton"
                     android:layout_weight="5"
-                    android:hint="type message"
-                    android:inputType="textMultiLine" />
+                    android:hint="@string/lbl_type_message"
+                    android:inputType="textMultiLine"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="-2dp"/>
 
                 <TextView
                     android:id="@+id/c_chatSendTextView"
@@ -363,13 +165,37 @@
                     android:layout_weight="1"
                     android:background="@color/colorAccent"
                     android:gravity="center"
-                    android:text="SEND"
+                    android:text="@string/lbl_send"
                     android:textColor="@color/background_material_light"
                     android:textStyle="bold"
 
                     />
 
             </LinearLayout>
-        </LinearLayout>
+
+            <!--chat history-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/c_chat_input_root"
+                android:orientation="vertical" >
+
+                <ListView
+                    android:id="@+id/c_chat_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible"
+                    android:divider="@null"
+                    android:dividerHeight="0dp"
+                    android:listSelector="@android:color/transparent"
+                    android:stackFromBottom="true"
+                    android:transcriptMode="alwaysScroll">
+
+                </ListView>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
     </LinearLayout>
 </LinearLayout>

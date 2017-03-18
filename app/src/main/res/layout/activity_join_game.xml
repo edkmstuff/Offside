@@ -51,7 +51,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="5dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <!-- Greeting -->
         <LinearLayout
@@ -157,17 +157,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/grayText"
-            android:text="אין לך קוד?"
-
+            android:text="@string/lbl_you_dont_have_code"
             android:layout_margin="5dp"
+            android:layout_gravity="right">
 
-            android:layout_gravity="right"
-
-
-            ></TextView>
+        </TextView>
 
         <TextView
-            android:id="@+id/jg_create_private_game_text_view"
+            android:id="@+id/jg_no_available_games_return_later_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/grayText"
+            android:text="@string/lbl_no_available_game_message_return_later"
+            android:layout_margin="5dp"
+            android:layout_gravity="right" >
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/jg_create_private_game_button_text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -176,7 +184,7 @@
             android:gravity="center"
             android:padding="5dp"
             android:minHeight="50dp"
-            android:text="צור משחק פרטי"
+            android:text="@string/lbl_create_private_game"
 
             android:textColor="@color/grayText" />
 
@@ -199,17 +207,8 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="10dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
-
-
-        <!--<Spinner-->
-            <!--android:background="@drawable/spinner_rectangle_background"-->
-            <!--android:spinnerMode="dropdown"-->
-            <!--android:id="@+id/jg_available_games_spinner"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--/>-->
 
         <ImageView
             android:src="@drawable/friends_blue_transparent"
@@ -222,7 +221,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="בחר שם למועדון"
+            android:text="@string/lbl_select_name_for_club"
             android:textColor="@color/grayText"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="20dp"
@@ -244,7 +243,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="בחר משחק"
+            android:text="@string/lbl_select_game"
             android:textColor="@color/grayText"
             android:layout_marginBottom="10dp"
             />
@@ -259,7 +258,7 @@
             />
 
         <TextView
-            android:id="@+id/jg_generate_private_game_code_text_view"
+            android:id="@+id/jg_generate_private_game_code_button_text_view"
             android:background="@color/chatText"
             android:gravity="center"
             android:textColor="@color/grayText"
@@ -269,7 +268,7 @@
             android:minWidth="100dp"
             android:layout_height="wrap_content"
             android:textDirection="rtl"
-            android:text="צור משחק פרטי" />
+            android:text="@string/lbl_create_private_game" />
 
         <!--<TextView-->
             <!--android:id="@+id/jg_private_game_code_text_view"-->

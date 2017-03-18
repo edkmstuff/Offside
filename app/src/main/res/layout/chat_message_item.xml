@@ -174,6 +174,17 @@
                             android:layout_marginTop="20dp"/>
 
                     </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/cm_incoming_question_processed_question_title_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_how_others_answered"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textSize="16dp"
+                        />
+
                     <!--answers-->
                     <LinearLayout
                         android:id="@+id/cm_incoming_answers_root"
@@ -374,6 +385,7 @@
 
 
 
+
                 </LinearLayout>
 
                 <!--processing question root-->
@@ -462,17 +474,7 @@
                     </LinearLayout>
 
 
-                    <TextView
-                        android:id="@+id/cm_incoming_processing_question_title_text_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:padding="10dp"
-                        android:text="@string/lbl_stay_tuned_to_see_your_friends_answers"
-                        android:textColor="@color/colorBlack"
-                        android:visibility="visible"
 
-                        />
 
 
                 </LinearLayout>
