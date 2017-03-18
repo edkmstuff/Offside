@@ -150,28 +150,34 @@
                                     android:id="@+id/cm_incoming_balance_text_view"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="1500"
-
-                                    />
-
-
+                                    android:text="1500"/>
                             </LinearLayout>
 
-
-
                         </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/cm_incoming_time_to_answer_text_view"
+                        <ProgressBar
+                            android:id="@+id/cm_incoming_time_to_answer_progress_bar"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:text="25 sec"
-                            android:background="@color/colorPrimary"
+                            style="@android:style/Widget.ProgressBar.Horizontal"
+                            android:max="15"
+                            android:progress="3"
                             android:textColor="@color/colorWhite"
                             android:height="30dp"
-                            android:layout_marginTop="20dp"/>
+                            android:layout_marginTop="20dp"
+                            android:progressDrawable="@drawable/progress_bar"
+                            />
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/cm_incoming_time_to_answer_text_view"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_gravity="center"-->
+                            <!--android:gravity="center"-->
+                            <!--android:text="25 sec"-->
+                            <!--android:background="@color/colorPrimary"-->
+                            <!--android:textColor="@color/colorWhite"-->
+                            <!--android:height="30dp"-->
+                            <!--android:layout_marginTop="20dp"/>-->
 
                     </LinearLayout>
 

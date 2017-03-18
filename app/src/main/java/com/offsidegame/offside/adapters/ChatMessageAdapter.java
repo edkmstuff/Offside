@@ -2,26 +2,28 @@ package com.offsidegame.offside.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.InsetDrawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
+import com.offsidegame.offside.helpers.ProgressBarAnimation;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.AnswerIdentifier;
@@ -36,8 +38,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Map;
-
-import static com.offsidegame.offside.R.color.privateGameTitle;
 
 /**
  * Created by KFIR on 11/21/2016.
@@ -82,7 +82,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         public TextView[] betSizeOptionsTextViews = new TextView[3];
         public TextView incomingBalanceTextView;
-        public TextView incomingTimeToAnswerTextView;
+        //public TextView incomingTimeToAnswerProgressBar;
+        public ProgressBar incomingTimeToAnswerProgressBar;
 
         public LinearLayout incomingProcessingQuestionRoot;
         public TextView incomingProcessingQuestionTextView;
@@ -156,7 +157,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingBalanceTextView = (TextView) convertView.findViewById(R.id.cm_incoming_balance_text_view);
 
 
-                viewHolder.incomingTimeToAnswerTextView = (TextView) convertView.findViewById(R.id.cm_incoming_time_to_answer_text_view);
+                viewHolder.incomingTimeToAnswerProgressBar = (ProgressBar) convertView.findViewById(R.id.cm_incoming_time_to_answer_progress_bar);
 
                 viewHolder.incomingProcessingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_processing_question_root);
                 viewHolder.incomingSelectedAnswerTitleTextView = (TextView) convertView.findViewById(R.id.cm_incoming_selected_answer_title_text_view);
@@ -387,7 +388,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
 
                     //set the timeToAskQuestion timer
-                    //time to answer was attached to chat message and is updated in thge server using timer
+                    //time to answer was attached to chat message and is updated in the server using timer
                     timeToAnswer = chatMessage.getTimeLeftToAnswer();
 
 //                //in case user opened app in the middle of asked question
@@ -397,16 +398,20 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 //                    timeToAnswer = updatedTimeToAnswerFromChat;
 
 
+                    final int progressBarMaxValue = Math.round((float) timeToAnswer / 1000.0f);
+                    viewHolder.incomingTimeToAnswerProgressBar.setMax(progressBarMaxValue);
+
                     timeToAnswerTimer = new CountDownTimer(timeToAnswer, 100) {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             if (Math.round((float) millisUntilFinished / 1000.0f) != secondsLeft) {
                                 secondsLeft = Math.round((float) millisUntilFinished / 1000.0f);
-                                viewHolder.incomingTimeToAnswerTextView.setText(Integer.toString(secondsLeft));
-                                if (secondsLeft < 7 && secondsLeft > 3)
-                                    viewHolder.incomingTimeToAnswerTextView.setBackgroundColor(Color.parseColor("#FFAB00"));
-                                if (secondsLeft < 4)
-                                    viewHolder.incomingTimeToAnswerTextView.setBackgroundColor(Color.RED);
+                                viewHolder.incomingTimeToAnswerProgressBar.setProgress(secondsLeft);
+
+//                                if (secondsLeft < 7 && secondsLeft > 3)
+//                                    viewHolder.incomingTimeToAnswerProgressBar.setBackgroundColor(Color.parseColor("#FFAB00"));
+//                                if (secondsLeft < 4)
+//                                    viewHolder.incomingTimeToAnswerProgressBar.setBackgroundColor(Color.RED);
                             }
                         }
 
@@ -436,7 +441,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
 
                     viewHolder.incomingBetPanelRoot.setVisibility(View.VISIBLE);
-                    viewHolder.incomingTimeToAnswerTextView.setVisibility(View.VISIBLE);
+                    viewHolder.incomingTimeToAnswerProgressBar.setVisibility(View.VISIBLE);
 
                 }
 
@@ -581,7 +586,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingProcessingQuestionRoot.setVisibility(View.GONE);
             viewHolder.incomingClosedQuestionRoot.setVisibility(View.GONE);
             viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
-            viewHolder.incomingTimeToAnswerTextView.setVisibility(View.GONE);
+            viewHolder.incomingTimeToAnswerProgressBar.setVisibility(View.GONE);
             viewHolder.incomingQuestionProcessedQuestionTitleTextView.setVisibility(View.GONE);
 
             for (int i = 0; i < 4; i++) {
@@ -640,3 +645,5 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
 
 }
+
+
