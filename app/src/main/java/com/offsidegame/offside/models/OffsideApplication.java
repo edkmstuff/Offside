@@ -35,7 +35,6 @@ public class OffsideApplication extends Application {
     private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
     private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";
 
-    private static int balance;
     private static int offsideCoins;
 
 
@@ -73,14 +72,6 @@ public class OffsideApplication extends Application {
 
     public static void setOffsideCoins(int offsideCoins) {
         OffsideApplication.offsideCoins = offsideCoins;
-    }
-
-    public static int getBalance() {
-        return balance;
-    }
-
-    public static void setBalance(int balance) {
-        OffsideApplication.balance = balance;
     }
 
     public Context getContext() {

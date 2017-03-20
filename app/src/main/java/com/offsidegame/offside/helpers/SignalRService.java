@@ -190,7 +190,7 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(new PositionEvent(position));
             }
         }, Position.class);
-        hub.on("UpdatePlayer", new SubscriptionHandler1<Player>() {
+        hub.on("UpdatePlayerData", new SubscriptionHandler1<Player>() {
             @Override
             public void run(Player player) {
                 EventBus.getDefault().post(player);

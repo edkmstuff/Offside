@@ -30,6 +30,7 @@ import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
+import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.Position;
 
@@ -39,7 +40,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
@@ -57,6 +57,7 @@ public class ChatActivity extends AppCompatActivity {
     private String playerId;
     private Chat chat;
     private ArrayList messages;
+
     private ChatMessageAdapter chatMessageAdapter;
     private Map<String, AnswerIdentifier> playerAnswers;
     private LinearLayout root;
@@ -253,8 +254,9 @@ public class ChatActivity extends AppCompatActivity {
     public void onReceiveChat(ChatEvent chatEvent) {
 
         try{
-            chat = chatEvent.getChat();
-            messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
+
+            chat = new Chat(chatEvent.getChat());
+
 
             EventBus.getDefault().post(new PositionEvent(chat.getPosition()));
 
@@ -265,11 +267,7 @@ public class ChatActivity extends AppCompatActivity {
 
             scoreTextView.setText(String.valueOf((int) player.getPoints()));
 
-
-            chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
-            ListView chatListView = (ListView) findViewById(R.id.c_chat_list_view);
-            chatListView.setAdapter(chatMessageAdapter);
-
+            createNewChatAdapter();
         } catch(Exception ex ){
             ACRA.getErrorReporter().handleException(ex);
 
@@ -283,26 +281,34 @@ public class ChatActivity extends AppCompatActivity {
         try{
             ChatMessage message = chatMessageEvent.getChatMessage();
 
-            chat.addMessage(message);
+            boolean isAdded = chat.addMessageIfNotAlreadyExists(message);
 
+            if (!isAdded){
+                throw new Exception("Duplicate chat message. id: " + message.getId() + " content: " + message.getMessageText() );
+            }
+
+            //new message was added, notify data change
             if (messages != null && chatMessageAdapter != null) {
-                messages.add(message);
                 chatMessageAdapter.notifyDataSetChanged();
                 return;
             }
 
-            messages = new ArrayList(Arrays.asList(chat.getChatMessages()));
-            chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
-            ListView chatListView = (ListView) findViewById(R.id.c_chat_list_view);
-            chatListView.setAdapter(chatMessageAdapter);
+
+            createNewChatAdapter();
 
         } catch(Exception ex ){
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
 
+    }
 
+    private void createNewChatAdapter(){
+        messages = chat.getChatMessages();
+        chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
+        ListView chatListView = (ListView) findViewById(R.id.c_chat_list_view);
+        chatListView.setAdapter(chatMessageAdapter);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -364,6 +370,7 @@ public class ChatActivity extends AppCompatActivity {
             this.player = player;
             this.playerAnswers = player.getPlayerAnswers();
             scoreTextView.setText(Integer.toString((int)player.getPoints()));
+            OffsideApplication.setOffsideCoins(player.getOffsideCoins());
 
         } catch(Exception ex ){
             ACRA.getErrorReporter().handleException(ex);

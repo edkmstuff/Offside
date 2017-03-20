@@ -65,6 +65,18 @@
                     android:textColor="@color/chatText"
                     android:visibility="visible">
 
+                    <ProgressBar
+                        android:id="@+id/cm_incoming_time_to_answer_progress_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:max="15"
+                        android:progress="3"
+                        android:textColor="@color/colorWhite"
+                        android:height="30dp"
+
+                        android:progressDrawable="@drawable/progress_bar"
+                        />
                     <TextView
                         android:id="@+id/cm_incoming_question_text_view"
                         android:layout_width="match_parent"
@@ -154,32 +166,19 @@
                             </LinearLayout>
 
                         </LinearLayout>
-                        <ProgressBar
-                            android:id="@+id/cm_incoming_time_to_answer_progress_bar"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            style="@android:style/Widget.ProgressBar.Horizontal"
-                            android:max="15"
-                            android:progress="3"
-                            android:textColor="@color/colorWhite"
-                            android:height="30dp"
-                            android:layout_marginTop="20dp"
-                            android:progressDrawable="@drawable/progress_bar"
-                            />
 
-                        <!--<TextView-->
-                            <!--android:id="@+id/cm_incoming_time_to_answer_text_view"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_gravity="center"-->
-                            <!--android:gravity="center"-->
-                            <!--android:text="25 sec"-->
-                            <!--android:background="@color/colorPrimary"-->
-                            <!--android:textColor="@color/colorWhite"-->
-                            <!--android:height="30dp"-->
-                            <!--android:layout_marginTop="20dp"/>-->
 
                     </LinearLayout>
+                    <TextView
+                        android:id="@+id/cm_incoming_question_asked_not_enough_coins_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="אין לך מספיק מטבעות כדי לשחק"
+                        android:textColor="@color/answer1backgroundColor"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textSize="16dp"
+                        />
 
                     <TextView
                         android:id="@+id/cm_incoming_question_processed_question_title_text_view"

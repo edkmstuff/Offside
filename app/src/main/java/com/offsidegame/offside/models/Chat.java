@@ -1,10 +1,7 @@
 package com.offsidegame.offside.models;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Created by KFIR on 12/7/2016.
@@ -13,7 +10,7 @@ import java.util.Map;
 
 public class Chat {
     @com.google.gson.annotations.SerializedName("CM")
-    private ChatMessage[] chatMessages;
+    private ArrayList<ChatMessage> chatMessages;
 
     @com.google.gson.annotations.SerializedName("P")
     private Player player;
@@ -21,22 +18,35 @@ public class Chat {
     @com.google.gson.annotations.SerializedName("POS")
     private Position position;
 
+    private HashMap<String,ChatMessage> chatMessagesDictionary;
 
-    public ChatMessage[] getChatMessages() {
-        return chatMessages;
+    public Chat(Chat chat){
+        chatMessages= chat.getChatMessages();
+        player= chat.getPlayer();
+        position = chat.getPosition();
+        chatMessagesDictionary= new HashMap<>();
+        for(ChatMessage cm : chat.getChatMessages() ){
+            chatMessagesDictionary.put(cm.getId(),cm);
+        }
+
+
     }
 
-    public void setChatMessages(ChatMessage[] chatMessages) {
-        this.chatMessages = chatMessages;
-    }
 
-    public void addMessage(ChatMessage chatMessage){
+
+    public boolean addMessageIfNotAlreadyExists(ChatMessage chatMessage){
+
         if (chatMessages == null)
-            return;
+            return false;
 
-        List<ChatMessage> list = new ArrayList(Arrays.asList( chatMessages));
-        list.add(chatMessage);
-        chatMessages = list.toArray(chatMessages);
+        if(!chatMessagesDictionary.containsKey(chatMessage.getId())){
+            chatMessagesDictionary.put(chatMessage.getId(),chatMessage);
+            chatMessages.add(chatMessage);
+            return true;
+        }
+
+        return false;
+
 
     }
 
@@ -54,5 +64,14 @@ public class Chat {
 
     public void setPosition(Position position) {
         this.position = position;
+    }
+
+
+    public ArrayList<ChatMessage> getChatMessages() {
+        return chatMessages;
+    }
+
+    public void setChatMessages(ArrayList<ChatMessage> chatMessages) {
+        this.chatMessages = chatMessages;
     }
 }

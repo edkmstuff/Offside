@@ -284,7 +284,6 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             String homeTeam = gameInfo.getHomeTeam();
             String awayTeam = gameInfo.getAwayTeam();
             int offsideCoins = gameInfo.getOffsideCoins();
-            int balance = gameInfo.getBalance();
             int totalPlayers = gameInfo.getTotalPlayers();
 
             SharedPreferences.Editor editor = settings.edit();
@@ -299,11 +298,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
             editor.commit();
 
-            OffsideApplication.setBalance(balance);
             OffsideApplication.setOffsideCoins(offsideCoins);
-
-
-
 
             Intent intent = new Intent(context, ChatActivity.class);
             startActivity(intent);
