@@ -453,9 +453,8 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:gravity="center"
-                            android:text="@string/lbl_you_can_earn"
-                            android:textColor="@color/colorBlack"
-                            />
+                            android:text="@string/lbl_points"
+                            android:textColor="@color/colorBlack" />
 
                         <TextView
                             android:id="@+id/cm_incoming_selected_answer_return_text_view"
@@ -467,14 +466,16 @@
                             android:textColor="@color/colorBlack"
                             android:layout_marginLeft="2dp"
                             android:layout_marginRight="2dp"/>
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:gravity="center"
-                            android:text=" points"
-                            android:textColor="@color/colorBlack" />
+                            android:text="@string/lbl_you_can_earn"
+                            android:textColor="@color/colorBlack"
+                            />
+
+
 
                     </LinearLayout>
 

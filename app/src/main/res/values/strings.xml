@@ -41,7 +41,7 @@
     <string name="home_team_key">homeTeam</string>
     <string name="away_team_key">awayTeam</string>
     <string name="total_players_key">totalPlayers</string>
-    <string name="crash_toast_text">Something went wrong... we are sending email to the developers...</string>
+    <string name="crash_toast_text">Something went wrong... we are sending the info to the developers...</string>
     <string name="lbl_you_can_earn">רווח אפשרי</string>
     <string name="lbl_correct_answer_feedback">תותח!!!</string>
     <string name="lbl_wrong_answer_feedback">איזו החמצה...</string>
@@ -60,7 +60,7 @@
     <string name="lbl_type_message">הקלד הודעה</string>
     <string name="lbl_send">שלח</string>
     <string name="lbl_how_others_answered">כך ענו כולם</string>
-    <string name="lbl_not_enough_coins_to_play">אין לך מספיק מטבעות כדי לשחק</string>
+    <string name="lbl_not_enough_coins_to_play">אין לך מספיק מטבעות כדי להשתתף</string>
 
 
 </resources>
