@@ -1,5 +1,7 @@
 package com.offsidegame.offside.models;
 
+import android.os.CountDownTimer;
+
 import java.io.Serializable;
 
 /**
@@ -26,9 +28,6 @@ public class Question implements Serializable {
     private boolean hasPointsValue;
     @com.google.gson.annotations.SerializedName("IWFA")
     private boolean isWaitingForAnswers;
-
-
-
 
     public String getQuestionText() {
         return questionText;
@@ -102,4 +101,5 @@ public class Question implements Serializable {
     public void setWaitingForAnswers(boolean waitingForAnswers) {
         isWaitingForAnswers = waitingForAnswers;
     }
+
 }

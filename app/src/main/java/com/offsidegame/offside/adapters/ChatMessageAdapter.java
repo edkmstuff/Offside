@@ -102,6 +102,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public TextView outgoingTextMessageTextView;
         public TextView outgoingTimeSentTextView;
 
+        public Question question;
+        public int timeToAnswer;
+        public ChatMessage chatMessage;
+        public CountDownTimer countDownTimer;
+        public String messageId;
+
     }
 
 
@@ -188,11 +194,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            ChatMessage chatMessage = getItem(position);
-            if (chatMessage == null)
+            viewHolder.chatMessage = getItem(position);
+            if (viewHolder.chatMessage == null)
                 return convertView;
 
-            String chatMessageType = chatMessage.getMessageType();
+            String chatMessageType = viewHolder.chatMessage.getMessageType();
 
             if (chatMessageType == null)
                 return convertView;
@@ -200,13 +206,13 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             if (chatMessageType.equals(OffsideApplication.getMessageTypeText()))  //"TEXT"
             {
-                generateTextChatMessage(viewHolder, chatMessage, chatMessage.isIncoming());
+                generateTextChatMessage(viewHolder);
 
             } else if (chatMessageType.equals(OffsideApplication.getMessageTypeAskedQuestion()) || //"ASKED_QUESTION"
                     chatMessageType.equals(OffsideApplication.getMessageTypeProcessedQuestion()) ||  //"PROCESSED_QUESTION"
                     chatMessageType.equals(OffsideApplication.getMessageTypeClosedQuestion())) //"CLOSED_QUESTION"
             {
-                generateQuestionChatMessage(viewHolder, chatMessage);
+                generateQuestionChatMessage(viewHolder);
             }
 
             return convertView;
@@ -219,20 +225,20 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         return null;
     }
 
-    private void generateTextChatMessage(ViewHolder viewHolder, ChatMessage chatMessage, boolean isIncoming) {
+    private void generateTextChatMessage(ViewHolder viewHolder) {
 
         try {
 
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            Uri profilePictureUri = Uri.parse(chatMessage.getImageUrl());
+            Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
 
             //visibility reset
             resetWidgetsVisibility(viewHolder);
 
-            if (isIncoming) {
+            if (viewHolder.chatMessage.isIncoming()) {
                 loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
-                viewHolder.incomingTimeSentTextView.setText(timeFormat.format(chatMessage.getSentTime()));
-                viewHolder.incomingTextMessageTextView.setText(chatMessage.getMessageText());
+                viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
+                viewHolder.incomingTextMessageTextView.setText(viewHolder.chatMessage.getMessageText());
 
                 //visibility set
                 viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
@@ -240,8 +246,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             } else {
                 loadFbImage(viewHolder.outgoingProfilePictureImageView, profilePictureUri);
-                viewHolder.outgoingTimeSentTextView.setText(timeFormat.format(chatMessage.getSentTime()));
-                viewHolder.outgoingTextMessageTextView.setText(chatMessage.getMessageText());
+                viewHolder.outgoingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
+                viewHolder.outgoingTextMessageTextView.setText(viewHolder.chatMessage.getMessageText());
 
                 //visibility set
                 viewHolder.outgoingMessagesRoot.setVisibility(View.VISIBLE);
@@ -252,21 +258,21 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         }
     }
 
-    private void generateQuestionChatMessage(final ViewHolder viewHolder, ChatMessage chatMessage) {
+    private void generateQuestionChatMessage(final ViewHolder viewHolder) {
 
         try {
 
             //chat message properties
-            final Uri profilePictureUri = Uri.parse(chatMessage.getImageUrl());
+            final Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
             loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
             final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            viewHolder.incomingTimeSentTextView.setText(timeFormat.format(chatMessage.getSentTime()));
-            String chatMessageType = chatMessage.getMessageType();
+            viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
+            String chatMessageType = viewHolder.chatMessage.getMessageType();
 
             //bind Question object to the ui elements
             final Gson gson = new GsonBuilder().create();
-            final Question question = gson.fromJson(chatMessage.getMessageText(), Question.class);
-            final String questionId = question.getId();
+            viewHolder.question = gson.fromJson(viewHolder.chatMessage.getMessageText(), Question.class);
+            final String questionId = viewHolder.question.getId();
 
             final boolean isAskedQuestion = chatMessageType.equals(OffsideApplication.getMessageTypeAskedQuestion());
             final boolean isProcessedQuestion = chatMessageType.equals(OffsideApplication.getMessageTypeProcessedQuestion());
@@ -279,14 +285,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             if (isAskedQuestion && isPlayerAnsweredQuestion) {
                 final String userAnswerId = playerAnswers.get(questionId).getAnswerId();
                 int betSize = playerAnswers.get(questionId).getBetSize();
-                int answerNumber = getAnswerNumber(question, userAnswerId);
+                int answerNumber = getAnswerNumber(viewHolder.question, userAnswerId);
                 if (answerNumber == 0)
                     return;
 
-                final Answer answerOfTheUser = question.getAnswers()[answerNumber - 1];
+                final Answer answerOfTheUser = viewHolder.question.getAnswers()[answerNumber - 1];
 
                 //set values to widgets
-                viewHolder.incomingProcessingQuestionTextView.setText(question.getQuestionText());
+                viewHolder.incomingProcessingQuestionTextView.setText(viewHolder.question.getQuestionText());
                 viewHolder.incomingSelectedAnswerTextView.setText(answerOfTheUser.getAnswerText());
 
                 int returnValue = (int) (betSize * answerOfTheUser.getPointsMultiplier());
@@ -311,13 +317,15 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             //ASKED_QUESTION elements
 
-            final int minBetSize = OffsideApplication.getGameInfo().getMinBetSize();
+            final int minBetSize = OffsideApplication.getOffsideCoins()< OffsideApplication.getGameInfo().getMinBetSize() ? 0 : OffsideApplication.getGameInfo().getMinBetSize();
 
-            final Answer[] answers = question.getAnswers();
+
+
+            final Answer[] answers = viewHolder.question.getAnswers();
 
             if (isAskedQuestion || isProcessedQuestion) {
 
-                viewHolder.incomingQuestionTextView.setText(question.getQuestionText());
+                viewHolder.incomingQuestionTextView.setText(viewHolder.question.getQuestionText());
 
                 for (int i = 0; i < answers.length; i++) {
                     final String answerText = answers[i].getAnswerText();
@@ -381,8 +389,18 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                         viewHolder.betSizeOptionsTextViews[i].setVisibility(View.INVISIBLE);
 
-                        if (OffsideApplication.getOffsideCoins() > (i + 1) * minBetSize)
+                        if (OffsideApplication.getOffsideCoins() >= (i + 1) * OffsideApplication.getGameInfo().getMinBetSize())
                             viewHolder.betSizeOptionsTextViews[i].setVisibility(View.VISIBLE);
+                        else {
+                            if(OffsideApplication.getOffsideCoins()<OffsideApplication.getGameInfo().getMinBetSize()){
+                                for(Answer answer : viewHolder.question.getAnswers()){
+                                    answer.selectedBetSize = 0;
+
+                                }
+                            }
+
+
+                        }
 
                     }
 
@@ -391,8 +409,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                     //set the timeToAskQuestion timer
                     //time to answer was attached to chat message and is updated in the server using timer
-                    int timeToAnswer = chatMessage.getTimeLeftToAnswer();
-                    Log.i("offside","timeToAnswer: "+String.valueOf(timeToAnswer));
+                    viewHolder.timeToAnswer = viewHolder.chatMessage.getTimeLeftToAnswer();
+                    //Log.i("offside","questionId : "+ viewHolder.question.getQuestionText() + "- timeToAnswer: "+String.valueOf(viewHolder.timeToAnswer));
 
 //                //in case user opened app in the middle of asked question
 //                // time to answer is taken from the chat
@@ -400,34 +418,46 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 //                if (updatedTimeToAnswerFromChat > 0)
 //                    timeToAnswer = updatedTimeToAnswerFromChat;
 
-
-                    //final int progressBarMaxValue = Math.round((float) timeToAnswer / 1000.0f);
-                    final int progressBarMaxValue = timeToAnswer;
+                    final int progressBarMaxValue = viewHolder.timeToAnswer;
                     viewHolder.incomingTimeToAnswerProgressBar.setMax(progressBarMaxValue);
 
-                    new CountDownTimer(timeToAnswer, 100) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
+                    viewHolder.messageId = viewHolder.question.getId();
 
 
-                                Log.i("offside","secondsLeft: "+String.valueOf(Math.round((float) millisUntilFinished / 1000.0f)));
+                    if(viewHolder.timeToAnswer > 0 ) {
+                        if(viewHolder.countDownTimer != null ){
+                            Log.i("offside","CANCELLING!!! timerId: "+String.valueOf(viewHolder.countDownTimer.hashCode()));
+                            viewHolder.countDownTimer.cancel();
+                            viewHolder.countDownTimer=null;
+                        }
+
+
+
+                        viewHolder.countDownTimer = new CountDownTimer(viewHolder.timeToAnswer, 100) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                viewHolder.chatMessage.setTimeLeftToAnswer((int)millisUntilFinished);
+                                //Log.i("offside","timerId: "+String.valueOf(this.hashCode())+" - questionId : "+ viewHolder.messageId+ " question text: "+ viewHolder.question.getQuestionText()+ " - secondsLeft: "+ Math.round((int)millisUntilFinished/1000.0f) );
                                 viewHolder.incomingTimeToAnswerProgressBar.setProgress(Math.round((float) millisUntilFinished ));
 //
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            //user did not answer this question, we select random answer
-                            boolean isAnswered = playerAnswers.containsKey(question.getId());
-                            if (!isAnswered) {
-                                int answersCount = question.getAnswers().length;
-                                int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
-                                Answer randomAnswer = question.getAnswers()[selectedAnswerIndex];
-                                //final int returnValue = Integer.parseInt( viewHolder.answerReturnTextViews[selectedAnswerIndex].getText().toString());
-                                postAnswer(question, randomAnswer, null, viewHolder);
                             }
-                        }
-                    }.start();
+
+                            @Override
+                            public void onFinish() {
+                                //user did not answer this question, we select random answer
+                                viewHolder.chatMessage.setTimeLeftToAnswer(0);
+                                viewHolder.incomingTimeToAnswerProgressBar.setProgress(0);
+                                boolean isAnswered = playerAnswers.containsKey(questionId);
+                                if (!isAnswered) {
+                                    int answersCount = viewHolder.question.getAnswers().length;
+                                    int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
+                                    Answer randomAnswer = viewHolder.question.getAnswers()[selectedAnswerIndex];
+                                    //final int returnValue = Integer.parseInt( viewHolder.answerReturnTextViews[selectedAnswerIndex].getText().toString());
+                                    postAnswer(viewHolder.question, randomAnswer, null, viewHolder);
+                                }
+                            }
+                        }.start();
+                    }
 
                     //set on click event to answers
                     for (int i = 0; i < answers.length; i++) {
@@ -436,14 +466,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         viewHolder.answerRoots[i].setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                postAnswer(question, clickedAnswer, view, viewHolder);
+                                postAnswer(viewHolder.question, clickedAnswer, view, viewHolder);
                             }
                         });
                     }
 
 
                     //we don't have enough coins to play
-                    if (OffsideApplication.getOffsideCoins() < minBetSize){
+                    if (OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize()){
                         viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
                         viewHolder.incomingQuestionAskedNotEnoughCoinsTextView.setVisibility(View.VISIBLE);
                         for (int j = 0; j < 4; j++) {
@@ -499,20 +529,20 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             if (isClosedQuestion) {
 
                 Answer correctAnswer = null;
-                for (Answer answer : question.getAnswers()) {
+                for (Answer answer : viewHolder.question.getAnswers()) {
                     if (answer.isCorrect())
                         correctAnswer = answer;
                 }
                 if (correctAnswer == null)
                     return;
 
-                AnswerIdentifier userAnswerIdentifier = playerAnswers.containsKey(question.getId()) ? playerAnswers.get(question.getId()) : null;
+                AnswerIdentifier userAnswerIdentifier = playerAnswers.containsKey(viewHolder.question.getId()) ? playerAnswers.get(viewHolder.question.getId()) : null;
                 if (userAnswerIdentifier == null)
                     return;
 
                 boolean isUserAnswerCorrect = correctAnswer.getId().equals(userAnswerIdentifier.getAnswerId());
                 int userBetSize = userAnswerIdentifier.getBetSize();
-                int answerNumber = getAnswerNumber(question, correctAnswer.getId());
+                int answerNumber = getAnswerNumber(viewHolder.question, correctAnswer.getId());
                 int userReturnValue = (int) (correctAnswer.getPointsMultiplier() * userBetSize);
 
                 final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
@@ -547,6 +577,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         try {
             final ViewHolder myViewHolder = viewHolder;
+            viewHolder.countDownTimer.cancel();
+            viewHolder.countDownTimer= null;
             final boolean isRandomlySelected = view == null;
             if (isRandomlySelected)
                 viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_randomly_selected_answer_title);
@@ -578,6 +610,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             if (view != null) //null when random answer was selected
                 view.animate().rotationX(360.0f).setDuration(200).start();
 
+            int delay = isRandomlySelected ? 0 : 500 ;
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -585,7 +619,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     myViewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
                     EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, isRandomlySelected, betSize));
                 }
-            }, 500);
+            }, delay);
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleException(ex);

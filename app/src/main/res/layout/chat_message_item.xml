@@ -173,7 +173,7 @@
                         android:id="@+id/cm_incoming_question_asked_not_enough_coins_text_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="אין לך מספיק מטבעות כדי לשחק"
+                        android:text="@string/lbl_not_enough_coins_to_play"
                         android:textColor="@color/answer1backgroundColor"
                         android:gravity="center"
                         android:layout_marginTop="5dp"

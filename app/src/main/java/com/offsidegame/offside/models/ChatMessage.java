@@ -69,4 +69,8 @@ public class ChatMessage {
     public String getId() {
         return id;
     }
+
+    public void setTimeLeftToAnswer(int timeLeftToAnswer) {
+        this.timeLeftToAnswer = timeLeftToAnswer;
+    }
 }

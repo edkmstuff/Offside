@@ -102,6 +102,22 @@ public class OffsideApplication extends Application {
         isPlayerQuitGame = playerQuitGame;
     }
 
+    public void onCreate ()
+    {
+        super.onCreate();
+        // Setup handler for uncaught exceptions.
+        Thread.setDefaultUncaughtExceptionHandler (new Thread.UncaughtExceptionHandler()
+        {
+            @Override
+            public void uncaughtException (Thread thread, Throwable e)
+            {
+                ACRA.getErrorReporter().handleSilentException(e);
+            }
+        });
+    }
+
+
+
 
     @Override
     protected void attachBaseContext(Context base) {
