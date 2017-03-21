@@ -185,6 +185,10 @@ public class ChatActivity extends AppCompatActivity {
             intent.setClass(context, SignalRService.class);
             bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
 
+            //reset to chat adapter
+            createNewChatAdapter(true);
+
+
         } catch(Exception ex ){
             ACRA.getErrorReporter().handleException(ex);
 
@@ -267,7 +271,8 @@ public class ChatActivity extends AppCompatActivity {
 
             scoreTextView.setText(String.valueOf((int) player.getPoints()));
 
-            createNewChatAdapter();
+            createNewChatAdapter(false);
+
         } catch(Exception ex ){
             ACRA.getErrorReporter().handleException(ex);
 
@@ -294,7 +299,7 @@ public class ChatActivity extends AppCompatActivity {
             }
 
 
-            createNewChatAdapter();
+            createNewChatAdapter(false);
 
         } catch(Exception ex ){
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -304,24 +309,28 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    private void createNewChatAdapter(){
-        messages = chat.getChatMessages();
+    private void createNewChatAdapter(boolean reset){
+        messages = new ArrayList();
+
+        if (!reset && chat != null)
+            messages = chat.getChatMessages();
+
         chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
         ListView chatListView = (ListView) findViewById(R.id.c_chat_list_view);
         chatListView.setAdapter(chatMessageAdapter);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onQuestionAnsweredEvent(QuestionAnsweredEvent questionAnswered) {
+    public void onQuestionAnsweredEvent(QuestionAnsweredEvent questionAnsweredEvent) {
 
         try{
-            String gameId = questionAnswered.getGameId();
-            String questionId = questionAnswered.getQuestionId();
-            boolean isRandomAnswer = questionAnswered.isRandomAnswer();
-            int betSize = questionAnswered.getBetSize();
+            String gameId = questionAnsweredEvent.getGameId();
+            String questionId = questionAnsweredEvent.getQuestionId();
+            boolean isRandomAnswer = questionAnsweredEvent.isRandomAnswer();
+            int betSize = questionAnsweredEvent.getBetSize();
 
             // this parameter will be null if the user does not answer
-            String answerId = questionAnswered.getAnswerId();
+            String answerId = questionAnsweredEvent.getAnswerId();
             signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer, betSize);
             if (!playerAnswers.containsKey(questionId))
                 playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize));

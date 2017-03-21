@@ -37,6 +37,9 @@ public class OffsideApplication extends Application {
 
     private static int offsideCoins;
 
+    private static GameInfo gameInfo;
+
+
 
     public static String getMessageTypeText() {
         return messageTypeText;
@@ -72,6 +75,14 @@ public class OffsideApplication extends Application {
 
     public static void setOffsideCoins(int offsideCoins) {
         OffsideApplication.offsideCoins = offsideCoins;
+    }
+
+    public static GameInfo getGameInfo() {
+        return gameInfo;
+    }
+
+    public static void setGameInfo(GameInfo gameInfo) {
+        OffsideApplication.gameInfo = gameInfo;
     }
 
     public Context getContext() {

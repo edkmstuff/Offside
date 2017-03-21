@@ -311,7 +311,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             //ASKED_QUESTION elements
 
-            final int minBetSize = 100;
+            final int minBetSize = OffsideApplication.getGameInfo().getMinBetSize();
 
             final Answer[] answers = question.getAnswers();
 
@@ -354,9 +354,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                 //update answers return value based on betSize
                                 int betSize = minBetSize * (index + 1);
                                 for (int i = 0; i < answers.length; i++) {
-                                    final int returnValue = (int) answers[i].getPointsMultiplier() * betSize;
+                                    final int returnValue = (int) Math.round(answers[i].getPointsMultiplier() * betSize);
                                     viewHolder.answerReturnTextViews[i].setText(String.valueOf(returnValue));
                                     answers[i].setScore(returnValue);
+                                    answers[i].setSelectedBetSize(betSize);
                                 }
 
                                 //update betSize button background
@@ -567,7 +568,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             final int returnValue = (int) answer.getScore();
 
 
-            final int betSize = (int) (returnValue / answer.getPointsMultiplier());
+            final int betSize = answer.getSelectedBetSize();
 
 
             viewHolder.incomingSelectedAnswerReturnTextView.setText(String.valueOf(returnValue));
@@ -582,7 +583,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 public void run() {
                     myViewHolder.incomingQuestionRoot.setVisibility(View.GONE);
                     myViewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
-                    EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, isRandomlySelected, returnValue));
+                    EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, isRandomlySelected, betSize));
                 }
             }, 500);
 
