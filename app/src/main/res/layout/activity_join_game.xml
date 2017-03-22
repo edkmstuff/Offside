@@ -128,8 +128,8 @@
                 android:layout_marginRight="5dp"
                 android:background="@color/colorWhite"
                 android:ems="10"
-                android:hint=" קוד משחק"
-                android:inputType="textEmailAddress"
+                android:hint="@string/lbl_type_in_game_code"
+                android:inputType="phone"
                 android:textDirection="rtl" />
 
             <TextView

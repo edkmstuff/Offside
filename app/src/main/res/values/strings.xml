@@ -26,7 +26,6 @@
     <string name="game_id_key">gameId</string>
 
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="player_profile_picture_url_key">userProfilePictureUrl</string>
     <string name="lbl_no_such_game">משחק לא קיים</string>
     <string name="recent_token_key">recentToken</string>
@@ -43,8 +42,8 @@
     <string name="total_players_key">totalPlayers</string>
     <string name="crash_toast_text">Something went wrong... we are sending the info to the developers...</string>
     <string name="lbl_you_can_earn">רווח אפשרי</string>
-    <string name="lbl_correct_answer_feedback">תותח!!!</string>
-    <string name="lbl_wrong_answer_feedback">איזו החמצה...</string>
+    <string name="lbl_correct_answer_feedback">צדקת!</string>
+    <string name="lbl_wrong_answer_feedback">אופס טעית...</string>
     <string name="lbl_you_earned">זכית ב-</string>
     <string name="lbl_points">נקודות</string>
     <string name="lbl_you_didnt_earn_points">הפעם לא זכית בנקודות</string>
@@ -61,7 +60,10 @@
     <string name="lbl_send">שלח</string>
     <string name="lbl_how_others_answered">כך ענו כולם</string>
     <string name="lbl_not_enough_coins_to_play">אין לך מספיק מטבעות כדי להשתתף</string>
-    <string name="lbl_question_time_expired_message">בעוד רגע נדע מי צל\"ש ומי טר\"ש</string>
+    <string name="lbl_question_time_expired_message">מייד תישלח התשובה הנכונה</string>
+    <string name="lbl_we_have_an_answer">יש לנו תשובה</string>
+    <string name="lbl_in_few_seconds_you_will_see_others_answers">בעוד מספר שניות תראה כיצד חושבים כולם...</string>
+    <string name="lbl_type_in_game_code">הזן קוד משחק פרטי</string>
 
 
 </resources>
