@@ -137,14 +137,18 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     String message = chatMessageEditText.getText().toString();
-                    signalRService.sendChatMessage(gameId, gameCode, message, playerId);
-                    //clear text
-                    chatMessageEditText.setText("");
-                    //hide keypad
-                    hideKeypad();
+                    if(message!=null && message.length()>0){
+                        signalRService.sendChatMessage(gameId, gameCode, message, playerId);
+                        //clear text
+                        chatMessageEditText.setText("");
+                        //hide keypad
+                        hideKeypad();
+                    }
+
 
                 }
             });
+
 
             chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -184,6 +188,8 @@ public class ChatActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.setClass(context, SignalRService.class);
             bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+
+            hideKeypad();
 
             //reset to chat adapter
             createNewChatAdapter(true);
