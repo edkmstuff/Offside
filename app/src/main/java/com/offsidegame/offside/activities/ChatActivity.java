@@ -128,7 +128,7 @@ public class ChatActivity extends AppCompatActivity {
             positionTextView = (TextView) findViewById(R.id.c_position_text_view);
 
             privateGameNameTextView.setText(privateGameTitle);
-            gameTitleTextView.setText(homeTeam + " vs " + awayTeam);
+            gameTitleTextView.setText(homeTeam + " vs. " + awayTeam);
 
 
             chatSendTextView.setBackgroundResource(R.color.colorDivider);
