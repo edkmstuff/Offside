@@ -59,6 +59,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     private class ViewHolder {
 
+        //<editor-fold desc="VIEWHOLDER PROPERTIES">
+
         public LinearLayout incomingMessagesRoot;
         public ImageView incomingProfilePictureImageView;
         public TextView incomingTextMessageTextView;
@@ -80,15 +82,16 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         public TextView[] betSizeOptionsTextViews = new TextView[3];
         public TextView incomingBalanceTextView;
-        //public TextView incomingTimeToAnswerProgressBar;
+
         public ProgressBar incomingTimeToAnswerProgressBar;
+        public TextView incomingQuestionProcessedQuestionTimeExpiredMessageTextView;
 
         public LinearLayout incomingProcessingQuestionRoot;
         public TextView incomingProcessingQuestionTextView;
         public TextView incomingSelectedAnswerTitleTextView;
         public TextView incomingSelectedAnswerTextView;
         public TextView incomingSelectedAnswerReturnTextView;
-        public TextView incomingProcessingQuestionTitleTextView;
+
 
         public LinearLayout incomingClosedQuestionRoot;
         public TextView incomingCorrectWrongTitleTextView;
@@ -106,7 +109,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public int timeToAnswer;
         public ChatMessage chatMessage;
         public CountDownTimer countDownTimer;
-        public String messageId;
+        //</editor-fold>
 
     }
 
@@ -120,8 +123,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.chat_message_item, parent, false);
                 viewHolder = new ViewHolder();
 
-
-                //<editor-fold desc="findViewById">
+                //<editor-fold desc="FIND WIDGETS">
 
                 //text message
                 viewHolder.incomingMessagesRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_messages_root);
@@ -162,6 +164,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
 
                 viewHolder.incomingTimeToAnswerProgressBar = (ProgressBar) convertView.findViewById(R.id.cm_incoming_time_to_answer_progress_bar);
+                viewHolder.incomingQuestionProcessedQuestionTimeExpiredMessageTextView= (TextView) convertView.findViewById(R.id.cm_incoming_question_processed_question_time_expired_message_text_view);
 
                 viewHolder.incomingProcessingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_processing_question_root);
                 viewHolder.incomingSelectedAnswerTitleTextView = (TextView) convertView.findViewById(R.id.cm_incoming_selected_answer_title_text_view);
@@ -188,6 +191,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.outgoingTimeSentTextView = (TextView) convertView.findViewById(R.id.cm_outgoing_time_sent_text_view);
 
                 //</editor-fold>
+
                 convertView.setTag(viewHolder);
 
             } else {
@@ -315,15 +319,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 return;
             }
 
-            //ASKED_QUESTION elements
-
             final int minBetSize = OffsideApplication.getOffsideCoins()< OffsideApplication.getGameInfo().getMinBetSize() ? 0 : OffsideApplication.getGameInfo().getMinBetSize();
-
-
 
             final Answer[] answers = viewHolder.question.getAnswers();
 
-            if (isAskedQuestion || isProcessedQuestion) {
+            if (isAskedQuestion || isProcessedQuestion)
+            {
+
+            //<editor-fold desc="ASKED OR PROCESSED QUESTION">
 
                 viewHolder.incomingQuestionTextView.setText(viewHolder.question.getQuestionText());
 
@@ -348,9 +351,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 }
 
 
-                //ASKED_QUESTION SECTION
                 if (isAskedQuestion) {
 
+                //<editor-fold desc="ASKED QUESTION">
 
                     //set on click event to bet options
                     for (int i = 0; i < viewHolder.betSizeOptionsTextViews.length; i++) {
@@ -418,10 +421,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 //                if (updatedTimeToAnswerFromChat > 0)
 //                    timeToAnswer = updatedTimeToAnswerFromChat;
 
-                    final int progressBarMaxValue = viewHolder.timeToAnswer;
+                    int progressBarMaxValue = viewHolder.timeToAnswer;
                     viewHolder.incomingTimeToAnswerProgressBar.setMax(progressBarMaxValue);
 
-                    viewHolder.messageId = viewHolder.question.getId();
+                    //viewHolder.messageId = viewHolder.question.getId();
 
 
                     if(viewHolder.timeToAnswer > 0 ) {
@@ -487,13 +490,13 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         viewHolder.incomingBetPanelRoot.setVisibility(View.VISIBLE);
 
                     }
-
-                    viewHolder.incomingTimeToAnswerProgressBar.setVisibility(View.VISIBLE);
+                //</editor-fold>
 
                 }
 
-                //PROCESSED_QUESTION SECTION
                 if (isProcessedQuestion) {
+
+                //<editor-fold desc="PROCESSED QUESTION">
                     viewHolder.incomingQuestionProcessedQuestionTitleTextView.setVisibility(View.VISIBLE);
 
                     for (int i = 0; i < 4; i++) {
@@ -516,17 +519,53 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         }
                     }
 
+                    viewHolder.timeToAnswer = viewHolder.chatMessage.getTimeLeftToAnswer();
+                    int progressBarMaxValue = viewHolder.timeToAnswer;
+                    viewHolder.incomingTimeToAnswerProgressBar.setMax(progressBarMaxValue);
+
+                    //timer to current question
+                    if(viewHolder.timeToAnswer > 0 ) {
+                        if(viewHolder.countDownTimer != null ){
+                            Log.i("offside","CANCELLING!!! timerId: "+String.valueOf(viewHolder.countDownTimer.hashCode()));
+                            viewHolder.countDownTimer.cancel();
+                            viewHolder.countDownTimer=null;
+                        }
+
+                        viewHolder.countDownTimer = new CountDownTimer(viewHolder.timeToAnswer, 100) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                viewHolder.chatMessage.setTimeLeftToAnswer((int)millisUntilFinished);
+                                //Log.i("offside","timerId: "+String.valueOf(this.hashCode())+" question text: "+ viewHolder.question.getQuestionText()+ " - secondsLeft: "+ Math.round((int)millisUntilFinished/1000.0f) );
+                                viewHolder.incomingTimeToAnswerProgressBar.setProgress(Math.round((float) millisUntilFinished ));
+//
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                //user did not answer this question, we select random answer
+                                viewHolder.chatMessage.setTimeLeftToAnswer(0);
+                                viewHolder.incomingTimeToAnswerProgressBar.setProgress(0);
+                                viewHolder.incomingTimeToAnswerProgressBar.setVisibility(View.GONE);
+                                viewHolder.incomingQuestionProcessedQuestionTimeExpiredMessageTextView.setVisibility(View.VISIBLE);
+
+
+                            }
+                        }.start();
+                    }
+
+                //</editor-fold>
 
                 }
 
+                viewHolder.incomingTimeToAnswerProgressBar.setVisibility(View.VISIBLE);
                 viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
                 viewHolder.incomingQuestionRoot.setVisibility(View.VISIBLE);
-
+            //</editor-fold>
             }
 
-
-            //CLOSED_QUESTION SECTION
             if (isClosedQuestion) {
+
+            //<editor-fold desc="CLOSED QUESTION">
 
                 Answer correctAnswer = null;
                 for (Answer answer : viewHolder.question.getAnswers()) {
@@ -562,6 +601,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingClosedQuestionRoot.setVisibility(View.VISIBLE);
 
                 return;
+
+                //</editor-fold>
             }
 
 
@@ -585,7 +626,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             else
                 viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_user_selected_answer_title);
 
-
             viewHolder.incomingProcessingQuestionTextView.setText(question.getQuestionText());
             viewHolder.incomingSelectedAnswerTextView.setText(answer.getAnswerText());
 
@@ -593,18 +633,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
             viewHolder.incomingSelectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
 
-
             final String gameId = question.getGameId();
             final String questionId = question.getId();
             final String answerId = answer.getId();
             final int returnValue = (int) answer.getScore();
 
-
             final int betSize = answer.getSelectedBetSize();
 
-
             viewHolder.incomingSelectedAnswerReturnTextView.setText(String.valueOf(returnValue));
-
 
             playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomlySelected, betSize));
             if (view != null) //null when random answer was selected
@@ -643,6 +679,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
             viewHolder.incomingTimeToAnswerProgressBar.setVisibility(View.GONE);
             viewHolder.incomingQuestionProcessedQuestionTitleTextView.setVisibility(View.GONE);
+            viewHolder.incomingQuestionProcessedQuestionTimeExpiredMessageTextView.setVisibility(View.GONE);
             viewHolder.incomingQuestionAskedNotEnoughCoinsTextView.setVisibility(View.GONE);
 
             for (int i = 0; i < 4; i++) {
@@ -656,7 +693,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         }
 
     }
-
 
     private int getAnswerNumber(Question question, String answerId) {
 

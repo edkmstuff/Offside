@@ -78,6 +78,17 @@
                         android:progressDrawable="@drawable/progress_bar"
                         />
                     <TextView
+                        android:id="@+id/cm_incoming_question_processed_question_time_expired_message_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lbl_question_time_expired_message"
+                        android:textColor="@color/answer4backgroundColor"
+                        android:gravity="center"
+                        android:layout_marginTop="5dp"
+                        android:textSize="16dp"
+                        />
+
+                    <TextView
                         android:id="@+id/cm_incoming_question_text_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

@@ -61,6 +61,7 @@
     <string name="lbl_send">שלח</string>
     <string name="lbl_how_others_answered">כך ענו כולם</string>
     <string name="lbl_not_enough_coins_to_play">אין לך מספיק מטבעות כדי להשתתף</string>
+    <string name="lbl_question_time_expired_message">בעוד רגע נדע מי צל\"ש ומי טר\"ש</string>
 
 
 </resources>
