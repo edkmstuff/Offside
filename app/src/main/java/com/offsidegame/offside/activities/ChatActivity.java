@@ -339,7 +339,7 @@ public class ChatActivity extends AppCompatActivity {
             String answerId = questionAnsweredEvent.getAnswerId();
             signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer, betSize);
             if (!playerAnswers.containsKey(questionId))
-                playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize));
+                playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize, true));
 
 //        if (!isBatch) {
 //            calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);

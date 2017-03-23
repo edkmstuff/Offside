@@ -530,7 +530,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     int progressBarMaxValue = viewHolder.timeToAnswer;
                     viewHolder.incomingTimeToAnswerProgressBar.setMax(progressBarMaxValue);
 
-                    //timer to current question
+                    //timer of current question
                     if (viewHolder.timeToAnswer > 0) {
                         if (viewHolder.countDownTimer != null) {
                             Log.i("offside", "CANCELLING!!! timerId: " + String.valueOf(viewHolder.countDownTimer.hashCode()));
@@ -541,8 +541,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         viewHolder.countDownTimer = new CountDownTimer(viewHolder.timeToAnswer, 100) {
                             @Override
                             public void onTick(long millisUntilFinished) {
+                                String questionId = viewHolder.question.getId();
+                                if(playerAnswers.containsKey(questionId) && !playerAnswers.get(questionId).getQuestionIsActive()){
+                                    this.onFinish();
+                                }
                                 viewHolder.chatMessage.setTimeLeftToAnswer((int) millisUntilFinished);
-                                //Log.i("offside","timerId: "+String.valueOf(this.hashCode())+" question text: "+ viewHolder.question.getQuestionText()+ " - secondsLeft: "+ Math.round((int)millisUntilFinished/1000.0f) );
+                                Log.i("offside","timerId: "+String.valueOf(this.hashCode())+" question text: "+ viewHolder.question.getQuestionText()+ " - secondsLeft: "+ Math.round((int)millisUntilFinished/1000.0f) );
                                 viewHolder.incomingTimeToAnswerProgressBar.setProgress(Math.round((float) millisUntilFinished));
 
                                 String formattedTimerDisplay = formatTimerDisplay(millisUntilFinished);
@@ -558,6 +562,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                 viewHolder.incomingTimeToAnswerProgressBar.setProgress(0);
                                 viewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
                                 viewHolder.incomingQuestionProcessedQuestionTimeExpiredMessageTextView.setVisibility(View.VISIBLE);
+
+                                //cancel();
 
 
                             }
@@ -591,6 +597,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 AnswerIdentifier userAnswerIdentifier = playerAnswers.containsKey(viewHolder.question.getId()) ? playerAnswers.get(viewHolder.question.getId()) : null;
                 if (userAnswerIdentifier == null)
                     return;
+
+                userAnswerIdentifier.setQuestionIsActive(false);
 
                 boolean isUserAnswerCorrect = correctAnswer.getId().equals(userAnswerIdentifier.getAnswerId());
                 int userBetSize = userAnswerIdentifier.getBetSize();
@@ -657,7 +665,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             viewHolder.incomingSelectedAnswerReturnTextView.setText(String.valueOf(returnValue));
 
-            playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomlySelected, betSize));
+            playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomlySelected, betSize, true));
             if (view != null) //null when random answer was selected
                 view.animate().rotationX(360.0f).setDuration(200).start();
 
