@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -78,6 +80,9 @@ public class ChatActivity extends AppCompatActivity {
     private TextView gameTitleTextView;
     private TextView positionTextView;
 
+    private LinearLayout actionsMenuRoot;
+    private TextView chatActionsButton;
+
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
@@ -128,6 +133,11 @@ public class ChatActivity extends AppCompatActivity {
             gameTitleTextView = (TextView) findViewById(R.id.c_game_title_text_view);
             positionTextView = (TextView) findViewById(R.id.c_position_text_view);
 
+            //actionsMenuRoot = (LinearLayout) findViewById(R.id.c_actions_menu_root);
+            //actionsMenuRoot.setVisibility(View.GONE);
+
+            //chatActionsButton = (TextView) findViewById(R.id.c_chatActionsButton);
+
             privateGameNameTextView.setText(privateGameTitle);
             gameTitleTextView.setText(homeTeam + " vs. " + awayTeam);
 
@@ -149,6 +159,22 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
             });
+
+//            chatActionsButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    actionsMenuRoot.setVisibility(View.VISIBLE);
+//                    actionsMenuRoot.animate().scaleX(1).scaleY(1);
+//
+//
+//
+//
+//                }
+//            });
+
+
+
+
 
 
             chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
