@@ -1,14 +1,20 @@
 package com.offsidegame.offside.helpers;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Base64;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.activities.ChatActivity;
 import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.AvailableGamesEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
@@ -26,6 +32,7 @@ import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.LoginInfo;
+import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.PlayerScore;
 import com.offsidegame.offside.events.PlayerScoreEvent;
@@ -66,9 +73,12 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("192.168.1.140:8080");
     //public final String ip = new String("10.0.0.17:8080");
-    public final String ip = new String("offside.somee.com");
+    //public final String ip = new String("offside.somee.com");
+
+    public Boolean stoppedIntentionally = false;
+    private int mId = -1;
 
 
     //<editor-fold desc="constructors">
@@ -93,13 +103,30 @@ public class SignalRService extends Service {
 
     @Override
     public void onDestroy() {
+        if (OffsideApplication.signalRService != null)
+            return;
         hubConnection.stop();
         super.onDestroy();
+
+    }
+
+    private void deleteSignalRServiceReferenceFromApplication(){
+        if (OffsideApplication.signalRService != null && OffsideApplication.signalRService.hubConnection != null ) {
+            OffsideApplication.signalRService.hubConnection.stop();
+            OffsideApplication.signalRService.stoppedIntentionally = true;
+
+        }
+
+        OffsideApplication.signalRService = null;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
         // Return the communication channel to the service.
+        if (OffsideApplication.signalRService != null)
+        {
+            deleteSignalRServiceReferenceFromApplication();
+        }
         startSignalR(false);
         return binder;
     }
@@ -118,7 +145,7 @@ public class SignalRService extends Service {
                 @Override
                 public void stateChanged(ConnectionState oldState, ConnectionState newState) {
                     try {
-                        if (newState == ConnectionState.Disconnected) {
+                        if (newState == ConnectionState.Disconnected && !stoppedIntentionally) {
                             ACRA.getErrorReporter().handleSilentException(new Throwable("SignalR disconnected"));
 
                             EventBus.getDefault().post(new ConnectionEvent(false, "disconnected"));
@@ -180,8 +207,16 @@ public class SignalRService extends Service {
         hub.on("AddChatMessage", new SubscriptionHandler1<ChatMessage>() {
             @Override
             public void run(ChatMessage chatMessage) {
+
+                if (chatMessage.getMessageType().equals(OffsideApplication.getMessageTypeAskedQuestion()))
+                    notifyOnNewQuestion();
+
+
+
                 EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
             }
+
+
         }, ChatMessage.class);
 
         hub.on("UpdatePosition", new SubscriptionHandler1<Position>() {
@@ -197,6 +232,35 @@ public class SignalRService extends Service {
             }
         }, Player.class);
 
+
+    }
+
+    private void notifyOnNewQuestion() {
+
+        NotificationCompat.Builder mBuilder =  new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.mipmap.ic_offside_logo)
+                        .setContentTitle("שאלה חדשה מחכה לך")
+                        .setDefaults(NotificationCompat.DEFAULT_ALL)
+                        .setContentText("לחץ כדי לענות")
+                        .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+// Creates an explicit intent for an Activity in your app
+        Intent chatIntent = new Intent(this, ChatActivity.class);
+
+// The stack builder object will contain an artificial back stack for the
+// started Activity.
+// This ensures that navigating backward from the Activity leads out of
+// your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+// Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(ChatActivity.class);
+// Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(chatIntent);
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+// mId allows you to update the notification later on.
+        mNotificationManager.notify(mId, mBuilder.build());
 
     }
     //</editor-fold>

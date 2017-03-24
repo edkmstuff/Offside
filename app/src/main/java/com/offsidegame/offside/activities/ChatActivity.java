@@ -85,6 +85,7 @@ public class ChatActivity extends AppCompatActivity {
             // We've bound to SignalRService, cast the IBinder and get SignalRService instance
             SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
             signalRService = binder.getService();
+            OffsideApplication.signalRService = signalRService;
             isBoundToSignalRService = true;
             chatSendTextView.setBackgroundResource(R.color.colorAccent);
             EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
@@ -169,6 +170,9 @@ public class ChatActivity extends AppCompatActivity {
             });
 
 
+
+
+
         } catch (Exception ex){
             ACRA.getErrorReporter().handleException(ex);
         }
@@ -193,6 +197,9 @@ public class ChatActivity extends AppCompatActivity {
 
             //reset to chat adapter
             createNewChatAdapter(true);
+
+            if (isBoundToSignalRService)
+                onSignalRServiceBinding(new SignalRServiceBoundEvent(context));
 
 
         } catch(Exception ex ){

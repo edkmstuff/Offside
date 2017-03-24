@@ -1,13 +1,20 @@
 package com.offsidegame.offside.models;
 
 import android.app.Application;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.helpers.SignalRService;
 
 import org.acra.*;
 import org.acra.annotation.*;
 import org.acra.sender.HttpSender;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by KFIR on 1/15/2017.
@@ -114,6 +121,13 @@ public class OffsideApplication extends Application {
                 ACRA.getErrorReporter().handleSilentException(e);
             }
         });
+
+
+//        //signal r
+//        Intent intent = new Intent();
+//        intent.setClass(context, SignalRService.class);
+//        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+
     }
 
 
@@ -126,6 +140,27 @@ public class OffsideApplication extends Application {
         // The following line triggers the initialization of ACRA
         ACRA.init(this);
     }
+
+
+//signal r
+    public static SignalRService signalRService;
+//    public static boolean isBoundToSignalRService = false;
+//    public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
+//        @Override
+//        public void onServiceConnected(ComponentName className,
+//                                       IBinder service) {
+//            // We've bound to SignalRService, cast the IBinder and get SignalRService instance
+//            SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
+//            signalRService = binder.getService();
+//            isBoundToSignalRService = true;
+////            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
+//        }
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName className) {
+//            isBoundToSignalRService = false;
+//        }
+//    };
 
 
 
