@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_view_scoreboard"
@@ -117,313 +119,363 @@
 
 
         <!--chat content root-->
-        <RelativeLayout
-            android:id="@+id/c_content_root"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <!--chat input window-->
-            <LinearLayout
-                android:id="@+id/c_chat_input_root"
+            <RelativeLayout
+                android:id="@+id/c_content_root"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorAccent"
-                android:focusableInTouchMode="true"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:layout_alignParentBottom="true"
-                android:weightSum="7">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-                <TextView
-                    android:id="@+id/c_chatActionsButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@color/colorAccent"
-                    android:gravity="center"
-                    android:text="+"
-                    android:textColor="@color/background_material_light"
-                    android:textSize="@dimen/OffsideLargeText" />
-
-                <EditText
-                    android:id="@+id/c_chat_message_edit_text"
-                    style="@style/editTextClassic"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@+id/chatSendButton"
-                    android:layout_weight="5"
-                    android:hint="@string/lbl_type_message"
-                    android:inputType="textMultiLine"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginBottom="-2dp"/>
-
-                <TextView
-                    android:id="@+id/c_chatSendTextView"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@color/colorAccent"
-                    android:gravity="center"
-                    android:text="@string/lbl_send"
-                    android:textColor="@color/background_material_light"
-                    android:textStyle="bold"
-
-                    />
-
-            </LinearLayout>
-
-            <!--chat history-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/c_chat_input_root"
-                android:orientation="vertical" >
-
-                <ListView
-                    android:id="@+id/c_chat_list_view"
+                <!--chat input window-->
+                <LinearLayout
+                    android:id="@+id/c_chat_input_root"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="visible"
-                    android:divider="@null"
-                    android:dividerHeight="0dp"
-                    android:listSelector="@android:color/transparent"
-                    android:stackFromBottom="true"
-                    android:transcriptMode="alwaysScroll">
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorAccent"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="7">
 
-                </ListView>
+                    <TextView
+                        android:id="@+id/c_chatActionsButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/colorAccent"
+                        android:gravity="center"
+                        android:text="+"
+                        android:textColor="@color/background_material_light"
+                        android:textSize="@dimen/OffsideLargeText" />
 
-                <!--<LinearLayout-->
+                    <EditText
+                        android:id="@+id/c_chat_message_edit_text"
+                        style="@style/editTextClassic"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginBottom="-2dp"
+                        android:layout_toLeftOf="@+id/chatSendButton"
+                        android:layout_weight="5"
+                        android:hint="@string/lbl_type_message"
+                        android:inputType="textMultiLine" />
+
+                    <TextView
+                        android:id="@+id/c_chatSendTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/colorAccent"
+                        android:gravity="center"
+                        android:text="@string/lbl_send"
+                        android:textColor="@color/background_material_light"
+                        android:textStyle="bold"
+
+                        />
+
+                </LinearLayout>
+
+                <!--chat history-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/c_chat_input_root"
+                    android:orientation="vertical">
+
+                    <ListView
+
+                        android:id="@+id/c_chat_list_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@null"
+                        android:dividerHeight="0dp"
+                        android:listSelector="@android:color/transparent"
+                        android:stackFromBottom="true"
+                        android:transcriptMode="alwaysScroll"
+                        android:visibility="visible">
+
+                    </ListView>
+
+                    <!--<FrameLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!---->
+                    <!--android:layout_height="match_parent">-->
+
+                    <!--<LinearLayout-->
                     <!--android:id="@+id/c_actions_menu_root"-->
-                    <!--android:scaleX="0"-->
-                    <!--android:scaleY="0"-->
                     <!--android:layout_width="match_parent"-->
                     <!--android:layout_height="match_parent"-->
                     <!--android:orientation="horizontal"-->
-                    <!--android:visibility="visible">-->
+                    <!--&gt;-->
 
                     <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="50dp"-->
-                        <!--android:minWidth="50dp"-->
-                        <!--android:orientation="vertical">-->
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:src="@mipmap/ic_offside_logo"/>-->
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="command1"-->
-                            <!--/>-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="50dp"-->
-                        <!--android:minWidth="50dp"-->
-                        <!--android:orientation="vertical">-->
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:src="@mipmap/ic_offside_logo"/>-->
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="command1"-->
-                            <!--/>-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="50dp"-->
-                        <!--android:minWidth="50dp"-->
-                        <!--android:orientation="vertical">-->
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:src="@mipmap/ic_offside_logo"/>-->
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="command1"-->
-                            <!--/>-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="50dp"-->
-                        <!--android:minWidth="50dp"-->
-                        <!--android:orientation="vertical">-->
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:src="@mipmap/ic_offside_logo"/>-->
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="command1"-->
-                            <!--/>-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="50dp"-->
-                        <!--android:minWidth="50dp"-->
-                        <!--android:orientation="vertical">-->
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:src="@mipmap/ic_offside_logo"/>-->
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="command1"-->
-                            <!--/>-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="50dp"-->
-                        <!--android:minWidth="50dp"-->
-                        <!--android:orientation="vertical">-->
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:src="@mipmap/ic_offside_logo"/>-->
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="command1"-->
-                            <!--/>-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="50dp"-->
-                        <!--android:minWidth="50dp"-->
-                        <!--android:orientation="vertical">-->
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:src="@mipmap/ic_offside_logo"/>-->
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="command1"-->
-                            <!--/>-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="50dp"-->
-                        <!--android:minWidth="50dp"-->
-                        <!--android:orientation="vertical">-->
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:src="@mipmap/ic_offside_logo"/>-->
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="command1"-->
-                            <!--/>-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="50dp"-->
-                        <!--android:minWidth="50dp"-->
-                        <!--android:orientation="vertical">-->
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:src="@mipmap/ic_offside_logo"/>-->
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="command1"-->
-                            <!--/>-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="50dp"-->
-                        <!--android:minWidth="50dp"-->
-                        <!--android:orientation="vertical">-->
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:src="@mipmap/ic_offside_logo"/>-->
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="command1"-->
-                            <!--/>-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="50dp"-->
-                        <!--android:minWidth="50dp"-->
-                        <!--android:orientation="vertical">-->
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:src="@mipmap/ic_offside_logo"/>-->
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="command1"-->
-                            <!--/>-->
-
-                    <!--</LinearLayout>-->
-
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:minHeight="50dp"-->
-                        <!--android:minWidth="50dp"-->
-                        <!--android:orientation="vertical">-->
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:src="@mipmap/ic_offside_logo"/>-->
-                        <!--<TextView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="command1"-->
-                            <!--/>-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:minHeight="50dp"-->
+                    <!--android:minWidth="50dp"-->
+                    <!--android:orientation="vertical">-->
+                    <!--<ImageView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:src="@mipmap/ic_offside_logo"/>-->
+                    <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="command1"-->
+                    <!--/>-->
 
                     <!--</LinearLayout>-->
 
 
-                <!--</LinearLayout>-->
+                    <!--</LinearLayout>-->
+                    <!--</FrameLayout>-->
 
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/c_actions_menu_root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="50dp"
+
+                android:padding="10dp"
+                android:scaleX="0"
+                android:scaleY="0"
+                android:visibility="visible">
+
+
+                <org.apmem.tools.layouts.FlowLayout
+
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryDark">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@color/grayText"
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_offside_logo" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="command1" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@color/grayText"
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_offside_logo" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="command1" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@color/grayText"
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_offside_logo" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="command1" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@color/grayText"
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_offside_logo" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="command1" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@color/grayText"
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_offside_logo" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="command1" />
+
+                    </LinearLayout>
+
+
+                </org.apmem.tools.layouts.FlowLayout>
             </LinearLayout>
 
 
-        </RelativeLayout>
+        </FrameLayout>
+
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/c_actions_menu_root1"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/colorWhite"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:padding="5dp">-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_margin="5dp"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/grayText"-->
+        <!--android:minHeight="80dp"-->
+        <!--android:minWidth="80dp"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:src="@mipmap/ic_offside_logo" />-->
+
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:gravity="center"-->
+        <!--android:text="command1" />-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_margin="5dp"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/grayText"-->
+        <!--android:minHeight="80dp"-->
+        <!--android:minWidth="80dp"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:src="@mipmap/ic_offside_logo" />-->
+
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:gravity="center"-->
+        <!--android:text="command1" />-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_margin="5dp"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/grayText"-->
+        <!--android:minHeight="80dp"-->
+        <!--android:minWidth="80dp"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center_horizontal"-->
+        <!--android:src="@mipmap/ic_offside_logo" />-->
+
+        <!--<TextView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:gravity="center"-->
+        <!--android:text="command1" />-->
+
+        <!--</LinearLayout>-->
+
+
+        <!---->
+
+
+        <!--</LinearLayout>-->
     </LinearLayout>
 </LinearLayout>

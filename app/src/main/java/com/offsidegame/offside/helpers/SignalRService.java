@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -73,9 +74,9 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    public final String ip = new String("192.168.1.140:8080");
+    //public final String ip = new String("192.168.1.140:8080");
     //public final String ip = new String("10.0.0.17:8080");
-    //public final String ip = new String("offside.somee.com");
+    public final String ip = new String("offside.somee.com");
 
     public Boolean stoppedIntentionally = false;
     private int mId = -1;
@@ -236,6 +237,13 @@ public class SignalRService extends Service {
     }
 
     private void notifyOnNewQuestion() {
+
+        MediaPlayer player;
+        player = MediaPlayer.create(getApplicationContext(), R.raw.human_whisle);
+        player.start();
+
+
+
 
         NotificationCompat.Builder mBuilder =  new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_offside_logo)

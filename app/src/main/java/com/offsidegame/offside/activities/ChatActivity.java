@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,6 +82,7 @@ public class ChatActivity extends AppCompatActivity {
     private TextView positionTextView;
 
     private LinearLayout actionsMenuRoot;
+    private RelativeLayout contentRoot;
     private TextView chatActionsButton;
 
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
@@ -133,10 +135,15 @@ public class ChatActivity extends AppCompatActivity {
             gameTitleTextView = (TextView) findViewById(R.id.c_game_title_text_view);
             positionTextView = (TextView) findViewById(R.id.c_position_text_view);
 
-            //actionsMenuRoot = (LinearLayout) findViewById(R.id.c_actions_menu_root);
+            contentRoot = (RelativeLayout) findViewById(R.id.c_content_root);
+            actionsMenuRoot = (LinearLayout) findViewById(R.id.c_actions_menu_root);
+            actionsMenuRoot.setScaleX(0f);
+            actionsMenuRoot.setScaleY(0f);
+
+            actionsMenuRoot.setAlpha(0.99f);
             //actionsMenuRoot.setVisibility(View.GONE);
 
-            //chatActionsButton = (TextView) findViewById(R.id.c_chatActionsButton);
+            chatActionsButton = (TextView) findViewById(R.id.c_chatActionsButton);
 
             privateGameNameTextView.setText(privateGameTitle);
             gameTitleTextView.setText(homeTeam + " vs. " + awayTeam);
@@ -160,17 +167,23 @@ public class ChatActivity extends AppCompatActivity {
                 }
             });
 
-//            chatActionsButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    actionsMenuRoot.setVisibility(View.VISIBLE);
-//                    actionsMenuRoot.animate().scaleX(1).scaleY(1);
-//
-//
-//
-//
-//                }
-//            });
+            chatActionsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Boolean isActionMenuOn = view.getTag() == null ? false : (Boolean) view.getTag();
+                    if (isActionMenuOn)
+                        actionsMenuRoot.animate().scaleX(0f).scaleY(0f);
+                    else
+                        actionsMenuRoot.animate().scaleX(1f).scaleY(1f);
+
+                    view.setTag(!isActionMenuOn);
+
+
+
+
+                }
+            });
 
 
 
