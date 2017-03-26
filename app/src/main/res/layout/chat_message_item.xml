@@ -2,6 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:components="http://schemas.android.com/apk/res-auto"
 
     android:gravity="center"
     android:layoutDirection="ltr"
@@ -435,7 +436,7 @@
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"
                     android:textColor="@color/chatText"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
 
                     <TextView
@@ -531,7 +532,7 @@
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"
                     android:textColor="@color/chatText"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:layout_width="match_parent"

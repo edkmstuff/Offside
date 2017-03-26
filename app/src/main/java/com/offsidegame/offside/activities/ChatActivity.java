@@ -179,15 +179,8 @@ public class ChatActivity extends AppCompatActivity {
 
                     view.setTag(!isActionMenuOn);
 
-
-
-
                 }
             });
-
-
-
-
 
 
             chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -208,7 +201,71 @@ public class ChatActivity extends AppCompatActivity {
 
             });
 
+            //<editor-fold desc="ACTIONS">
 
+            LinearLayout actionLeadersRoot = (LinearLayout)findViewById(R.id.c_action_leaders_root);
+
+            actionLeadersRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    chatMessageEditText.setText("!leader");
+                    //chatSendTextView.performClick();
+                    chatActionsButton.performClick();
+
+                }
+            });
+
+            LinearLayout actionCurrentQuestionRoot = (LinearLayout)findViewById(R.id.c_action_current_question_root);
+
+            actionCurrentQuestionRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    chatMessageEditText.setText("!question");
+                    //chatSendTextView.performClick();
+                    chatActionsButton.performClick();
+
+                }
+            });
+
+            LinearLayout actionOffsideCoinsRoot = (LinearLayout)findViewById(R.id.c_action_offside_coins_root);
+
+            actionOffsideCoinsRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    chatMessageEditText.setText("!coins");
+                    //chatSendTextView.performClick();
+                    chatActionsButton.performClick();
+
+                }
+            });
+
+            LinearLayout actionReloadRoot = (LinearLayout)findViewById(R.id.c_action_reload_root);
+
+            actionReloadRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    chatMessageEditText.setText("!reload");
+                    //chatSendTextView.performClick();
+                    chatActionsButton.performClick();
+
+                }
+            });
+
+
+            LinearLayout actionCodeRoot = (LinearLayout)findViewById(R.id.c_action_code_root);
+
+            actionCodeRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    chatMessageEditText.setText("!code");
+                    //chatSendTextView.performClick();
+                    chatActionsButton.performClick();
+
+                }
+            });
+
+
+            //</editor-fold>
 
 
 

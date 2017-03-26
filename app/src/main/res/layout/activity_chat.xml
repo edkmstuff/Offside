@@ -240,6 +240,8 @@
 
             </RelativeLayout>
 
+            <!--Action Menu-->
+
             <LinearLayout
                 android:id="@+id/c_actions_menu_root"
                 android:layout_width="match_parent"
@@ -265,6 +267,7 @@
                     android:background="@color/colorPrimaryDark">
 
                     <LinearLayout
+                        android:id="@+id/c_action_leaders_root"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -274,21 +277,24 @@
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@mipmap/ic_offside_logo" />
 
-                        <TextView
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:text="command1" />
+                            android:layout_height="match_parent"
+
+
+                            android:src="@mipmap/ic_action_leaders" />
+
+                        <!--<TextView-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_gravity="bottom"-->
+                            <!--android:gravity="center"-->
+                            <!--android:text="command1" />-->
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/c_action_current_question_root"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -301,18 +307,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:src="@mipmap/ic_offside_logo" />
+                            android:src="@mipmap/ic_action_current_question" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:text="command1" />
+                        <!--<TextView-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_gravity="bottom"-->
+                            <!--android:gravity="center"-->
+                            <!--android:text="command1" />-->
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/c_action_offside_coins_root"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -325,18 +332,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:src="@mipmap/ic_offside_logo" />
+                            android:src="@mipmap/ic_action_offside_coins" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:text="command1" />
+                        <!--<TextView-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_gravity="bottom"-->
+                            <!--android:gravity="center"-->
+                            <!--android:text="command1" />-->
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/c_action_reload_root"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -349,18 +357,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:src="@mipmap/ic_offside_logo" />
+                            android:src="@mipmap/ic_action_reload" />
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:text="command1" />
+                        <!--<TextView-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_gravity="bottom"-->
+                            <!--android:gravity="center"-->
+                            <!--android:text="command1" />-->
 
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/c_action_code_root"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
@@ -373,7 +382,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
-                            android:src="@mipmap/ic_offside_logo" />
+                            android:src="@mipmap/ic_action_code" />
 
                         <TextView
                             android:layout_width="match_parent"
