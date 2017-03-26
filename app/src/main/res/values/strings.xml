@@ -64,6 +64,11 @@
     <string name="lbl_we_have_an_answer">יש לנו תשובה</string>
     <string name="lbl_in_few_seconds_you_will_see_others_answers">בעוד מספר שניות תראה כיצד חושבים כולם...</string>
     <string name="lbl_type_in_game_code">הזן קוד משחק פרטי</string>
+    <string name="lbl_commands_leaders">מובילים</string>
+    <string name="lbl_command_current_question">שאלה פעילה</string>
+    <string name="lbl_command_offside_coins">יתרה</string>
+    <string name="lbl_command_reload">השג מטבעות</string>
+    <string name="lbl_command_game_code">שלח לי קוד</string>
 
 
 </resources>

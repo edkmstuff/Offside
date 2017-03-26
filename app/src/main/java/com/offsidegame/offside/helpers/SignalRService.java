@@ -74,9 +74,9 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("192.168.1.140:8080");
     //public final String ip = new String("10.0.0.17:8080");
-    public final String ip = new String("offside.somee.com");
+    //public final String ip = new String("offside.somee.com");
 
     public Boolean stoppedIntentionally = false;
     private int mId = -1;
@@ -166,11 +166,12 @@ public class SignalRService extends Service {
                             }
                             if (hubConnection.getState() == ConnectionState.Connected) {
                                 startReconnecting = null;
+                                //just for putting message that we are connected
                                 EventBus.getDefault().post(new ConnectionEvent(true, "connected"));
                             }
                         }
                     } catch (Exception ex) {
-                        ACRA.getErrorReporter().handleException(ex);
+                        ACRA.getErrorReporter().handleSilentException(ex);
                         EventBus.getDefault().post(new ConnectionEvent(false, ex.getMessage()));
                     }
 
@@ -193,10 +194,12 @@ public class SignalRService extends Service {
                 startReconnecting = null;
             }
 
-            if (hubConnection.getState() == ConnectionState.Connected)
+            if (hubConnection.getState() == ConnectionState.Connected){
                 subscribeToServer();
+                EventBus.getDefault().post(new ConnectionEvent(true, "connected"));
+            }
         } catch (Exception ex) {
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
@@ -289,7 +292,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleException(error);
+                ACRA.getErrorReporter().handleSilentException(error);
             }
         });
     }
@@ -301,7 +304,7 @@ public class SignalRService extends Service {
         hub.invoke(Boolean.class, "QuitGame", gameId, playerId).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleException(error);
+                ACRA.getErrorReporter().handleSilentException(error);
             }
         });
     }
@@ -318,7 +321,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleException(error);
+                ACRA.getErrorReporter().handleSilentException(error);
             }
         });
     }
@@ -336,7 +339,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleException(error);
+                ACRA.getErrorReporter().handleSilentException(error);
             }
         });
     }
@@ -353,7 +356,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleException(error);
+                ACRA.getErrorReporter().handleSilentException(error);
             }
         });
     }
@@ -371,7 +374,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleException(error);
+                ACRA.getErrorReporter().handleSilentException(error);
             }
         });
 
@@ -389,7 +392,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleException(error);
+                ACRA.getErrorReporter().handleSilentException(error);
             }
         });
     }
@@ -406,7 +409,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleException(error);
+                ACRA.getErrorReporter().handleSilentException(error);
             }
         });
     }
@@ -423,7 +426,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleException(error);
+                ACRA.getErrorReporter().handleSilentException(error);
             }
         });
 
@@ -441,7 +444,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleException(error);
+                ACRA.getErrorReporter().handleSilentException(error);
             }
         });
     }
@@ -459,7 +462,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleException(error);
+                ACRA.getErrorReporter().handleSilentException(error);
             }
         });
 
@@ -479,7 +482,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleException(error);
+                ACRA.getErrorReporter().handleSilentException(error);
             }
         });
         return true;

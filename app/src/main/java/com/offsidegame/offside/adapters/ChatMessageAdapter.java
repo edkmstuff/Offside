@@ -227,7 +227,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             return convertView;
         } catch (Exception ex) {
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -264,7 +264,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             }
 
         } catch (Exception ex) {
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
@@ -630,7 +630,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
 
         } catch (Exception ex) {
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -681,7 +681,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             }, delay);
 
         } catch (Exception ex) {
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -711,7 +711,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             }
 
         } catch (Exception ex) {
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -733,7 +733,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             return answerNumber;
 
         } catch (Exception ex) {
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 

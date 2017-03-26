@@ -161,7 +161,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
 
         } catch (Exception ex) {
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
 
 
@@ -249,7 +249,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             }
         }
         catch (Exception ex){
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
@@ -263,7 +263,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
         }
         catch(Exception ex){
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
@@ -305,7 +305,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             startActivity(intent);
         }
         catch(Exception ex){
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
@@ -326,7 +326,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             }
         }
         catch (Exception ex){
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 

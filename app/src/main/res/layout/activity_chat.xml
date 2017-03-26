@@ -246,12 +246,12 @@
                 android:id="@+id/c_actions_menu_root"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorPrimaryDark"
+                android:background="@color/chatText"
                 android:orientation="vertical"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="60dp"
 
                 android:padding="10dp"
                 android:scaleX="0"
@@ -264,32 +264,32 @@
                     xmlns:android="http://schemas.android.com/apk/res/android"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimaryDark">
+                    android:background="@color/chatText">
 
                     <LinearLayout
                         android:id="@+id/c_action_leaders_root"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:background="@color/grayText"
+
                         android:minHeight="80dp"
                         android:minWidth="80dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical" >
 
                         <ImageView
 
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-
-
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:src="@mipmap/ic_action_leaders" />
 
-                        <!--<TextView-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_gravity="bottom"-->
-                            <!--android:gravity="center"-->
-                            <!--android:text="command1" />-->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_commands_leaders"
+                            style="@style/OffsideActionButton"/>
 
                     </LinearLayout>
 
@@ -298,7 +298,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:background="@color/grayText"
+
                         android:minHeight="80dp"
                         android:minWidth="80dp"
                         android:orientation="vertical">
@@ -309,12 +309,13 @@
                             android:layout_gravity="center_horizontal"
                             android:src="@mipmap/ic_action_current_question" />
 
-                        <!--<TextView-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_gravity="bottom"-->
-                            <!--android:gravity="center"-->
-                            <!--android:text="command1" />-->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_command_current_question"
+                            style="@style/OffsideActionButton"/>
 
                     </LinearLayout>
 
@@ -323,7 +324,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:background="@color/grayText"
+
                         android:minHeight="80dp"
                         android:minWidth="80dp"
                         android:orientation="vertical">
@@ -334,12 +335,13 @@
                             android:layout_gravity="center_horizontal"
                             android:src="@mipmap/ic_action_offside_coins" />
 
-                        <!--<TextView-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_gravity="bottom"-->
-                            <!--android:gravity="center"-->
-                            <!--android:text="command1" />-->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_command_offside_coins"
+                            style="@style/OffsideActionButton"/>
 
                     </LinearLayout>
 
@@ -348,7 +350,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:background="@color/grayText"
                         android:minHeight="80dp"
                         android:minWidth="80dp"
                         android:orientation="vertical">
@@ -359,12 +360,13 @@
                             android:layout_gravity="center_horizontal"
                             android:src="@mipmap/ic_action_reload" />
 
-                        <!--<TextView-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_gravity="bottom"-->
-                            <!--android:gravity="center"-->
-                            <!--android:text="command1" />-->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_command_reload"
+                            style="@style/OffsideActionButton"/>
 
                     </LinearLayout>
 
@@ -373,7 +375,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:background="@color/grayText"
+
                         android:minHeight="80dp"
                         android:minWidth="80dp"
                         android:orientation="vertical">
@@ -389,7 +391,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:gravity="center"
-                            android:text="command1" />
+                            android:text="@string/lbl_command_game_code"
+                            style="@style/OffsideActionButton"/>
 
                     </LinearLayout>
 

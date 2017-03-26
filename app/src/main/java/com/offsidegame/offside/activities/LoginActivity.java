@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
 
         } catch (Exception ex) {
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
@@ -117,7 +117,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             else
                 Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             }
         }
         catch (Exception ex){
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
@@ -168,7 +168,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                         .build(), RC_SIGN_IN);
             }
         } catch (Exception ex) {
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
@@ -262,7 +262,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         }
         catch (Exception ex)
         {
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
 
     }

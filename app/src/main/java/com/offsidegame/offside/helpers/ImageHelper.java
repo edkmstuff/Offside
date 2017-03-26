@@ -67,7 +67,7 @@ public class ImageHelper {
             outputStream.close();
 
         } catch (Exception ex) {
-            ACRA.getErrorReporter().handleException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
 
     }

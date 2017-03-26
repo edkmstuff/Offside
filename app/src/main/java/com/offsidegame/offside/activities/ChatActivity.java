@@ -85,6 +85,8 @@ public class ChatActivity extends AppCompatActivity {
     private RelativeLayout contentRoot;
     private TextView chatActionsButton;
 
+    private boolean isConnected = false;
+
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className,
@@ -108,7 +110,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        try{
+        try {
 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_chat);
@@ -154,8 +156,12 @@ public class ChatActivity extends AppCompatActivity {
             chatSendTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    if (!isConnected)
+                        return;
+
                     String message = chatMessageEditText.getText().toString();
-                    if(message!=null && message.length()>0){
+                    if (message != null && message.length() > 0) {
                         signalRService.sendChatMessage(gameId, gameCode, message, playerId);
                         //clear text
                         chatMessageEditText.setText("");
@@ -170,6 +176,8 @@ public class ChatActivity extends AppCompatActivity {
             chatActionsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (!isConnected)
+                        return;
 
                     Boolean isActionMenuOn = view.getTag() == null ? false : (Boolean) view.getTag();
                     if (isActionMenuOn)
@@ -203,62 +211,67 @@ public class ChatActivity extends AppCompatActivity {
 
             //<editor-fold desc="ACTIONS">
 
-            LinearLayout actionLeadersRoot = (LinearLayout)findViewById(R.id.c_action_leaders_root);
+            LinearLayout actionLeadersRoot = (LinearLayout) findViewById(R.id.c_action_leaders_root);
 
             actionLeadersRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    chatMessageEditText.setText("!leader");
-                    //chatSendTextView.performClick();
+                    signalRService.sendChatMessage(gameId, gameCode, "!leaders", playerId);
+//                    chatMessageEditText.setText("!leader");
+//                    //chatSendTextView.performClick();
                     chatActionsButton.performClick();
 
                 }
             });
 
-            LinearLayout actionCurrentQuestionRoot = (LinearLayout)findViewById(R.id.c_action_current_question_root);
+            LinearLayout actionCurrentQuestionRoot = (LinearLayout) findViewById(R.id.c_action_current_question_root);
 
             actionCurrentQuestionRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    chatMessageEditText.setText("!question");
-                    //chatSendTextView.performClick();
+                    signalRService.sendChatMessage(gameId, gameCode, "!question", playerId);
+//                    chatMessageEditText.setText("!question");
+//                    //chatSendTextView.performClick();
                     chatActionsButton.performClick();
 
                 }
             });
 
-            LinearLayout actionOffsideCoinsRoot = (LinearLayout)findViewById(R.id.c_action_offside_coins_root);
+            LinearLayout actionOffsideCoinsRoot = (LinearLayout) findViewById(R.id.c_action_offside_coins_root);
 
             actionOffsideCoinsRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    chatMessageEditText.setText("!coins");
-                    //chatSendTextView.performClick();
+                    signalRService.sendChatMessage(gameId, gameCode, "!coins", playerId);
+//                    chatMessageEditText.setText("!coins");
+//                    //chatSendTextView.performClick();
                     chatActionsButton.performClick();
 
                 }
             });
 
-            LinearLayout actionReloadRoot = (LinearLayout)findViewById(R.id.c_action_reload_root);
+            LinearLayout actionReloadRoot = (LinearLayout) findViewById(R.id.c_action_reload_root);
 
             actionReloadRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    chatMessageEditText.setText("!reload");
-                    //chatSendTextView.performClick();
+                    signalRService.sendChatMessage(gameId, gameCode, "!reload", playerId);
+//                    chatMessageEditText.setText("!reload");
+//                    //chatSendTextView.performClick();
                     chatActionsButton.performClick();
 
                 }
             });
 
 
-            LinearLayout actionCodeRoot = (LinearLayout)findViewById(R.id.c_action_code_root);
+            LinearLayout actionCodeRoot = (LinearLayout) findViewById(R.id.c_action_code_root);
 
             actionCodeRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    chatMessageEditText.setText("!code");
-                    //chatSendTextView.performClick();
+                    signalRService.sendChatMessage(gameId, gameCode, "!code", playerId);
+//                    chatMessageEditText.setText("!code");
+//                    //chatSendTextView.performClick();
                     chatActionsButton.performClick();
 
                 }
@@ -268,13 +281,9 @@ public class ChatActivity extends AppCompatActivity {
             //</editor-fold>
 
 
-
-        } catch (Exception ex){
-            ACRA.getErrorReporter().handleException(ex);
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
-
-
-
 
 
     }
@@ -282,7 +291,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public void onResume() {
 
-        try{
+        try {
             super.onResume();
             EventBus.getDefault().register(context);
             Intent intent = new Intent();
@@ -298,8 +307,8 @@ public class ChatActivity extends AppCompatActivity {
                 onSignalRServiceBinding(new SignalRServiceBoundEvent(context));
 
 
-        } catch(Exception ex ){
-            ACRA.getErrorReporter().handleException(ex);
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -309,7 +318,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public void onStop() {
 
-        try{
+        try {
             EventBus.getDefault().unregister(context);
             // Unbind from the service
             if (isBoundToSignalRService) {
@@ -320,8 +329,8 @@ public class ChatActivity extends AppCompatActivity {
 
             super.onStop();
 
-        } catch(Exception ex ){
-            ACRA.getErrorReporter().handleException(ex);
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -334,39 +343,47 @@ public class ChatActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onConnectionEvent(ConnectionEvent connectionEvent) {
-        boolean isConnected = connectionEvent.getConnected();
+        isConnected = connectionEvent.getConnected();
+
         if (isConnected) {
             Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
+            chatSendTextView.setAlpha(1f);
+            chatActionsButton.setAlpha(1f);
 
         } else {
             Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
-
+            chatSendTextView.setAlpha(0.4f);
+            chatActionsButton.setAlpha(0.4f);
         }
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
-        Context eventContext = signalRServiceBoundEvent.getContext();
-        if (eventContext == null) {
+//        Context eventContext = signalRServiceBoundEvent.getContext();
+//        if (eventContext == null) {
+//
+//            Intent intent = new Intent(context, JoinGameActivity.class);
+//            context.startActivity(intent);
+//            return;
+//        }
 
+
+//        if (eventContext == context) {
+
+        if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
+            signalRService.getChatMessages(gameId, gameCode, playerId);
+        } else {
             Intent intent = new Intent(context, JoinGameActivity.class);
             context.startActivity(intent);
-            return;
         }
-
-
-        if (eventContext == context) {
-
-            if (gameId != null && !gameId.isEmpty())
-                signalRService.getChatMessages(gameId, gameCode, playerId);
-        }
+//        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveChat(ChatEvent chatEvent) {
 
-        try{
+        try {
 
             chat = new Chat(chatEvent.getChat());
 
@@ -382,8 +399,8 @@ public class ChatActivity extends AppCompatActivity {
 
             createNewChatAdapter(false);
 
-        } catch(Exception ex ){
-            ACRA.getErrorReporter().handleException(ex);
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -392,13 +409,13 @@ public class ChatActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveChatMessage(ChatMessageEvent chatMessageEvent) {
 
-        try{
+        try {
             ChatMessage message = chatMessageEvent.getChatMessage();
 
             boolean isAdded = chat.addMessageIfNotAlreadyExists(message);
 
-            if (!isAdded){
-                throw new Exception("Duplicate chat message. id: " + message.getId() + " content: " + message.getMessageText() );
+            if (!isAdded) {
+                throw new Exception("Duplicate chat message. id: " + message.getId() + " content: " + message.getMessageText());
             }
 
             //new message was added, notify data change
@@ -410,7 +427,7 @@ public class ChatActivity extends AppCompatActivity {
 
             createNewChatAdapter(false);
 
-        } catch(Exception ex ){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 
         }
@@ -418,7 +435,7 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    private void createNewChatAdapter(boolean reset){
+    private void createNewChatAdapter(boolean reset) {
         messages = new ArrayList();
 
         if (!reset && chat != null)
@@ -432,7 +449,7 @@ public class ChatActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onQuestionAnsweredEvent(QuestionAnsweredEvent questionAnsweredEvent) {
 
-        try{
+        try {
             String gameId = questionAnsweredEvent.getGameId();
             String questionId = questionAnsweredEvent.getQuestionId();
             boolean isRandomAnswer = questionAnsweredEvent.isRandomAnswer();
@@ -457,8 +474,8 @@ public class ChatActivity extends AppCompatActivity {
 //            }
 //        }
 
-        } catch(Exception ex ){
-            ACRA.getErrorReporter().handleException(ex);
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -467,13 +484,13 @@ public class ChatActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePosition(PositionEvent positionEvent) {
 
-        try{
+        try {
             Position position = positionEvent.getPosition();
             String positionDisplay = Integer.toString(position.getPrivateGamePosition()) + "/" + Integer.toString(position.getPrivateGameTotalPlayers());
             positionTextView.setText(positionDisplay);
 
-        } catch(Exception ex ){
-            ACRA.getErrorReporter().handleException(ex);
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -481,17 +498,17 @@ public class ChatActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayer(Player player) {
-        try{
+        try {
             if (player == null)
                 return;
 
             this.player = player;
             this.playerAnswers = player.getPlayerAnswers();
-            scoreTextView.setText(Integer.toString((int)player.getPoints()));
+            scoreTextView.setText(Integer.toString((int) player.getPoints()));
             OffsideApplication.setOffsideCoins(player.getOffsideCoins());
 
-        } catch(Exception ex ){
-            ACRA.getErrorReporter().handleException(ex);
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
