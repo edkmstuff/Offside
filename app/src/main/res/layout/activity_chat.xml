@@ -396,6 +396,32 @@
 
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/c_action_share_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_action_whatsapp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_command_share_code"
+                            style="@style/OffsideActionButton"/>
+
+                    </LinearLayout>
+
 
                 </org.apmem.tools.layouts.FlowLayout>
             </LinearLayout>

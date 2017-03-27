@@ -157,8 +157,8 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    if (!isConnected)
-                        return;
+//                    if (!isConnected)
+//                        return;
 
                     String message = chatMessageEditText.getText().toString();
                     if (message != null && message.length() > 0) {
@@ -176,8 +176,8 @@ public class ChatActivity extends AppCompatActivity {
             chatActionsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!isConnected)
-                        return;
+//                    if (!isConnected)
+//                        return;
 
                     Boolean isActionMenuOn = view.getTag() == null ? false : (Boolean) view.getTag();
                     if (isActionMenuOn)
@@ -272,6 +272,25 @@ public class ChatActivity extends AppCompatActivity {
                     signalRService.sendChatMessage(gameId, gameCode, "!code", playerId);
 //                    chatMessageEditText.setText("!code");
 //                    //chatSendTextView.performClick();
+                    chatActionsButton.performClick();
+
+                }
+            });
+
+            LinearLayout actionShareRoot = (LinearLayout) findViewById(R.id.c_action_share_root);
+            actionShareRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //signalRService.sendChatMessage(gameId, gameCode, "!share", playerId);
+
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + gameCode+"*");
+                    sendIntent.setType("text/plain");
+                    sendIntent.setPackage("com.whatsapp");
+                    startActivity(sendIntent);
+
+
                     chatActionsButton.performClick();
 
                 }

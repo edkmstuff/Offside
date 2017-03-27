@@ -69,6 +69,7 @@
     <string name="lbl_command_offside_coins">יתרה</string>
     <string name="lbl_command_reload">השג מטבעות</string>
     <string name="lbl_command_game_code">שלח לי קוד</string>
+    <string name="lbl_command_share_code">share code</string>
 
 
 </resources>
