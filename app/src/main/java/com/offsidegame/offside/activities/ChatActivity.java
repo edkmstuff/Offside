@@ -222,51 +222,57 @@ public class ChatActivity extends AppCompatActivity {
             final LinearLayout actionOffsideCoinsRoot = (LinearLayout) findViewById(R.id.c_action_offside_coins_root);
             final LinearLayout actionReloadRoot = (LinearLayout) findViewById(R.id.c_action_reload_root);
             final LinearLayout actionCodeRoot = (LinearLayout) findViewById(R.id.c_action_code_root);
+            final LinearLayout actionShareRoot = (LinearLayout) findViewById(R.id.c_action_share_root);
 
-            Map<String,LinearLayout> actionButtons = new HashMap<String,LinearLayout>() {
+            Map<String, LinearLayout> actionButtons = new HashMap<String, LinearLayout>() {
                 {
                     put("!leaders", actionLeadersRoot);
                     put("!question", actionCurrentQuestionRoot);
                     put("!coins", actionOffsideCoinsRoot);
                     put("!reload", actionReloadRoot);
                     put("!code", actionCodeRoot);
+                    put("!share", actionShareRoot);
 
                 }
             };
 
             for (String action : actionButtons.keySet()) {
+
                 final String command = action;
-                actionButtons.get(action).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        signalRService.sendChatMessage(gameId, gameCode,command, playerId);
+
+                if (action == "!share") {
+                    actionButtons.get(action).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //signalRService.sendChatMessage(gameId, gameCode, "!share", playerId);
+
+                            Intent sendIntent = new Intent();
+                            sendIntent.setAction(Intent.ACTION_SEND);
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + gameCode + "*");
+                            sendIntent.setType("text/plain");
+                            sendIntent.setPackage("com.whatsapp");
+                            startActivity(sendIntent);
+                            chatActionsButton.performClick();
+                        }
+                    });
+
+                } else {
+
+                    actionButtons.get(action).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            signalRService.sendChatMessage(gameId, gameCode, command, playerId);
 //                    chatMessageEditText.setText("!code");
 //                    //chatSendTextView.performClick();
-                        chatActionsButton.performClick();
+                            chatActionsButton.performClick();
 
-                    }
-                });
-
-            }
-
-            LinearLayout actionShareRoot = (LinearLayout) findViewById(R.id.c_action_share_root);
-            actionShareRoot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //signalRService.sendChatMessage(gameId, gameCode, "!share", playerId);
-
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + gameCode + "*");
-                    sendIntent.setType("text/plain");
-                    sendIntent.setPackage("com.whatsapp");
-                    startActivity(sendIntent);
-
-
-                    chatActionsButton.performClick();
+                        }
+                    });
 
                 }
-            });
+
+
+            }
 
 
             //</editor-fold>
