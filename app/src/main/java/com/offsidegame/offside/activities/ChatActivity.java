@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -54,10 +55,6 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private final Context context = this;
-
-    private SignalRService signalRService;
-    private boolean isBoundToSignalRService = false;
-    //private final QuestionEventsHandler questionEventsHandler = new QuestionEventsHandler(this);
     private TextView chatSendTextView;
     private EditText chatMessageEditText;
     private String gameId;
@@ -65,13 +62,10 @@ public class ChatActivity extends AppCompatActivity {
     private String playerId;
     private Chat chat;
     private ArrayList messages;
-
     private ChatMessageAdapter chatMessageAdapter;
     private Map<String, AnswerIdentifier> playerAnswers;
     private LinearLayout root;
     private ListView chatListView;
-
-    private boolean isBatch = false;
 
     String privateGameTitle;
     String homeTeam;
@@ -91,27 +85,7 @@ public class ChatActivity extends AppCompatActivity {
     private TextView chatActionsButton;
 
     private boolean isConnected = false;
-
-//    private Map actionButtons = new HashMap();
-
-    public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
-            // We've bound to SignalRService, cast the IBinder and get SignalRService instance
-            SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
-            signalRService = binder.getService();
-            OffsideApplication.signalRService = signalRService;
-            isBoundToSignalRService = true;
-            chatSendTextView.setBackgroundResource(R.color.colorAccent);
-            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName className) {
-            isBoundToSignalRService = false;
-        }
-    };
+    private boolean isActionMenuVisible = false;
 
 
     @Override
@@ -157,9 +131,6 @@ public class ChatActivity extends AppCompatActivity {
             privateGameNameTextView.setText(privateGameTitle);
             gameTitleTextView.setText(homeTeam + " vs. " + awayTeam);
 
-
-            chatSendTextView.setBackgroundResource(R.color.colorDivider);
-
             chatSendTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -169,7 +140,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     String message = chatMessageEditText.getText().toString();
                     if (message != null && message.length() > 0) {
-                        signalRService.sendChatMessage(gameId, gameCode, message, playerId);
+                        OffsideApplication.signalRService.sendChatMessage(gameId, gameCode, message, playerId);
                         //clear text
                         chatMessageEditText.setText("");
                         //hide keypad
@@ -183,16 +154,16 @@ public class ChatActivity extends AppCompatActivity {
             chatActionsButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
 //                    if (!isConnected)
 //                        return;
 
-                    Boolean isActionMenuOn = view.getTag() == null ? false : (Boolean) view.getTag();
-                    if (isActionMenuOn)
+                    if (isActionMenuVisible)
                         actionsMenuRoot.animate().scaleX(0f).scaleY(0f);
                     else
                         actionsMenuRoot.animate().scaleX(1f).scaleY(1f);
 
-                    view.setTag(!isActionMenuOn);
+                    isActionMenuVisible = !isActionMenuVisible;
 
                 }
             });
@@ -218,158 +189,75 @@ public class ChatActivity extends AppCompatActivity {
 
             //<editor-fold desc="ACTIONS SHORT VERSION">
 
-//            final LinearLayout actionLeadersRoot = (LinearLayout) findViewById(R.id.c_action_leaders_root);
-//            final LinearLayout actionCurrentQuestionRoot = (LinearLayout) findViewById(R.id.c_action_current_question_root);
-//            final LinearLayout actionOffsideCoinsRoot = (LinearLayout) findViewById(R.id.c_action_offside_coins_root);
-//            final LinearLayout actionReloadRoot = (LinearLayout) findViewById(R.id.c_action_reload_root);
-//            final LinearLayout actionCodeRoot = (LinearLayout) findViewById(R.id.c_action_code_root);
-//            final LinearLayout actionShareRoot = (LinearLayout) findViewById(R.id.c_action_share_root);
-//
-//            Map<String, LinearLayout> actionButtons = new HashMap<String, LinearLayout>() {
-//                {
-//                    put("!leaders", actionLeadersRoot);
-//                    put("!question", actionCurrentQuestionRoot);
-//                    put("!coins", actionOffsideCoinsRoot);
-//                    put("!reload", actionReloadRoot);
-//                    put("!code", actionCodeRoot);
-//                    put("!share", actionShareRoot);
-//
-//                }
-//            };
-//
-//            for (String action : actionButtons.keySet()) {
-//
-//                final String command = action;
-//                final LinearLayout actionElement = actionButtons.get(action);
-//
-//                if (action == "!share") {
-//                    actionElement.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            //signalRService.sendChatMessage(gameId, gameCode, "!share", playerId);
-//
-//                            Intent sendIntent = new Intent();
-//                            sendIntent.setAction(Intent.ACTION_SEND);
-//                            sendIntent.putExtra(Intent.EXTRA_TEXT, "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + gameCode + "*");
-//                            sendIntent.setType("text/plain");
-//                            sendIntent.setPackage("com.whatsapp");
-//                            startActivity(sendIntent);
-//                            chatActionsButton.performClick();
-//
-//                        }
-//                    });
-//
-//                } else {
-//
-//                    actionElement.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            signalRService.sendChatMessage(gameId, gameCode, command, playerId);
-////                    chatMessageEditText.setText("!code");
-////                    //chatSendTextView.performClick();
-//                            chatActionsButton.performClick();
-//                            view.setClickable(false);
-//
-//
-//                        }
-//
-//                    });
-//
-//                }
-//
-//
-//            }
+            final LinearLayout actionLeadersRoot = (LinearLayout) findViewById(R.id.c_action_leaders_root);
+            final LinearLayout actionCurrentQuestionRoot = (LinearLayout) findViewById(R.id.c_action_current_question_root);
+            final LinearLayout actionOffsideCoinsRoot = (LinearLayout) findViewById(R.id.c_action_offside_coins_root);
+            final LinearLayout actionReloadRoot = (LinearLayout) findViewById(R.id.c_action_reload_root);
+            final LinearLayout actionCodeRoot = (LinearLayout) findViewById(R.id.c_action_code_root);
+            final LinearLayout actionShareRoot = (LinearLayout) findViewById(R.id.c_action_share_root);
 
-
-            //</editor-fold>
-
-            //<editor-fold desc=ACTIONS LONG VERSION>
-
-
-            LinearLayout actionLeadersRoot = (LinearLayout) findViewById(R.id.c_action_leaders_root);
-
-            actionLeadersRoot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    signalRService.sendChatMessage(gameId, gameCode, "!leaders", playerId);
-//                    chatMessageEditText.setText("!leader");
-//                    //chatSendTextView.performClick();
-                    chatActionsButton.performClick();
+            Map<String, LinearLayout> actionButtons = new HashMap<String, LinearLayout>() {
+                {
+                    put("!leaders", actionLeadersRoot);
+                    put("!question", actionCurrentQuestionRoot);
+                    put("!coins", actionOffsideCoinsRoot);
+                    put("!reload", actionReloadRoot);
+                    put("!code", actionCodeRoot);
+                    put("!share", actionShareRoot);
 
                 }
-            });
+            };
 
-            LinearLayout actionCurrentQuestionRoot = (LinearLayout) findViewById(R.id.c_action_current_question_root);
+            for (String action : actionButtons.keySet()) {
 
-            actionCurrentQuestionRoot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    signalRService.sendChatMessage(gameId, gameCode, "!question", playerId);
-//                    chatMessageEditText.setText("!question");
-//                    //chatSendTextView.performClick();
-                    chatActionsButton.performClick();
+                final String command = action;
+                final LinearLayout actionElement = actionButtons.get(action);
 
-                }
-            });
+                actionElement.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
-            LinearLayout actionOffsideCoinsRoot = (LinearLayout) findViewById(R.id.c_action_offside_coins_root);
+                        try
+                        {
+                            if (!isActionMenuVisible)
+                                return;
 
-            actionOffsideCoinsRoot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    signalRService.sendChatMessage(gameId, gameCode, "!coins", playerId);
-//                    chatMessageEditText.setText("!coins");
-//                    //chatSendTextView.performClick();
-                    chatActionsButton.performClick();
+                            if (command == "!share" ) {
 
-                }
-            });
+                                PackageManager pm = context.getPackageManager();
+                                boolean isWhatsappInstalled = isPackageInstalled("com.whatsapp", pm);
+                                String shareMessage = "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + gameCode + "*";
+                                Intent sendIntent = new Intent();
+                                sendIntent.setAction(Intent.ACTION_SEND);
+                                sendIntent.setType("text/plain");
+                                if(isWhatsappInstalled) {
+                                    sendIntent.setPackage("com.whatsapp");
+                                    sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+                                }
+                                else{
+                                    sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage.replaceAll("[*]",""));
+                                }
 
-            LinearLayout actionReloadRoot = (LinearLayout) findViewById(R.id.c_action_reload_root);
+                                startActivity(sendIntent);
 
-            actionReloadRoot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    signalRService.sendChatMessage(gameId, gameCode, "!reload", playerId);
-//                    chatMessageEditText.setText("!reload");
-//                    //chatSendTextView.performClick();
-                    chatActionsButton.performClick();
+                            } else {
+                                OffsideApplication.signalRService.sendChatMessage(gameId, gameCode, command, playerId);
+                            }
 
-                }
-            });
+                            chatActionsButton.performClick();
 
+                        }
 
-            LinearLayout actionCodeRoot = (LinearLayout) findViewById(R.id.c_action_code_root);
-
-            actionCodeRoot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    signalRService.sendChatMessage(gameId, gameCode, "!code", playerId);
-//                    chatMessageEditText.setText("!code");
-//                    //chatSendTextView.performClick();
-                    chatActionsButton.performClick();
-
-                }
-            });
-
-            LinearLayout actionShareRoot = (LinearLayout) findViewById(R.id.c_action_share_root);
-            actionShareRoot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //signalRService.sendChatMessage(gameId, gameCode, "!share", playerId);
-
-                    Intent sendIntent = new Intent();
-                    sendIntent.setAction(Intent.ACTION_SEND);
-                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + gameCode+"*");
-                    sendIntent.setType("text/plain");
-                    sendIntent.setPackage("com.whatsapp");
-                    startActivity(sendIntent);
+                        catch (Exception ex) {
+                            ACRA.getErrorReporter().handleSilentException(ex);
+                            chatActionsButton.performClick();
+                        }
 
 
-                    chatActionsButton.performClick();
 
-                }
-            });
+                    }
+                });
+            }
 
 
             //</editor-fold>
@@ -383,23 +271,24 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(context);
+
+    }
+
+    @Override
     public void onResume() {
 
         try {
             super.onResume();
-            EventBus.getDefault().register(context);
-            Intent intent = new Intent();
-            intent.setClass(context, SignalRService.class);
-            bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
 
             hideKeypad();
 
             //reset to chat adapter
             createNewChatAdapter(true);
 
-            if (isBoundToSignalRService)
-                onSignalRServiceBinding(new SignalRServiceBoundEvent(context));
-
+            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -414,13 +303,6 @@ public class ChatActivity extends AppCompatActivity {
 
         try {
             EventBus.getDefault().unregister(context);
-            // Unbind from the service
-            if (isBoundToSignalRService) {
-                unbindService(signalRServiceConnection);
-                isBoundToSignalRService = false;
-            }
-            chatSendTextView.setBackgroundResource(R.color.colorDivider);
-
             super.onStop();
 
         } catch (Exception ex) {
@@ -454,24 +336,18 @@ public class ChatActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
-//        Context eventContext = signalRServiceBoundEvent.getContext();
-//        if (eventContext == null) {
-//
-//            Intent intent = new Intent(context, JoinGameActivity.class);
-//            context.startActivity(intent);
-//            return;
-//        }
 
+        Context eventContext = signalRServiceBoundEvent.getContext();
 
-//        if (eventContext == context) {
+        if (eventContext == context || eventContext == getApplicationContext() ) {
 
-        if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
-            signalRService.getChatMessages(gameId, gameCode, playerId);
-        } else {
-            Intent intent = new Intent(context, JoinGameActivity.class);
-            context.startActivity(intent);
+            if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
+                OffsideApplication.signalRService.getChatMessages(gameId, gameCode, playerId);
+            } else {
+                Intent intent = new Intent(context, JoinGameActivity.class);
+                context.startActivity(intent);
+            }
         }
-//        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -540,6 +416,15 @@ public class ChatActivity extends AppCompatActivity {
         chatListView.setAdapter(chatMessageAdapter);
     }
 
+    private boolean isPackageInstalled(String packagename, PackageManager packageManager) {
+        try {
+            packageManager.getPackageInfo(packagename, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onQuestionAnsweredEvent(QuestionAnsweredEvent questionAnsweredEvent) {
 
@@ -551,22 +436,9 @@ public class ChatActivity extends AppCompatActivity {
 
             // this parameter will be null if the user does not answer
             String answerId = questionAnsweredEvent.getAnswerId();
-            signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer, betSize);
+            OffsideApplication.signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer, betSize);
             if (!playerAnswers.containsKey(questionId))
                 playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize, true));
-
-//        if (!isBatch) {
-//            calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
-//            questionAndAnswersRoot.setVisibility(View.GONE);
-//        } else {
-//            if (batchedQuestionsQueue.isEmpty()) {
-//                calcQuestionStatisticsRoot.setVisibility(View.VISIBLE);
-//                questionAndAnswersRoot.setVisibility(View.GONE);
-//            } else {
-//                question = batchedQuestionsQueue.remove();
-//                showQuestion();
-//            }
-//        }
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -607,6 +479,8 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
+
+
 
 
 }

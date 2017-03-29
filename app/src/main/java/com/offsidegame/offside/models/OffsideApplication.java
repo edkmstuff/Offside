@@ -29,7 +29,6 @@ import org.greenrobot.eventbus.EventBus;
 )
 public class OffsideApplication extends Application {
 
-    private Context context;
     private static boolean isPlayerQuitGame = false;
     private static String messageTypeText = "TEXT";
     private static String messageTypeAskedQuestion = "ASKED_QUESTION";
@@ -92,15 +91,6 @@ public class OffsideApplication extends Application {
         OffsideApplication.gameInfo = gameInfo;
     }
 
-    public Context getContext() {
-        return context;
-    }
-
-    public void setContext(Context mContext) {
-        this.context = mContext;
-    }
-
-
     public static boolean isPlayerQuitGame() {
         return isPlayerQuitGame;
     }
@@ -111,27 +101,33 @@ public class OffsideApplication extends Application {
 
     public void onCreate ()
     {
-        super.onCreate();
-        // Setup handler for uncaught exceptions.
-        Thread.setDefaultUncaughtExceptionHandler (new Thread.UncaughtExceptionHandler()
-        {
-            @Override
-            public void uncaughtException (Thread thread, Throwable e)
+
+        try {
+            super.onCreate();
+            // Setup handler for uncaught exceptions.
+            Thread.setDefaultUncaughtExceptionHandler (new Thread.UncaughtExceptionHandler()
             {
-                ACRA.getErrorReporter().handleSilentException(e);
-            }
-        });
+                @Override
+                public void uncaughtException (Thread thread, Throwable e)
+                {
+                    ACRA.getErrorReporter().handleSilentException(e);
+                }
+            });
 
+            //signal r
+            Intent intent = new Intent();
+            intent.setClass(getApplicationContext(), SignalRService.class);
+            bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
 
-//        //signal r
-//        Intent intent = new Intent();
-//        intent.setClass(context, SignalRService.class);
-//        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+        }
+
+        catch(Exception ex){
+
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+
 
     }
-
-
-
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -144,23 +140,26 @@ public class OffsideApplication extends Application {
 
 //signal r
     public static SignalRService signalRService;
-//    public static boolean isBoundToSignalRService = false;
-//    public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
-//        @Override
-//        public void onServiceConnected(ComponentName className,
-//                                       IBinder service) {
-//            // We've bound to SignalRService, cast the IBinder and get SignalRService instance
-//            SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
-//            signalRService = binder.getService();
-//            isBoundToSignalRService = true;
-////            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
-//        }
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName className) {
-//            isBoundToSignalRService = false;
-//        }
-//    };
+    public static boolean isBoundToSignalRService = false;
+    public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to SignalRService, cast the IBinder and get SignalRService instance
+            SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
+            signalRService = binder.getService();
+            isBoundToSignalRService = true;
+            EventBus.getDefault().post(new SignalRServiceBoundEvent(getApplicationContext()));
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName className) {
+            isBoundToSignalRService = false;
+        }
+
+
+    };
 
 
 

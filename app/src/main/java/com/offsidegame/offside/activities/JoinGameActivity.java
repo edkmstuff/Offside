@@ -43,15 +43,13 @@ import java.io.Serializable;
 public class JoinGameActivity extends AppCompatActivity implements Serializable {
     private final String activityName = "JoinGameActivity";
     private final Context context = this;
-    private SignalRService signalRService;
-    private boolean isBoundToSignalRService = false;
     private EditText gameCodeEditText;
     private TextView joinTextView;
     private TextView userNameTextView;
     private ImageView playerPictureImageView;
     private LinearLayout joinGameRoot;
     private LinearLayout loadingGameRoot;
-    private Toolbar toolbar;
+
     private TextView createPrivateGameButtonTextView;
     private LinearLayout createPrivateGameRoot;
     private Spinner availableGamesSpinner;
@@ -65,22 +63,6 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private SharedPreferences settings;
     private AvailableGame[] availableGames ;
     private TextView noAvailableGamesReturnLaterTextView;
-
-    private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            // We've bound to SignalRService, cast the IBinder and get SignalRService instance
-            SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
-            signalRService = binder.getService();
-            isBoundToSignalRService = true;
-            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName className) {
-            isBoundToSignalRService = false;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,10 +132,12 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                     int selectedGamePosition = availableGamesSpinner.getSelectedItemPosition();
                     String gameId = getGameId(selectedGamePosition);
                     //get group messageText
-                    String groupName = privateGameNameEditText.getText().toString();
 
-                    if (isBoundToSignalRService)
-                        signalRService.generatePrivateGame(gameId, groupName);
+                    String groupName =  privateGameNameEditText.getText().toString();
+                    groupName = groupName.length() > 20 ? groupName.substring(0,20) : groupName;
+
+                    if (OffsideApplication.isBoundToSignalRService)
+                        OffsideApplication.signalRService.generatePrivateGame(gameId, groupName);
                     else
                         throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
                 }
@@ -170,11 +154,9 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     @Override
     public void onResume() {
 
-        //todo:why this is in on resume and not in onStart????
         super.onResume();
-        Intent intent = new Intent();
-        intent.setClass(context, SignalRService.class);
-        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+        EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
+
 
     }
 
@@ -188,22 +170,16 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(context);
-        // Unbind from the service
-        if (isBoundToSignalRService) {
-            unbindService(signalRServiceConnection);
-            isBoundToSignalRService = false;
-        }
-
         super.onStop();
     }
 
 
 
     private void joinGame( String privateGameCode, boolean isPrivateGameCreator) {
-        if (isBoundToSignalRService) {
+        if (OffsideApplication.isBoundToSignalRService) {
 
             OffsideApplication.setIsPlayerQuitGame(false);
-            signalRService.joinGame(privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl,isPrivateGameCreator );
+            OffsideApplication.signalRService.joinGame(privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl,isPrivateGameCreator );
             loadingGameRoot.setVisibility(View.VISIBLE);
             joinGameRoot.setVisibility(View.GONE);
             createPrivateGameRoot.setVisibility(View.GONE);
@@ -217,15 +193,10 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
         try {
+
             Context eventContext = signalRServiceBoundEvent.getContext();
+            if (eventContext == context || eventContext == getApplicationContext() ) {
 
-            if (eventContext == null) {
-                Intent intent = new Intent(context, JoinGameActivity.class);
-                context.startActivity(intent);
-                return;
-            }
-
-            if (eventContext == context) {
                 if (OffsideApplication.isPlayerQuitGame()) {
                     loadingGameRoot.setVisibility(View.GONE);
                     joinGameRoot.setVisibility(View.VISIBLE);
@@ -235,9 +206,9 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
                 String gameId = settings.getString(getString(R.string.game_id_key), "");
                 String gameCode = settings.getString(getString(R.string.game_code_key), "");
-                if (isBoundToSignalRService) {
-                    signalRService.isGameActive(gameId, gameCode);
-                    signalRService.getAvailableGames();
+                if (OffsideApplication.isBoundToSignalRService) {
+                    OffsideApplication.signalRService.isGameActive(gameId, gameCode);
+                    OffsideApplication.signalRService.getAvailableGames();
                 }
                 else
                     throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");
@@ -245,8 +216,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 String [] emptyAvailableGames= new String[]{getString(R.string.lbl_no_available_games)};
                 setAvailableGamesSpinnerAdapter(emptyAvailableGames);
 
-
             }
+
         }
         catch (Exception ex){
             ACRA.getErrorReporter().handleSilentException(ex);

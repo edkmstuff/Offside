@@ -68,7 +68,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
  */
 
 public class SignalRService extends Service {
-    private HubConnection hubConnection;
+    public HubConnection hubConnection;
     private HubProxy hub;
     //private Handler handler; // to display Toast message
     private final IBinder binder = new LocalBinder(); // Binder given to clients
