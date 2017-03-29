@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -200,7 +201,7 @@ public class ChatActivity extends AppCompatActivity {
             chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    //hide keypad
+
                     hideKeypad();
                 }
             });
@@ -215,64 +216,160 @@ public class ChatActivity extends AppCompatActivity {
 
             });
 
-            //<editor-fold desc="ACTIONS">
+            //<editor-fold desc="ACTIONS SHORT VERSION">
 
-            final LinearLayout actionLeadersRoot = (LinearLayout) findViewById(R.id.c_action_leaders_root);
-            final LinearLayout actionCurrentQuestionRoot = (LinearLayout) findViewById(R.id.c_action_current_question_root);
-            final LinearLayout actionOffsideCoinsRoot = (LinearLayout) findViewById(R.id.c_action_offside_coins_root);
-            final LinearLayout actionReloadRoot = (LinearLayout) findViewById(R.id.c_action_reload_root);
-            final LinearLayout actionCodeRoot = (LinearLayout) findViewById(R.id.c_action_code_root);
-            final LinearLayout actionShareRoot = (LinearLayout) findViewById(R.id.c_action_share_root);
+//            final LinearLayout actionLeadersRoot = (LinearLayout) findViewById(R.id.c_action_leaders_root);
+//            final LinearLayout actionCurrentQuestionRoot = (LinearLayout) findViewById(R.id.c_action_current_question_root);
+//            final LinearLayout actionOffsideCoinsRoot = (LinearLayout) findViewById(R.id.c_action_offside_coins_root);
+//            final LinearLayout actionReloadRoot = (LinearLayout) findViewById(R.id.c_action_reload_root);
+//            final LinearLayout actionCodeRoot = (LinearLayout) findViewById(R.id.c_action_code_root);
+//            final LinearLayout actionShareRoot = (LinearLayout) findViewById(R.id.c_action_share_root);
+//
+//            Map<String, LinearLayout> actionButtons = new HashMap<String, LinearLayout>() {
+//                {
+//                    put("!leaders", actionLeadersRoot);
+//                    put("!question", actionCurrentQuestionRoot);
+//                    put("!coins", actionOffsideCoinsRoot);
+//                    put("!reload", actionReloadRoot);
+//                    put("!code", actionCodeRoot);
+//                    put("!share", actionShareRoot);
+//
+//                }
+//            };
+//
+//            for (String action : actionButtons.keySet()) {
+//
+//                final String command = action;
+//                final LinearLayout actionElement = actionButtons.get(action);
+//
+//                if (action == "!share") {
+//                    actionElement.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            //signalRService.sendChatMessage(gameId, gameCode, "!share", playerId);
+//
+//                            Intent sendIntent = new Intent();
+//                            sendIntent.setAction(Intent.ACTION_SEND);
+//                            sendIntent.putExtra(Intent.EXTRA_TEXT, "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + gameCode + "*");
+//                            sendIntent.setType("text/plain");
+//                            sendIntent.setPackage("com.whatsapp");
+//                            startActivity(sendIntent);
+//                            chatActionsButton.performClick();
+//
+//                        }
+//                    });
+//
+//                } else {
+//
+//                    actionElement.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View view) {
+//                            signalRService.sendChatMessage(gameId, gameCode, command, playerId);
+////                    chatMessageEditText.setText("!code");
+////                    //chatSendTextView.performClick();
+//                            chatActionsButton.performClick();
+//                            view.setClickable(false);
+//
+//
+//                        }
+//
+//                    });
+//
+//                }
+//
+//
+//            }
 
-            Map<String, LinearLayout> actionButtons = new HashMap<String, LinearLayout>() {
-                {
-                    put("!leaders", actionLeadersRoot);
-                    put("!question", actionCurrentQuestionRoot);
-                    put("!coins", actionOffsideCoinsRoot);
-                    put("!reload", actionReloadRoot);
-                    put("!code", actionCodeRoot);
-                    put("!share", actionShareRoot);
+
+            //</editor-fold>
+
+            //<editor-fold desc=ACTIONS LONG VERSION>
+
+
+            LinearLayout actionLeadersRoot = (LinearLayout) findViewById(R.id.c_action_leaders_root);
+
+            actionLeadersRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    signalRService.sendChatMessage(gameId, gameCode, "!leaders", playerId);
+//                    chatMessageEditText.setText("!leader");
+//                    //chatSendTextView.performClick();
+                    chatActionsButton.performClick();
 
                 }
-            };
+            });
 
-            for (String action : actionButtons.keySet()) {
+            LinearLayout actionCurrentQuestionRoot = (LinearLayout) findViewById(R.id.c_action_current_question_root);
 
-                final String command = action;
+            actionCurrentQuestionRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    signalRService.sendChatMessage(gameId, gameCode, "!question", playerId);
+//                    chatMessageEditText.setText("!question");
+//                    //chatSendTextView.performClick();
+                    chatActionsButton.performClick();
 
-                if (action == "!share") {
-                    actionButtons.get(action).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //signalRService.sendChatMessage(gameId, gameCode, "!share", playerId);
+                }
+            });
 
-                            Intent sendIntent = new Intent();
-                            sendIntent.setAction(Intent.ACTION_SEND);
-                            sendIntent.putExtra(Intent.EXTRA_TEXT, "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + gameCode + "*");
-                            sendIntent.setType("text/plain");
-                            sendIntent.setPackage("com.whatsapp");
-                            startActivity(sendIntent);
-                            chatActionsButton.performClick();
-                        }
-                    });
+            LinearLayout actionOffsideCoinsRoot = (LinearLayout) findViewById(R.id.c_action_offside_coins_root);
 
-                } else {
+            actionOffsideCoinsRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    signalRService.sendChatMessage(gameId, gameCode, "!coins", playerId);
+//                    chatMessageEditText.setText("!coins");
+//                    //chatSendTextView.performClick();
+                    chatActionsButton.performClick();
 
-                    actionButtons.get(action).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            signalRService.sendChatMessage(gameId, gameCode, command, playerId);
+                }
+            });
+
+            LinearLayout actionReloadRoot = (LinearLayout) findViewById(R.id.c_action_reload_root);
+
+            actionReloadRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    signalRService.sendChatMessage(gameId, gameCode, "!reload", playerId);
+//                    chatMessageEditText.setText("!reload");
+//                    //chatSendTextView.performClick();
+                    chatActionsButton.performClick();
+
+                }
+            });
+
+
+            LinearLayout actionCodeRoot = (LinearLayout) findViewById(R.id.c_action_code_root);
+
+            actionCodeRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    signalRService.sendChatMessage(gameId, gameCode, "!code", playerId);
 //                    chatMessageEditText.setText("!code");
 //                    //chatSendTextView.performClick();
-                            chatActionsButton.performClick();
-
-                        }
-                    });
+                    chatActionsButton.performClick();
 
                 }
+            });
+
+            LinearLayout actionShareRoot = (LinearLayout) findViewById(R.id.c_action_share_root);
+            actionShareRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //signalRService.sendChatMessage(gameId, gameCode, "!share", playerId);
+
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + gameCode+"*");
+                    sendIntent.setType("text/plain");
+                    sendIntent.setPackage("com.whatsapp");
+                    startActivity(sendIntent);
 
 
-            }
+                    chatActionsButton.performClick();
+
+                }
+            });
 
 
             //</editor-fold>
