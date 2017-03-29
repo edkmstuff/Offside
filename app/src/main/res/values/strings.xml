@@ -70,6 +70,9 @@
     <string name="lbl_command_reload">השג מטבעות</string>
     <string name="lbl_command_game_code">שלח לי קוד</string>
     <string name="lbl_command_share_code">share code</string>
+    <string name="rewarded_video_ad_unit_id_key">ca-app-pub-3734756240615742/4334945313</string>
+
+
 
 
 </resources>

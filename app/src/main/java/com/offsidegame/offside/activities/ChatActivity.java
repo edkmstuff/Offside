@@ -1,19 +1,12 @@
 package com.offsidegame.offside.activities;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -23,7 +16,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
@@ -32,7 +31,6 @@ import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
-import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
@@ -46,12 +44,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements RewardedVideoAdListener {
 
 
     private final Context context = this;
@@ -87,6 +83,8 @@ public class ChatActivity extends AppCompatActivity {
     private boolean isConnected = false;
     private boolean isActionMenuVisible = false;
 
+    private RewardedVideoAd rewardedVideoAd;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,17 +94,29 @@ public class ChatActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_chat);
 
-            SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-            gameId = settings.getString(getString(R.string.game_id_key), "");
-            gameCode = settings.getString(getString(R.string.game_code_key), "");
-            playerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            gameId = OffsideApplication.getGameInfo().getGameId();
+            gameCode = OffsideApplication.getGameInfo().getPrivateGameCode();
+            FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
+            playerId = player.getUid();
 
-            privateGameTitle = settings.getString(getString(R.string.private_game_title_key), "");
-            homeTeam = settings.getString(getString(R.string.home_team_key), "");
-            awayTeam = settings.getString(getString(R.string.away_team_key), "");
-            offsideCoins = settings.getInt(getString(R.string.offside_coins_key), 0);
-            balance = settings.getInt(getString(R.string.balance_key), 0);
-            totalPlayers = settings.getInt(getString(R.string.total_players_key), 0);
+            privateGameTitle = OffsideApplication.getGameInfo().getPrivateGameTitle();
+            homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
+            awayTeam =OffsideApplication.getGameInfo().getAwayTeam();
+            offsideCoins = OffsideApplication.getGameInfo().getOffsideCoins();
+
+//
+//            SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+//            gameId = settings.getString(getString(R.string.game_id_key), "");
+//            gameCode = settings.getString(getString(R.string.game_code_key), "");
+//            playerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+//
+//            privateGameTitle = settings.getString(getString(R.string.private_game_title_key), "");
+//            homeTeam = settings.getString(getString(R.string.home_team_key), "");
+//            awayTeam = settings.getString(getString(R.string.away_team_key), "");
+//            offsideCoins = settings.getInt(getString(R.string.offside_coins_key), 0);
+//            totalPlayers = settings.getInt(getString(R.string.total_players_key), 0);
+
+            //<editor-fold desc="FindById">
 
             root = (LinearLayout) findViewById(R.id.c_root);
             chatListView = (ListView) findViewById(R.id.c_chat_list_view);
@@ -122,12 +132,8 @@ public class ChatActivity extends AppCompatActivity {
             actionsMenuRoot = (LinearLayout) findViewById(R.id.c_actions_menu_root);
             actionsMenuRoot.setScaleX(0f);
             actionsMenuRoot.setScaleY(0f);
-
             actionsMenuRoot.setAlpha(0.99f);
-            //actionsMenuRoot.setVisibility(View.GONE);
-
             chatActionsButton = (TextView) findViewById(R.id.c_chatActionsButton);
-
             privateGameNameTextView.setText(privateGameTitle);
             gameTitleTextView.setText(homeTeam + " vs. " + awayTeam);
 
@@ -217,12 +223,11 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
 
-                        try
-                        {
+                        try {
                             if (!isActionMenuVisible)
                                 return;
 
-                            if (command == "!share" ) {
+                            if (command == "!share") {
 
                                 PackageManager pm = context.getPackageManager();
                                 boolean isWhatsappInstalled = isPackageInstalled("com.whatsapp", pm);
@@ -230,12 +235,11 @@ public class ChatActivity extends AppCompatActivity {
                                 Intent sendIntent = new Intent();
                                 sendIntent.setAction(Intent.ACTION_SEND);
                                 sendIntent.setType("text/plain");
-                                if(isWhatsappInstalled) {
+                                if (isWhatsappInstalled) {
                                     sendIntent.setPackage("com.whatsapp");
                                     sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-                                }
-                                else{
-                                    sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage.replaceAll("[*]",""));
+                                } else {
+                                    sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage.replaceAll("[*]", ""));
                                 }
 
                                 startActivity(sendIntent);
@@ -246,13 +250,10 @@ public class ChatActivity extends AppCompatActivity {
 
                             chatActionsButton.performClick();
 
-                        }
-
-                        catch (Exception ex) {
+                        } catch (Exception ex) {
                             ACRA.getErrorReporter().handleSilentException(ex);
                             chatActionsButton.performClick();
                         }
-
 
 
                     }
@@ -262,9 +263,34 @@ public class ChatActivity extends AppCompatActivity {
 
             //</editor-fold>
 
+            //</editor-fold>
+
+            // Use an activity context to get the rewarded video instance.
+            rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+            rewardedVideoAd.setRewardedVideoAdListener(this);
+
+            if (offsideCoins < 5000)
+                loadRewardedVideoAd();
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
+        }
+
+
+    }
+
+    private void loadRewardedVideoAd() {
+        try {
+
+            String REWARDED_VIDEO_AD_APP_UNIT_ID = getString(R.string.rewarded_video_ad_unit_id_key);
+
+            if (!rewardedVideoAd.isLoaded())
+                rewardedVideoAd.loadAd(REWARDED_VIDEO_AD_APP_UNIT_ID, new AdRequest.Builder().build());
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+
         }
 
 
@@ -339,7 +365,7 @@ public class ChatActivity extends AppCompatActivity {
 
         Context eventContext = signalRServiceBoundEvent.getContext();
 
-        if (eventContext == context || eventContext == getApplicationContext() ) {
+        if (eventContext == context || eventContext == getApplicationContext()) {
 
             if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
                 OffsideApplication.signalRService.getChatMessages(gameId, gameCode, playerId);
@@ -481,6 +507,47 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
+    //<editor-fold desc="AdMob Reward Video>
+    @Override
+    public void onRewarded(RewardItem reward) {
+        Toast.makeText(this, "onRewarded! currency: " + reward.getType() + "  amount: " +
+                reward.getAmount(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+
+        Toast.makeText(this, "onRewardedVideoAdLeftApplication",
+                Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {
+        Toast.makeText(this, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int errorCode) {
+        Toast.makeText(this, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRewardedVideoAdLoaded() {
+        if (rewardedVideoAd.isLoaded())
+            rewardedVideoAd.show();
+        Toast.makeText(this, "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+        Toast.makeText(this, "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
+        Toast.makeText(this, "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
+    }
+    //</editor-fold>
 
 
 }
