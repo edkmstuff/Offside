@@ -469,6 +469,26 @@ public class SignalRService extends Service {
         return true;
     }
 
+    public boolean setOffsideCoins(String playerId, int offsideCoins) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return false;
+
+        hub.invoke(Boolean.class, "SetOffsideCoins", playerId, offsideCoins).done(new Action<Boolean>() {
+            @Override
+            public void run(Boolean isOffsideCoinsUpdated) throws Exception {
+                EventBus.getDefault().post(new IsAnswerAcceptedEvent(isOffsideCoinsUpdated));
+            }
+
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleSilentException(error);
+            }
+        });
+
+        return true;
+    }
+
     public boolean saveImageInDatabase(String playerId, String imageString) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return false;

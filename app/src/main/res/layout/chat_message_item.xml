@@ -49,7 +49,184 @@
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"
                     android:textColor="@color/chatText"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
+
+                <!-- Get Coins message Root-->
+                <LinearLayout
+
+                    android:id="@+id/cm_incoming_get_coins_message_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_bg_incoming_bubble"
+                    android:orientation="vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/chatText"
+                    android:visibility="visible">
+
+                    <!--player options to obtain coins-->
+                    <LinearLayout
+                        android:id="@+id/cm_incoming_get_coins_player_options_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/cm_incoming_get_coins_not_enough_coins_message_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:text="@string/lbl_not_enough_coins_to_play"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/OffsideMediumText" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:text="@string/lbl_you_can_get_coins_doing_one_of_the_following"
+                            android:textColor="@color/colorBlack"
+                            />
+
+                        <TextView
+                            android:id="@+id/cm_incoming_get_coins_watch_reward_video_action_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:minHeight="50dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="צפה בוידאו קצר"
+                            android:textColor="@color/colorWhite"
+                            android:background="@color/answer2backgroundColor"/>
+
+                        <TextView
+                            android:id="@+id/cm_incoming_get_coins_buy_coins_action_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:minHeight="50dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="קנה מטבעות"
+                            android:layout_marginTop="10dp"
+                            android:textColor="@color/colorWhite"
+                            android:background="@color/answer4backgroundColor"/>
+
+
+                    </LinearLayout>
+
+                    <!-- Get Coins message -  loading video  Root-->
+                    <LinearLayout
+                        android:id="@+id/cm_incoming_get_coins_loading_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/ic_offside_logo"
+                            android:layout_gravity="center"
+                            android:minHeight="100dp"
+                            android:minWidth="100dp"
+                            />
+
+                        <ProgressBar
+                            style="?android:attr/progressBarStyleLarge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center">
+
+                        </ProgressBar>
+
+                    </LinearLayout>
+                    <!-- Get Coins feedback after video was watched-->
+                    <LinearLayout
+                        android:id="@+id/cm_incoming_get_coins_feedback_post_video_watch_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/ic_action_offside_coins"
+                            android:layout_gravity="center"
+                            android:minHeight="50dp"
+                            android:minWidth="50dp"
+                            />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:text="@string/lbl_congrates_for_getting_more_offside_coins"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/OffsideMediumText" />
+
+                        <TextView
+                            android:id="@+id/cm_incoming_get_coins_reward_value_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:text="500"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/OffsideLargeText" />
+
+                        <TextView
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:text="@string/lbl_updated_balance"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/OffsideMediumText" />
+                        <TextView
+                            android:id="@+id/cm_incoming_get_coins_updated_offside_coins_value_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:text="1500"
+                            android:textColor="@color/colorBlack"
+                            android:textSize="@dimen/OffsideLargeText" />
+
+
+                    </LinearLayout>
+
+
+
+
+                </LinearLayout>
+
+
+
+
 
                 <!--Asked or Processed question root-->
                 <LinearLayout
@@ -532,7 +709,7 @@
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"
                     android:textColor="@color/chatText"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="match_parent"

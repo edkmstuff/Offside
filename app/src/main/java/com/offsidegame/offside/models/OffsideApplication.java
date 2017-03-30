@@ -34,6 +34,7 @@ public class OffsideApplication extends Application {
     private static String messageTypeAskedQuestion = "ASKED_QUESTION";
     private static String messageTypeProcessedQuestion = "PROCESSED_QUESTION";
     private static String messageTypeClosedQuestion = "CLOSED_QUESTION";
+    private static String messageTypeGetCoins = "GET_COINS";
 
     private static String profileImageFileName = "profileImage.jpg";
     //private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
@@ -44,6 +45,8 @@ public class OffsideApplication extends Application {
     private static int offsideCoins;
 
     private static GameInfo gameInfo;
+
+
 
 
 
@@ -97,6 +100,10 @@ public class OffsideApplication extends Application {
 
     public static void setIsPlayerQuitGame(boolean playerQuitGame) {
         isPlayerQuitGame = playerQuitGame;
+    }
+
+    public static String getMessageTypeGetCoins() {
+        return messageTypeGetCoins;
     }
 
     public void onCreate ()
@@ -160,7 +167,5 @@ public class OffsideApplication extends Application {
 
 
     };
-
-
 
 }

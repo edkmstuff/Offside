@@ -71,8 +71,9 @@
     <string name="lbl_command_game_code">שלח לי קוד</string>
     <string name="lbl_command_share_code">share code</string>
     <string name="rewarded_video_ad_unit_id_key">ca-app-pub-3734756240615742/4334945313</string>
-
-
+    <string name="lbl_you_can_get_coins_doing_one_of_the_following">תוכל להשיג מטבעות באחת מהדרכים הבאות</string>
+    <string name="lbl_congrates_for_getting_more_offside_coins">צפית עד הסוף? זכית!</string>
+    <string name="lbl_updated_balance">יתרה מעודכנת</string>
 
 
 </resources>

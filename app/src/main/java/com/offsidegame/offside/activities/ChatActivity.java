@@ -30,6 +30,7 @@ import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
+import com.offsidegame.offside.events.RewardEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
@@ -47,7 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ChatActivity extends AppCompatActivity implements RewardedVideoAdListener {
+public class ChatActivity extends AppCompatActivity {
 
 
     private final Context context = this;
@@ -67,9 +68,9 @@ public class ChatActivity extends AppCompatActivity implements RewardedVideoAdLi
     String homeTeam;
     String awayTeam;
     int offsideCoins;
-    int balance;
+
     private Player player;
-    int totalPlayers;
+
 
     private TextView scoreTextView;
     private TextView privateGameNameTextView;
@@ -83,7 +84,8 @@ public class ChatActivity extends AppCompatActivity implements RewardedVideoAdLi
     private boolean isConnected = false;
     private boolean isActionMenuVisible = false;
 
-    private RewardedVideoAd rewardedVideoAd;
+    //private RewardedVideoAd rewardedVideoAd;
+
 
 
     @Override
@@ -101,20 +103,9 @@ public class ChatActivity extends AppCompatActivity implements RewardedVideoAdLi
 
             privateGameTitle = OffsideApplication.getGameInfo().getPrivateGameTitle();
             homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
-            awayTeam =OffsideApplication.getGameInfo().getAwayTeam();
+            awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
             offsideCoins = OffsideApplication.getGameInfo().getOffsideCoins();
 
-//
-//            SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-//            gameId = settings.getString(getString(R.string.game_id_key), "");
-//            gameCode = settings.getString(getString(R.string.game_code_key), "");
-//            playerId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-//
-//            privateGameTitle = settings.getString(getString(R.string.private_game_title_key), "");
-//            homeTeam = settings.getString(getString(R.string.home_team_key), "");
-//            awayTeam = settings.getString(getString(R.string.away_team_key), "");
-//            offsideCoins = settings.getInt(getString(R.string.offside_coins_key), 0);
-//            totalPlayers = settings.getInt(getString(R.string.total_players_key), 0);
 
             //<editor-fold desc="FindById">
 
@@ -265,12 +256,71 @@ public class ChatActivity extends AppCompatActivity implements RewardedVideoAdLi
 
             //</editor-fold>
 
-            // Use an activity context to get the rewarded video instance.
-            rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
-            rewardedVideoAd.setRewardedVideoAdListener(this);
+//            // Use an activity context to get the rewarded video instance.
+//            rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(context);
+//            rewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+//
+//                //<editor-fold desc="RewardedVideoAdListener Methods">
+//                @Override
+//                public void onRewarded(RewardItem reward) {
+//                    Toast.makeText(context, "onRewarded! currency: " + reward.getType() + "  amount: " +
+//                            reward.getAmount(), Toast.LENGTH_SHORT).show();
+//                }
+//
+//                @Override
+//                public void onRewardedVideoAdLeftApplication() {
+//
+//                    Toast.makeText(context, "onRewardedVideoAdLeftApplication",
+//                            Toast.LENGTH_SHORT).show();
+//                }
+//
+//                @Override
+//                public void onRewardedVideoAdClosed() {
+//                    Toast.makeText(context, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
+//
+//                    rewardedVideoAd = null;
+//
+//
+//                }
+//
+//                @Override
+//                public void onRewardedVideoAdFailedToLoad(int errorCode) {
+//                    Toast.makeText(context, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
+//                    rewardedVideoAd = null;
+//                }
+//
+//                @Override
+//                public void onRewardedVideoAdLoaded() {
+//                    try {
+//
+//                        if (rewardedVideoAd.isLoaded())
+//                            rewardedVideoAd.show();
+//                        Toast.makeText(context, "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
+//
+//                    } catch (Exception ex) {
+//
+//                        ACRA.getErrorReporter().handleException(ex);
+//
+//                    }
+//
+//
+//                }
+//
+//                @Override
+//                public void onRewardedVideoAdOpened() {
+//                    Toast.makeText(context, "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
+//                }
+//
+//                @Override
+//                public void onRewardedVideoStarted() {
+//                    Toast.makeText(context, "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
+//                }
+//                //</editor-fold>
+//
+//            });
 
-            if (offsideCoins < 5000)
-                loadRewardedVideoAd();
+//            if (offsideCoins < 5000)
+//                loadRewardedVideoAd();
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -279,22 +329,22 @@ public class ChatActivity extends AppCompatActivity implements RewardedVideoAdLi
 
     }
 
-    private void loadRewardedVideoAd() {
-        try {
-
-            String REWARDED_VIDEO_AD_APP_UNIT_ID = getString(R.string.rewarded_video_ad_unit_id_key);
-
-            if (!rewardedVideoAd.isLoaded())
-                rewardedVideoAd.loadAd(REWARDED_VIDEO_AD_APP_UNIT_ID, new AdRequest.Builder().build());
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-
-        }
-
-
-    }
+//    private void loadRewardedVideoAd() {
+//        try {
+//
+//            String REWARDED_VIDEO_AD_APP_UNIT_ID = getString(R.string.rewarded_video_ad_unit_id_key);
+//
+//            if (!rewardedVideoAd.isLoaded())
+//                rewardedVideoAd.loadAd(REWARDED_VIDEO_AD_APP_UNIT_ID, new AdRequest.Builder().build());
+//
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//
+//
+//        }
+//
+//
+//    }
 
     @Override
     public void onStart() {
@@ -369,10 +419,12 @@ public class ChatActivity extends AppCompatActivity implements RewardedVideoAdLi
 
             if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
                 OffsideApplication.signalRService.getChatMessages(gameId, gameCode, playerId);
+
             } else {
                 Intent intent = new Intent(context, JoinGameActivity.class);
                 context.startActivity(intent);
             }
+
         }
     }
 
@@ -506,48 +558,28 @@ public class ChatActivity extends AppCompatActivity implements RewardedVideoAdLi
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveRewardEvent(RewardEvent rewardEvent) {
+        try {
+            int rewardAmount = rewardEvent.getRewardAmount();
+            if (player == null || rewardAmount==0)
+                return;
+            int updatedOffsideCoins = player.getOffsideCoins()+rewardAmount;
 
-    //<editor-fold desc="AdMob Reward Video>
-    @Override
-    public void onRewarded(RewardItem reward) {
-        Toast.makeText(this, "onRewarded! currency: " + reward.getType() + "  amount: " +
-                reward.getAmount(), Toast.LENGTH_SHORT).show();
+            player.setOffsideCoins(updatedOffsideCoins);
+            OffsideApplication.setOffsideCoins(updatedOffsideCoins);
+            OffsideApplication.signalRService.setOffsideCoins(playerId, updatedOffsideCoins);
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
-    @Override
-    public void onRewardedVideoAdLeftApplication() {
 
-        Toast.makeText(this, "onRewardedVideoAdLeftApplication",
-                Toast.LENGTH_SHORT).show();
-    }
 
-    @Override
-    public void onRewardedVideoAdClosed() {
-        Toast.makeText(this, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRewardedVideoAdFailedToLoad(int errorCode) {
-        Toast.makeText(this, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRewardedVideoAdLoaded() {
-        if (rewardedVideoAd.isLoaded())
-            rewardedVideoAd.show();
-        Toast.makeText(this, "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRewardedVideoAdOpened() {
-        Toast.makeText(this, "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onRewardedVideoStarted() {
-        Toast.makeText(this, "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
-    }
-    //</editor-fold>
 
 
 }
