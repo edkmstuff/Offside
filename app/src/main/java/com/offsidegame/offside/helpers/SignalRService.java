@@ -75,8 +75,8 @@ public class SignalRService extends Service {
     private Date startReconnecting = null;
 
     //public final String ip = new String("192.168.1.140:8080");
-    //public final String ip = new String("10.0.0.17:8080");
-    public final String ip = new String("offside.somee.com");
+    public final String ip = new String("10.0.0.17:8080");
+    //public final String ip = new String("offside.somee.com");
 
     public Boolean stoppedIntentionally = false;
     private int mId = -1;
@@ -250,9 +250,9 @@ public class SignalRService extends Service {
 
         NotificationCompat.Builder mBuilder =  new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.ic_offside_logo)
-                        .setContentTitle("שאלה חדשה מחכה לך")
+                        .setContentTitle(getString(R.string.lbl_new_question_is_waiting_for_you))
                         .setDefaults(NotificationCompat.DEFAULT_ALL)
-                        .setContentText("לחץ כדי לענות")
+                        .setContentText(getString(R.string.lbl_click_to_answer))
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
 
 // Creates an explicit intent for an Activity in your app
@@ -469,14 +469,14 @@ public class SignalRService extends Service {
         return true;
     }
 
-    public boolean setOffsideCoins(String playerId, int offsideCoins) {
+    public boolean setOffsideCoins(String gameId, String playerId, int offsideCoins) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return false;
 
-        hub.invoke(Boolean.class, "SetOffsideCoins", playerId, offsideCoins).done(new Action<Boolean>() {
+        hub.invoke(Integer.class, "SetOffsideCoins", gameId, playerId, offsideCoins).done(new Action<Integer>() {
             @Override
-            public void run(Boolean isOffsideCoinsUpdated) throws Exception {
-                EventBus.getDefault().post(new IsAnswerAcceptedEvent(isOffsideCoinsUpdated));
+            public void run(Integer newOffsideCoinsValue) throws Exception {
+                EventBus.getDefault().post(newOffsideCoinsValue);
             }
 
         }).onError(new ErrorCallback() {

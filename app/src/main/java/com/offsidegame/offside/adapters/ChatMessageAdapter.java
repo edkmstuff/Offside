@@ -129,9 +129,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public LinearLayout incomingGetCoinsLoadingRoot;
         public LinearLayout incomingGetCoinsPlayerOptionsRoot;
 
-        public LinearLayout incomingGetCoinsFeedbackPostVideoWatchRoot;
-        public TextView incomingGetCoinsRewardValueTextView;
-        public TextView incomingGetCoinsUpdatedOffsideCoinsValueTextView;
+//        public LinearLayout incomingGetCoinsFeedbackPostVideoWatchRoot;
+//        public TextView incomingGetCoinsRewardValueTextView;
+//        public TextView incomingGetCoinsUpdatedOffsideCoinsValueTextView;
 
         //</editor-fold>
 
@@ -226,10 +226,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingGetCoinsLoadingRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_get_coins_loading_root);
                 viewHolder.incomingGetCoinsPlayerOptionsRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_get_coins_player_options_root);
 
-                viewHolder.incomingGetCoinsFeedbackPostVideoWatchRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_get_coins_feedback_post_video_watch_root);
-
-                viewHolder.incomingGetCoinsRewardValueTextView = (TextView) convertView.findViewById(R.id.cm_incoming_get_coins_reward_value_text_view);
-                viewHolder.incomingGetCoinsUpdatedOffsideCoinsValueTextView = (TextView) convertView.findViewById(R.id.cm_incoming_get_coins_updated_offside_coins_value_text_view);
+//                viewHolder.incomingGetCoinsFeedbackPostVideoWatchRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_get_coins_feedback_post_video_watch_root);
+//
+//                viewHolder.incomingGetCoinsRewardValueTextView = (TextView) convertView.findViewById(R.id.cm_incoming_get_coins_reward_value_text_view);
+//                viewHolder.incomingGetCoinsUpdatedOffsideCoinsValueTextView = (TextView) convertView.findViewById(R.id.cm_incoming_get_coins_updated_offside_coins_value_text_view);
 
                 //</editor-fold>
 
@@ -353,17 +353,16 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 public void onRewarded(RewardItem reward) {
 
                     int rewardAmount = reward.getAmount();
-                    int currentOffsideCoinsValue = OffsideApplication.getOffsideCoins();
+                    //int currentOffsideCoinsValue = OffsideApplication.getOffsideCoins();
 
                     viewHolder.incomingGetCoinsPlayerOptionsRoot.setVisibility(View.GONE);
                     viewHolder.incomingGetCoinsLoadingRoot.setVisibility(View.GONE);
 
-                    viewHolder.incomingGetCoinsRewardValueTextView.setText(String.valueOf(rewardAmount));
-                    viewHolder.incomingGetCoinsUpdatedOffsideCoinsValueTextView.setText(String.valueOf(currentOffsideCoinsValue+rewardAmount));
-                    viewHolder.incomingGetCoinsFeedbackPostVideoWatchRoot.setVisibility(View.VISIBLE);
+//                    viewHolder.incomingGetCoinsRewardValueTextView.setText(String.valueOf(rewardAmount));
+//                    viewHolder.incomingGetCoinsUpdatedOffsideCoinsValueTextView.setText(String.valueOf(currentOffsideCoinsValue+rewardAmount));
+//                    viewHolder.incomingGetCoinsFeedbackPostVideoWatchRoot.setVisibility(View.VISIBLE);
 
-                    Toast.makeText(context, "onRewarded! currency: " + reward.getType() + "  amount: " +
-                            reward.getAmount(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "onRewarded! currency: " + reward.getType() + "  amount: " +  reward.getAmount(), Toast.LENGTH_SHORT).show();
 
                     EventBus.getDefault().post(new RewardEvent(rewardAmount));
 
@@ -372,13 +371,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 @Override
                 public void onRewardedVideoAdLeftApplication() {
 
-                    Toast.makeText(context, "onRewardedVideoAdLeftApplication",
-                            Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "onRewardedVideoAdLeftApplication",Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onRewardedVideoAdClosed() {
-                    Toast.makeText(context, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(context, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
 
                     rewardedVideoAd = null;
 
@@ -387,8 +385,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 @Override
                 public void onRewardedVideoAdFailedToLoad(int errorCode) {
-                    Toast.makeText(context, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
                     rewardedVideoAd = null;
+
+                    //viewHolder.incomingGetCoinsMessageRoot.setVisibility(View.GONE);
                 }
 
                 @Override
@@ -404,7 +404,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         ACRA.getErrorReporter().handleException(ex);
 
                     }
-
 
                 }
 
@@ -611,7 +610,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                     if (viewHolder.timeToAnswer > 0) {
                         if (viewHolder.countDownTimer != null) {
-                            Log.i("offside", "CANCELLING!!! timerId: " + String.valueOf(viewHolder.countDownTimer.hashCode()));
+                            //Log.i("offside", "CANCELLING!!! timerId: " + String.valueOf(viewHolder.countDownTimer.hashCode()));
                             viewHolder.countDownTimer.cancel();
                             viewHolder.countDownTimer = null;
                         }
@@ -883,7 +882,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingGetCoinsMessageRoot.setVisibility(View.GONE);
             viewHolder.incomingGetCoinsPlayerOptionsRoot.setVisibility(View.GONE);
             viewHolder.incomingGetCoinsLoadingRoot.setVisibility(View.GONE);
-            viewHolder.incomingGetCoinsFeedbackPostVideoWatchRoot.setVisibility(View.GONE);
+            //viewHolder.incomingGetCoinsFeedbackPostVideoWatchRoot.setVisibility(View.GONE);
 
 
             for (int i = 0; i < 4; i++) {
