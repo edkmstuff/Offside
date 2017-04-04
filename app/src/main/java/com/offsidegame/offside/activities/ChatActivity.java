@@ -86,6 +86,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private RewardedVideoAd rewardedVideoAd;
     private LinearLayout rewardVideoLoadingRoot;
+    private LinearLayout actionExitGameRoot;
 
 
 
@@ -132,6 +133,8 @@ public class ChatActivity extends AppCompatActivity {
             loadRewardedVideoAd();
             rewardVideoLoadingRoot = (LinearLayout) findViewById(R.id.c_reward_video_loading_root);
             rewardVideoLoadingRoot.setVisibility(View.GONE);
+
+            actionExitGameRoot = (LinearLayout) findViewById(R.id.c_action_exit_game_root);
 
 
             chatSendTextView.setOnClickListener(new View.OnClickListener() {
@@ -261,6 +264,8 @@ public class ChatActivity extends AppCompatActivity {
 
             }
 
+            //<editor-fold desc="VIDEO AD">
+
             //prepare watch video objects
 
             // Use an activity context to get the rewarded video instance.
@@ -346,11 +351,39 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
             });
+            //</editor-fold>
+
+            //<editor-fold desc="exit game">
+            actionExitGameRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    OffsideApplication.signalRService.quitGame(gameId,playerId);
+                    chatActionsButton.performClick();
+
+                    SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+                    SharedPreferences.Editor editor = settings.edit();
+
+                    editor.putString(getString(R.string.game_id_key), null);
+                    editor.putString(getString(R.string.game_code_key), null);
+                    editor.putString(getString(R.string.private_game_title_key), null);
+                    editor.putString(getString(R.string.home_team_key), null);
+                    editor.putString(getString(R.string.away_team_key), null);
+
+
+
+                    editor.commit();
+                    Intent intent = new Intent(context,JoinGameActivity.class);
+                    startActivity(intent);
+                }
+            });
 
 
             //</editor-fold>
 
-            //</editor-fold>
+
+        //</editor-fold>
+
+    //</editor-fold>
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);

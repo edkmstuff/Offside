@@ -80,6 +80,7 @@
     <string name="lbl_watch_short_video">צפה בוידאו קצר (1000 מטבעות)</string>
     <string name="lbl_buy_offside_coins">רכוש מטבעות</string>
     <string name="lbl_loading_video">טוען וידאו...</string>
+    <string name="lbl_leave_game">צא מהמשחק</string>
 
 
 </resources>
