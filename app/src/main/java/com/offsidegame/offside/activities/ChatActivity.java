@@ -462,6 +462,10 @@ public class ChatActivity extends AppCompatActivity {
             Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
             chatSendTextView.setAlpha(1f);
             chatActionsButton.setAlpha(1f);
+            if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
+                OffsideApplication.signalRService.getChatMessages(gameId, gameCode, playerId);
+            }
+
 
         } else {
             Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
