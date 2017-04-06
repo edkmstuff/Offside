@@ -573,10 +573,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                         viewHolder.betSizeOptionsTextViews[i].setVisibility(View.INVISIBLE);
 
-                        if (OffsideApplication.getOffsideCoins() >= (i + 1) * OffsideApplication.getGameInfo().getMinBetSize())
+                        if (!viewHolder.question.getQuestionType().equals("Debate") && OffsideApplication.getOffsideCoins() >= (i + 1) * OffsideApplication.getGameInfo().getMinBetSize())
                             viewHolder.betSizeOptionsTextViews[i].setVisibility(View.VISIBLE);
                         else {
-                            if (OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize()) {
+                            if (viewHolder.question.getQuestionType().equals("Debate") || OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize()) {
                                 for (Answer answer : viewHolder.question.getAnswers()) {
                                     answer.selectedBetSize = 0;
 

@@ -76,6 +76,7 @@
     <string name="lbl_updated_balance">יתרה מעודכנת</string>
     <string name="lbl_new_question_is_waiting_for_you">שאלה חדשה מחכה לך</string>
     <string name="lbl_click_to_answer">לחץ כדי לענות</string>
+    <string name="lbl_click_to_view">לחץ כדי לראות</string>
     <string name="lbl_get_offside_coins">השג מטבעות</string>
     <string name="lbl_watch_short_video">צפה בוידאו קצר (1000 מטבעות)</string>
     <string name="lbl_buy_offside_coins">רכוש מטבעות</string>

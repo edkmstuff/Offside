@@ -16,6 +16,8 @@ import org.acra.annotation.*;
 import org.acra.sender.HttpSender;
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Map;
+
 /**
  * Created by KFIR on 1/15/2017.
  */
@@ -141,6 +143,9 @@ public class OffsideApplication extends Application {
         // The following line triggers the initialization of ACRA
         ACRA.init(this);
     }
+
+
+    public static  Map<String, AnswerIdentifier> playerAnswers;
 
 
 //signal r

@@ -60,7 +60,7 @@ public class ChatActivity extends AppCompatActivity {
     private Chat chat;
     private ArrayList messages;
     private ChatMessageAdapter chatMessageAdapter;
-    private Map<String, AnswerIdentifier> playerAnswers;
+
     private LinearLayout root;
     private ListView chatListView;
 
@@ -506,7 +506,7 @@ public class ChatActivity extends AppCompatActivity {
             player = chat.getPlayer();
             if (player == null)
                 return;
-            playerAnswers = player.getPlayerAnswers();
+            OffsideApplication.playerAnswers = player.getPlayerAnswers();
 
             scoreTextView.setText(String.valueOf((int) player.getPoints()));
 
@@ -554,7 +554,7 @@ public class ChatActivity extends AppCompatActivity {
         if (!reset && chat != null)
             messages = chat.getChatMessages();
 
-        chatMessageAdapter = new ChatMessageAdapter(context, messages, playerAnswers);
+        chatMessageAdapter = new ChatMessageAdapter(context, messages, OffsideApplication.playerAnswers);
         ListView chatListView = (ListView) findViewById(R.id.c_chat_list_view);
         chatListView.setAdapter(chatMessageAdapter);
     }
@@ -580,8 +580,8 @@ public class ChatActivity extends AppCompatActivity {
             // this parameter will be null if the user does not answer
             String answerId = questionAnsweredEvent.getAnswerId();
             OffsideApplication.signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer, betSize);
-            if (!playerAnswers.containsKey(questionId))
-                playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize, true));
+            if (!OffsideApplication.playerAnswers.containsKey(questionId))
+                OffsideApplication.playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize, true));
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -612,7 +612,7 @@ public class ChatActivity extends AppCompatActivity {
                 return;
 
             this.player = player;
-            this.playerAnswers = player.getPlayerAnswers();
+            OffsideApplication.playerAnswers = player.getPlayerAnswers();
             scoreTextView.setText(Integer.toString((int) player.getPoints()));
             OffsideApplication.setOffsideCoins(player.getOffsideCoins());
 
