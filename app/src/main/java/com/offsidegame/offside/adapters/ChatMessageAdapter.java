@@ -576,7 +576,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         if (!viewHolder.question.getQuestionType().equals("Debate") && OffsideApplication.getOffsideCoins() >= (i + 1) * OffsideApplication.getGameInfo().getMinBetSize())
                             viewHolder.betSizeOptionsTextViews[i].setVisibility(View.VISIBLE);
                         else {
-                            if (viewHolder.question.getQuestionType().equals("Debate") || OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize()) {
+                            if (OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize()) {
                                 for (Answer answer : viewHolder.question.getAnswers()) {
                                     answer.selectedBetSize = 0;
 
@@ -587,6 +587,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         }
 
                     }
+
+
+
+
 
                     viewHolder.betSizeOptionsTextViews[0].performClick();
 
@@ -672,6 +676,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         viewHolder.incomingBetPanelRoot.setVisibility(View.VISIBLE);
 
                     }
+
+                    //hiding bet panel in case it is not needed
+                    if (viewHolder.question.getQuestionType().equals("Debate"))
+                        viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
+
+
                     //</editor-fold>
 
                 }
@@ -747,6 +757,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     }
 
 
+
                     //</editor-fold>
 
                 }
@@ -754,6 +765,16 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingTimeToAnswerRoot.setVisibility(View.VISIBLE);
                 viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
                 viewHolder.incomingQuestionRoot.setVisibility(View.VISIBLE);
+
+                //hiding bet panel in case it is not needed
+                if (viewHolder.question.getQuestionType().equals("Debate") && isProcessedQuestion) {
+                    viewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
+                    viewHolder.incomingQuestionProcessedQuestionTimeExpiredMessageTextView.setVisibility(View.GONE);
+
+                }
+
+
+
                 //</editor-fold>
             }
 

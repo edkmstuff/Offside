@@ -154,7 +154,7 @@ public class SignalRService extends Service {
 
                                 startSignalR(true);  //sending true to identify a reconnection event
                                 now = new Date();
-                                Thread.sleep(20000);
+                                Thread.sleep(5000);
 
                             }
                             if (hubConnection.getState() == ConnectionState.Connected) {
