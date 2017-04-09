@@ -100,6 +100,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public TextView incomingProcessingQuestionTextView;
         public TextView incomingSelectedAnswerTitleTextView;
         public TextView incomingSelectedAnswerTextView;
+        public LinearLayout incomingProcessingQuestionPossibleReturnValueMessageRoot;
         public TextView incomingSelectedAnswerReturnTextView;
 
 
@@ -195,6 +196,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingProcessingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_processing_question_root);
                 viewHolder.incomingSelectedAnswerTitleTextView = (TextView) convertView.findViewById(R.id.cm_incoming_selected_answer_title_text_view);
                 viewHolder.incomingSelectedAnswerTextView = (TextView) convertView.findViewById(R.id.cm_incoming_selected_answer_text_view);
+                viewHolder.incomingProcessingQuestionPossibleReturnValueMessageRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_processing_question_possible_return_value_message_root);
                 viewHolder.incomingSelectedAnswerReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_selected_answer_return_text_view);
                 viewHolder.incomingQuestionProcessedQuestionTitleTextView = (TextView) convertView.findViewById(R.id.cm_incoming_question_processed_question_title_text_view);
                 viewHolder.incomingQuestionAskedNotEnoughCoinsTextView = (TextView) convertView.findViewById(R.id.cm_incoming_question_asked_not_enough_coins_text_view);
@@ -464,6 +466,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             final boolean isProcessedQuestion = chatMessageType.equals(OffsideApplication.getMessageTypeProcessedQuestion());
             final boolean isClosedQuestion = chatMessageType.equals(OffsideApplication.getMessageTypeClosedQuestion());
             final boolean isPlayerAnsweredQuestion = playerAnswers.containsKey(questionId);
+            final boolean isDebate = viewHolder.question.getQuestionType().equals(OffsideApplication.getQuestionTypeDebate());
 
             resetWidgetsVisibility(viewHolder);
 
@@ -573,8 +576,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                         viewHolder.betSizeOptionsTextViews[i].setVisibility(View.INVISIBLE);
 
-                        if (!viewHolder.question.getQuestionType().equals("Debate") && OffsideApplication.getOffsideCoins() >= (i + 1) * OffsideApplication.getGameInfo().getMinBetSize())
+                        if (OffsideApplication.getOffsideCoins() >= (i + 1) * OffsideApplication.getGameInfo().getMinBetSize()){
                             viewHolder.betSizeOptionsTextViews[i].setVisibility(View.VISIBLE);
+                        }
                         else {
                             if (OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize()) {
                                 for (Answer answer : viewHolder.question.getAnswers()) {
@@ -583,17 +587,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                 }
                             }
 
-
                         }
-
                     }
-
-
-
-
-
-                    viewHolder.betSizeOptionsTextViews[0].performClick();
-
+                    //to set the default betsize 100 only if user has coins
+                    if(OffsideApplication.getOffsideCoins() >= OffsideApplication.getGameInfo().getMinBetSize())
+                        viewHolder.betSizeOptionsTextViews[0].performClick();
 
                     //set the timeToAskQuestion timer
                     //time to answer was attached to chat message and is updated in the server using timer
@@ -610,7 +608,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     viewHolder.incomingTimeToAnswerProgressBar.setMax(progressBarMaxValue);
 
                     //viewHolder.messageId = viewHolder.question.getId();
-
 
                     if (viewHolder.timeToAnswer > 0) {
                         if (viewHolder.countDownTimer != null) {
@@ -663,7 +660,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
 
                     //we don't have enough coins to play
-                    if (OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize()) {
+                    if (OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize() && !isDebate ) {
                         viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
                         viewHolder.incomingQuestionAskedNotEnoughCoinsTextView.setVisibility(View.VISIBLE);
                         for (int j = 0; j < 4; j++) {
@@ -677,9 +674,17 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                     }
 
-                    //hiding bet panel in case it is not needed
-                    if (viewHolder.question.getQuestionType().equals("Debate"))
+                    //hiding elements irrelevant to Debate question
+                    if (isDebate){
+                        viewHolder.incomingQuestionAskedNotEnoughCoinsTextView.setVisibility(View.GONE);
                         viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
+
+                        for(int i=0;i<viewHolder.answerReturnTextViews.length;i++){
+                            viewHolder.answerReturnTextViews[i].setVisibility(View.GONE);
+                        }
+                        viewHolder.incomingProcessingQuestionPossibleReturnValueMessageRoot.setVisibility(View.GONE);
+                    }
+
 
 
                     //</editor-fold>
@@ -766,8 +771,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
                 viewHolder.incomingQuestionRoot.setVisibility(View.VISIBLE);
 
-                //hiding bet panel in case it is not needed
-                if (viewHolder.question.getQuestionType().equals("Debate") && isProcessedQuestion) {
+                //hiding timer
+                if (isDebate && isProcessedQuestion) {
                     viewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
                     viewHolder.incomingQuestionProcessedQuestionTimeExpiredMessageTextView.setVisibility(View.GONE);
 
@@ -894,6 +899,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingTextMessageTextView.setVisibility(View.GONE);
             viewHolder.incomingQuestionRoot.setVisibility(View.GONE);
             viewHolder.incomingProcessingQuestionRoot.setVisibility(View.GONE);
+            viewHolder.incomingProcessingQuestionPossibleReturnValueMessageRoot.setVisibility(View.VISIBLE);
             viewHolder.incomingClosedQuestionRoot.setVisibility(View.GONE);
             viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
             viewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
@@ -903,7 +909,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingGetCoinsMessageRoot.setVisibility(View.GONE);
             viewHolder.incomingGetCoinsPlayerOptionsRoot.setVisibility(View.GONE);
             viewHolder.incomingGetCoinsLoadingRoot.setVisibility(View.GONE);
-            //viewHolder.incomingGetCoinsFeedbackPostVideoWatchRoot.setVisibility(View.GONE);
+
 
 
             for (int i = 0; i < 4; i++) {

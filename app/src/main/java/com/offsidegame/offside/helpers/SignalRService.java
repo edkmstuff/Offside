@@ -69,8 +69,8 @@ public class SignalRService extends Service {
     private Date startReconnecting = null;
 
     //public final String ip = new String("192.168.1.140:8080");
-    //public final String ip = new String("10.0.0.17:8080");
-    public final String ip = new String("offside.somee.com");
+    public final String ip = new String("10.0.0.17:8080");
+    //public final String ip = new String("offside.somee.com");
 
     public Boolean stoppedIntentionally = false;
     private int mId = -1;
@@ -224,14 +224,13 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(new PositionEvent(position));
             }
         }, Position.class);
+
         hub.on("UpdatePlayerData", new SubscriptionHandler1<Player>() {
             @Override
             public void run(Player player) {
                 EventBus.getDefault().post(player);
             }
         }, Player.class);
-
-
     }
 
     private void fireNotification(String messageType, String message) {
@@ -256,39 +255,43 @@ public class SignalRService extends Service {
             player = MediaPlayer.create(getApplicationContext(), soundResource);
             player.start();
 
+            if(!OffsideApplication.isChatActivityVisible()){
 
-            int titleResource = R.string.lbl_new_question_is_waiting_for_you;
-            int textResource = R.string.lbl_click_to_answer;
-            if (isCloseQuestion) {
-                titleResource = R.string.lbl_we_have_an_answer;
-                textResource = R.string.lbl_click_to_view;
-            }
+                int titleResource = R.string.lbl_new_question_is_waiting_for_you;
+                int textResource = R.string.lbl_click_to_answer;
+                if (isCloseQuestion) {
+                    titleResource = R.string.lbl_we_have_an_answer;
+                    textResource = R.string.lbl_click_to_view;
+                }
 
 
-            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(R.mipmap.ic_offside_logo)
-                    .setContentTitle(getString(titleResource))
-                    .setDefaults(NotificationCompat.DEFAULT_ALL)
-                    .setContentText(getString(textResource))
-                    .setPriority(NotificationCompat.PRIORITY_HIGH);
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.mipmap.ic_offside_logo)
+                        .setContentTitle(getString(titleResource))
+                        .setDefaults(NotificationCompat.DEFAULT_ALL)
+                        .setContentText(getString(textResource))
+                        .setPriority(NotificationCompat.PRIORITY_HIGH);
 
 // Creates an explicit intent for an Activity in your app
-            Intent chatIntent = new Intent(this, ChatActivity.class);
+                Intent chatIntent = new Intent(this, ChatActivity.class);
 
 // The stack builder object will contain an artificial back stack for the
 // started Activity.
 // This ensures that navigating backward from the Activity leads out of
 // your application to the Home screen.
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 // Adds the back stack for the Intent (but not the Intent itself)
-            stackBuilder.addParentStack(ChatActivity.class);
+                stackBuilder.addParentStack(ChatActivity.class);
 // Adds the Intent that starts the Activity to the top of the stack
-            stackBuilder.addNextIntent(chatIntent);
-            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            mBuilder.setContentIntent(resultPendingIntent);
-            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                stackBuilder.addNextIntent(chatIntent);
+                PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                mBuilder.setContentIntent(resultPendingIntent);
+                NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 // mId allows you to update the notification later on.
-            mNotificationManager.notify(mId, mBuilder.build());
+                mNotificationManager.notify(mId, mBuilder.build());
+
+            }
+
 
         }
 

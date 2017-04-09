@@ -127,6 +127,8 @@ public class ChatActivity extends AppCompatActivity {
             actionsMenuRoot.setScaleY(0f);
             actionsMenuRoot.setAlpha(0.99f);
             chatActionsButton = (TextView) findViewById(R.id.c_chatActionsButton);
+            actionsMenuRoot.setVisibility(View.GONE);
+
             privateGameNameTextView.setText(privateGameTitle);
             gameTitleTextView.setText(homeTeam + " vs. " + awayTeam);
 
@@ -166,9 +168,18 @@ public class ChatActivity extends AppCompatActivity {
 
                     hideKeypad();
                     if (isActionMenuVisible)
+                    {
                         actionsMenuRoot.animate().scaleX(0f).scaleY(0f);
+                        actionsMenuRoot.setVisibility(View.INVISIBLE);
+
+                    }
                     else
+                    {
+                        actionsMenuRoot.setVisibility(View.VISIBLE);
                         actionsMenuRoot.animate().scaleX(1f).scaleY(1f);
+
+                    }
+
 
                     isActionMenuVisible = !isActionMenuVisible;
 
@@ -419,7 +430,7 @@ public class ChatActivity extends AppCompatActivity {
 
         try {
             super.onResume();
-
+            OffsideApplication.setIsChatActivityVisible(true);
             hideKeypad();
 
             //reset to chat adapter
@@ -434,11 +445,17 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onPause(){
+        super.onPause();
+        OffsideApplication.setIsChatActivityVisible(false);
+    }
 
     @Override
     public void onStop() {
 
         try {
+            OffsideApplication.setIsChatActivityVisible(false);
             EventBus.getDefault().unregister(context);
             super.onStop();
 
