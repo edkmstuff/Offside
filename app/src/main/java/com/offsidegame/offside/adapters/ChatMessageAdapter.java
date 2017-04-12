@@ -134,6 +134,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 //        public TextView incomingGetCoinsRewardValueTextView;
 //        public TextView incomingGetCoinsUpdatedOffsideCoinsValueTextView;
 
+        //missed question
+        public LinearLayout incomingMissedQuestionRoot;
+        public TextView incomingMissedQuestionTextView;
+
         //</editor-fold>
 
     }
@@ -232,6 +236,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 //
 //                viewHolder.incomingGetCoinsRewardValueTextView = (TextView) convertView.findViewById(R.id.cm_incoming_get_coins_reward_value_text_view);
 //                viewHolder.incomingGetCoinsUpdatedOffsideCoinsValueTextView = (TextView) convertView.findViewById(R.id.cm_incoming_get_coins_updated_offside_coins_value_text_view);
+
+                viewHolder.incomingMissedQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_missed_question_root);
+                viewHolder.incomingMissedQuestionTextView = (TextView) convertView.findViewById(R.id.cm_incoming_missed_question_text_view);
 
                 //</editor-fold>
 
@@ -467,41 +474,56 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             final boolean isClosedQuestion = chatMessageType.equals(OffsideApplication.getMessageTypeClosedQuestion());
             final boolean isPlayerAnsweredQuestion = playerAnswers.containsKey(questionId);
             final boolean isDebate = viewHolder.question.getQuestionType().equals(OffsideApplication.getQuestionTypeDebate());
+            final boolean isWaitingForAnswers = viewHolder.chatMessage.isWaitingForAnswers();
 
             resetWidgetsVisibility(viewHolder);
 
             //open question but user already answered it
-            if (isAskedQuestion && isPlayerAnsweredQuestion) {
-                final String userAnswerId = playerAnswers.get(questionId).getAnswerId();
-                int betSize = playerAnswers.get(questionId).getBetSize();
-                int answerNumber = getAnswerNumber(viewHolder.question, userAnswerId);
-                if (answerNumber == 0)
+            if (isAskedQuestion) {
+
+                if(isPlayerAnsweredQuestion){
+
+                    final String userAnswerId = playerAnswers.get(questionId).getAnswerId();
+                    int betSize = playerAnswers.get(questionId).getBetSize();
+                    int answerNumber = getAnswerNumber(viewHolder.question, userAnswerId);
+                    if (answerNumber == 0)
+                        return;
+
+                    final Answer answerOfTheUser = viewHolder.question.getAnswers()[answerNumber - 1];
+
+                    //set values to widgets
+                    viewHolder.incomingProcessingQuestionTextView.setText(viewHolder.question.getQuestionText());
+                    viewHolder.incomingSelectedAnswerTextView.setText(answerOfTheUser.getAnswerText());
+
+                    int returnValue = (int) (betSize * answerOfTheUser.getPointsMultiplier());
+                    viewHolder.incomingSelectedAnswerReturnTextView.setText(String.valueOf(returnValue));
+
+                    final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
+                    viewHolder.incomingSelectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
+
+                    if (playerAnswers.get(questionId).isRandomlySelected())
+                        viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_randomly_selected_answer_title);
+                    else
+                        viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_user_selected_answer_title);
+
+                    //visibility set
+                    viewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
+                    viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
                     return;
 
-                final Answer answerOfTheUser = viewHolder.question.getAnswers()[answerNumber - 1];
+                }
 
-                //set values to widgets
-                viewHolder.incomingProcessingQuestionTextView.setText(viewHolder.question.getQuestionText());
-                viewHolder.incomingSelectedAnswerTextView.setText(answerOfTheUser.getAnswerText());
+                else if(!isWaitingForAnswers){
+                    viewHolder.incomingMissedQuestionTextView.setText(viewHolder.question.getQuestionText());
+                    viewHolder.incomingMissedQuestionRoot.setVisibility(View.VISIBLE);
+                    viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
+                    return;
 
-                int returnValue = (int) (betSize * answerOfTheUser.getPointsMultiplier());
-                viewHolder.incomingSelectedAnswerReturnTextView.setText(String.valueOf(returnValue));
-
-                final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
-                viewHolder.incomingSelectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
-
-                if (playerAnswers.get(questionId).isRandomlySelected())
-                    viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_randomly_selected_answer_title);
-                else
-                    viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_user_selected_answer_title);
-
-                //visibility set
-
-                viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
-                viewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
+                }
 
 
-                return;
+
+
             }
 
             final int minBetSize = OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize() ? 0 : OffsideApplication.getGameInfo().getMinBetSize();
@@ -909,6 +931,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingGetCoinsMessageRoot.setVisibility(View.GONE);
             viewHolder.incomingGetCoinsPlayerOptionsRoot.setVisibility(View.GONE);
             viewHolder.incomingGetCoinsLoadingRoot.setVisibility(View.GONE);
+            viewHolder.incomingMissedQuestionRoot.setVisibility(View.GONE);
 
 
 

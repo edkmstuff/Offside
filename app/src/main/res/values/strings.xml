@@ -43,10 +43,10 @@
     <string name="crash_toast_text">Something went wrong... we are sending the info to the developers...</string>
     <string name="lbl_you_can_earn">רווח אפשרי</string>
     <string name="lbl_correct_answer_feedback">צדקת!</string>
-    <string name="lbl_wrong_answer_feedback">אופס טעית...</string>
+    <string name="lbl_wrong_answer_feedback">הפעם טעית...</string>
     <string name="lbl_you_earned">זכית ב-</string>
     <string name="lbl_points">נקודות</string>
-    <string name="lbl_you_didnt_earn_points">הפעם לא זכית בנקודות</string>
+    <string name="lbl_you_didnt_earn_points">לא זכית בנקודות</string>
     <string name="lbl_bet_level">גובה הימור</string>
     <string name="lbl_balance">יתרה</string>
     <string name="lbl_wrong_answer_encourage_feedback">לא נורא אולי בשאלה הבאה</string>
@@ -60,7 +60,7 @@
     <string name="lbl_send">שלח</string>
     <string name="lbl_how_others_answered">כך ענו כולם</string>
     <string name="lbl_not_enough_coins_to_play">אין לך מספיק מטבעות כדי להשתתף</string>
-    <string name="lbl_question_time_expired_message">מייד תישלח התשובה הנכונה</string>
+    <string name="lbl_question_time_expired_message">תם הזמן תשובה נשלחה</string>
     <string name="lbl_we_have_an_answer">יש לנו תשובה</string>
     <string name="lbl_in_few_seconds_you_will_see_others_answers">בעוד מספר שניות תראה כיצד חושבים כולם...</string>
     <string name="lbl_type_in_game_code">הזן קוד משחק פרטי</string>

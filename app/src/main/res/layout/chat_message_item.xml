@@ -49,7 +49,7 @@
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"
                     android:textColor="@color/chatText"
-                    android:visibility="visible"/>
+                    android:visibility="gone"/>
 
                 <!-- Get Coins message Root-->
                 <LinearLayout
@@ -64,7 +64,7 @@
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"
                     android:textColor="@color/chatText"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <!--player options to obtain coins-->
                     <LinearLayout
@@ -225,10 +225,6 @@
 
                 </LinearLayout>
 
-
-
-
-
                 <!--Asked or Processed question root-->
                 <LinearLayout
                     android:id="@+id/cm_incoming_question_root"
@@ -241,7 +237,7 @@
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"
                     android:textColor="@color/chatText"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <LinearLayout
                         android:id="@+id/cm_incoming_time_to_answer_root"
@@ -253,7 +249,7 @@
                             android:id="@+id/cm_incoming_time_to_answer_text_display_text_view"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="10:00"
+                            android:text="0:00"
                             android:layout_weight="2"
                             android:gravity="center_horizontal"
                             android:layout_gravity="center"
@@ -614,7 +610,7 @@
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"
                     android:textColor="@color/chatText"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
 
                     <TextView
@@ -697,6 +693,43 @@
                         android:text="@string/lbl_in_few_seconds_you_will_see_others_answers" />
 
                 </LinearLayout>
+
+                <!--Missed question root-->
+                <LinearLayout
+                    android:id="@+id/cm_incoming_missed_question_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/shape_bg_incoming_bubble"
+                    android:orientation="vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:textColor="@color/chatText"
+                    android:visibility="visible">
+
+
+                    <TextView
+                        android:id="@+id/cm_incoming_missed_question_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
+                        android:background="@color/colorWhite"
+                        android:gravity="center"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="which team will score next?"
+                        android:textColor="@color/colorBlack"
+                        android:textSize="@dimen/OffsideMediumText" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:padding="10dp"
+                        android:text="You missed this question"
+                        android:textColor="@color/colorBlack" />
+                    </LinearLayout>
 
                 <!--closed question root-->
                 <LinearLayout
