@@ -5,48 +5,77 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/chatPrimary"
-    tools:context="com.offsidegame.offside.activities.SlotActivity"
     android:orientation="vertical"
-    >
+    tools:context="com.offsidegame.offside.activities.SlotActivity">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/chatPrimary"
+        android:background="@drawable/slot_machine_frame"
         android:gravity="center"
         android:orientation="horizontal"
-        android:weightSum="3"
-        android:padding="50dp">
+        android:weightSum="3">
 
-
-
-        <ImageView
-            android:id="@+id/img1"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/slot_adidas"
+            android:gravity="center">
 
-            />
+            <ImageView
+                android:id="@+id/img1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-        <ImageView
-            android:id="@+id/img2"
+                android:src="@drawable/slot_adidas"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/slot_adidas"
+            android:gravity="center">
 
-            />
+            <ImageView
+                android:id="@+id/img2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/slot_adidas"/>
+        </LinearLayout>
 
-        <ImageView
-            android:id="@+id/img3"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/slot_adidas"
+            android:gravity="center">
 
-            />
+            <ImageView
+                android:id="@+id/img3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:src="@drawable/slot_adidas"/>
+        </LinearLayout>
+
+
+        <!--<ImageView-->
+        <!--android:id="@+id/img2"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:src="@drawable/slot_adidas"-->
+
+        <!--/>-->
+
+        <!--<ImageView-->
+        <!--android:id="@+id/img3"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_weight="1"-->
+        <!--android:src="@drawable/slot_adidas"-->
+
+        <!--/>-->
 
 
     </LinearLayout>
@@ -54,29 +83,26 @@
     <Button
         android:id="@+id/s_start_slot_button"
         android:layout_width="match_parent"
-        android:layout_margin="10dp"
         android:layout_height="wrap_content"
-        android:text="@string/lbl_start_slot"
         android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
         android:background="@color/answer3backgroundColor"
-        android:textColor="@color/colorWhite"
-        android:padding="5dp"
         android:gravity="center"
-        />
+        android:padding="5dp"
+        android:text="@string/lbl_start_slot"
+        android:textColor="@color/colorWhite" />
+
     <Button
         android:id="@+id/s_go_back_to_chat_button"
         android:layout_width="match_parent"
-        android:layout_margin="10dp"
         android:layout_height="wrap_content"
-        android:text="@string/lbl_back_to_game"
         android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
         android:background="@color/answer3backgroundColor"
-        android:textColor="@color/colorWhite"
-        android:padding="5dp"
         android:gravity="center"
-        />
-
-
+        android:padding="5dp"
+        android:text="@string/lbl_back_to_game"
+        android:textColor="@color/colorWhite" />
 
 
 </LinearLayout>
