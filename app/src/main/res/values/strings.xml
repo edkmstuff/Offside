@@ -82,6 +82,12 @@
     <string name="lbl_buy_offside_coins">רכוש מטבעות</string>
     <string name="lbl_loading_video">טוען וידאו...</string>
     <string name="lbl_leave_game">צא מהמשחק</string>
+    <string name="lbl_start_slot">לחץ כאן כדי להגריל</string>
+    <string name="lbl_back_to_game">חזור למשחק</string>
+    <string name="lbl_well_done_you_earned_1000_coins">כל הכבוד! הרווחת 1000 מטבעות</string>
+    <string name="lbl_well_done_you_earned_500_coins">כל הכבוד! הרווחת 500 מטבעות</string>
+    <string name="lbl_you_didnt_earn_coins">לא זכית במטבעות הפעם... לא נורא, תוכל לנסות שוב בעוד 5 דקות</string>
+    <string name="lbl_try_again">נסה שוב</string>
 
 
 </resources>

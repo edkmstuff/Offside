@@ -1,6 +1,7 @@
 package com.offsidegame.offside.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,8 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.Wheel;
+import com.offsidegame.offside.models.OffsideApplication;
 
 import java.util.Random;
 
@@ -22,8 +26,12 @@ public class SlotActivity extends AppCompatActivity {
     private TextView msg;
     private ImageView img1, img2, img3;
     private Wheel wheel1, wheel2, wheel3;
-    private Button btn;
+    private Button startSlotButton;
+    private Button goBackToChatButton;
     private boolean isStarted;
+    private int frameDuration = 200;
+    private int maxWaitBeforeWheelStartRolling = 500;
+    private int timeToStopSlotMachine = 5000;
 
     public static final Random RANDOM = new Random();
 
@@ -41,9 +49,23 @@ public class SlotActivity extends AppCompatActivity {
         img1 = (ImageView) findViewById(R.id.img1);
         img2 = (ImageView) findViewById(R.id.img2);
         img3 = (ImageView) findViewById(R.id.img3);
-        btn = (Button) findViewById(R.id.btn);
+        startSlotButton = (Button) findViewById(R.id.s_start_slot_button);
+        goBackToChatButton = (Button) findViewById(R.id.s_go_back_to_chat_button);
 
-        btn.setOnClickListener(new View.OnClickListener() {
+        goBackToChatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(context,ChatActivity.class);
+                startActivity(intent);
+            }
+        }
+
+
+        );
+
+        goBackToChatButton.setVisibility(View.GONE);
+
+        startSlotButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isStarted) {
@@ -61,7 +83,7 @@ public class SlotActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                    }, 500, randomLong(0, 5000));
+                    }, frameDuration, randomLong(0, maxWaitBeforeWheelStartRolling));
 
                     wheel1.start();
 
@@ -75,7 +97,7 @@ public class SlotActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                    }, 500, randomLong(0, 5000));
+                    }, frameDuration, randomLong(0, maxWaitBeforeWheelStartRolling));
 
                     wheel2.start();
 
@@ -89,11 +111,11 @@ public class SlotActivity extends AppCompatActivity {
                                 }
                             });
                         }
-                    }, 500, randomLong(0, 5000));
+                    }, frameDuration, randomLong(0, maxWaitBeforeWheelStartRolling));
 
                     wheel3.start();
 
-                    btn.setVisibility(View.GONE);
+                    startSlotButton.setVisibility(View.GONE);
                     isStarted = true;
 
 
@@ -102,7 +124,7 @@ public class SlotActivity extends AppCompatActivity {
                         public void run() {
                             stopSlot();
                         }
-                    }, 20000);
+                    }, timeToStopSlotMachine);
 
 
 
@@ -119,15 +141,42 @@ public class SlotActivity extends AppCompatActivity {
         wheel2.stopWheel();
         wheel3.stopWheel();
 
-        if (wheel1.currentIndex == wheel2.currentIndex && wheel2.currentIndex == wheel3.currentIndex)
-            Toast.makeText(context, "כל הכבוד! הרווחת 1000 מטבעות", Toast.LENGTH_LONG).show();
-        else if (wheel1.currentIndex == wheel2.currentIndex || wheel2.currentIndex == wheel3.currentIndex || wheel1.currentIndex == wheel3.currentIndex)
-            Toast.makeText(context, "כל הכבוד! הרווחת 500 מטבעות", Toast.LENGTH_LONG).show();
-        else
-            Toast.makeText(context, "לא זכית במטבעות הפעם... לא נורא, תוכל לנסות שוב בעוד 5 דקות", Toast.LENGTH_LONG).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
 
-        btn.setText("Start");
-        btn.setVisibility(View.VISIBLE);
-        isStarted = false;
+                String command = null;
+
+                if (wheel1.currentIndex == wheel2.currentIndex && wheel2.currentIndex == wheel3.currentIndex){
+                    command = "!reload1000";
+                    Toast.makeText(context, R.string.lbl_well_done_you_earned_1000_coins, Toast.LENGTH_LONG).show();
+                }
+
+                else if (wheel1.currentIndex == wheel2.currentIndex || wheel2.currentIndex == wheel3.currentIndex || wheel1.currentIndex == wheel3.currentIndex) {
+                    command = "!reload500";
+                    Toast.makeText(context, R.string.lbl_well_done_you_earned_500_coins, Toast.LENGTH_LONG).show();
+                }
+                else
+                    Toast.makeText(context, R.string.lbl_you_didnt_earn_coins, Toast.LENGTH_LONG).show();
+
+                startSlotButton.setText(R.string.lbl_try_again);
+                startSlotButton.setVisibility(View.VISIBLE);
+                goBackToChatButton.setVisibility(View.VISIBLE);
+                isStarted = false;
+
+                if(OffsideApplication.isBoundToSignalRService && command != null)
+                {
+                    String gameId = OffsideApplication.getGameInfo().getGameId();
+                    String gameCode = OffsideApplication.getGameInfo().getPrivateGameCode();
+                    FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
+                    String playerId = player.getUid();
+                    OffsideApplication.signalRService.sendChatMessage(gameId, gameCode, command, playerId);
+                }
+
+            }
+        }, frameDuration * 2);
+
+
+
     }
 }

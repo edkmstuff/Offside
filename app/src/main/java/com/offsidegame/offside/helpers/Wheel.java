@@ -2,11 +2,15 @@ package com.offsidegame.offside.helpers;
 
 import com.offsidegame.offside.R;
 
+import java.util.Random;
+
 /**
  * Created by KFIR on 4/15/2017.
  */
 
 public class Wheel extends Thread {
+
+    public static final Random RANDOM = new Random();
 
     public interface WheelListener {
         void newImage(int img);
@@ -38,7 +42,8 @@ public class Wheel extends Thread {
     }
 
     public void nextImg() {
-        currentIndex++;
+        //currentIndex++;
+        currentIndex = (int)(RANDOM.nextDouble()*imgs.length);
         if (currentIndex == imgs.length)
             currentIndex = 0;
     }
@@ -47,7 +52,8 @@ public class Wheel extends Thread {
     public void run() {
         try {
             Thread.sleep(startIn);
-        } catch (InterruptedException e) {
+        }
+        catch (InterruptedException e) {
 
         }
 

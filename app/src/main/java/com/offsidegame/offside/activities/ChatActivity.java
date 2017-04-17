@@ -138,6 +138,19 @@ public class ChatActivity extends AppCompatActivity {
 
             actionExitGameRoot = (LinearLayout) findViewById(R.id.c_action_exit_game_root);
 
+            chatMessageEditText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (isActionMenuVisible)
+                    {
+                        actionsMenuRoot.animate().scaleX(0f).scaleY(0f);
+                        actionsMenuRoot.setVisibility(View.INVISIBLE);
+
+                    }
+
+                }
+            });
+
 
             chatSendTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -241,7 +254,7 @@ public class ChatActivity extends AppCompatActivity {
                             if (!isActionMenuVisible)
                                 return;
 
-                            if (command == "!share") {
+                            if (command.equals("!share")) {
 
                                 PackageManager pm = context.getPackageManager();
                                 boolean isWhatsappInstalled = isPackageInstalled("com.whatsapp", pm);
@@ -257,6 +270,11 @@ public class ChatActivity extends AppCompatActivity {
                                 }
 
                                 startActivity(sendIntent);
+
+                            } else if (command.equals("!reload")) {
+                                Intent intent = new Intent(context,SlotActivity.class);
+                                startActivity(intent);
+
 
                             } else {
                                 OffsideApplication.signalRService.sendChatMessage(gameId, gameCode, command, playerId);
