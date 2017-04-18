@@ -88,6 +88,8 @@
     <string name="lbl_well_done_you_earned_500_coins">כל הכבוד! הרווחת 500 מטבעות</string>
     <string name="lbl_you_didnt_earn_coins">לא זכית במטבעות הפעם... לא נורא, תוכל לנסות שוב</string>
     <string name="lbl_try_again">נסה שוב</string>
+    <string name="lbl_you_missed_this_question">לא היית מחובר בזמן שנשלחה השאלה</string>
+    <string name="lbl_feeling_lucky">הגרל מטבעות (סיכוי 1:10)</string>
 
 
 </resources>

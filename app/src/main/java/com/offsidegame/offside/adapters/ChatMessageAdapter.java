@@ -1,6 +1,7 @@
 package com.offsidegame.offside.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 
 import android.graphics.drawable.BitmapDrawable;
@@ -29,6 +30,7 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.activities.SlotActivity;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
 import com.offsidegame.offside.helpers.RoundImage;
@@ -127,6 +129,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public TextView incomingGetCoinsNotEnoughCoinsMessageTextView;
         public TextView incomingGetCoinsWatchRewardVideoActionTextView;
         public TextView incomingGetCoinsBuyCoinsActionTextView;
+        public TextView incomingGetCoinsSlotMachineActionTextView;
         public LinearLayout incomingGetCoinsLoadingRoot;
         public LinearLayout incomingGetCoinsPlayerOptionsRoot;
 
@@ -227,6 +230,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingGetCoinsMessageRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_get_coins_message_root);
                 viewHolder.incomingGetCoinsWatchRewardVideoActionTextView = (TextView) convertView.findViewById(R.id.cm_incoming_get_coins_watch_reward_video_action_text_view);
                 viewHolder.incomingGetCoinsBuyCoinsActionTextView = (TextView) convertView.findViewById(R.id.cm_incoming_get_coins_buy_coins_action_text_view);
+                viewHolder.incomingGetCoinsSlotMachineActionTextView = (TextView) convertView.findViewById(R.id.cm_incoming_get_coins_slot_machine_action_text_view);
                 viewHolder.incomingGetCoinsNotEnoughCoinsMessageTextView = (TextView) convertView.findViewById(R.id.cm_incoming_get_coins_not_enough_coins_message_text_view);
 
                 viewHolder.incomingGetCoinsLoadingRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_get_coins_loading_root);
@@ -357,6 +361,15 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     //ToDo: add IAP logic here
                 }
             });
+
+            viewHolder.incomingGetCoinsSlotMachineActionTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, SlotActivity.class);
+                    getContext().startActivity(intent);
+                }
+            });
+
 
             // Use an activity context to get the rewarded video instance.
             rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(context);
