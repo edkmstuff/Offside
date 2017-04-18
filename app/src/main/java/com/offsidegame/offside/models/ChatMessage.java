@@ -1,5 +1,7 @@
 package com.offsidegame.offside.models;
 
+import android.os.CountDownTimer;
+
 import java.util.Date;
 
 /**
@@ -28,8 +30,7 @@ public class ChatMessage {
     @com.google.gson.annotations.SerializedName("TLTA")
     private int timeLeftToAnswer;
 
-    @com.google.gson.annotations.SerializedName("IWFA")
-    private boolean isWaitingForAnswers;
+
 
 //Todo: remove when remove dummy
 //    public ChatMessage(String messageText, boolean isIncoming){
@@ -77,7 +78,25 @@ public class ChatMessage {
         this.timeLeftToAnswer = timeLeftToAnswer;
     }
 
-    public boolean isWaitingForAnswers() {
-        return isWaitingForAnswers;
+
+
+
+    public void startCountdownTimer(){
+        if(messageType.equals(OffsideApplication.getMessageTypeAskedQuestion()) || messageType.equals(OffsideApplication.getMessageTypeProcessedQuestion())) {
+            new CountDownTimer(timeLeftToAnswer, 100) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    timeLeftToAnswer = (int) millisUntilFinished;
+
+                }
+
+                @Override
+                public void onFinish() {
+                    //user did not answer this question, we select random answer
+                    timeLeftToAnswer= 0;
+                }
+            }.start();
+
+        }
     }
 }

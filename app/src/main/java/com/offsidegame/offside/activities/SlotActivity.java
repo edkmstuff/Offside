@@ -72,6 +72,7 @@ public class SlotActivity extends AppCompatActivity {
                     stopSlot();
 
                 } else {
+                    goBackToChatButton.setVisibility(View.GONE);
 
                     wheel1 = new Wheel(new Wheel.WheelListener() {
                         @Override

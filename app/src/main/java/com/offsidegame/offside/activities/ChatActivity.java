@@ -535,7 +535,6 @@ public class ChatActivity extends AppCompatActivity {
 
             chat = new Chat(chatEvent.getChat());
 
-
             EventBus.getDefault().post(new PositionEvent(chat.getPosition()));
 
             player = chat.getPlayer();
@@ -559,6 +558,7 @@ public class ChatActivity extends AppCompatActivity {
 
         try {
             ChatMessage message = chatMessageEvent.getChatMessage();
+            message.startCountdownTimer();
 
             boolean isAdded = chat.addMessageIfNotAlreadyExists(message);
 

@@ -27,7 +27,9 @@ public class Chat {
         chatMessagesDictionary= new HashMap<>();
         for(ChatMessage cm : chat.getChatMessages() ){
             chatMessagesDictionary.put(cm.getId(),cm);
+            cm.startCountdownTimer();
         }
+
 
 
     }

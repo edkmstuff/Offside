@@ -246,6 +246,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
+                if(viewHolder.countDownTimer != null){
+                    viewHolder.countDownTimer.cancel();
+                    viewHolder.countDownTimer= null;
+                    viewHolder.incomingTimeToAnswerTextDisplayTextView.setText("00:00");
+                }
             }
 
             viewHolder.chatMessage = getItem(position);
@@ -474,7 +479,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             final boolean isClosedQuestion = chatMessageType.equals(OffsideApplication.getMessageTypeClosedQuestion());
             final boolean isPlayerAnsweredQuestion = playerAnswers.containsKey(questionId);
             final boolean isDebate = viewHolder.question.getQuestionType().equals(OffsideApplication.getQuestionTypeDebate());
-            final boolean isWaitingForAnswers = viewHolder.chatMessage.isWaitingForAnswers();
+            final boolean isOpenForAnswering = viewHolder.chatMessage.getTimeLeftToAnswer()>0;
+
 
             resetWidgetsVisibility(viewHolder);
 
@@ -513,16 +519,13 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 }
 
-                else if(!isWaitingForAnswers){
+                else if(!isOpenForAnswering){
                     viewHolder.incomingMissedQuestionTextView.setText(viewHolder.question.getQuestionText());
                     viewHolder.incomingMissedQuestionRoot.setVisibility(View.VISIBLE);
                     viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
                     return;
 
                 }
-
-
-
 
             }
 

@@ -60,7 +60,7 @@
     <string name="lbl_send">שלח</string>
     <string name="lbl_how_others_answered">כך ענו כולם</string>
     <string name="lbl_not_enough_coins_to_play">אין לך מספיק מטבעות כדי להשתתף</string>
-    <string name="lbl_question_time_expired_message">תם הזמן תשובה נשלחה</string>
+    <string name="lbl_question_time_expired_message">תם הזמן לשאלה זו</string>
     <string name="lbl_we_have_an_answer">יש לנו תשובה</string>
     <string name="lbl_in_few_seconds_you_will_see_others_answers">בעוד מספר שניות תראה כיצד חושבים כולם...</string>
     <string name="lbl_type_in_game_code">הזן קוד משחק פרטי</string>
@@ -86,7 +86,7 @@
     <string name="lbl_back_to_game">חזור למשחק</string>
     <string name="lbl_well_done_you_earned_1000_coins">כל הכבוד! הרווחת 1000 מטבעות</string>
     <string name="lbl_well_done_you_earned_500_coins">כל הכבוד! הרווחת 500 מטבעות</string>
-    <string name="lbl_you_didnt_earn_coins">לא זכית במטבעות הפעם... לא נורא, תוכל לנסות שוב בעוד 5 דקות</string>
+    <string name="lbl_you_didnt_earn_coins">לא זכית במטבעות הפעם... לא נורא, תוכל לנסות שוב</string>
     <string name="lbl_try_again">נסה שוב</string>
 
 
