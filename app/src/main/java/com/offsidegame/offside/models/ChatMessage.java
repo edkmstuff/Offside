@@ -30,6 +30,9 @@ public class ChatMessage {
     @com.google.gson.annotations.SerializedName("TLTA")
     private int timeLeftToAnswer;
 
+    @com.google.gson.annotations.SerializedName("SBUN")
+    private String sentByUserName;
+
 
 
 //Todo: remove when remove dummy
@@ -72,6 +75,10 @@ public class ChatMessage {
 
     public String getId() {
         return id;
+    }
+
+    public String getSentByUserName() {
+        return sentByUserName;
     }
 
     public void setTimeLeftToAnswer(int timeLeftToAnswer) {

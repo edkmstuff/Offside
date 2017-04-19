@@ -81,6 +81,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public LinearLayout incomingMessagesRoot;
         public ImageView incomingProfilePictureImageView;
         public TextView incomingTextMessageTextView;
+        public TextView outgoingUserSentTextView;
+        public TextView incomingUserSentTextView;
 
         public LinearLayout incomingQuestionRoot;
         public TextView incomingQuestionTextView;
@@ -168,6 +170,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingMessagesRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_messages_root);
                 viewHolder.incomingProfilePictureImageView = (ImageView) convertView.findViewById(R.id.cm_incoming_profile_picture_image_view);
                 viewHolder.incomingTextMessageTextView = (TextView) convertView.findViewById(R.id.cm_incoming_text_message_text_view);
+                viewHolder.outgoingUserSentTextView = (TextView) convertView.findViewById(R.id.cm_outgoing_user_sent_text_view);
+                viewHolder.incomingUserSentTextView = (TextView) convertView.findViewById(R.id.cm_incoming_user_sent_text_view);
 
                 viewHolder.incomingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_question_root);
                 viewHolder.incomingQuestionTextView = (TextView) convertView.findViewById(R.id.cm_incoming_question_text_view);
@@ -310,6 +314,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             if (viewHolder.chatMessage.isIncoming()) {
                 loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
                 viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
+                viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
                 viewHolder.incomingTextMessageTextView.setText(viewHolder.chatMessage.getMessageText());
 
                 //visibility set
@@ -319,6 +324,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             } else {
                 loadFbImage(viewHolder.outgoingProfilePictureImageView, profilePictureUri);
                 viewHolder.outgoingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
+                viewHolder.outgoingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
                 viewHolder.outgoingTextMessageTextView.setText(viewHolder.chatMessage.getMessageText());
 
                 //visibility set
@@ -344,6 +350,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
             viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
+            viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
+
             viewHolder.incomingGetCoinsNotEnoughCoinsMessageTextView.setText(viewHolder.chatMessage.getMessageText());
 
             viewHolder.incomingGetCoinsWatchRewardVideoActionTextView.setOnClickListener(new View.OnClickListener() {
@@ -484,6 +492,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
             final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
             viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
+            viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
             String chatMessageType = viewHolder.chatMessage.getMessageType();
 
             //bind Question object to the ui elements
@@ -856,13 +865,15 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 if (isUserAnswerCorrect) {
                     viewHolder.incomingFeedbackPlayerTextView.setVisibility(View.GONE);
 
-                    //viewHolder.incomingPlayerAnswerRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_correct);
-                    viewHolder.incomingPlayerAnswerRoot.setBackgroundColor(Color.GREEN);
+                    viewHolder.incomingClosedQuestionRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_correct);
+
+
+
                     //viewHolder.incomingPlayerAnswerRoot.setBackground(ContextCompat.getDrawable(context,R.drawable.shape_bg_incoming_bubble_correct));
                 } else {
                     //viewHolder.incomingPlayerAnswerRoot.getBackground().mutate();
                     //viewHolder.incomingPlayerAnswerRoot.setBackground(ContextCompat.getDrawable(context,R.drawable.shape_bg_incoming_bubble_wrong));
-                    viewHolder.incomingPlayerAnswerRoot.setBackgroundColor(Color.RED);
+                    viewHolder.incomingClosedQuestionRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_wrong);
                     viewHolder.incomingPlayerAnswerTextView.setText(getAnswerText(viewHolder.question,userAnswerIdentifier.getAnswerId()));
                     viewHolder.incomingFeedbackPlayerTextView.setText(context.getString(R.string.lbl_wrong_answer_encourage_feedback));
                     viewHolder.incomingPlayerAnswerRoot.setVisibility(View.VISIBLE);
