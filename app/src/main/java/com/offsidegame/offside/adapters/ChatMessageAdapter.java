@@ -4,10 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import android.util.Log;
@@ -113,6 +120,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public TextView incomingCorrectAnswerReturnTextView;
         public TextView incomingFeedbackPlayerTextView;
         public TextView incomingTimeSentTextView;
+        public LinearLayout incomingPlayerAnswerRoot;
+        public TextView incomingPlayerAnswerTextView;
+
 
         public LinearLayout outgoingMessagesRoot;
         public ImageView outgoingProfilePictureImageView;
@@ -133,9 +143,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public LinearLayout incomingGetCoinsLoadingRoot;
         public LinearLayout incomingGetCoinsPlayerOptionsRoot;
 
-//        public LinearLayout incomingGetCoinsFeedbackPostVideoWatchRoot;
-//        public TextView incomingGetCoinsRewardValueTextView;
-//        public TextView incomingGetCoinsUpdatedOffsideCoinsValueTextView;
 
         //missed question
         public LinearLayout incomingMissedQuestionRoot;
@@ -217,8 +224,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingCorrectAnswerTextView = (TextView) convertView.findViewById(R.id.cm_incoming_correct_answer_text_view);
                 viewHolder.incomingCorrectAnswerReturnTextView = (TextView) convertView.findViewById(R.id.cm_incoming_correct_answer_return_text_view);
                 viewHolder.incomingFeedbackPlayerTextView = (TextView) convertView.findViewById(R.id.cm_incoming_feedback_player_text_view);
-
                 viewHolder.incomingTimeSentTextView = (TextView) convertView.findViewById(R.id.cm_incoming_time_sent_text_view);
+
+                viewHolder.incomingPlayerAnswerRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_player_answer_root);;
+                viewHolder.incomingPlayerAnswerTextView = (TextView) convertView.findViewById(R.id.cm_incoming_player_answer_text_view);
 
 
                 viewHolder.outgoingMessagesRoot = (LinearLayout) convertView.findViewById(R.id.cm_outgoing_messages_root);
@@ -235,11 +244,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 viewHolder.incomingGetCoinsLoadingRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_get_coins_loading_root);
                 viewHolder.incomingGetCoinsPlayerOptionsRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_get_coins_player_options_root);
-
-//                viewHolder.incomingGetCoinsFeedbackPostVideoWatchRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_get_coins_feedback_post_video_watch_root);
-//
-//                viewHolder.incomingGetCoinsRewardValueTextView = (TextView) convertView.findViewById(R.id.cm_incoming_get_coins_reward_value_text_view);
-//                viewHolder.incomingGetCoinsUpdatedOffsideCoinsValueTextView = (TextView) convertView.findViewById(R.id.cm_incoming_get_coins_updated_offside_coins_value_text_view);
 
                 viewHolder.incomingMissedQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_missed_question_root);
                 viewHolder.incomingMissedQuestionTextView = (TextView) convertView.findViewById(R.id.cm_incoming_missed_question_text_view);
@@ -842,21 +846,26 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 boolean isUserAnswerCorrect = correctAnswer.getId().equals(userAnswerIdentifier.getAnswerId());
                 int userBetSize = userAnswerIdentifier.getBetSize();
-                int answerNumber = getAnswerNumber(viewHolder.question, correctAnswer.getId());
                 int userReturnValue = (int) (correctAnswer.getPointsMultiplier() * userBetSize);
 
-                final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
-
                 viewHolder.incomingClosedQuestionTextView.setText(viewHolder.question.getQuestionText());
-
                 viewHolder.incomingCorrectWrongTitleTextView.setText(isUserAnswerCorrect ? context.getString(R.string.lbl_correct_answer_feedback) : context.getString(R.string.lbl_wrong_answer_feedback));
                 viewHolder.incomingCorrectAnswerTextView.setText(correctAnswer.getAnswerText());
-                viewHolder.incomingCorrectAnswerTextView.setBackgroundResource(backgroundColorResourceId);
+
                 viewHolder.incomingCorrectAnswerReturnTextView.setText(isUserAnswerCorrect ? context.getString(R.string.lbl_you_earned) + " " + userReturnValue + " " + context.getString(R.string.lbl_points) : context.getString(R.string.lbl_you_didnt_earn_points));
                 if (isUserAnswerCorrect) {
                     viewHolder.incomingFeedbackPlayerTextView.setVisibility(View.GONE);
+
+                    //viewHolder.incomingPlayerAnswerRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_correct);
+                    viewHolder.incomingPlayerAnswerRoot.setBackgroundColor(Color.GREEN);
+                    //viewHolder.incomingPlayerAnswerRoot.setBackground(ContextCompat.getDrawable(context,R.drawable.shape_bg_incoming_bubble_correct));
                 } else {
+                    //viewHolder.incomingPlayerAnswerRoot.getBackground().mutate();
+                    //viewHolder.incomingPlayerAnswerRoot.setBackground(ContextCompat.getDrawable(context,R.drawable.shape_bg_incoming_bubble_wrong));
+                    viewHolder.incomingPlayerAnswerRoot.setBackgroundColor(Color.RED);
+                    viewHolder.incomingPlayerAnswerTextView.setText(getAnswerText(viewHolder.question,userAnswerIdentifier.getAnswerId()));
                     viewHolder.incomingFeedbackPlayerTextView.setText(context.getString(R.string.lbl_wrong_answer_encourage_feedback));
+                    viewHolder.incomingPlayerAnswerRoot.setVisibility(View.VISIBLE);
                     viewHolder.incomingFeedbackPlayerTextView.setVisibility(View.VISIBLE);
                 }
 
@@ -948,6 +957,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingGetCoinsPlayerOptionsRoot.setVisibility(View.GONE);
             viewHolder.incomingGetCoinsLoadingRoot.setVisibility(View.GONE);
             viewHolder.incomingMissedQuestionRoot.setVisibility(View.GONE);
+            viewHolder.incomingPlayerAnswerRoot.setVisibility(View.GONE);
 
 
 
@@ -984,6 +994,30 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         }
 
         return 0;
+
+    }
+
+    private String getAnswerText(Question question, String answerId) {
+
+        try {
+            String answerText = "" ;
+            Answer[] answers = question.getAnswers();
+            for (int i = 0; i < answers.length; i++) {
+                Answer answer = answers[i];
+                if (answer.getId().equals(answerId)) {
+                    answerText = answer.getAnswerText();
+                    break;
+                }
+
+            }
+            return answerText;
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+        return "";
 
     }
 

@@ -169,74 +169,6 @@
                             android:textSize="@dimen/OffsideMediumText" />
 
                     </LinearLayout>
-                    <!-- Get Coins feedback after video was watched-->
-                    <!--<LinearLayout-->
-                        <!--android:id="@+id/cm_incoming_get_coins_feedback_post_video_watch_root"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:orientation="vertical"-->
-                        <!--android:visibility="gone">-->
-
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:src="@mipmap/ic_action_offside_coins"-->
-                            <!--android:layout_gravity="center"-->
-                            <!--android:minHeight="50dp"-->
-                            <!--android:minWidth="50dp"-->
-                            <!--/>-->
-
-                        <!--<TextView-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_margin="1dp"-->
-                            <!--android:gravity="center"-->
-                            <!--android:paddingBottom="10dp"-->
-                            <!--android:paddingTop="10dp"-->
-                            <!--android:text="@string/lbl_congrates_for_getting_more_offside_coins"-->
-                            <!--android:textColor="@color/colorBlack"-->
-                            <!--android:textSize="@dimen/OffsideMediumText" />-->
-
-                        <!--<TextView-->
-                            <!--android:id="@+id/cm_incoming_get_coins_reward_value_text_view"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_margin="1dp"-->
-                            <!--android:gravity="center"-->
-                            <!--android:paddingBottom="10dp"-->
-                            <!--android:paddingTop="10dp"-->
-                            <!--android:text="500"-->
-                            <!--android:textColor="@color/colorBlack"-->
-                            <!--android:textSize="@dimen/OffsideLargeText" />-->
-
-                        <!--<TextView-->
-
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_margin="1dp"-->
-                            <!--android:gravity="center"-->
-                            <!--android:paddingBottom="10dp"-->
-                            <!--android:paddingTop="10dp"-->
-                            <!--android:text="@string/lbl_updated_balance"-->
-                            <!--android:textColor="@color/colorBlack"-->
-                            <!--android:textSize="@dimen/OffsideMediumText" />-->
-                        <!--<TextView-->
-                            <!--android:id="@+id/cm_incoming_get_coins_updated_offside_coins_value_text_view"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_margin="1dp"-->
-                            <!--android:gravity="center"-->
-                            <!--android:paddingBottom="10dp"-->
-                            <!--android:paddingTop="10dp"-->
-                            <!--android:text="1500"-->
-                            <!--android:textColor="@color/colorBlack"-->
-                            <!--android:textSize="@dimen/OffsideLargeText" />-->
-
-
-                    <!--</LinearLayout>-->
-
-
-
 
                 </LinearLayout>
 
@@ -721,7 +653,7 @@
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"
                     android:textColor="@color/chatText"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
 
                     <TextView
@@ -752,14 +684,25 @@
                     android:id="@+id/cm_incoming_closed_question_root"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/shape_bg_incoming_bubble"
+                    android:background="@drawable/shape_bg_incoming_bubble_wrong"
                     android:orientation="vertical"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:paddingTop="5dp"
-                    android:textColor="@color/chatText"
-                    android:visibility="gone">
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/cm_incoming_correct_wrong_title_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
+                        android:gravity="center"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="צדקת!"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/OffsideLargeText" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -769,8 +712,9 @@
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp"
                         android:text="@string/lbl_we_have_an_answer"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/OffsideMediumText" />
+                        android:textColor="@color/colorWhite"
+                         />
+
 
                     <TextView
                         android:id="@+id/cm_incoming_closed_question_text_view"
@@ -783,7 +727,18 @@
                         android:paddingTop="10dp"
                         android:text="which team will score next?"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/OffsideMediumText" />
+                         />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
+                        android:gravity="center"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/lbl_is"
+                        android:textColor="@color/colorWhite"
+                        />
 
 
                     <TextView
@@ -792,24 +747,44 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:gravity="center"
-                        android:minHeight="50dp"
+                        android:minHeight="30dp"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:text="Barcelona"
-                        android:textColor="@color/colorWhite"
-                        android:background="@color/answer1backgroundColor"/>
-
-                    <TextView
-                        android:id="@+id/cm_incoming_correct_wrong_title_text_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="1dp"
-                        android:gravity="center"
-                        android:paddingBottom="10dp"
-                        android:paddingTop="10dp"
-                        android:text="Correct :)"
                         android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/OffsideMediumText" />
+                        android:background="@color/colorWhite"/>
+
+                    <LinearLayout
+                        android:id="@+id/cm_incoming_player_answer_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:gravity="center"
+                            android:paddingBottom="10dp"
+                            android:paddingTop="10dp"
+                            android:text="@string/lbl_your_answer_was"
+                            android:textColor="@color/colorWhite"
+                             />
+
+                        <TextView
+                            android:id="@+id/cm_incoming_player_answer_text_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:gravity="center"
+                            android:minHeight="30dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="Real Madrid"
+                            android:textColor="@color/colorBlack"
+                            android:background="@color/colorWhite"/>
+
+                    </LinearLayout>
+
 
                     <TextView
                         android:id="@+id/cm_incoming_correct_answer_return_text_view"
@@ -818,7 +793,8 @@
                         android:layout_marginTop="10dp"
                         android:gravity="center"
                         android:text="You earned 100 points"
-                        android:textColor="@color/colorBlack" />
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/OffsideMediumText"/>
 
 
 
@@ -829,8 +805,8 @@
                         android:gravity="center"
                         android:padding="10dp"
                         android:text="Good job!"
-                        android:textColor="@color/colorBlack"
-                        android:visibility="visible"
+                        android:textColor="@color/colorWhite"
+                        android:visibility="gone"
 
                         />
 
