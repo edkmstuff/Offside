@@ -28,6 +28,7 @@ import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
@@ -614,7 +615,7 @@ public class ChatActivity extends AppCompatActivity {
 
             // this parameter will be null if the user does not answer
             String answerId = questionAnsweredEvent.getAnswerId();
-            OffsideApplication.signalRService.postAnswer(gameId, questionId, answerId, isRandomAnswer, betSize);
+            OffsideApplication.signalRService.postAnswer(gameId, playerId, questionId, answerId, isRandomAnswer, betSize);
             if (!OffsideApplication.playerAnswers.containsKey(questionId))
                 OffsideApplication.playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize, true));
 
@@ -624,6 +625,27 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onQuestionAnsweredEvent(IsAnswerAcceptedEvent isAnswerAcceptedEvent) {
+
+        try {
+            boolean isAnswerAccepted = isAnswerAcceptedEvent.getIsAnswerAccepted();
+            if (!isAnswerAccepted) {
+                String msg = "Answered not accepted! details: " + "gameid: " + isAnswerAcceptedEvent.getGameId() + " playerid: " + isAnswerAcceptedEvent.getPlayerId() + " questionid: " + isAnswerAcceptedEvent.getQuestionId() + " answerid: " + isAnswerAcceptedEvent.getAnswerId() + " israndomlyselected: " + isAnswerAcceptedEvent.isRandomlySelected() + " betsize: " + isAnswerAcceptedEvent.getBetSize();
+                ACRA.getErrorReporter().handleSilentException(new Throwable(msg));
+            }
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+
+    }
+
+
+
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePosition(PositionEvent positionEvent) {

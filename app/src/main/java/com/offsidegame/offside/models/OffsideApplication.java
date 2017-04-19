@@ -54,6 +54,8 @@ public class OffsideApplication extends Application {
 
 
 
+
+
     public static String getMessageTypeText() {
         return messageTypeText;
     }

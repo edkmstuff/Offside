@@ -68,9 +68,9 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("192.168.1.140:8080");
     //public final String ip = new String("10.0.0.17:8080");
-    public final String ip = new String("offside.somee.com");
+    //public final String ip = new String("offside.somee.com");
 
     public Boolean stoppedIntentionally = false;
     private int mId = -1;
@@ -420,13 +420,13 @@ public class SignalRService extends Service {
     }
 
 
-    public void postAnswer(String gameId, String questionId, String answerId, boolean isRandomlySelected, int betSize) {
+    public void postAnswer(final String gameId,final  String playerId,final  String questionId,final  String answerId,final  boolean isRandomlySelected,final  int betSize) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Boolean.class, "PostAnswer", gameId, questionId, answerId, isRandomlySelected, betSize).done(new Action<Boolean>() {
+        hub.invoke(Boolean.class, "PostAnswer", gameId, playerId ,questionId, answerId, isRandomlySelected, betSize).done(new Action<Boolean>() {
             @Override
             public void run(Boolean isAnswerAccepted) throws Exception {
-                EventBus.getDefault().post(new IsAnswerAcceptedEvent(isAnswerAccepted));
+                EventBus.getDefault().post(new IsAnswerAcceptedEvent(isAnswerAccepted,gameId, playerId ,questionId, answerId, isRandomlySelected, betSize ));
             }
 
         }).onError(new ErrorCallback() {
@@ -514,7 +514,7 @@ public class SignalRService extends Service {
         hub.invoke(Boolean.class, "SaveLoggedInUser", user.getId(), user.getName(), user.getEmail()).done(new Action<Boolean>() {
             @Override
             public void run(Boolean isUserSaved) throws Exception {
-                EventBus.getDefault().post(new IsAnswerAcceptedEvent(isUserSaved));
+                //EventBus.getDefault().post(new IsAnswerAcceptedEvent(isUserSaved));
             }
 
         }).onError(new ErrorCallback() {
