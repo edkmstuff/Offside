@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -273,6 +274,9 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             OffsideApplication.setGameInfo(gameInfo);
 
             Intent intent = new Intent(context, ChatActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
         catch(Exception ex){
@@ -350,6 +354,27 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
         }
         catch (Exception ex){
             ACRA.getErrorReporter().handleSilentException(ex);
+        }
+
+    }
+
+
+    private Boolean exit = false;
+    @Override
+    public void onBackPressed() {
+        if (exit) {
+            finish(); // finish activity
+        } else {
+            Toast.makeText(this, R.string.lbl_press_back_again_to_exit,
+                    Toast.LENGTH_LONG).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+
         }
 
     }

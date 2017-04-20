@@ -135,7 +135,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public int timeToAnswer;
         public ChatMessage chatMessage;
         public CountDownTimer countDownTimer;
-
+        public boolean isMessageFromBot;
         //get coins message type
         public LinearLayout incomingGetCoinsMessageRoot;
         public TextView incomingGetCoinsNotEnoughCoinsMessageTextView;
@@ -274,6 +274,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             if (chatMessageType == null)
                 return convertView;
 
+            viewHolder.isMessageFromBot = viewHolder.chatMessage.getSentByUserName().equals("OFFSIDE BOT");
+
 
             if (chatMessageType.equals(OffsideApplication.getMessageTypeText()))  //"TEXT"
             {
@@ -316,6 +318,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
                 viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
                 viewHolder.incomingTextMessageTextView.setText(viewHolder.chatMessage.getMessageText());
+
+                //background set
+                if(viewHolder.isMessageFromBot)
+                    viewHolder.incomingTextMessageTextView.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_from_bot);
+                else
+                    viewHolder.incomingTextMessageTextView.setBackgroundResource(R.drawable.shape_bg_incoming_bubble);
 
                 //visibility set
                 viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);

@@ -36,8 +36,8 @@
 
         <activity
             android:name=".activities.LoginActivity"
-            android:label="Offside1"
-            android:launchMode="singleTop"
+            android:label="Offside"
+
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -73,6 +74,12 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
             loadingRoot = (LinearLayout) findViewById(R.id.l_loading_root);
             loadingRoot.setVisibility(View.VISIBLE);
+
+            Intent intent = this.getIntent();
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
 
         } catch (Exception ex) {
@@ -226,6 +233,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         if (isUserDetailsSaved && isUserImageSaved) {
             Intent intent = new Intent(context, JoinGameActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
         }
 
@@ -250,6 +260,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                     return;
 
                 } else if (resultCode == RESULT_CANCELED) {
+
+                    onBackPressed();
 
                     Toast.makeText(context, "SIGN IN FAILED - CANCELLED", Toast.LENGTH_LONG);
                     return;
@@ -280,6 +292,13 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
+
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        finish(); // finish activity
 
     }
 
