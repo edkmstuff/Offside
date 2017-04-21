@@ -118,6 +118,33 @@
         </LinearLayout>
 
 
+<!-- scoreboard -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/c_scoreboard_root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="10dp"
+                android:layoutDirection="ltr"
+                android:animateLayoutChanges="true">
+
+                <!-- items are added dynamicly-->
+
+
+
+
+
+
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+
         <!--chat content root-->
         <FrameLayout
             android:layout_width="match_parent"

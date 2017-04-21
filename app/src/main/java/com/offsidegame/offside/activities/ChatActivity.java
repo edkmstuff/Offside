@@ -7,10 +7,14 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -33,13 +37,17 @@ import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
+import com.offsidegame.offside.events.ScoreboardEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.Position;
+import com.offsidegame.offside.models.Score;
+import com.offsidegame.offside.models.Scoreboard;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -90,6 +98,8 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayout rewardVideoLoadingRoot;
     private LinearLayout actionExitGameRoot;
 
+    private LinearLayout scoreboardRoot;
+
 
 
     @Override
@@ -122,6 +132,7 @@ public class ChatActivity extends AppCompatActivity {
             privateGameNameTextView = (TextView) findViewById(R.id.c_private_game_name_text_view);
             gameTitleTextView = (TextView) findViewById(R.id.c_game_title_text_view);
             positionTextView = (TextView) findViewById(R.id.c_position_text_view);
+            scoreboardRoot = (LinearLayout) findViewById(R.id.c_scoreboard_root);
 
             contentRoot = (RelativeLayout) findViewById(R.id.c_content_root);
             actionsMenuRoot = (LinearLayout) findViewById(R.id.c_actions_menu_root);
@@ -609,6 +620,14 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+
+
+    public void removeButton (View view){
+        view.setVisibility(View.GONE);
+    }
+
+
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onQuestionAnsweredEvent(QuestionAnsweredEvent questionAnsweredEvent) {
 
@@ -721,6 +740,76 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveScoreboard(ScoreboardEvent scoreboardEvent) {
+        try {
+
+            scoreboardRoot.removeAllViewsInLayout();
+
+            Scoreboard scoreboard = scoreboardEvent.getScoreboard();
+            if (scoreboard == null)
+                return;
+            Score[]  scores = scoreboard.getScores();
+
+            if (scores == null || scores.length == 0)
+                return;
+
+            ArrayList<LinearLayout> elements = new ArrayList<>(scores.length);
+
+
+            for(Score score: scores){
+
+
+                View view = LayoutInflater.from(context).inflate(R.layout.scoreboard_item, scoreboardRoot,true);
+                ImageView imageView = (ImageView) view.findViewById(R.id.si_player_image_view);
+                TextView textView = (TextView) view.findViewById(R.id.si_player_score_text_view);
+                ImageHelper.loadImage(context, score.getImageUrl(), imageView, "ChatActivity");
+                textView.setText(Integer.toString(score.getPoints()));
+
+
+//                LinearLayout layout = new LinearLayout(context);
+//                layout.setLayoutParams(new LinearLayout.LayoutParams(60,60));
+//                layout.setOrientation(LinearLayout.VERTICAL);
+//                layout.setGravity(Gravity.CENTER);
+//
+//
+//                ImageView imageView = new ImageView(context);
+////                imageView.getLayoutParams().width = 40;
+////                imageView.getLayoutParams().height = 40;
+//                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+//                ImageHelper.loadImage(context, score.getImageUrl(), imageView, "ChatActivity");
+//
+//                TextView textView = new TextView(context);
+////                textView.getLayoutParams().width = 40;
+////                textView.getLayoutParams().height = 20;
+//                textView.setText(Integer.toString(score.getPoints()));
+//                textView.setTextSize(20);
+//
+//                layout.addView(imageView);
+//                layout.addView(textView);
+//
+//                //Button btn = new Button(context);
+////                btn.setLayoutParams(new L);
+
+                //elements.add();
+            }
+
+//            for (LinearLayout layout:elements){
+//                scoreboardRoot.addView(layout);
+//            }
+
+
+
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
 
     private Boolean exit = false;
     @Override

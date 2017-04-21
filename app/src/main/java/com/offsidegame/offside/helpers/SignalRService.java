@@ -68,9 +68,9 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("192.168.1.140:8080");
     //public final String ip = new String("10.0.0.17:8080");
-    public final String ip = new String("offside.somee.com");
+    //public final String ip = new String("offside.somee.com");
 
     public Boolean stoppedIntentionally = false;
     private int mId = -1;
@@ -231,6 +231,34 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(player);
             }
         }, Player.class);
+
+        hub.on("UpdateScoreboard", new SubscriptionHandler1<Scoreboard>() {
+            @Override
+            public void run(Scoreboard scoreboard) {
+                EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
+            }
+        }, Scoreboard.class);
+
+
+
+        /*
+         public void getScoreboard(String gameId) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke(Scoreboard.class, "GetScoreboard", gameId).done(new Action<Scoreboard>() {
+
+            @Override
+            public void run(Scoreboard scoreboard) throws Exception {
+                EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleSilentException(error);
+            }
+        });
+    }
+         */
     }
 
     private void fireNotification(String messageType, String message) {

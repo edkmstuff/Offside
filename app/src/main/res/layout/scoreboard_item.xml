@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="ltr"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="com.offsidegame.offside.activities.ChatActivity">
+
+    <ImageView
+        android:id="@+id/si_player_image_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/logo"
+        />
+    <TextView
+        android:id="@+id/si_player_score_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textColor="@color/colorWhite"
+        android:text="1234"/>
+
+
+
+
+</LinearLayout>
