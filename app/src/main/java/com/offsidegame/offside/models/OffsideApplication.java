@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 
+import com.offsidegame.offside.BuildConfig;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.SignalRService;
@@ -52,8 +53,7 @@ public class OffsideApplication extends Application {
 
     private static boolean isChatActivityVisible= false;
 
-
-
+    String version = BuildConfig.VERSION_NAME;
 
 
     public static String getMessageTypeText() {

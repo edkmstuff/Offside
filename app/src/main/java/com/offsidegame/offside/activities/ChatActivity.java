@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -101,6 +102,7 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayout actionExitGameRoot;
 
     private LinearLayout scoreboardRoot;
+    private  String androidDeviceId;
 
 
 
@@ -111,6 +113,7 @@ public class ChatActivity extends AppCompatActivity {
 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_chat);
+            androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 
             gameId = OffsideApplication.getGameInfo().getGameId();
             gameCode = OffsideApplication.getGameInfo().getPrivateGameCode();
@@ -401,9 +404,9 @@ public class ChatActivity extends AppCompatActivity {
             actionExitGameRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    OffsideApplication.signalRService.quitGame(gameId,playerId);
+                    String androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                    OffsideApplication.signalRService.quitGame(gameId, playerId, androidDeviceId);
                     chatActionsButton.performClick();
-
                     SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
                     SharedPreferences.Editor editor = settings.edit();
 
@@ -517,7 +520,7 @@ public class ChatActivity extends AppCompatActivity {
             chatSendTextView.setAlpha(1f);
             chatActionsButton.setAlpha(1f);
             if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
-                OffsideApplication.signalRService.getChatMessages(gameId, gameCode, playerId);
+                OffsideApplication.signalRService.getChatMessages(gameId, gameCode, playerId, androidDeviceId);
             }
 
 
@@ -537,7 +540,7 @@ public class ChatActivity extends AppCompatActivity {
         if (eventContext == context || eventContext == getApplicationContext()) {
 
             if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
-                OffsideApplication.signalRService.getChatMessages(gameId, gameCode, playerId);
+                OffsideApplication.signalRService.getChatMessages(gameId, gameCode, playerId, androidDeviceId);
 
             } else {
                 Intent intent = new Intent(context, JoinGameActivity.class);
@@ -768,12 +771,6 @@ public class ChatActivity extends AppCompatActivity {
                 ImageView imageView = (ImageView) layout.getChildAt(0);
 
 
-                /*
-                ViewGroup v = (ViewGroup)getLayoutInflater().inflate(R.layout.image_preview,vg);
-ImageView imv = (ImageView) v.getChildAt(0);
-TextView dt = (TextView) v.getChildAt(1);
-TextView ttl = (TextView) v.getChildAt(2);
-                 */
 
 
 
@@ -785,65 +782,11 @@ TextView ttl = (TextView) v.getChildAt(2);
                 scoreboardRoot.addView(layout);
 
 
-
-//                LinearLayout layout = new LinearLayout(context);
-//                layout.setLayoutParams(new LinearLayout.LayoutParams(60,60));
-//                layout.setOrientation(LinearLayout.VERTICAL);
-//                layout.setGravity(Gravity.CENTER);
-//
-//
-//                ImageView imageView = new ImageView(context);
-////                imageView.getLayoutParams().width = 40;
-////                imageView.getLayoutParams().height = 40;
-//                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-//                ImageHelper.loadImage(context, score.getImageUrl(), imageView, "ChatActivity");
-//
-//                TextView textView = new TextView(context);
-////                textView.getLayoutParams().width = 40;
-////                textView.getLayoutParams().height = 20;
-//                textView.setText(Integer.toString(score.getPoints()));
-//                textView.setTextSize(20);
-//
-//                layout.addView(imageView);
-//                layout.addView(textView);
-//
-//                //Button btn = new Button(context);
-////                btn.setLayoutParams(new L);
-
-                //elements.add();
             }
-
-//            for (LinearLayout layout:elements){
-//                scoreboardRoot.addView(layout);
-//            }
-
-
-
 
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
-
-    }
-
-
-    private Boolean exit = false;
-    @Override
-    public void onBackPressed() {
-        if (exit) {
-            finish(); // finish activity
-        } else {
-            Toast.makeText(this, R.string.lbl_press_back_again_to_exit,
-                    Toast.LENGTH_LONG).show();
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3 * 1000);
 
         }
 

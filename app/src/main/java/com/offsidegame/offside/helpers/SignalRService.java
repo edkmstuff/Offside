@@ -68,8 +68,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    public final String ip = new String("192.168.1.140:8080");
-    //public final String ip = new String("10.0.0.17:8080");
+    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
 
     public Boolean stoppedIntentionally = false;
@@ -365,11 +365,11 @@ public class SignalRService extends Service {
     //<editor-fold desc="methods for client activities">
 
 
-    public void joinGame(String gameCode, String playerId, String playerDisplayName, String playerProfilePictureUrl, boolean isPrivateGameCreator) {
+    public void joinGame(String gameCode, String playerId, String playerDisplayName, String playerProfilePictureUrl, boolean isPrivateGameCreator, String androidDeviceId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
-        hub.invoke(GameInfo.class, "JoinGame", gameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator).done(new Action<GameInfo>() {
+        hub.invoke(GameInfo.class, "JoinGame", gameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId).done(new Action<GameInfo>() {
 
             @Override
             public void run(GameInfo gameInfo) throws Exception {
@@ -383,7 +383,7 @@ public class SignalRService extends Service {
         });
     }
 
-    public void quitGame(String gameId, String playerId) {
+    public void quitGame(String gameId, String playerId, String androidDeviceId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
@@ -483,10 +483,10 @@ public class SignalRService extends Service {
         });
     }
 
-    public void getChatMessages(String gameId, String gameCode, String playerId) {
+    public void getChatMessages(String gameId, String gameCode, String playerId, String androidDeviceId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Chat.class, "GetChatMessages", gameId, gameCode, playerId).done(new Action<Chat>() {
+        hub.invoke(Chat.class, "GetChatMessages", gameId, gameCode, playerId, androidDeviceId).done(new Action<Chat>() {
 
             @Override
             public void run(Chat chat) throws Exception {

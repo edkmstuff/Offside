@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -180,7 +181,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
         if (OffsideApplication.isBoundToSignalRService) {
 
             OffsideApplication.setIsPlayerQuitGame(false);
-            OffsideApplication.signalRService.joinGame(privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl,isPrivateGameCreator );
+            String androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            OffsideApplication.signalRService.joinGame(privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl,isPrivateGameCreator, androidDeviceId );
             loadingGameRoot.setVisibility(View.VISIBLE);
             joinGameRoot.setVisibility(View.GONE);
             createPrivateGameRoot.setVisibility(View.GONE);
@@ -242,6 +244,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onJoinGame(JoinGameEvent joinGameEvent) {
         try {
+
 
             GameInfo gameInfo = joinGameEvent.getGameInfo();
             if (gameInfo == null) {
