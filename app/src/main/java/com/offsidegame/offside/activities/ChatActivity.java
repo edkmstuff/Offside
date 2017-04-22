@@ -7,9 +7,11 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -761,11 +763,27 @@ public class ChatActivity extends AppCompatActivity {
             for(Score score: scores){
 
 
-                View view = LayoutInflater.from(context).inflate(R.layout.scoreboard_item, scoreboardRoot,true);
-                ImageView imageView = (ImageView) view.findViewById(R.id.si_player_image_view);
-                TextView textView = (TextView) view.findViewById(R.id.si_player_score_text_view);
+                ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.scoreboard_item, scoreboardRoot,false);
+
+                ImageView imageView = (ImageView) layout.getChildAt(0);
+
+
+                /*
+                ViewGroup v = (ViewGroup)getLayoutInflater().inflate(R.layout.image_preview,vg);
+ImageView imv = (ImageView) v.getChildAt(0);
+TextView dt = (TextView) v.getChildAt(1);
+TextView ttl = (TextView) v.getChildAt(2);
+                 */
+
+
+
+                TextView textView = (TextView) layout.getChildAt(1);
                 ImageHelper.loadImage(context, score.getImageUrl(), imageView, "ChatActivity");
                 textView.setText(Integer.toString(score.getPoints()));
+
+
+                scoreboardRoot.addView(layout);
+
 
 
 //                LinearLayout layout = new LinearLayout(context);

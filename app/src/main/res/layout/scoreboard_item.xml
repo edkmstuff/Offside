@@ -5,20 +5,19 @@
     android:layoutDirection="ltr"
     android:orientation="vertical"
     android:gravity="center"
+    android:layout_marginLeft="10dp"
     tools:context="com.offsidegame.offside.activities.ChatActivity">
 
     <ImageView
-        android:id="@+id/si_player_image_view"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:scaleType="centerCrop"
         android:src="@drawable/logo"
         />
     <TextView
-        android:id="@+id/si_player_score_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10sp"
+        android:textSize="14sp"
         android:textColor="@color/colorWhite"
         android:text="1234"/>
 
