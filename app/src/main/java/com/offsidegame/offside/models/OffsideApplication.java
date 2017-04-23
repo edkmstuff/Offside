@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Binder;
 import android.os.IBinder;
 
 import com.offsidegame.offside.BuildConfig;
@@ -44,6 +45,10 @@ public class OffsideApplication extends Application {
     private static String profileImageFileName = "profileImage.jpg";
     //private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
     //private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
+
+//    private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
+//    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/Images/defaultImage.jpg";
+
     private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
     private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";
 
@@ -171,9 +176,9 @@ public class OffsideApplication extends Application {
     public static boolean isBoundToSignalRService = false;
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
+        public void onServiceConnected(ComponentName className, IBinder service) {
             // We've bound to SignalRService, cast the IBinder and get SignalRService instance
+
             SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
             signalRService = binder.getService();
             isBoundToSignalRService = true;

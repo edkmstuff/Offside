@@ -1,5 +1,6 @@
 package com.offsidegame.offside.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -7,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
@@ -26,20 +28,55 @@ import java.io.FileOutputStream;
 
 public class ImageHelper {
 
-    public static void loadImage(Context context, final String imageUrl, final ImageView imageView, final String callerName) {
-        Picasso.with(context).load(imageUrl).into(imageView, new com.squareup.picasso.Callback() {
+    public static void loadImage(final Activity activity, final String imageUrl, final ImageView imageView, final String callerName) {
+
+//        AsyncTask.execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                Picasso.with(activity).load(imageUrl).into(imageView, new com.squareup.picasso.Callback() {
+//                    @Override
+//                    public void onSuccess() {
+//                        activity.runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+//                                RoundImage roundedImage = new RoundImage(bm);
+//                                imageView.setImageDrawable(roundedImage);
+//                            }
+//                        });
+//                    }
+//
+//                    @Override
+//                    public void onError() {
+//                        Exception ex = new RuntimeException(callerName + " - onCreate - Error loading image with url: " + imageUrl);
+//                        ACRA.getErrorReporter().handleSilentException(ex);
+//                    }
+//                });
+//
+//
+//            }
+//        });
+
+
+        Picasso.with(activity).load(imageUrl).into(imageView, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
-                Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                RoundImage roundedImage = new RoundImage(bm);
-                imageView.setImageDrawable(roundedImage);
+                        Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                        RoundImage roundedImage = new RoundImage(bm);
+                        imageView.setImageDrawable(roundedImage);
             }
 
             @Override
             public void onError() {
-                throw new RuntimeException(callerName + " - onCreate - Error loading image with url: " + imageUrl);
+                Exception ex = new RuntimeException(callerName + " - onCreate - Error loading image with url: " + imageUrl);
+                ACRA.getErrorReporter().handleSilentException(ex);
             }
         });
+
+
+
+
+
     }
 
     public static void loadImage(Context context, final File imagePath, final ImageView imageView, final String callerName) {

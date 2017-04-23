@@ -176,16 +176,28 @@
                     android:orientation="horizontal"
                     android:weightSum="7">
 
-                    <TextView
+                    <!--<TextView-->
+                        <!--android:id="@+id/c_chatActionsButton"-->
+                        <!--android:layout_width="0dp"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:background="@color/colorAccent"-->
+                        <!--android:gravity="center"-->
+                        <!--android:text="+"-->
+                        <!--android:textColor="@color/background_material_light"-->
+                        <!--android:textSize="@dimen/OffsideLargeText" />-->
+
+                    <ImageView
                         android:id="@+id/c_chatActionsButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@color/colorAccent"
                         android:gravity="center"
-                        android:text="+"
-                        android:textColor="@color/background_material_light"
-                        android:textSize="@dimen/OffsideLargeText" />
+                        android:src="@mipmap/ic_menu"
+
+
+                         />
 
                     <EditText
                         android:id="@+id/c_chat_message_edit_text"
@@ -268,6 +280,7 @@
 
                     <!--leaders-->
                     <LinearLayout
+                        android:visibility="gone"
                         android:id="@+id/c_action_leaders_root"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

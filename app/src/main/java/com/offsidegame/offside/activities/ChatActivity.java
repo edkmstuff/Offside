@@ -1,5 +1,6 @@
 package com.offsidegame.offside.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -65,6 +66,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private final Context context = this;
+    private final Activity thisActivity = this;
     private TextView chatSendTextView;
     private EditText chatMessageEditText;
     private String gameId;
@@ -92,7 +94,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private LinearLayout actionsMenuRoot;
     private RelativeLayout contentRoot;
-    private TextView chatActionsButton;
+    private ImageView chatActionsButton;
 
     private boolean isConnected = false;
     private boolean isActionMenuVisible = false;
@@ -144,7 +146,7 @@ public class ChatActivity extends AppCompatActivity {
             actionsMenuRoot.setScaleX(0f);
             actionsMenuRoot.setScaleY(0f);
             actionsMenuRoot.setAlpha(0.99f);
-            chatActionsButton = (TextView) findViewById(R.id.c_chatActionsButton);
+            chatActionsButton = (ImageView) findViewById(R.id.c_chatActionsButton);
             actionsMenuRoot.setVisibility(View.GONE);
 
             privateGameNameTextView.setText(privateGameTitle);
@@ -534,6 +536,8 @@ public class ChatActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+        if (OffsideApplication.signalRService == null)
+            return;
 
         Context eventContext = signalRServiceBoundEvent.getContext();
 
@@ -775,7 +779,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
                 TextView textView = (TextView) layout.getChildAt(1);
-                ImageHelper.loadImage(context, score.getImageUrl(), imageView, "ChatActivity");
+                ImageHelper.loadImage(thisActivity, score.getImageUrl(), imageView, "ChatActivity");
                 textView.setText(Integer.toString(score.getPoints()));
 
 

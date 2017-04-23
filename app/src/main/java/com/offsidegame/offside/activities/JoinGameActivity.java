@@ -1,5 +1,6 @@
 package com.offsidegame.offside.activities;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +46,7 @@ import java.io.Serializable;
 public class JoinGameActivity extends AppCompatActivity implements Serializable {
     private final String activityName = "JoinGameActivity";
     private final Context context = this;
+    private final Activity thisActivity = this;
     private EditText gameCodeEditText;
     private TextView joinTextView;
     private TextView userNameTextView;
@@ -88,7 +90,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
             playerProfilePictureUrl = settings.getString(getString(R.string.player_profile_picture_url_key),null);
             playerProfilePictureUrl = playerProfilePictureUrl== null ? OffsideApplication.getDefaultProfilePictureUrl()  : playerProfilePictureUrl;
-            ImageHelper.loadImage(context, playerProfilePictureUrl, playerPictureImageView, activityName);
+            ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName);
 
             gameCodeEditText = (EditText) findViewById(R.id.jg_game_code_edit_text);
             joinTextView = (TextView) findViewById(R.id.jg_join_text_view);
@@ -196,6 +198,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
         try {
+            if (OffsideApplication.signalRService == null)
+                return;
 
             Context eventContext = signalRServiceBoundEvent.getContext();
             if (eventContext == context || eventContext == getApplicationContext() ) {

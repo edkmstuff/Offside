@@ -49,6 +49,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private LinearLayout loadingRoot;
     private boolean isInLoginProcess = false;
 
+//    private   SignalRService signalRService;
+//    private  boolean isBoundToSignalRService = false;
+//
 //    private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
 //        @Override
 //        public void onServiceConnected(ComponentName className, IBinder service) {
@@ -56,6 +59,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 //            SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
 //            signalRService = binder.getService();
 //            isBoundToSignalRService = true;
+//            OffsideApplication.signalRService = signalRService;
+//            OffsideApplication.isBoundToSignalRService = isBoundToSignalRService;
 //            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
 //        }
 //
@@ -75,8 +80,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             loadingRoot = (LinearLayout) findViewById(R.id.l_loading_root);
             loadingRoot.setVisibility(View.VISIBLE);
 
+            // to allow exit by clicking on back button , setting some flags on current intent
             Intent intent = this.getIntent();
-
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -135,8 +140,11 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
         try {
 
+            if (OffsideApplication.signalRService == null)
+                return;
+
             Context eventContext = signalRServiceBoundEvent.getContext();
-            if (eventContext == context || eventContext == getApplicationContext() ) {
+            if (eventContext == context || eventContext == getApplicationContext()) {
 
                 if (isSignalRConnected() && !isInLoginProcess) {
 
@@ -145,8 +153,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                 }
 
             }
-
-
 
 
         } catch (Exception ex) {
@@ -200,6 +206,11 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private void handleSuccessfulLogin() {
 
         FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
+        if (player == null || OffsideApplication.signalRService == null)
+            return;
+
+
+
         String playerId = player.getUid();
         String playerDisplayName = player.getDisplayName();
         String playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
@@ -216,6 +227,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context);
             byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
             String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
+
+
 
             isUserImageSaved = OffsideApplication.signalRService.saveImageInDatabase(playerId, imageString);
             //ImageHelper.storeImage(profilePicture, context);
