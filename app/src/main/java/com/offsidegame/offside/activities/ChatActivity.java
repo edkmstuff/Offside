@@ -675,11 +675,6 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-
-
-
-
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePosition(PositionEvent positionEvent) {
 
@@ -766,22 +761,17 @@ public class ChatActivity extends AppCompatActivity {
 
             ArrayList<LinearLayout> elements = new ArrayList<>(scores.length);
 
-
             for(Score score: scores){
-
 
                 ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.scoreboard_item, scoreboardRoot,false);
 
-                ImageView imageView = (ImageView) layout.getChildAt(0);
+                TextView rankTextView = (TextView) layout.getChildAt(0);
+                ImageView imageView = (ImageView) layout.getChildAt(1);
+                TextView textView = (TextView) layout.getChildAt(2);
 
-
-
-
-
-                TextView textView = (TextView) layout.getChildAt(1);
+                rankTextView.setText(Integer.toString(score.getPosition()));
                 ImageHelper.loadImage(thisActivity, score.getImageUrl(), imageView, "ChatActivity");
                 textView.setText(Integer.toString(score.getPoints()));
-
 
                 scoreboardRoot.addView(layout);
 
