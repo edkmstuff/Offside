@@ -3,6 +3,7 @@ package com.offsidegame.offside.models;
 import android.os.CountDownTimer;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by KFIR on 12/7/2016.
@@ -32,6 +33,9 @@ public class ChatMessage {
 
     @com.google.gson.annotations.SerializedName("SBUN")
     private String sentByUserName;
+
+    @com.google.gson.annotations.SerializedName("W")
+    private List<Winner> winners;
 
 
 
@@ -108,7 +112,11 @@ public class ChatMessage {
     }
 
 
+    public List<Winner> getWinners() {
+        return winners;
+    }
 
-
-
+    public void setWinners(List<Winner> winners) {
+        this.winners = winners;
+    }
 }

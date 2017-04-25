@@ -39,6 +39,7 @@ public class OffsideApplication extends Application {
     private static String messageTypeProcessedQuestion = "PROCESSED_QUESTION";
     private static String messageTypeClosedQuestion = "CLOSED_QUESTION";
     private static String messageTypeGetCoins = "GET_COINS";
+    private static String messageTypeWinner = "WINNER";
     private static String questionTypeDebate = "Debate";
 
 
@@ -127,6 +128,10 @@ public class OffsideApplication extends Application {
 
     public static void setIsChatActivityVisible(boolean isChatActivityVisible) {
         OffsideApplication.isChatActivityVisible = isChatActivityVisible;
+    }
+
+    public static String getMessageTypeWinner() {
+        return messageTypeWinner;
     }
 
     public void onCreate ()

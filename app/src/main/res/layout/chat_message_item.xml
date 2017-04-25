@@ -189,6 +189,67 @@
 
                     </LinearLayout>
 
+                    <!-- Winner message Root-->
+                    <LinearLayout
+
+                        android:id="@+id/cm_incoming_winner_message_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape_bg_incoming_bubble_from_bot"
+                        android:orientation="vertical"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="5dp"
+                        android:textColor="@color/chatText"
+                        android:visibility="visible">
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:gravity="center"
+                                android:paddingBottom="10dp"
+                                android:paddingTop="10dp"
+                                android:text="והמנצח הוא...היא...הם..."
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/OffsideMediumText" />
+
+                            <ImageView
+                                android:id="@+id/c_chatActionsButton"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:src="@mipmap/ic_trophy" />
+
+                            <TextView
+                                android:id="@+id/cm_incoming_winner_points_text_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:gravity="center"
+                                android:paddingBottom="10dp"
+                                android:paddingTop="10dp"
+                                android:text="with 1000 points"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/OffsideMediumText" />
+                            <LinearLayout
+                                android:orientation="vertical"
+                                android:id="@+id/cm_incoming_winners_root"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <!--winners images are populated dynamically childAt(0) -->
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
+
                     <!--Asked or Processed question root-->
                     <LinearLayout
                         android:id="@+id/cm_incoming_question_root"
@@ -705,7 +766,7 @@
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <TextView
                             android:id="@+id/cm_incoming_correct_wrong_title_text_view"
@@ -717,7 +778,7 @@
                             android:paddingTop="10dp"
                             android:text="צדקת!"
                             android:textColor="@color/colorWhite"
-                            android:textSize="@dimen/OffsideLargeText" />
+                            android:textSize="@dimen/OffsideMediumText" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -833,7 +894,9 @@
                         android:layout_marginLeft="5dp"
                         android:text="10:23"
                         android:textColor="@color/chatActions"
-                        android:textSize="12dp" />
+                        android:textSize="12dp"
+
+                        />
 
                 </LinearLayout>
 

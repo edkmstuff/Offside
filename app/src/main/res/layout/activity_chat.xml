@@ -137,7 +137,7 @@
                     android:layoutDirection="ltr"
                     android:animateLayoutChanges="true">
 
-                    <!-- items are added dynamicly-->
+                    <!-- items are added dynamically-->
 
                 </LinearLayout>
 

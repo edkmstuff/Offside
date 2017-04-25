@@ -31,6 +31,8 @@ public class Player {
     private int generalPosition;
     @com.google.gson.annotations.SerializedName("PGP")
     private int privateGamePosition;
+    @com.google.gson.annotations.SerializedName("T")
+    private int trophies;
 
     public String getImageUrl() {
         return imageUrl;
@@ -128,4 +130,14 @@ public class Player {
     public void setPrivateGamePosition(int privateGamePosition) {
         this.privateGamePosition = privateGamePosition;
     }
+
+    public int getTrophies() {
+        return trophies;
+    }
+
+    public void setTrophies(int trophies) {
+        this.trophies = trophies;
+    }
 }
+
+

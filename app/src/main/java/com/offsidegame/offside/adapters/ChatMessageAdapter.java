@@ -4,17 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.support.annotation.IntRange;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import android.util.Log;
@@ -40,12 +33,14 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.SlotActivity;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
+import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Question;
+import com.offsidegame.offside.models.Winner;
 import com.squareup.picasso.Picasso;
 
 import org.acra.ACRA;
@@ -53,6 +48,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -149,6 +145,15 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         //missed question
         public LinearLayout incomingMissedQuestionRoot;
         public TextView incomingMissedQuestionTextView;
+
+        //winner message type
+        public LinearLayout incomingWinnerMessageRoot;
+        public TextView incomingWinnerPointsTextView;
+        public LinearLayout incomingWinnersRoot;
+        public ViewGroup winnersLayout;
+        public ImageView winnerImageView;
+
+
 
         //</editor-fold>
 
@@ -252,6 +257,13 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingMissedQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_missed_question_root);
                 viewHolder.incomingMissedQuestionTextView = (TextView) convertView.findViewById(R.id.cm_incoming_missed_question_text_view);
 
+                //winner message
+                viewHolder.incomingWinnerMessageRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_winner_message_root);
+                viewHolder.incomingWinnerPointsTextView = (TextView) convertView.findViewById(R.id.cm_incoming_winner_points_text_view);
+                viewHolder.incomingWinnersRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_winners_root);
+                viewHolder.winnersLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.winner_item, viewHolder.incomingWinnersRoot,false);
+                viewHolder.winnerImageView = (ImageView) viewHolder.winnersLayout.getChildAt(0);
+
                 //</editor-fold>
 
                 convertView.setTag(viewHolder);
@@ -290,6 +302,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             } else if (chatMessageType.equals(OffsideApplication.getMessageTypeGetCoins()))  //"GET_COINS"
             {
                 generateGetCoinsChatMessage(viewHolder);
+
+            } else if (chatMessageType.equals(OffsideApplication.getMessageTypeWinner()))  //"WINNER"
+            {
+                generateWinnerChatMessage(viewHolder);
 
             }
 
@@ -471,6 +487,44 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
             viewHolder.incomingGetCoinsMessageRoot.setVisibility(View.VISIBLE);
 
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+    }
+
+    private void generateWinnerChatMessage(final ViewHolder viewHolder) {
+
+        try {
+
+            SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+            Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
+
+            //visibility reset
+            resetWidgetsVisibility(viewHolder);
+
+            loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
+            viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
+            viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
+
+            viewHolder.incomingWinnerPointsTextView.setText(viewHolder.chatMessage.getMessageText());
+
+            List<Winner> winners = viewHolder.chatMessage.getWinners();
+
+            for(Winner winner: winners) {
+
+                //ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.winner_item, viewHolder.incomingWinnersRoot,false);
+                //ImageView imageView = (ImageView) layout.getChildAt(0);
+
+                Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
+                loadFbImage(viewHolder.winnerImageView, winnerProfilePictureUri);
+
+
+            }
+
+            //visibility set
+            viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
+            viewHolder.incomingWinnerMessageRoot.setVisibility(View.VISIBLE);
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -977,6 +1031,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingGetCoinsLoadingRoot.setVisibility(View.GONE);
             viewHolder.incomingMissedQuestionRoot.setVisibility(View.GONE);
             viewHolder.incomingPlayerAnswerRoot.setVisibility(View.GONE);
+            viewHolder.incomingWinnerMessageRoot.setVisibility(View.GONE);
 
 
 
