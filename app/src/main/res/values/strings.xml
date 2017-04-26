@@ -93,6 +93,7 @@
     <string name="lbl_is">היא</string>
     <string name="lbl_your_answer_was">תשובתך היתה</string>
     <string name="lbl_press_back_again_to_exit">לחץ שוב על חזרה כדי לצאת</string>
+    <string name="lbl_and_the_winner_is">והמנצח הוא...היא...הם...</string>
 
 
 </resources>

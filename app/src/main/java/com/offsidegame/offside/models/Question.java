@@ -38,7 +38,23 @@ public class Question implements Serializable {
 
 
     public String getQuestionText() {
-        return questionText;
+        if(questionText==null)
+        return "";
+        String[] questionTextArray = questionText.split("--S--");
+        return questionTextArray[0];
+    }
+
+    public String getQuestionStatText() {
+        if(questionText==null)
+            return "";
+        String[] questionTextArray = questionText.split("--S--");
+        if (questionTextArray.length == 2) {
+            return questionTextArray[1];
+
+        }
+
+        return "";
+
     }
 
     public void setQuestionText(String questionText) {

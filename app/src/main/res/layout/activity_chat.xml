@@ -408,31 +408,6 @@
                             style="@style/OffsideActionButton"/>
 
                     </LinearLayout>
-                    <!--exit game-->
-                    <LinearLayout
-                        android:id="@+id/c_action_exit_game_root"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:minHeight="80dp"
-                        android:minWidth="80dp"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@mipmap/ic_action_exit" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:text="@string/lbl_leave_game"
-                            style="@style/OffsideActionButton"/>
-
-                    </LinearLayout>
                     <!--reload coins - lottery-->
                     <LinearLayout
                         android:id="@+id/c_action_reload_root"
@@ -482,6 +457,31 @@
                             android:layout_gravity="bottom"
                             android:gravity="center"
                             android:text="@string/lbl_get_offside_coins"
+                            style="@style/OffsideActionButton"/>
+
+                    </LinearLayout>
+                    <!--exit game-->
+                    <LinearLayout
+                        android:id="@+id/c_action_exit_game_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_action_exit" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_leave_game"
                             style="@style/OffsideActionButton"/>
 
                     </LinearLayout>

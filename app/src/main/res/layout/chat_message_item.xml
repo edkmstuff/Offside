@@ -202,7 +202,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
                         android:textColor="@color/chatText"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
 
                         <LinearLayout
@@ -215,18 +215,23 @@
                                 android:layout_height="wrap_content"
                                 android:layout_margin="1dp"
                                 android:gravity="center"
-                                android:paddingBottom="10dp"
-                                android:paddingTop="10dp"
-                                android:text="והמנצח הוא...היא...הם..."
+
+                                android:text="@string/lbl_and_the_winner_is"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="@dimen/OffsideMediumText" />
 
                             <ImageView
-                                android:id="@+id/c_chatActionsButton"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
                                 android:src="@mipmap/ic_trophy" />
+
+                            <!--<com.felipecsl.gifimageview.library.GifImageViewGifImageView-->
+                                <!--android:id="@+id/cm_incoming_winner_trophy_gif_image_view"-->
+                                <!--android:layout_width="match_parent"-->
+                                <!--android:layout_height="wrap_content"-->
+                                <!--android:gravity="center"-->
+                                 <!--/>-->
 
                             <TextView
                                 android:id="@+id/cm_incoming_winner_points_text_view"
@@ -234,16 +239,15 @@
                                 android:layout_height="wrap_content"
                                 android:layout_margin="1dp"
                                 android:gravity="center"
-                                android:paddingBottom="10dp"
-                                android:paddingTop="10dp"
-                                android:text="with 1000 points"
+                                android:text="1000 points"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="@dimen/OffsideMediumText" />
                             <LinearLayout
-                                android:orientation="vertical"
+                                android:orientation="horizontal"
                                 android:id="@+id/cm_incoming_winners_root"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal">
                                 <!--winners images are populated dynamically childAt(0) -->
                             </LinearLayout>
                         </LinearLayout>
@@ -262,7 +266,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
                         android:textColor="@color/chatText"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <LinearLayout
                             android:id="@+id/cm_incoming_time_to_answer_root"
@@ -306,6 +310,32 @@
                             android:text="@string/lbl_question_time_expired_message"
                             android:textColor="@color/answer4backgroundColor"
                             android:textSize="16dp" />
+
+                        <LinearLayout
+                            android:id="@+id/cm_incoming_question_stat_root"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layoutDirection="rtl"
+                            android:background="@color/chatIncomingFromBot">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@mipmap/ic_info"/>
+                            <TextView
+                                android:id="@+id/cm_incoming_question_stat_text_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+
+                                android:paddingBottom="10dp"
+                                android:paddingTop="10dp"
+                                android:text="this is the stats message"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/OffsideSmallText" />
+                        </LinearLayout>
+
+
 
                         <TextView
                             android:id="@+id/cm_incoming_question_text_view"

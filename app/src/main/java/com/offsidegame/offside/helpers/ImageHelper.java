@@ -3,6 +3,7 @@ package com.offsidegame.offside.helpers;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -21,6 +22,9 @@ import org.acra.ACRA;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by KFIR on 3/13/2017.
@@ -113,7 +117,7 @@ public class ImageHelper {
         Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint(Paint.LINEAR_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-        int colorPrimary = Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(context, R.color.colorSecondary)));
+        int colorPrimary = Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(context, R.color.colorBlue)));
 
         paint.setColor(colorPrimary);
         paint.setStyle(Paint.Style.FILL);
@@ -144,6 +148,8 @@ public class ImageHelper {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
         return stream.toByteArray();
     }
+
+
 
 
 }

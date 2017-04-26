@@ -3,18 +3,15 @@ package com.offsidegame.offside.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,7 +30,6 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.SlotActivity;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
-import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.AnswerIdentifier;
@@ -80,8 +76,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public TextView outgoingUserSentTextView;
         public TextView incomingUserSentTextView;
 
+        public LinearLayout incomingQuestionStatRoot;
+        public TextView incomingQuestionStatTextView;
+
         public LinearLayout incomingQuestionRoot;
         public TextView incomingQuestionTextView;
+
         public TextView incomingQuestionProcessedQuestionTitleTextView;
         public TextView incomingQuestionAskedNotEnoughCoinsTextView;
         public LinearLayout incomingAnswersRoot;
@@ -150,8 +150,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public LinearLayout incomingWinnerMessageRoot;
         public TextView incomingWinnerPointsTextView;
         public LinearLayout incomingWinnersRoot;
-        public ViewGroup winnersLayout;
-        public ImageView winnerImageView;
+        //public GifImageView incomingWinnerTrophyGifImageView;
 
 
 
@@ -180,6 +179,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 viewHolder.incomingQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_question_root);
                 viewHolder.incomingQuestionTextView = (TextView) convertView.findViewById(R.id.cm_incoming_question_text_view);
+
+                viewHolder.incomingQuestionStatRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_question_stat_root);
+                viewHolder.incomingQuestionStatTextView = (TextView) convertView.findViewById(R.id.cm_incoming_question_stat_text_view);
+
 
                 viewHolder.incomingAnswersRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_answers_root);
 
@@ -261,8 +264,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingWinnerMessageRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_winner_message_root);
                 viewHolder.incomingWinnerPointsTextView = (TextView) convertView.findViewById(R.id.cm_incoming_winner_points_text_view);
                 viewHolder.incomingWinnersRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_winners_root);
-                viewHolder.winnersLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.winner_item, viewHolder.incomingWinnersRoot,false);
-                viewHolder.winnerImageView = (ImageView) viewHolder.winnersLayout.getChildAt(0);
+
+                //viewHolder.incomingWinnerTrophyGifImageView = (GifImageView) convertView.findViewById(R.id.cm_incoming_winner_trophy_gif_image_view);
 
                 //</editor-fold>
 
@@ -493,12 +496,38 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         }
     }
 
+    private void loadRewardedVideoAd() {
+        try {
+
+            rewardedVideoAdAppUnitId = context.getString(R.string.rewarded_video_ad_unit_id_key);
+
+            if (!rewardedVideoAd.isLoaded())
+                rewardedVideoAd.loadAd(rewardedVideoAdAppUnitId, new AdRequest.Builder().build());
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+    }
+
     private void generateWinnerChatMessage(final ViewHolder viewHolder) {
 
         try {
 
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
             Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
+
+            //animated gif
+            /*
+            new GifDataDownloader() {
+                @Override protected void onPostExecute(final byte[] bytes) {
+                    viewHolder.incomingWinnerTrophyGifImageView.setBytes(bytes);
+                    viewHolder.incomingWinnerTrophyGifImageView.startAnimation();
+                    Log.d(TAG, "GIF width is " + viewHolder.incomingWinnerTrophyGifImageView.getGifWidth());
+                    Log.d(TAG, "GIF height is " + viewHolder.incomingWinnerTrophyGifImageView.getGifHeight());
+                }
+            }.execute("http://10.0.0.17:8080/Images/animated_won_trophy.gif");
+//
+            viewHolder.incomingWinnerTrophyGifImageView.setBytes(bitmapData);*/
 
             //visibility reset
             resetWidgetsVisibility(viewHolder);
@@ -513,14 +542,18 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             for(Winner winner: winners) {
 
-                //ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.winner_item, viewHolder.incomingWinnersRoot,false);
-                //ImageView imageView = (ImageView) layout.getChildAt(0);
+                ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.winner_item, viewHolder.incomingWinnersRoot,false);
+                ImageView imageView = (ImageView) layout.getChildAt(0);
+                TextView  winnerNameTextView = (TextView) layout.getChildAt(1);
 
                 Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
-                loadFbImage(viewHolder.winnerImageView, winnerProfilePictureUri);
-
-
+                loadFbImage(imageView, winnerProfilePictureUri);
+                winnerNameTextView.setText(winner.getUserName());
+                viewHolder.incomingWinnersRoot.addView(layout);
             }
+
+            //viewHolder.incomingWinnersRoot.invalidate();
+
 
             //visibility set
             viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
@@ -530,20 +563,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
-
-    private void loadRewardedVideoAd() {
-        try {
-
-            rewardedVideoAdAppUnitId = context.getString(R.string.rewarded_video_ad_unit_id_key);
-
-            if (!rewardedVideoAd.isLoaded())
-                rewardedVideoAd.loadAd(rewardedVideoAdAppUnitId, new AdRequest.Builder().build());
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
-
 
     private void generateQuestionChatMessage(final ViewHolder viewHolder) {
 
@@ -627,6 +646,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 viewHolder.incomingQuestionTextView.setText(viewHolder.question.getQuestionText());
 
+
                 for (int i = 0; i < answers.length; i++) {
                     final String answerText = answers[i].getAnswerText();
                     final String percentUserAnswered = String.valueOf((int) answers[i].getPercentUsersAnswered()) + "%";
@@ -651,6 +671,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 if (isAskedQuestion) {
 
                     //<editor-fold desc="ASKED QUESTION">
+
+                    String questionStatText = viewHolder.question.getQuestionStatText();
+                    if(questionStatText.length()>0) {
+                        viewHolder.incomingQuestionStatTextView.setText(questionStatText);
+                        viewHolder.incomingQuestionStatRoot.setVisibility(View.VISIBLE);
+                    }
 
                     //set on click event to bet options
                     for (int i = 0; i < viewHolder.betSizeOptionsTextViews.length; i++) {
@@ -1018,6 +1044,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.outgoingMessagesRoot.setVisibility(View.GONE);
             viewHolder.incomingTextMessageTextView.setVisibility(View.GONE);
             viewHolder.incomingQuestionRoot.setVisibility(View.GONE);
+            viewHolder.incomingQuestionStatRoot.setVisibility(View.GONE);
             viewHolder.incomingProcessingQuestionRoot.setVisibility(View.GONE);
             viewHolder.incomingProcessingQuestionPossibleReturnValueMessageRoot.setVisibility(View.VISIBLE);
             viewHolder.incomingClosedQuestionRoot.setVisibility(View.GONE);
