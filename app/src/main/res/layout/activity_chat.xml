@@ -36,6 +36,7 @@
         </LinearLayout>
 
         <!--chat title root -->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,74 +44,123 @@
             android:orientation="horizontal"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
-            android:visibility="visible"
-            android:weightSum="22">
+            android:visibility="visible">
+
+            <!--<LinearLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_weight="5"-->
+            <!--android:gravity="center"-->
+            <!--android:orientation="vertical">-->
+
+            <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:text="Score"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:textColor="@color/colorWhite" />&ndash;&gt;-->
+
+            <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+            <!--&lt;!&ndash;android:id="@+id/c_score_text_view"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+
+            <!--&lt;!&ndash;android:textColor="@color/colorWhite" />&ndash;&gt;-->
+
+            <!--</LinearLayout>-->
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="5"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Score"
-                    android:textColor="@color/colorWhite" />
-
-                <TextView
-                    android:id="@+id/c_score_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:textColor="@color/colorWhite" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="12"
-                android:gravity="center"
+                android:layout_marginLeft="4dp"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/c_private_game_name_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
+                    android:text="dummy private game"
                     android:textColor="@color/privateGameTitle" />
 
                 <TextView
                     android:id="@+id/c_game_title_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
+                    android:text="barcelona Vs. Real"
                     android:textColor="@color/colorWhite" />
 
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="5"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rank"
+                    android:background="@drawable/shape_bg_rectangle_rounded_corners"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="9dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:text="4000"
                     android:textColor="@color/colorWhite" />
 
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="-7dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/gold_coin" />
+
+                <!--<TextView-->
+                <!--android:id="@+id/c_position_text_view"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="0/0"-->
+                <!--android:textColor="@color/colorWhite" />-->
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_gravity="right"
+                android:layout_marginLeft="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
                 <TextView
-                    android:id="@+id/c_position_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="0/0"
+                    android:background="@drawable/shape_bg_rectangle_rounded_corners"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:paddingLeft="2dp"
+                    android:paddingRight="9dp"
+                    android:text="2"
                     android:textColor="@color/colorWhite" />
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginLeft="-7dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_trophy" />
+
+                <!--<TextView-->
+                <!--android:id="@+id/c_position_text_view"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="0/0"-->
+                <!--android:textColor="@color/colorWhite" />-->
 
 
             </LinearLayout>
@@ -118,37 +168,160 @@
         </LinearLayout>
 
 
-<!-- scoreboard -->
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@color/colorPrimaryDark"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:paddingBottom="4dp"-->
+        <!--android:paddingTop="4dp"-->
+        <!--android:visibility="visible"-->
+        <!--android:weightSum="22">-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="5"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Score"-->
+        <!--android:textColor="@color/colorWhite" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/c_score_text_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+
+        <!--android:textColor="@color/colorWhite" />-->
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="12"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/c_private_game_name_text_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+
+        <!--android:textColor="@color/privateGameTitle" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/c_game_title_text_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+
+        <!--android:textColor="@color/colorWhite" />-->
+
+
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_weight="5"-->
+        <!--android:gravity="center"-->
+        <!--android:orientation="vertical">-->
+
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Rank"-->
+        <!--android:textColor="@color/colorWhite" />-->
+
+        <!--<TextView-->
+        <!--android:id="@+id/c_position_text_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="0/0"-->
+        <!--android:textColor="@color/colorWhite" />-->
+
+
+        <!--</LinearLayout>-->
+
+        <!--</LinearLayout>-->
+
+
+        <!-- scoreboard -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"  >
+            android:orientation="vertical">
 
-            <HorizontalScrollView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <LinearLayout
-                    android:id="@+id/c_scoreboard_root"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="5dp"
-                    android:layoutDirection="ltr"
-                    android:animateLayoutChanges="true">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                    <!-- items are added dynamically-->
+                <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/chatText"
+                    android:gravity="center"
+                    android:layoutDirection="ltr"
+                    android:orientation="vertical"
+
+                    android:padding="5dp"
+                    tools:context="com.offsidegame.offside.activities.ChatActivity">
+
+                    <TextView
+                        android:id="@+id/c_position_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1/477"
+                        android:textColor="@color/privateGameTitle"
+                        android:textSize="8sp" />
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/logo" />
+
+                    <TextView
+                        android:id="@+id/c_score_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1234"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="12sp" />
+
 
                 </LinearLayout>
 
-            </HorizontalScrollView>
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/c_scoreboard_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:animateLayoutChanges="true"
+                        android:gravity="center_vertical"
+                        android:layoutDirection="ltr"
+                        android:orientation="horizontal"
+                        android:padding="5dp"></LinearLayout>
+
+                </HorizontalScrollView>
+
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
-                android:background="@color/chatText"/>
+                android:background="@color/chatText" />
 
         </LinearLayout>
-
 
 
         <!--chat content root-->
@@ -176,15 +349,15 @@
                     android:weightSum="7">
 
                     <!--<TextView-->
-                        <!--android:id="@+id/c_chatActionsButton"-->
-                        <!--android:layout_width="0dp"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_weight="1"-->
-                        <!--android:background="@color/colorAccent"-->
-                        <!--android:gravity="center"-->
-                        <!--android:text="+"-->
-                        <!--android:textColor="@color/background_material_light"-->
-                        <!--android:textSize="@dimen/OffsideLargeText" />-->
+                    <!--android:id="@+id/c_chatActionsButton"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@color/colorAccent"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="+"-->
+                    <!--android:textColor="@color/background_material_light"-->
+                    <!--android:textSize="@dimen/OffsideLargeText" />-->
 
                     <ImageView
                         android:id="@+id/c_chatActionsButton"
@@ -196,7 +369,7 @@
                         android:src="@mipmap/ic_menu"
 
 
-                         />
+                        />
 
                     <EditText
                         android:id="@+id/c_chat_message_edit_text"
@@ -257,12 +430,12 @@
                 android:id="@+id/c_actions_menu_root"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/chatText"
-                android:orientation="vertical"
-                android:layout_marginTop="25dp"
+                android:layout_marginBottom="60dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
-                android:layout_marginBottom="60dp"
+                android:layout_marginTop="25dp"
+                android:background="@color/chatText"
+                android:orientation="vertical"
 
                 android:padding="10dp"
                 android:scaleX="0"
@@ -279,15 +452,15 @@
 
                     <!--leaders-->
                     <LinearLayout
-                        android:visibility="gone"
                         android:id="@+id/c_action_leaders_root"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-
                         android:minHeight="80dp"
+
                         android:minWidth="80dp"
-                        android:orientation="vertical" >
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <ImageView
 
@@ -297,12 +470,12 @@
                             android:src="@mipmap/ic_action_leaders" />
 
                         <TextView
+                            style="@style/OffsideActionButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:gravity="center"
-                            android:text="@string/lbl_commands_leaders"
-                            style="@style/OffsideActionButton"/>
+                            android:text="@string/lbl_commands_leaders" />
 
                     </LinearLayout>
                     <!--current question-->
@@ -322,12 +495,12 @@
                             android:src="@mipmap/ic_action_current_question" />
 
                         <TextView
+                            style="@style/OffsideActionButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:gravity="center"
-                            android:text="@string/lbl_command_current_question"
-                            style="@style/OffsideActionButton"/>
+                            android:text="@string/lbl_command_current_question" />
 
                     </LinearLayout>
                     <!--player balance-->
@@ -348,12 +521,12 @@
                             android:src="@mipmap/ic_action_offside_coins" />
 
                         <TextView
+                            style="@style/OffsideActionButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:gravity="center"
-                            android:text="@string/lbl_command_offside_coins"
-                            style="@style/OffsideActionButton"/>
+                            android:text="@string/lbl_command_offside_coins" />
 
                     </LinearLayout>
                     <!--send me code-->
@@ -374,12 +547,12 @@
                             android:src="@mipmap/ic_action_code" />
 
                         <TextView
+                            style="@style/OffsideActionButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:gravity="center"
-                            android:text="@string/lbl_command_game_code"
-                            style="@style/OffsideActionButton"/>
+                            android:text="@string/lbl_command_game_code" />
 
                     </LinearLayout>
                     <!--share code-->
@@ -400,12 +573,12 @@
                             android:src="@mipmap/ic_action_whatsapp" />
 
                         <TextView
+                            style="@style/OffsideActionButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:gravity="center"
-                            android:text="@string/lbl_command_share_code"
-                            style="@style/OffsideActionButton"/>
+                            android:text="@string/lbl_command_share_code" />
 
                     </LinearLayout>
                     <!--reload coins - lottery-->
@@ -425,12 +598,12 @@
                             android:src="@mipmap/ic_action_reload" />
 
                         <TextView
+                            style="@style/OffsideActionButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:gravity="center"
-                            android:text="@string/lbl_command_reload"
-                            style="@style/OffsideActionButton"/>
+                            android:text="@string/lbl_command_reload" />
 
                     </LinearLayout>
                     <!--watch video-->
@@ -442,7 +615,7 @@
 
                         android:minHeight="80dp"
                         android:minWidth="80dp"
-                        android:orientation="vertical" >
+                        android:orientation="vertical">
 
                         <ImageView
 
@@ -452,12 +625,12 @@
                             android:src="@mipmap/ic_action_money_bag" />
 
                         <TextView
+                            style="@style/OffsideActionButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:gravity="center"
-                            android:text="@string/lbl_get_offside_coins"
-                            style="@style/OffsideActionButton"/>
+                            android:text="@string/lbl_get_offside_coins" />
 
                     </LinearLayout>
                     <!--exit game-->
@@ -477,12 +650,12 @@
                             android:src="@mipmap/ic_action_exit" />
 
                         <TextView
+                            style="@style/OffsideActionButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:gravity="center"
-                            android:text="@string/lbl_leave_game"
-                            style="@style/OffsideActionButton"/>
+                            android:text="@string/lbl_leave_game" />
 
                     </LinearLayout>
 
@@ -491,8 +664,7 @@
                         android:id="@+id/c_reward_video_loading_root"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        >
+                        android:orientation="vertical">
 
                         <ProgressBar
                             style="?android:attr/progressBarStyleLarge"
@@ -501,6 +673,7 @@
                             android:layout_gravity="center">
 
                         </ProgressBar>
+
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -513,7 +686,6 @@
                             android:textSize="@dimen/OffsideMediumText" />
 
                     </LinearLayout>
-
 
 
                 </org.apmem.tools.layouts.FlowLayout>
