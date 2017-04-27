@@ -27,6 +27,9 @@ public class GameInfo {
     @com.google.gson.annotations.SerializedName("MBS")
     private int minBetSize;
 
+    @com.google.gson.annotations.SerializedName("T")
+    private int trophies;
+
 
     public String getGameId() {
         return gameId;
@@ -60,4 +63,11 @@ public class GameInfo {
         return minBetSize;
     }
 
+    public int getTrophies() {
+        return trophies;
+    }
+
+    public void setTrophies(int trophies) {
+        this.trophies = trophies;
+    }
 }

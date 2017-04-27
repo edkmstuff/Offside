@@ -381,7 +381,9 @@
                                     android:background="@drawable/shape_bg_circle_selected"
                                     android:gravity="center"
                                     android:text="100"
-                                    android:textColor="@color/privateGameTitle" />
+                                    android:textColor="@color/chatPrimary"
+                                    android:textStyle="bold"
+                                    />
 
                                 <TextView
                                     android:id="@+id/cm_incoming_bet_option2_text_view"
@@ -394,7 +396,8 @@
                                     android:background="@drawable/shape_bg_circle"
                                     android:gravity="center"
                                     android:text="200"
-                                    android:textColor="@color/colorWhite" />
+                                    android:textColor="@color/colorBlack"
+                                    android:textStyle="bold"/>
 
                                 <TextView
                                     android:id="@+id/cm_incoming_bet_option3_text_view"
@@ -407,7 +410,8 @@
                                     android:background="@drawable/shape_bg_circle"
                                     android:gravity="center"
                                     android:text="300"
-                                    android:textColor="@color/colorWhite" />
+                                    android:textColor="@color/colorBlack"
+                                    android:textStyle="bold" />
 
                                 <LinearLayout
                                     android:layout_width="match_parent"

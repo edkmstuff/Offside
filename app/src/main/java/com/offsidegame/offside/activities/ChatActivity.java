@@ -83,6 +83,7 @@ public class ChatActivity extends AppCompatActivity {
     String homeTeam;
     String awayTeam;
     int offsideCoins;
+    int trophies;
 
     private Player player;
 
@@ -106,6 +107,10 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayout scoreboardRoot;
     private  String androidDeviceId;
 
+    private TextView trophiesTextView;
+    private TextView offsideCoinsTextView;
+    private ImageView playerPictureImageView;
+
 
 
     @Override
@@ -126,6 +131,8 @@ public class ChatActivity extends AppCompatActivity {
             homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
             awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
             offsideCoins = OffsideApplication.getGameInfo().getOffsideCoins();
+            trophies = OffsideApplication.getGameInfo().getTrophies();
+
 
 
             //<editor-fold desc="FindById">
@@ -151,6 +158,11 @@ public class ChatActivity extends AppCompatActivity {
 
             privateGameNameTextView.setText(privateGameTitle);
             gameTitleTextView.setText(homeTeam + " vs. " + awayTeam);
+
+            playerPictureImageView = (ImageView) findViewById(R.id.c_player_picture_image_view);
+            offsideCoinsTextView = (TextView) findViewById(R.id.c_offside_coins_text_view);
+            trophiesTextView = (TextView) findViewById(R.id.c_trophies_text_view);
+
 
             loadRewardedVideoAd();
             rewardVideoLoadingRoot = (LinearLayout) findViewById(R.id.c_reward_video_loading_root);
@@ -438,6 +450,12 @@ public class ChatActivity extends AppCompatActivity {
 
     //</editor-fold>
 
+            offsideCoinsTextView.setText(String.valueOf(offsideCoins));
+            trophiesTextView.setText(String.valueOf(trophies));
+            ImageHelper.loadImage(thisActivity, player.getPhotoUrl().toString(), playerPictureImageView, "ChatActivity");
+
+
+
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
@@ -700,6 +718,7 @@ public class ChatActivity extends AppCompatActivity {
             OffsideApplication.playerAnswers = player.getPlayerAnswers();
             scoreTextView.setText(Integer.toString((int) player.getPoints()));
             OffsideApplication.setOffsideCoins(player.getOffsideCoins());
+            OffsideApplication.getGameInfo().setTrophies(player.getTrophies());
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);

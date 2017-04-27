@@ -698,10 +698,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                 for (int j = 0; j < viewHolder.betSizeOptionsTextViews.length; j++) {
                                     if (j == index) {
                                         viewHolder.betSizeOptionsTextViews[j].setBackgroundResource(R.drawable.shape_bg_circle_selected);
-                                        viewHolder.betSizeOptionsTextViews[j].setTextColor(ContextCompat.getColor(context, R.color.privateGameTitle));
+                                        viewHolder.betSizeOptionsTextViews[j].setTextColor(ContextCompat.getColor(context, R.color.chatPrimary));
                                     } else {
                                         viewHolder.betSizeOptionsTextViews[j].setBackgroundResource(R.drawable.shape_bg_circle);
-                                        viewHolder.betSizeOptionsTextViews[j].setTextColor(ContextCompat.getColor(context, R.color.colorWhite));
+                                        viewHolder.betSizeOptionsTextViews[j].setTextColor(ContextCompat.getColor(context, R.color.chatPrimary));
                                     }
 
                                 }

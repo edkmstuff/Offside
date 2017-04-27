@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<shape
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval" >
+<!--<shape-->
+    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:shape="oval" >-->
 
-    <solid
-        android:color="#666666"/>
-    <stroke
-        android:width="2dp"
-        android:color="@color/privateGameTitle" />
+    <!--<solid-->
+        <!--android:color="#666666"/>-->
+    <!--<stroke-->
+        <!--android:width="2dp"-->
+        <!--android:color="@color/privateGameTitle" />-->
 
 
 
-</shape>
+<!--</shape>-->
+
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item>
+        <shape
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:shape="oval" >
+
+            <!--<solid-->
+                <!--android:color="#666666"/>-->
+            <stroke
+                android:width="2dp"
+                android:color="@color/chatPrimary" />
+        </shape>
+
+    </item>
+    <item android:drawable="@mipmap/ic_offside_coin_with_logo" />
+
+</layer-list>
