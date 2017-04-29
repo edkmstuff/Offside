@@ -16,6 +16,12 @@ import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.Wheel;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.Player;
+
+import org.acra.ACRA;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Random;
 
@@ -140,6 +146,25 @@ public class SlotActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(context);
+
+    }
+    @Override
+    public void onStop() {
+        try {
+            EventBus.getDefault().unregister(context);
+            super.onStop();
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
     private void stopSlot() {
         wheel1.stopWheel();
         wheel2.stopWheel();
@@ -179,6 +204,21 @@ public class SlotActivity extends AppCompatActivity {
 
             }
         }, frameDuration * 2);
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePlayer(Player player) {
+        try {
+            if (player == null)
+                return;
+
+            OffsideApplication.setPlayer(player);
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
 
     }
 

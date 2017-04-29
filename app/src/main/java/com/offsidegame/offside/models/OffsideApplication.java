@@ -53,11 +53,13 @@ public class OffsideApplication extends Application {
     private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
     private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";
 
-    private static int offsideCoins;
+    private static Player player;
+
+    //private static int offsideCoins;
 
     private static GameInfo gameInfo;
 
-    private static boolean isChatActivityVisible= false;
+    private static boolean isChatActivityVisible = false;
 
     String version = BuildConfig.VERSION_NAME;
 
@@ -91,11 +93,13 @@ public class OffsideApplication extends Application {
     }
 
     public static int getOffsideCoins() {
-        return offsideCoins;
+
+        return player == null? 0 : player.getOffsideCoins();
     }
 
     public static void setOffsideCoins(int offsideCoins) {
-        OffsideApplication.offsideCoins = offsideCoins;
+        if (player != null)
+            player.setOffsideCoins(offsideCoins);
     }
 
     public static GameInfo getGameInfo() {
@@ -134,17 +138,22 @@ public class OffsideApplication extends Application {
         return messageTypeWinner;
     }
 
-    public void onCreate ()
-    {
+    public static Player getPlayer() {
+        return player;
+    }
+
+    public static void setPlayer(Player player) {
+        OffsideApplication.player = player;
+    }
+
+    public void onCreate() {
 
         try {
             super.onCreate();
             // Setup handler for uncaught exceptions.
-            Thread.setDefaultUncaughtExceptionHandler (new Thread.UncaughtExceptionHandler()
-            {
+            Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
                 @Override
-                public void uncaughtException (Thread thread, Throwable e)
-                {
+                public void uncaughtException(Thread thread, Throwable e) {
                     ACRA.getErrorReporter().handleSilentException(e);
                 }
             });
@@ -154,9 +163,7 @@ public class OffsideApplication extends Application {
             intent.setClass(getApplicationContext(), SignalRService.class);
             bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
 
-        }
-
-        catch(Exception ex){
+        } catch (Exception ex) {
 
             ACRA.getErrorReporter().handleSilentException(ex);
         }
@@ -173,10 +180,10 @@ public class OffsideApplication extends Application {
     }
 
 
-    public static  Map<String, AnswerIdentifier> playerAnswers;
+    public static Map<String, AnswerIdentifier> playerAnswers;
 
 
-//signal r
+    //signal r
     public static SignalRService signalRService;
     public static boolean isBoundToSignalRService = false;
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {

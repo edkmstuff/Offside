@@ -85,7 +85,7 @@ public class ChatActivity extends AppCompatActivity {
     int offsideCoins;
     int trophies;
 
-    private Player player;
+    //private Player player;
 
 
     private TextView scoreTextView;
@@ -124,13 +124,14 @@ public class ChatActivity extends AppCompatActivity {
 
             gameId = OffsideApplication.getGameInfo().getGameId();
             gameCode = OffsideApplication.getGameInfo().getPrivateGameCode();
-            FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
-            playerId = player.getUid();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            playerId = user.getUid();
 
             privateGameTitle = OffsideApplication.getGameInfo().getPrivateGameTitle();
             homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
             awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
-            offsideCoins = OffsideApplication.getGameInfo().getOffsideCoins();
+            Player player = OffsideApplication.getPlayer();
+            offsideCoins = player != null? player.getOffsideCoins() : OffsideApplication.getGameInfo().getOffsideCoins();
             trophies = OffsideApplication.getGameInfo().getTrophies();
 
 
@@ -162,6 +163,12 @@ public class ChatActivity extends AppCompatActivity {
             playerPictureImageView = (ImageView) findViewById(R.id.c_player_picture_image_view);
             offsideCoinsTextView = (TextView) findViewById(R.id.c_offside_coins_text_view);
             trophiesTextView = (TextView) findViewById(R.id.c_trophies_text_view);
+
+
+            offsideCoinsTextView.setText(String.valueOf(offsideCoins));
+            trophiesTextView.setText(String.valueOf(trophies));
+            ImageHelper.loadImage(thisActivity, user.getPhotoUrl().toString(), playerPictureImageView, "ChatActivity");
+
 
 
             loadRewardedVideoAd();
@@ -450,9 +457,7 @@ public class ChatActivity extends AppCompatActivity {
 
     //</editor-fold>
 
-            offsideCoinsTextView.setText(String.valueOf(offsideCoins));
-            trophiesTextView.setText(String.valueOf(trophies));
-            ImageHelper.loadImage(thisActivity, player.getPhotoUrl().toString(), playerPictureImageView, "ChatActivity");
+
 
 
 
@@ -581,9 +586,11 @@ public class ChatActivity extends AppCompatActivity {
 
             EventBus.getDefault().post(new PositionEvent(chat.getPosition()));
 
-            player = chat.getPlayer();
+            Player player = chat.getPlayer();
             if (player == null)
                 return;
+
+            OffsideApplication.setPlayer(player);
             OffsideApplication.playerAnswers = player.getPlayerAnswers();
 
             scoreTextView.setText(String.valueOf((int) player.getPoints()));
@@ -708,30 +715,14 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceivePlayer(Player player) {
-        try {
-            if (player == null)
-                return;
 
-            this.player = player;
-            OffsideApplication.playerAnswers = player.getPlayerAnswers();
-            scoreTextView.setText(Integer.toString((int) player.getPoints()));
-            OffsideApplication.setOffsideCoins(player.getOffsideCoins());
-            OffsideApplication.getGameInfo().setTrophies(player.getTrophies());
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
-
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveRewardEvent(RewardEvent rewardEvent) {
         try {
             int rewardAmount = rewardEvent.getRewardAmount();
-            if (player == null || rewardAmount==0)
+            Player player = OffsideApplication.getPlayer();
+            if ( player == null || rewardAmount==0)
                 return;
             int updatedOffsideCoins = player.getOffsideCoins()+rewardAmount;
 
@@ -750,6 +741,7 @@ public class ChatActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveOffsideCoinsUpdated(Integer newOffsideCoinsValue) {
         try {
+            Player player = OffsideApplication.getPlayer();
             if (player == null)
                 return;
 

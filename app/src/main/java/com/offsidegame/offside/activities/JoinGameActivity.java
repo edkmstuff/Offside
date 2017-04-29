@@ -35,6 +35,7 @@ import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.Player;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -262,7 +263,9 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             String privateGameTitle = gameInfo.getPrivateGameTitle();
             String homeTeam = gameInfo.getHomeTeam();
             String awayTeam = gameInfo.getAwayTeam();
-            int offsideCoins = gameInfo.getOffsideCoins();
+            Player player = OffsideApplication.getPlayer();
+
+            int offsideCoins = player != null? player.getOffsideCoins() : gameInfo.getOffsideCoins();
 
 
             SharedPreferences.Editor editor = settings.edit();
