@@ -110,6 +110,7 @@ public class ChatActivity extends AppCompatActivity {
     private TextView trophiesTextView;
     private TextView offsideCoinsTextView;
     private ImageView playerPictureImageView;
+    private ImageView offsideCoinsImageView;
 
 
 
@@ -162,6 +163,7 @@ public class ChatActivity extends AppCompatActivity {
 
             playerPictureImageView = (ImageView) findViewById(R.id.c_player_picture_image_view);
             offsideCoinsTextView = (TextView) findViewById(R.id.c_offside_coins_text_view);
+            offsideCoinsImageView = (ImageView) findViewById(R.id.c_offside_coins_image_view);
             trophiesTextView = (TextView) findViewById(R.id.c_trophies_text_view);
 
 
@@ -738,6 +740,27 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePlayer(Player player) {
+        try {
+            if (player == null)
+                return;
+
+
+            OffsideApplication.playerAnswers = player.getPlayerAnswers();
+            scoreTextView.setText(Integer.toString((int) player.getPoints()));
+            OffsideApplication.setOffsideCoins(player.getOffsideCoins());
+            OffsideApplication.getGameInfo().setTrophies(player.getTrophies());
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveOffsideCoinsUpdated(Integer newOffsideCoinsValue) {
         try {
@@ -745,8 +768,13 @@ public class ChatActivity extends AppCompatActivity {
             if (player == null)
                 return;
 
-            player.setOffsideCoins(newOffsideCoinsValue);
-            OffsideApplication.setOffsideCoins(newOffsideCoinsValue);
+            int oldOffsideCoinsValue = player.getOffsideCoins();
+            if (newOffsideCoinsValue != oldOffsideCoinsValue) {
+                player.setOffsideCoins(newOffsideCoinsValue);
+                OffsideApplication.setOffsideCoins(newOffsideCoinsValue);
+                offsideCoinsImageView.animate().rotationX(360.0f).setDuration(1000).start();
+
+            }
 
 
         } catch (Exception ex) {
