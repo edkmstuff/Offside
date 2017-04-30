@@ -97,7 +97,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
 
                 <TextView
@@ -149,7 +150,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_offside_coin_with_logo" />
+                    android:src="@mipmap/ic_offside_coin_with_logo1" />
 
             </LinearLayout>
 
@@ -177,6 +178,7 @@
                     android:textColor="@color/colorWhite" />
 
                 <ImageView
+                    android:id="@+id/c_trophies_image_view"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:scaleType="centerCrop"
@@ -289,7 +291,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     xmlns:tools="http://schemas.android.com/tools"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -298,7 +300,10 @@
                     android:layoutDirection="ltr"
                     android:orientation="vertical"
 
-                    android:padding="5dp"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     tools:context="com.offsidegame.offside.activities.ChatActivity">
 
                     <TextView
@@ -329,7 +334,8 @@
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    >
 
                     <LinearLayout
                         android:id="@+id/c_scoreboard_root"

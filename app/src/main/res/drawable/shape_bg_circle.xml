@@ -21,13 +21,13 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:shape="oval" >
         <stroke
-            android:width="2dp"
+            android:width="6dp"
             android:color="@color/chatIncoming"  />
         <background
 
             ></background>
     </shape>
 </item>
-    <item android:drawable="@mipmap/ic_offside_coin_with_logo" />
+    <item android:drawable="@mipmap/ic_offside_coin_with_logo1" />
 
 </layer-list>

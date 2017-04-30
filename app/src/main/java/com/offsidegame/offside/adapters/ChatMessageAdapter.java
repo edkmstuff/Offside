@@ -539,6 +539,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingWinnerPointsTextView.setText(viewHolder.chatMessage.getMessageText());
 
             List<Winner> winners = viewHolder.chatMessage.getWinners();
+            viewHolder.incomingWinnersRoot.removeAllViews();
 
             for(Winner winner: winners) {
 

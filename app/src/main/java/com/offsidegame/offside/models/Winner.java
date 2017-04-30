@@ -6,8 +6,8 @@ package com.offsidegame.offside.models;
 
 public class Winner {
 
-    @com.google.gson.annotations.SerializedName("I")
-    private String id ;
+    @com.google.gson.annotations.SerializedName("PI")
+    private String playerId;
     @com.google.gson.annotations.SerializedName("UN")
     private String userName;
     @com.google.gson.annotations.SerializedName("P")
@@ -24,13 +24,7 @@ public class Winner {
     private int trophies;
 
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
 
     public String getUserName() {
         return userName;
@@ -86,5 +80,9 @@ public class Winner {
 
     public void setTrophies(int trophies) {
         this.trophies = trophies;
+    }
+
+    public String getPlayerId() {
+        return playerId;
     }
 }

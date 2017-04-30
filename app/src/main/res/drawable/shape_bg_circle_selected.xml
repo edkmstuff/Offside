@@ -24,11 +24,11 @@
             <!--<solid-->
                 <!--android:color="#666666"/>-->
             <stroke
-                android:width="2dp"
+                android:width="6dp"
                 android:color="@color/chatPrimary" />
         </shape>
 
     </item>
-    <item android:drawable="@mipmap/ic_offside_coin_with_logo" />
+    <item android:drawable="@mipmap/ic_offside_coin_with_logo1" />
 
 </layer-list>
