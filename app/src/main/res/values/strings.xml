@@ -53,6 +53,7 @@
     <string name="lbl_select_game">בחר משחק</string>
     <string name="lbl_select_name_for_club">בחר שם למועדון</string>
     <string name="lbl_create_private_game">צור משחק פרטי</string>
+    <string name="lbl_create_private_game_and_join">צור והתחל לשחק</string>
     <string name="lbl_no_available_games">לא נמצאו משחקים זמינים</string>
     <string name="lbl_you_dont_have_code">אין לך קוד?</string>
     <string name="lbl_no_available_game_message_return_later">כרגע איו משחקים זמינים, אנא חזור במועד מאוחר יותר</string>
@@ -65,11 +66,11 @@
     <string name="lbl_in_few_seconds_you_will_see_others_answers">בעוד מספר שניות תראה כיצד חושבים כולם...</string>
     <string name="lbl_type_in_game_code">הזן קוד משחק פרטי</string>
     <string name="lbl_commands_leaders">מובילים</string>
-    <string name="lbl_command_current_question">שאלה פעילה</string>
-    <string name="lbl_command_offside_coins">יתרה</string>
+    <string name="lbl_command_current_question">שאלה נוכחית</string>
+    <string name="lbl_command_offside_coins">היתרה שלי</string>
     <string name="lbl_command_reload">הגרל מטבעות</string>
-    <string name="lbl_command_game_code">שלח לי קוד</string>
-    <string name="lbl_command_share_code">share code</string>
+    <string name="lbl_command_game_code">קוד המשחק</string>
+    <string name="lbl_command_share_code">שתף קוד</string>
     <string name="rewarded_video_ad_unit_id_key">ca-app-pub-3734756240615742/4334945313</string>
     <string name="lbl_you_can_get_coins_doing_one_of_the_following">תוכל להשיג מטבעות באחת מהדרכים הבאות</string>
     <string name="lbl_congrates_for_getting_more_offside_coins">צפית עד הסוף? זכית!</string>

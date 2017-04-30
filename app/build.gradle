@@ -8,8 +8,8 @@ android {
         applicationId "com.offsidegame.offside"
         minSdkVersion 17
         targetSdkVersion 24
-        versionCode 3
-        versionName "3.0.1"
+        versionCode 4
+        versionName "3.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         //multiDexEnabled  false

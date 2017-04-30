@@ -372,6 +372,10 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private Boolean exit = false;
     @Override
     public void onBackPressed() {
+
+        joinGameRoot.setVisibility(View.VISIBLE);
+        createPrivateGameRoot.setVisibility(View.GONE);
+
         if (exit) {
             finish(); // finish activity
         } else {

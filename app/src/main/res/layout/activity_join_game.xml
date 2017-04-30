@@ -51,7 +51,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="5dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <!-- Greeting -->
         <LinearLayout
@@ -207,7 +207,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="10dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
 
         <ImageView
@@ -268,7 +268,7 @@
             android:minWidth="100dp"
             android:layout_height="wrap_content"
             android:textDirection="rtl"
-            android:text="@string/lbl_create_private_game" />
+            android:text="@string/lbl_create_private_game_and_join" />
 
         <!--<TextView-->
             <!--android:id="@+id/jg_private_game_code_text_view"-->

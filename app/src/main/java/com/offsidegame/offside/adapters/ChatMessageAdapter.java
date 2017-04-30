@@ -501,6 +501,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             rewardedVideoAdAppUnitId = context.getString(R.string.rewarded_video_ad_unit_id_key);
 
+            if(rewardedVideoAd== null)
+                return;;
+
             if (!rewardedVideoAd.isLoaded())
                 rewardedVideoAd.loadAd(rewardedVideoAdAppUnitId, new AdRequest.Builder().build());
 

@@ -180,10 +180,10 @@ public class ChatActivity extends AppCompatActivity {
             ImageHelper.loadImage(thisActivity, player != null? player.getImageUrl(): settings.getString(getString(R.string.player_profile_picture_url_key),null) , playerPictureImageView, "ChatActivity");
             ImageHelper.loadImage(thisActivity, player != null? player.getImageUrl(): settings.getString(getString(R.string.player_profile_picture_url_key),null) , playerPictureImageView1, "ChatActivity");
 
-
+            rewardVideoLoadingRoot = (LinearLayout) findViewById(R.id.c_reward_video_loading_root);
 
             loadRewardedVideoAd();
-            rewardVideoLoadingRoot = (LinearLayout) findViewById(R.id.c_reward_video_loading_root);
+
             rewardVideoLoadingRoot.setVisibility(View.GONE);
 
             actionExitGameRoot = (LinearLayout) findViewById(R.id.c_action_exit_game_root);
@@ -484,6 +484,9 @@ public class ChatActivity extends AppCompatActivity {
 
             String rewardedVideoAdAppUnitId = context.getString(R.string.rewarded_video_ad_unit_id_key);
 
+            if(rewardedVideoAd == null)
+                return;
+
             if (!rewardedVideoAd.isLoaded())
                 rewardedVideoAd.loadAd(rewardedVideoAdAppUnitId, new AdRequest.Builder().build());
 
@@ -511,6 +514,10 @@ public class ChatActivity extends AppCompatActivity {
 
             //reset to chat adapter
             createNewChatAdapter(true);
+
+            Player player = OffsideApplication.getPlayer();
+            offsideCoins = player != null? player.getOffsideCoins() : OffsideApplication.getGameInfo().getOffsideCoins();
+            offsideCoinsTextView.setText(Integer.toString(offsideCoins));
 
             EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
 
