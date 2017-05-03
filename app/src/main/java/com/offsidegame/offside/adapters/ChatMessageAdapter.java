@@ -867,7 +867,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     //timer of current question
                     if (viewHolder.timeToAnswer > 0) {
                         if (viewHolder.countDownTimer != null) {
-                            Log.i("offside", "CANCELLING!!! timerId: " + String.valueOf(viewHolder.countDownTimer.hashCode()));
+                            //Log.i("offside", "CANCELLING!!! timerId: " + String.valueOf(viewHolder.countDownTimer.hashCode()));
                             viewHolder.countDownTimer.cancel();
                             viewHolder.countDownTimer = null;
                         }
@@ -880,7 +880,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                     this.onFinish();
                                 }
                                 viewHolder.chatMessage.setTimeLeftToAnswer((int) millisUntilFinished);
-                                Log.i("offside", "timerId: " + String.valueOf(this.hashCode()) + " question text: " + viewHolder.question.getQuestionText() + " - secondsLeft: " + Math.round((int) millisUntilFinished / 1000.0f));
+                                //Log.i("offside", "timerId: " + String.valueOf(this.hashCode()) + " question text: " + viewHolder.question.getQuestionText() + " - secondsLeft: " + Math.round((int) millisUntilFinished / 1000.0f));
                                 viewHolder.incomingTimeToAnswerProgressBar.setProgress(Math.round((float) millisUntilFinished));
 
                                 String formattedTimerDisplay = formatTimerDisplay(millisUntilFinished);

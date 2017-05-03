@@ -389,7 +389,7 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
-        hub.invoke(Boolean.class, "QuitGame", gameId, playerId).onError(new ErrorCallback() {
+        hub.invoke(Boolean.class, "QuitGame", gameId, playerId, androidDeviceId).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
                 ACRA.getErrorReporter().handleSilentException(error);

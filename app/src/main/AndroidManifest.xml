@@ -27,17 +27,13 @@
         <!-- android:name="com.google.firebase.messaging.default_notification_color" -->
         <!-- android:resource="@color/colorAccent" /> -->
 
-        <activity android:name=".activities.SlotActivity"
+        <activity
+            android:name=".activities.SlotActivity"
             android:label="Offside"
-            android:screenOrientation="portrait">
-
-
-        </activity>
-
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activities.LoginActivity"
             android:label="Offside"
-
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,23 +44,20 @@
         <activity
             android:name=".activities.JoinGameActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activities.ChatActivity"
             android:label="Match field"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".helpers.SignalRService"
             android:exported="false" />
 
-
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-
+        <activity android:name=".activities.ViewPlayerActivity"></activity>
     </application>
 
 </manifest>
