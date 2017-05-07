@@ -54,6 +54,7 @@ import com.offsidegame.offside.models.Score;
 import com.offsidegame.offside.models.Scoreboard;
 
 import org.acra.ACRA;
+import org.apmem.tools.layouts.FlowLayout;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -116,6 +117,8 @@ public class ChatActivity extends AppCompatActivity {
     private ImageView offsideCoinsImageView;
     private ImageView trophiesImageView;
 
+    private FlowLayout actionsFlowLayout;
+
 
 
     @Override
@@ -162,6 +165,7 @@ public class ChatActivity extends AppCompatActivity {
             actionsMenuRoot.setAlpha(0.99f);
             chatActionsButton = (ImageView) findViewById(R.id.c_chatActionsButton);
             actionsMenuRoot.setVisibility(View.GONE);
+            actionsFlowLayout = (FlowLayout) findViewById(R.id.c_actions_flow_layout);
 
             privateGameNameTextView.setText(privateGameTitle);
             gameTitleTextView.setText(homeTeam + " vs. " + awayTeam);
@@ -184,6 +188,7 @@ public class ChatActivity extends AppCompatActivity {
 
             loadRewardedVideoAd();
 
+            actionsFlowLayout.setVisibility(View.VISIBLE);
             rewardVideoLoadingRoot.setVisibility(View.GONE);
 
             actionExitGameRoot = (LinearLayout) findViewById(R.id.c_action_exit_game_root);
@@ -279,7 +284,7 @@ public class ChatActivity extends AppCompatActivity {
             final LinearLayout actionWatchVideoRoot = (LinearLayout) findViewById(R.id.c_action_watch_video_root);
 
 
-            Map<String, LinearLayout> actionButtons = new HashMap<String, LinearLayout>() {
+            final Map<String, LinearLayout> actionButtons = new HashMap<String, LinearLayout>() {
                 {
                     put("!leaders", actionLeadersRoot);
                     put("!question", actionCurrentQuestionRoot);
@@ -356,41 +361,40 @@ public class ChatActivity extends AppCompatActivity {
                 public void onRewarded(RewardItem reward) {
 
                     int rewardAmount = reward.getAmount();
-                    //int currentOffsideCoinsValue = OffsideApplication.getOffsideCoins();
-
-
                     //Toast.makeText(context, "onRewarded! currency: " + reward.getType() + "  amount: " +  reward.getAmount(), Toast.LENGTH_SHORT).show();
-
+                    actionsFlowLayout.setVisibility(View.VISIBLE);
                     EventBus.getDefault().post(new RewardEvent(rewardAmount));
 
                 }
 
                 @Override
                 public void onRewardedVideoAdLeftApplication() {
-
+                    actionsFlowLayout.setVisibility(View.VISIBLE);
                    // Toast.makeText(context, "onRewardedVideoAdLeftApplication",Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onRewardedVideoAdClosed() {
+                    actionsFlowLayout.setVisibility(View.VISIBLE);
                     //Toast.makeText(context, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
 
-                    rewardedVideoAd = null;
+                    //rewardedVideoAd = null;
 
 
                 }
 
                 @Override
                 public void onRewardedVideoAdFailedToLoad(int errorCode) {
+                    actionsFlowLayout.setVisibility(View.VISIBLE);
                     //Toast.makeText(context, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
-                    rewardedVideoAd = null;
+                   // rewardedVideoAd = null;
 
                 }
 
                 @Override
                 public void onRewardedVideoAdLoaded() {
                     try {
-
+                        actionsFlowLayout.setVisibility(View.VISIBLE);
                         if (rewardedVideoAd.isLoaded()){
                             rewardVideoLoadingRoot.setVisibility(View.VISIBLE);
                             rewardedVideoAd.show();
@@ -409,6 +413,7 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onRewardedVideoAdOpened() {
                     //Toast.makeText(context, "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
+                    actionsFlowLayout.setVisibility(View.VISIBLE);
                     rewardVideoLoadingRoot.setVisibility(View.GONE);
                 }
 
@@ -423,9 +428,22 @@ public class ChatActivity extends AppCompatActivity {
             actionWatchVideoRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    rewardVideoLoadingRoot.setVisibility(View.VISIBLE);
-                    loadRewardedVideoAd();
-                    //chatActionsButton.performClick();
+
+                    Player player = OffsideApplication.getPlayer();
+                    if(player==null)
+                        return;
+                    if(player.getRewardVideoWatchCount() < OffsideApplication.getMaxAllowedRewardVideostOWatch() ){
+                        actionsFlowLayout.setVisibility(View.GONE);
+                        rewardVideoLoadingRoot.setVisibility(View.VISIBLE);
+
+                        loadRewardedVideoAd();
+                    }
+                    else
+                    {
+                        Toast.makeText(context, R.string.lbl_exceed_allowed_reward_video_watch_message, Toast.LENGTH_SHORT).show();
+                    }
+
+
 
 
                 }
@@ -744,10 +762,8 @@ public class ChatActivity extends AppCompatActivity {
             if ( player == null || rewardAmount==0)
                 return;
             int updatedOffsideCoins = player.getOffsideCoins()+rewardAmount;
-
-//            player.setOffsideCoins(updatedOffsideCoins);
-//            OffsideApplication.setOffsideCoins(updatedOffsideCoins);
-            OffsideApplication.signalRService.setOffsideCoins(gameId, playerId, updatedOffsideCoins);
+            player.incrementRewardVideoWatchCount();
+            OffsideApplication.signalRService.setOffsideCoins(gameId, playerId, updatedOffsideCoins, true);
 
 
         } catch (Exception ex) {

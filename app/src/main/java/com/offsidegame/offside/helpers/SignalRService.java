@@ -69,9 +69,9 @@ public class SignalRService extends Service {
     private Date startReconnecting = null;
 
     //public final String ip = new String("192.168.1.140:8080");
-    //public final String ip = new String("10.0.0.17:8080");
+    public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
-    public final String ip = new String("offside.azurewebsites.net");
+    //public final String ip = new String("offside.azurewebsites.net");
 
 
     public Boolean stoppedIntentionally = false;
@@ -557,11 +557,11 @@ public class SignalRService extends Service {
         return true;
     }
 
-    public boolean setOffsideCoins(String gameId, String playerId, int offsideCoins) {
+    public boolean setOffsideCoins(String gameId, String playerId, int offsideCoins, boolean isDueToRewardVideo) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return false;
 
-        hub.invoke(Integer.class, "SetOffsideCoins", gameId, playerId, offsideCoins).done(new Action<Integer>() {
+        hub.invoke(Integer.class, "SetOffsideCoins", gameId, playerId, offsideCoins, isDueToRewardVideo).done(new Action<Integer>() {
             @Override
             public void run(Integer newOffsideCoinsValue) throws Exception {
                 EventBus.getDefault().post(newOffsideCoinsValue);

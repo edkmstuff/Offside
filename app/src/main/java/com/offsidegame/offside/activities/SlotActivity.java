@@ -177,13 +177,13 @@ public class SlotActivity extends AppCompatActivity {
                 String command = null;
 
                 if (wheel1.currentIndex == wheel2.currentIndex && wheel2.currentIndex == wheel3.currentIndex){
-                    command = "!reload1000";
-                    Toast.makeText(context, R.string.lbl_well_done_you_earned_1000_coins, Toast.LENGTH_LONG).show();
+                    command = "!reload500";
+                    Toast.makeText(context, R.string.lbl_well_done_you_earned_500_coins, Toast.LENGTH_LONG).show();
                 }
 
                 else if (wheel1.currentIndex == wheel2.currentIndex || wheel2.currentIndex == wheel3.currentIndex || wheel1.currentIndex == wheel3.currentIndex) {
-                    command = "!reload500";
-                    Toast.makeText(context, R.string.lbl_well_done_you_earned_500_coins, Toast.LENGTH_LONG).show();
+                    command = "!reload100";
+                    Toast.makeText(context, R.string.lbl_well_done_you_earned_100_coins, Toast.LENGTH_LONG).show();
                 }
                 else
                     Toast.makeText(context, R.string.lbl_you_didnt_earn_coins, Toast.LENGTH_LONG).show();

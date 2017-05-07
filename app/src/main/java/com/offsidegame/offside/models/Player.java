@@ -33,6 +33,9 @@ public class Player {
     private int privateGamePosition;
     @com.google.gson.annotations.SerializedName("T")
     private int trophies;
+    @com.google.gson.annotations.SerializedName("RVWC")
+    private int rewardVideoWatchCount;
+
 
     public String getImageUrl() {
         return imageUrl;
@@ -138,6 +141,19 @@ public class Player {
     public void setTrophies(int trophies) {
         this.trophies = trophies;
     }
+
+    public int getRewardVideoWatchCount() {
+        return rewardVideoWatchCount;
+    }
+
+    public void setRewardVideoWatchCount(int rewardVideoWatchCount) {
+        this.rewardVideoWatchCount = rewardVideoWatchCount;
+    }
+
+    public void incrementRewardVideoWatchCount() {
+        this.rewardVideoWatchCount++;
+    }
+
 }
 
 

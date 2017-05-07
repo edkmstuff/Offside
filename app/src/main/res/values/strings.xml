@@ -85,7 +85,7 @@
     <string name="lbl_leave_game">צא מהמשחק</string>
     <string name="lbl_start_slot">לחץ כאן כדי להגריל</string>
     <string name="lbl_back_to_game">חזור למשחק</string>
-    <string name="lbl_well_done_you_earned_1000_coins">כל הכבוד! הרווחת 1000 מטבעות</string>
+    <string name="lbl_well_done_you_earned_100_coins">כל הכבוד! הרווחת 100 מטבעות</string>
     <string name="lbl_well_done_you_earned_500_coins">כל הכבוד! הרווחת 500 מטבעות</string>
     <string name="lbl_you_didnt_earn_coins">לא זכית במטבעות הפעם... לא נורא, תוכל לנסות שוב</string>
     <string name="lbl_try_again">נסה שוב</string>
@@ -95,6 +95,7 @@
     <string name="lbl_your_answer_was">תשובתך היתה</string>
     <string name="lbl_press_back_again_to_exit">לחץ שוב על חזרה כדי לצאת</string>
     <string name="lbl_and_the_winner_is">והמנצח הוא...היא...הם...</string>
+    <string name="lbl_exceed_allowed_reward_video_watch_message">צפית במקסימום סרטונים המותרים למשחק אחד.</string>
 
 
 </resources>

@@ -419,14 +419,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 public void onRewarded(RewardItem reward) {
 
                     int rewardAmount = reward.getAmount();
-                    //int currentOffsideCoinsValue = OffsideApplication.getOffsideCoins();
 
                     viewHolder.incomingGetCoinsPlayerOptionsRoot.setVisibility(View.GONE);
                     viewHolder.incomingGetCoinsLoadingRoot.setVisibility(View.GONE);
-
-//                    viewHolder.incomingGetCoinsRewardValueTextView.setText(String.valueOf(rewardAmount));
-//                    viewHolder.incomingGetCoinsUpdatedOffsideCoinsValueTextView.setText(String.valueOf(currentOffsideCoinsValue+rewardAmount));
-//                    viewHolder.incomingGetCoinsFeedbackPostVideoWatchRoot.setVisibility(View.VISIBLE);
 
                     //Toast.makeText(context, "onRewarded! currency: " + reward.getType() + "  amount: " +  reward.getAmount(), Toast.LENGTH_SHORT).show();
 

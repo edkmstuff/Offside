@@ -189,17 +189,33 @@
             android:textColor="@color/grayText" />
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="bottom">
+            <TextView
+                android:id="@+id/jg_version_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="v3.1"
+                android:textSize="12dp"
+                android:textColor="@color/grayText"
+                android:layout_gravity="center"
+                android:layout_marginBottom="2dp"
 
 
 
 
+                />
 
-
+        </LinearLayout>
     </LinearLayout>
 
 
 
-
+     <!--Private game creation form-->
     <LinearLayout
         android:id="@+id/jg_create_private_game_root"
         android:layout_width="match_parent"
@@ -279,6 +295,10 @@
 
 
     </LinearLayout>
+
+
+
+
 
 
 </LinearLayout>

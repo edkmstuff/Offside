@@ -43,6 +43,7 @@ public class OffsideApplication extends Application {
     private static String messageTypeGetCoins = "GET_COINS";
     private static String messageTypeWinner = "WINNER";
     private static String questionTypeDebate = "Debate";
+    private static int maxAllowedRewardVideostOWatch = 6;
 
 
     private static String profileImageFileName = "profileImage.jpg";
@@ -66,7 +67,7 @@ public class OffsideApplication extends Application {
 
     private static boolean isChatActivityVisible = false;
 
-    String version = BuildConfig.VERSION_NAME;
+    private static String version = BuildConfig.VERSION_NAME;
 
 
     public static String getMessageTypeText() {
@@ -151,6 +152,10 @@ public class OffsideApplication extends Application {
         OffsideApplication.player = player;
     }
 
+    public static int getMaxAllowedRewardVideostOWatch() {
+        return maxAllowedRewardVideostOWatch;
+    }
+
     public void onCreate() {
 
         try {
@@ -211,4 +216,7 @@ public class OffsideApplication extends Application {
 
     };
 
+    public static String getVersion() {
+        return version;
+    }
 }

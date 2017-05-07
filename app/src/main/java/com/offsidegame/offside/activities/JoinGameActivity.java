@@ -68,6 +68,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private SharedPreferences settings;
     private AvailableGame[] availableGames ;
     private TextView noAvailableGamesReturnLaterTextView;
+    private TextView versionTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +106,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             });
 
 
+            versionTextView = (TextView) findViewById(R.id.jg_version_text_view);
+            versionTextView.setText(OffsideApplication.getVersion()== null? "0.0" : OffsideApplication.getVersion());
             joinGameRoot = (LinearLayout) findViewById(R.id.jg_join_game_root);
             loadingGameRoot = (LinearLayout) findViewById(R.id.jg_loading_root);
             createPrivateGameRoot = (LinearLayout) findViewById(R.id.jg_create_private_game_root);
@@ -263,9 +266,11 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             String privateGameTitle = gameInfo.getPrivateGameTitle();
             String homeTeam = gameInfo.getHomeTeam();
             String awayTeam = gameInfo.getAwayTeam();
-            Player player = OffsideApplication.getPlayer();
 
-            int offsideCoins = player != null? player.getOffsideCoins() : gameInfo.getOffsideCoins();
+            //Player player = OffsideApplication.getPlayer();
+            //int offsideCoins = player != null? player.getOffsideCoins() : gameInfo.getOffsideCoins();
+
+            int offsideCoins = gameInfo.getOffsideCoins();
 
 
             SharedPreferences.Editor editor = settings.edit();
