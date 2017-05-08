@@ -42,6 +42,8 @@ repositories {
     allprojects {
         repositories {
             maven { url 'https://maven.fabric.io/public' }
+            //maven {url 'https://dl.bintray.com/ironsource-mobile/android-sdk'}
+
         }
     }
 }
@@ -66,6 +68,7 @@ dependencies {
     compile 'com.google.firebase:firebase-ads:10.2.0'
     compile 'com.felipecsl:gifimageview:2.1.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+//    compile 'com.ironsource.sdk:mediationsdk:6.5.3@jar'
     testCompile 'junit:junit:4.12'
 }
 

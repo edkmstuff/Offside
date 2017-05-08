@@ -43,8 +43,6 @@ public class OffsideApplication extends Application {
     private static String messageTypeGetCoins = "GET_COINS";
     private static String messageTypeWinner = "WINNER";
     private static String questionTypeDebate = "Debate";
-    private static int maxAllowedRewardVideostOWatch = 6;
-
 
     private static String profileImageFileName = "profileImage.jpg";
     //private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
@@ -152,9 +150,6 @@ public class OffsideApplication extends Application {
         OffsideApplication.player = player;
     }
 
-    public static int getMaxAllowedRewardVideostOWatch() {
-        return maxAllowedRewardVideostOWatch;
-    }
 
     public void onCreate() {
 

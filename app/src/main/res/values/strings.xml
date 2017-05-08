@@ -72,6 +72,8 @@
     <string name="lbl_command_game_code">קוד המשחק</string>
     <string name="lbl_command_share_code">שתף קוד</string>
     <string name="rewarded_video_ad_unit_id_key">ca-app-pub-3734756240615742/4334945313</string>
+    <string name="rewarded_video_ad_unit_id_key_1">ca-app-pub-3940256099942544/5224354917</string>  <!--googles test aduinitid-->
+
     <string name="lbl_you_can_get_coins_doing_one_of_the_following">תוכל להשיג מטבעות באחת מהדרכים הבאות</string>
     <string name="lbl_congrates_for_getting_more_offside_coins">צפית עד הסוף? זכית!</string>
     <string name="lbl_updated_balance">יתרה מעודכנת</string>
@@ -96,6 +98,7 @@
     <string name="lbl_press_back_again_to_exit">לחץ שוב על חזרה כדי לצאת</string>
     <string name="lbl_and_the_winner_is">והמנצח הוא...היא...הם...</string>
     <string name="lbl_exceed_allowed_reward_video_watch_message">צפית במקסימום סרטונים המותרים למשחק אחד.</string>
+    <string name="lbl_failed_to_load_video">טעינת וידאו נכשלה</string>
 
 
 </resources>

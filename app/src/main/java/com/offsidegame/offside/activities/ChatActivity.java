@@ -32,6 +32,7 @@ import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
@@ -66,6 +67,7 @@ import java.util.Map;
 public class ChatActivity extends AppCompatActivity {
 
 
+   //<editor-fold desc="private members">
     private final Context context = this;
     private final Activity thisActivity = this;
     private TextView chatSendTextView;
@@ -87,8 +89,6 @@ public class ChatActivity extends AppCompatActivity {
     int offsideCoins;
     int trophies;
 
-    //private Player player;
-
 
     private TextView scoreTextView;
     private TextView scoreTextView1;
@@ -105,6 +105,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private RewardedVideoAd rewardedVideoAd;
     private LinearLayout rewardVideoLoadingRoot;
+    private TextView loadingVideoTextView;
     private LinearLayout actionExitGameRoot;
 
     private LinearLayout scoreboardRoot;
@@ -119,6 +120,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private FlowLayout actionsFlowLayout;
 
+
+    //</editor-fold>
 
 
     @Override
@@ -166,6 +169,7 @@ public class ChatActivity extends AppCompatActivity {
             chatActionsButton = (ImageView) findViewById(R.id.c_chatActionsButton);
             actionsMenuRoot.setVisibility(View.GONE);
             actionsFlowLayout = (FlowLayout) findViewById(R.id.c_actions_flow_layout);
+            loadingVideoTextView = (TextView) findViewById(R.id.c_loading_video_text_view);
 
             privateGameNameTextView.setText(privateGameTitle);
             gameTitleTextView.setText(homeTeam + " vs. " + awayTeam);
@@ -183,13 +187,6 @@ public class ChatActivity extends AppCompatActivity {
             settings = getSharedPreferences(getString(R.string.preference_name), 0);
             ImageHelper.loadImage(thisActivity, player != null? player.getImageUrl(): settings.getString(getString(R.string.player_profile_picture_url_key),null) , playerPictureImageView, "ChatActivity");
             ImageHelper.loadImage(thisActivity, player != null? player.getImageUrl(): settings.getString(getString(R.string.player_profile_picture_url_key),null) , playerPictureImageView1, "ChatActivity");
-
-            rewardVideoLoadingRoot = (LinearLayout) findViewById(R.id.c_reward_video_loading_root);
-
-            loadRewardedVideoAd();
-
-            actionsFlowLayout.setVisibility(View.VISIBLE);
-            rewardVideoLoadingRoot.setVisibility(View.GONE);
 
             actionExitGameRoot = (LinearLayout) findViewById(R.id.c_action_exit_game_root);
 
@@ -231,9 +228,6 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-//                    if (!isConnected)
-//                        return;
-
                     hideKeypad();
                     if (isActionMenuVisible)
                     {
@@ -245,15 +239,11 @@ public class ChatActivity extends AppCompatActivity {
                     {
                         actionsMenuRoot.setVisibility(View.VISIBLE);
                         actionsMenuRoot.animate().scaleX(1f).scaleY(1f);
-
                     }
 
-
                     isActionMenuVisible = !isActionMenuVisible;
-
                 }
             });
-
 
             chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -362,45 +352,36 @@ public class ChatActivity extends AppCompatActivity {
 
                     int rewardAmount = reward.getAmount();
                     //Toast.makeText(context, "onRewarded! currency: " + reward.getType() + "  amount: " +  reward.getAmount(), Toast.LENGTH_SHORT).show();
-                    actionsFlowLayout.setVisibility(View.VISIBLE);
+                    resetElementsVisibility();
                     EventBus.getDefault().post(new RewardEvent(rewardAmount));
-
                 }
 
                 @Override
                 public void onRewardedVideoAdLeftApplication() {
-                    actionsFlowLayout.setVisibility(View.VISIBLE);
-                   // Toast.makeText(context, "onRewardedVideoAdLeftApplication",Toast.LENGTH_SHORT).show();
+                    resetElementsVisibility();
                 }
 
                 @Override
                 public void onRewardedVideoAdClosed() {
-                    actionsFlowLayout.setVisibility(View.VISIBLE);
-                    //Toast.makeText(context, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
-
-                    //rewardedVideoAd = null;
-
+                    resetElementsVisibility();
 
                 }
 
                 @Override
                 public void onRewardedVideoAdFailedToLoad(int errorCode) {
-                    actionsFlowLayout.setVisibility(View.VISIBLE);
-                    //Toast.makeText(context, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
-                   // rewardedVideoAd = null;
+                    resetElementsVisibility();
+                    Toast.makeText(context, R.string.lbl_failed_to_load_video, Toast.LENGTH_SHORT).show();
+
 
                 }
 
                 @Override
                 public void onRewardedVideoAdLoaded() {
                     try {
-                        actionsFlowLayout.setVisibility(View.VISIBLE);
                         if (rewardedVideoAd.isLoaded()){
-                            rewardVideoLoadingRoot.setVisibility(View.VISIBLE);
                             rewardedVideoAd.show();
                         }
-
-                        //Toast.makeText(context, "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
+                        resetElementsVisibility();
 
                     } catch (Exception ex) {
 
@@ -412,14 +393,17 @@ public class ChatActivity extends AppCompatActivity {
 
                 @Override
                 public void onRewardedVideoAdOpened() {
-                    //Toast.makeText(context, "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
-                    actionsFlowLayout.setVisibility(View.VISIBLE);
-                    rewardVideoLoadingRoot.setVisibility(View.GONE);
+                    resetElementsVisibility();
                 }
 
                 @Override
                 public void onRewardedVideoStarted() {
-                    //Toast.makeText(context, "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
+                    resetElementsVisibility();
+                }
+
+                public void resetElementsVisibility(){
+                    actionsFlowLayout.setVisibility(View.VISIBLE);
+                    rewardVideoLoadingRoot.setVisibility(View.GONE);
                 }
                 //</editor-fold>
 
@@ -432,7 +416,8 @@ public class ChatActivity extends AppCompatActivity {
                     Player player = OffsideApplication.getPlayer();
                     if(player==null)
                         return;
-                    if(player.getRewardVideoWatchCount() < OffsideApplication.getMaxAllowedRewardVideostOWatch() ){
+                    if(player.getRewardVideoWatchCount() < OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame() ){
+                        loadingVideoTextView.setText("Loading "+Integer.toString(player.getRewardVideoWatchCount())+ " of "+ Integer.toString(OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame())+" allowed videos");
                         actionsFlowLayout.setVisibility(View.GONE);
                         rewardVideoLoadingRoot.setVisibility(View.VISIBLE);
 
@@ -486,9 +471,79 @@ public class ChatActivity extends AppCompatActivity {
 
     //</editor-fold>
 
+            rewardVideoLoadingRoot = (LinearLayout) findViewById(R.id.c_reward_video_loading_root);
+
+            //loadRewardedVideoAd();
+
+            actionsFlowLayout.setVisibility(View.VISIBLE);
+            rewardVideoLoadingRoot.setVisibility(View.GONE);
 
 
 
+            //<editor-fold desc="IRON SOURCE STUFF">
+
+            /*   ---------------Iron Source stuff
+            IronSource.setUserId(playerId);  //must be before init;
+            //Ad Units should be in the type of IronSource.Ad_Unit.AdUnitName//
+            String ironSourceAppKey = "6248b53d";
+            //IronSource.init(thisActivity, ironSourceAppKey);
+            IronSource.init(thisActivity,ironSourceAppKey, IronSource.AD_UNIT.OFFERWALL, IronSource.AD_UNIT.INTERSTITIAL, IronSource.AD_UNIT.REWARDED_VIDEO);
+
+            IntegrationHelper.validateIntegration(thisActivity);
+            */
+
+            /*
+            IronSource.setRewardedVideoListener(new RewardedVideoListener() {
+
+                @Override
+                public void onRewardedVideoAdOpened() {
+                    actionsFlowLayout.setVisibility(View.VISIBLE);
+                    rewardVideoLoadingRoot.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onRewardedVideoAdClosed() {
+                    actionsFlowLayout.setVisibility(View.VISIBLE);
+                    rewardVideoLoadingRoot.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onRewardedVideoAvailabilityChanged(boolean available) {
+                    //Change the in-app 'Traffic Driver' state according to availability.
+                }
+
+                @Override
+                public void onRewardedVideoAdStarted() {
+                    actionsFlowLayout.setVisibility(View.VISIBLE);
+                    rewardVideoLoadingRoot.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onRewardedVideoAdEnded() {
+                    actionsFlowLayout.setVisibility(View.VISIBLE);
+                    rewardVideoLoadingRoot.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onRewardedVideoAdRewarded(Placement placement) {
+
+                    int rewardAmount = placement.getRewardAmount();
+                    //Toast.makeText(context, "onRewarded! currency: " + reward.getType() + "  amount: " +  reward.getAmount(), Toast.LENGTH_SHORT).show();
+                    actionsFlowLayout.setVisibility(View.VISIBLE);
+                    EventBus.getDefault().post(new RewardEvent(rewardAmount));
+
+                }
+
+                @Override
+                public void onRewardedVideoAdShowFailed(IronSourceError error) {
+                    actionsFlowLayout.setVisibility(View.VISIBLE);
+                    rewardVideoLoadingRoot.setVisibility(View.GONE);
+                    Toast.makeText(context, "Failed to load video", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+        */
+            //</editor-fold>
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -500,6 +555,7 @@ public class ChatActivity extends AppCompatActivity {
     private void loadRewardedVideoAd() {
         try {
 
+            //Google Firebase Ad-Mob
             String rewardedVideoAdAppUnitId = context.getString(R.string.rewarded_video_ad_unit_id_key);
 
             if(rewardedVideoAd == null)
@@ -507,6 +563,12 @@ public class ChatActivity extends AppCompatActivity {
 
             if (!rewardedVideoAd.isLoaded())
                 rewardedVideoAd.loadAd(rewardedVideoAdAppUnitId, new AdRequest.Builder().build());
+
+//IronSource
+//            boolean isIronSourceRewardVideoAvailable = IronSource.isRewardedVideoAvailable();
+//            if(isIronSourceRewardVideoAvailable)
+//                IronSource.showRewardedVideo("DefaultRewardedVideo");
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -527,6 +589,7 @@ public class ChatActivity extends AppCompatActivity {
 
         try {
             super.onResume();
+            //IronSource.onResume(thisActivity);
             OffsideApplication.setIsChatActivityVisible(true);
             hideKeypad();
 
@@ -549,6 +612,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public void onPause(){
         super.onPause();
+        //IronSource.onResume(thisActivity);
         OffsideApplication.setIsChatActivityVisible(false);
     }
 
