@@ -6,17 +6,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -88,6 +86,7 @@ public class ChatActivity extends AppCompatActivity {
     String awayTeam;
     int offsideCoins;
     int trophies;
+    int powerItems;
 
 
     private TextView scoreTextView;
@@ -112,11 +111,14 @@ public class ChatActivity extends AppCompatActivity {
     private  String androidDeviceId;
 
     private TextView trophiesTextView;
+    private TextView powerItemsTextView;
     private TextView offsideCoinsTextView;
     private ImageView playerPictureImageView;
     private ImageView playerPictureImageView1;
     private ImageView offsideCoinsImageView;
     private ImageView trophiesImageView;
+    private ImageView powerItemImageView;
+
 
     private FlowLayout actionsFlowLayout;
 
@@ -141,9 +143,10 @@ public class ChatActivity extends AppCompatActivity {
             privateGameTitle = OffsideApplication.getGameInfo().getPrivateGameTitle();
             homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
             awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
-            Player player = OffsideApplication.getPlayer();
+            Player player = OffsideApplication.getGameInfo().getPlayer();
             offsideCoins = player != null? player.getOffsideCoins() : OffsideApplication.getGameInfo().getOffsideCoins();
             trophies = OffsideApplication.getGameInfo().getTrophies();
+            powerItems = player.getPowerItems();
 
 
 
@@ -178,11 +181,14 @@ public class ChatActivity extends AppCompatActivity {
             playerPictureImageView1 = (ImageView) findViewById(R.id.c_player_picture_image_view1);
             offsideCoinsTextView = (TextView) findViewById(R.id.c_offside_coins_text_view);
             offsideCoinsImageView = (ImageView) findViewById(R.id.c_offside_coins_image_view);
-            trophiesTextView = (TextView) findViewById(R.id.c_trophies_text_view);
-            trophiesImageView = (ImageView) findViewById(R.id.c_trophies_image_view);
+            //trophiesTextView = (TextView) findViewById(R.id.c_trophies_text_view);
+            //trophiesImageView = (ImageView) findViewById(R.id.c_trophies_image_view);
+            powerItemsTextView = (TextView) findViewById(R.id.c_power_items_text_view);
+            powerItemImageView = (ImageView) findViewById(R.id.c_power_item_image_view);
 
-            offsideCoinsTextView.setText(String.valueOf(offsideCoins));
-            trophiesTextView.setText(String.valueOf(trophies));
+            offsideCoinsTextView.setText(Integer.toString(offsideCoins));
+            //trophiesTextView.setText(Integer.toString(trophies));
+            powerItemsTextView.setText(Integer.toString(powerItems));
 
             settings = getSharedPreferences(getString(R.string.preference_name), 0);
             ImageHelper.loadImage(thisActivity, player != null? player.getImageUrl(): settings.getString(getString(R.string.player_profile_picture_url_key),null) , playerPictureImageView, "ChatActivity");
@@ -413,7 +419,7 @@ public class ChatActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
 
-                    Player player = OffsideApplication.getPlayer();
+                    Player player = OffsideApplication.getGameInfo().getPlayer();
                     if(player==null)
                         return;
                     if(player.getRewardVideoWatchCount() < OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame() ){
@@ -596,8 +602,8 @@ public class ChatActivity extends AppCompatActivity {
             //reset to chat adapter
             createNewChatAdapter(true);
 
-            Player player = OffsideApplication.getPlayer();
-            offsideCoins = player != null? player.getOffsideCoins() : OffsideApplication.getGameInfo().getOffsideCoins();
+            Player player = OffsideApplication.getGameInfo().getPlayer();
+            offsideCoins = player != null? player.getOffsideCoins() : 0;
             offsideCoinsTextView.setText(Integer.toString(offsideCoins));
 
             EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
@@ -786,7 +792,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onQuestionAnsweredEvent(IsAnswerAcceptedEvent isAnswerAcceptedEvent) {
+    public void onAnswerAcceptedEvent(IsAnswerAcceptedEvent isAnswerAcceptedEvent) {
 
         try {
             boolean isAnswerAccepted = isAnswerAcceptedEvent.getIsAnswerAccepted();
@@ -822,12 +828,12 @@ public class ChatActivity extends AppCompatActivity {
     public void onReceiveRewardEvent(RewardEvent rewardEvent) {
         try {
             int rewardAmount = rewardEvent.getRewardAmount();
-            Player player = OffsideApplication.getPlayer();
+            Player player = OffsideApplication.getGameInfo().getPlayer();
             if ( player == null || rewardAmount==0)
                 return;
-            int updatedOffsideCoins = player.getOffsideCoins()+rewardAmount;
+
             player.incrementRewardVideoWatchCount();
-            OffsideApplication.signalRService.setOffsideCoins(gameId, playerId, updatedOffsideCoins, true);
+            OffsideApplication.signalRService.setPowerItems(gameId, playerId, rewardAmount, true);
 
 
         } catch (Exception ex) {
@@ -846,10 +852,10 @@ public class ChatActivity extends AppCompatActivity {
 
 
             OffsideApplication.playerAnswers = updatedPlayer.getPlayerAnswers();
-            scoreTextView.setText(Integer.toString((int) updatedPlayer.getPoints()));
-            scoreTextView1.setText(Integer.toString((int) updatedPlayer.getPoints()));
+            scoreTextView.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
+            scoreTextView1.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
 
-            Player currentPlayer = OffsideApplication.getPlayer();
+            Player currentPlayer = OffsideApplication.getGameInfo().getPlayer();
 
             if (currentPlayer != null) {
                 int oldOffsideCoinsValue = currentPlayer.getOffsideCoins();
@@ -860,45 +866,33 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
 
-                int oldTrophiesValue = currentPlayer.getTrophies();
-                int newTrophiesValue = updatedPlayer.getTrophies();
-                if (newTrophiesValue != oldTrophiesValue) {
-                    trophiesTextView.setText(Integer.toString(newTrophiesValue));
-                    trophiesImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
+//                int oldTrophiesValue = currentPlayer.getTrophies();
+//                int newTrophiesValue = updatedPlayer.getTrophies();
+//                if (newTrophiesValue != oldTrophiesValue) {
+//                    trophiesTextView.setText(Integer.toString(newTrophiesValue));
+//                    trophiesImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
+//
+//                }
 
+                int oldPowerItems = currentPlayer.getPowerItems();
+                int newPowerItems = updatedPlayer.getPowerItems();
+                if (newPowerItems != oldPowerItems) {
+                    powerItemsTextView.setText(Integer.toString(newPowerItems));
+                    //powerItemImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
+                    Animation a = new RotateAnimation(0.0f, 360.0f,
+                            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                            0.5f);
+                    a.setRepeatCount(1);
+                    a.setDuration(3000);
+                    powerItemImageView.startAnimation(a);
 
                 }
             }
 
-            OffsideApplication.getGameInfo().setTrophies(updatedPlayer.getTrophies());
+            //OffsideApplication.getGameInfo().setTrophies(updatedPlayer.getTrophies());
+            //OffsideApplication.setPlayer(updatedPlayer);
+            OffsideApplication.getGameInfo().setPlayer(updatedPlayer);
 
-            OffsideApplication.setPlayer(updatedPlayer);
-
-
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
-
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveOffsideCoinsUpdated(Integer newOffsideCoinsValue) {
-        try {
-            Player player = OffsideApplication.getPlayer();
-            if (player == null)
-                return;
-
-            int oldOffsideCoinsValue = player.getOffsideCoins();
-            if (newOffsideCoinsValue != oldOffsideCoinsValue) {
-                player.setOffsideCoins(newOffsideCoinsValue);
-                OffsideApplication.setOffsideCoins(newOffsideCoinsValue);
-                offsideCoinsTextView.setText(Integer.toString(newOffsideCoinsValue));
-                offsideCoinsImageView.animate().rotationX(360.0f).setDuration(1000).start();
-
-            }
 
 
         } catch (Exception ex) {
@@ -907,6 +901,31 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
+
+
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onReceiveOffsideCoinsUpdated(Integer newOffsideCoinsValue) {
+//        try {
+//            Player player = OffsideApplication.getGameInfo().getPlayer();
+//            if (player == null)
+//                return;
+//
+//            int oldOffsideCoinsValue = player.getOffsideCoins();
+//            if (newOffsideCoinsValue != oldOffsideCoinsValue) {
+//                player.setOffsideCoins(newOffsideCoinsValue);
+//                OffsideApplication.setOffsideCoins(newOffsideCoinsValue);
+//                offsideCoinsTextView.setText(Integer.toString(newOffsideCoinsValue));
+//                offsideCoinsImageView.animate().rotationX(360.0f).setDuration(1000).start();
+//
+//            }
+//
+//
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//
+//        }
+//
+//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveScoreboard(ScoreboardEvent scoreboardEvent) {
@@ -934,7 +953,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 rankTextView.setText(Integer.toString(score.getPosition()));
                 ImageHelper.loadImage(thisActivity, score.getImageUrl(), imageView, "ChatActivity");
-                textView.setText(Integer.toString(score.getPoints()));
+                textView.setText(Integer.toString(score.getOffsideCoins()));
 
                 scoreboardRoot.addView(layout);
 

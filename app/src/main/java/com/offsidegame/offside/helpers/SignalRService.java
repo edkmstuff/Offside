@@ -577,6 +577,26 @@ public class SignalRService extends Service {
         return true;
     }
 
+    public boolean setPowerItems(String gameId, String playerId, int powerItems, boolean isDueToRewardVideo) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return false;
+
+        hub.invoke(Integer.class, "SetPowerItems", gameId, playerId, powerItems, isDueToRewardVideo).done(new Action<Integer>() {
+            @Override
+            public void run(Integer newPowerItemsValue) throws Exception {
+                EventBus.getDefault().post(newPowerItemsValue);
+            }
+
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleSilentException(error);
+            }
+        });
+
+        return true;
+    }
+
     public boolean saveImageInDatabase(String playerId, String imageString) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return false;

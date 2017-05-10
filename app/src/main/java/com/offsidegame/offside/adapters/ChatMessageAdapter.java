@@ -384,7 +384,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             viewHolder.incomingGetCoinsNotEnoughCoinsMessageTextView.setText(viewHolder.chatMessage.getMessageText());
 
-            final Player player = OffsideApplication.getPlayer();
+            final Player player = OffsideApplication.getGameInfo().getPlayer();
 
             if(player !=null && player.getRewardVideoWatchCount() < OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame()){
 
@@ -649,7 +649,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             }
 
-            final int minBetSize = OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize() ? 0 : OffsideApplication.getGameInfo().getMinBetSize();
+            //final int minBetSize = OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize() ? 0 : OffsideApplication.getGameInfo().getMinBetSize();
+            final int minBetSize =  OffsideApplication.getGameInfo().getMinBetSize();
 
             final Answer[] answers = viewHolder.question.getAnswers();
 
@@ -728,21 +729,21 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                         viewHolder.betSizeOptionsTextViews[i].setVisibility(View.INVISIBLE);
 
-                        if (OffsideApplication.getOffsideCoins() >= (i + 1) * OffsideApplication.getGameInfo().getMinBetSize()){
+                        //decide if to display a bet option, based on number of balls.
+
+                        if (OffsideApplication.getGameInfo().getPlayer().getPowerItems() >= i){
                             viewHolder.betSizeOptionsTextViews[i].setVisibility(View.VISIBLE);
                         }
-                        else {
-                            if (OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize()) {
-                                for (Answer answer : viewHolder.question.getAnswers()) {
-                                    answer.selectedBetSize = 0;
 
-                                }
-                            }
-
-                        }
                     }
+
+//                    for (Answer answer : viewHolder.question.getAnswers()) {
+//                        answer.selectedBetSize = OffsideApplication.getGameInfo().getMinBetSize();
+//                    }
+
+
                     //to set the default betsize 100 only if user has coins
-                    if(OffsideApplication.getOffsideCoins() >= OffsideApplication.getGameInfo().getMinBetSize())
+                    if(OffsideApplication.getGameInfo().getPlayer().getPowerItems()==0)
                         viewHolder.betSizeOptionsTextViews[0].performClick();
 
                     //set the timeToAskQuestion timer
@@ -812,19 +813,19 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
 
                     //we don't have enough coins to play
-                    if (OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize() && !isDebate ) {
-                        viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
-                        viewHolder.incomingQuestionAskedNotEnoughCoinsTextView.setVisibility(View.VISIBLE);
-                        for (int j = 0; j < 4; j++) {
-                            viewHolder.answerRoots[j].getBackground().mutate().setAlpha(90);
-                            viewHolder.answerRoots[j].setOnClickListener(null);
-                        }
-
-
-                    } else {
+//                    if (OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize() && !isDebate ) {
+//                        viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
+//                        viewHolder.incomingQuestionAskedNotEnoughCoinsTextView.setVisibility(View.VISIBLE);
+//                        for (int j = 0; j < 4; j++) {
+//                            viewHolder.answerRoots[j].getBackground().mutate().setAlpha(90);
+//                            viewHolder.answerRoots[j].setOnClickListener(null);
+//                        }
+//
+//
+//                    } else {
                         viewHolder.incomingBetPanelRoot.setVisibility(View.VISIBLE);
 
-                    }
+                    //}
 
                     //hiding elements irrelevant to Debate question
                     if (isDebate){

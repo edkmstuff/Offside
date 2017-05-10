@@ -177,16 +177,16 @@ public class SlotActivity extends AppCompatActivity {
                 String command = null;
 
                 if (wheel1.currentIndex == wheel2.currentIndex && wheel2.currentIndex == wheel3.currentIndex){
-                    command = "!reload500";
-                    Toast.makeText(context, R.string.lbl_well_done_you_earned_500_coins, Toast.LENGTH_LONG).show();
+                    command = "!reload2PowerItem";
+                    Toast.makeText(context, R.string.lbl_well_done_you_earned_2_power_items, Toast.LENGTH_LONG).show();
                 }
 
                 else if (wheel1.currentIndex == wheel2.currentIndex || wheel2.currentIndex == wheel3.currentIndex || wheel1.currentIndex == wheel3.currentIndex) {
-                    command = "!reload100";
-                    Toast.makeText(context, R.string.lbl_well_done_you_earned_100_coins, Toast.LENGTH_LONG).show();
+                    command = "!reload1PowerItem";
+                    Toast.makeText(context, R.string.lbl_well_done_you_earned_1_power_items, Toast.LENGTH_LONG).show();
                 }
                 else
-                    Toast.makeText(context, R.string.lbl_you_didnt_earn_coins, Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, R.string.lbl_you_didnt_earn_balls, Toast.LENGTH_LONG).show();
 
                 startSlotButton.setText(R.string.lbl_try_again);
                 startSlotButton.setVisibility(View.VISIBLE);
@@ -213,7 +213,8 @@ public class SlotActivity extends AppCompatActivity {
             if (player == null)
                 return;
 
-            OffsideApplication.setPlayer(player);
+            //OffsideApplication.setPlayer(player);
+            OffsideApplication.getGameInfo().setPlayer(player);
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);

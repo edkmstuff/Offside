@@ -164,8 +164,28 @@
                 android:orientation="horizontal">
 
 
+                <!--<TextView-->
+                    <!--android:id="@+id/c_trophies_text_view"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="@drawable/shape_bg_rectangle_rounded_corners"-->
+                    <!--android:paddingTop="2dp"-->
+                    <!--android:paddingBottom="2dp"-->
+                    <!--android:paddingLeft="12dp"-->
+                    <!--android:paddingRight="5dp"-->
+                    <!--android:text="2"-->
+                    <!--android:layout_marginLeft="-14dp"-->
+                    <!--android:textColor="@color/colorWhite" />-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/c_trophies_image_view"-->
+                    <!--android:layout_width="26dp"-->
+                    <!--android:layout_height="26dp"-->
+                    <!--android:scaleType="centerCrop"-->
+                    <!--android:src="@mipmap/ic_offside_trophy" />-->
+
                 <TextView
-                    android:id="@+id/c_trophies_text_view"
+                    android:id="@+id/c_power_items_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/shape_bg_rectangle_rounded_corners"
@@ -178,11 +198,11 @@
                     android:textColor="@color/colorWhite" />
 
                 <ImageView
-                    android:id="@+id/c_trophies_image_view"
+                    android:id="@+id/c_power_item_image_view"
                     android:layout_width="26dp"
                     android:layout_height="26dp"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_offside_trophy" />
+                    android:src="@mipmap/ic_soccer_ball" />
 
                 <!--<TextView-->
                 <!--android:id="@+id/c_position_text_view"-->
@@ -515,31 +535,6 @@
                             android:text="@string/lbl_commands_leaders" />
 
                     </LinearLayout>
-                    <!--current question-->
-                    <LinearLayout
-                        android:id="@+id/c_action_current_question_root"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:minHeight="80dp"
-                        android:minWidth="80dp"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@mipmap/ic_action_current_question" />
-
-                        <TextView
-                            style="@style/OffsideActionButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:text="@string/lbl_command_current_question" />
-
-                    </LinearLayout>
                     <!--player balance-->
                     <LinearLayout
                         android:id="@+id/c_action_offside_coins_root"
@@ -549,7 +544,8 @@
 
                         android:minHeight="80dp"
                         android:minWidth="80dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -616,6 +612,31 @@
                             android:layout_gravity="bottom"
                             android:gravity="center"
                             android:text="@string/lbl_command_share_code" />
+
+                    </LinearLayout>
+                    <!--current question-->
+                    <LinearLayout
+                        android:id="@+id/c_action_current_question_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_action_current_question" />
+
+                        <TextView
+                            style="@style/OffsideActionButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_command_current_question" />
 
                     </LinearLayout>
                     <!--reload coins - lottery-->

@@ -13,8 +13,8 @@ public class Score {
     @com.google.gson.annotations.SerializedName("IU")
     private String imageUrl;
 
-    @com.google.gson.annotations.SerializedName("PO")
-    private int points;
+    @com.google.gson.annotations.SerializedName("OC")
+    private int offsideCoins;
 
     @com.google.gson.annotations.SerializedName("PGC")
     private String privateGameCode;
@@ -43,12 +43,12 @@ public class Score {
         this.imageUrl = imageUrl;
     }
 
-    public int getPoints() {
-        return points;
+    public int getOffsideCoins() {
+        return offsideCoins;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
+    public void setOffsideCoins(int offsideCoins) {
+        this.offsideCoins = offsideCoins;
     }
 
     public String getPrivateGameCode() {

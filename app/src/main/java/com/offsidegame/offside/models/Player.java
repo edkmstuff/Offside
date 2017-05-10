@@ -35,6 +35,8 @@ public class Player {
     private int trophies;
     @com.google.gson.annotations.SerializedName("RVWC")
     private int rewardVideoWatchCount;
+    @com.google.gson.annotations.SerializedName("PI")
+    private int powerItems;
 
 
     public String getImageUrl() {
@@ -154,6 +156,13 @@ public class Player {
         this.rewardVideoWatchCount++;
     }
 
+    public int getPowerItems() {
+        return powerItems;
+    }
+
+    public void setPowerItems(int powerItems) {
+        this.powerItems = powerItems;
+    }
 }
 
 

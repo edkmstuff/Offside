@@ -33,6 +33,11 @@ public class GameInfo {
     @com.google.gson.annotations.SerializedName("MARVWPG")
     private int maxAllowedRewardVideosWatchPerGame;
 
+    @com.google.gson.annotations.SerializedName("P")
+    private Player player;
+
+
+
 
     public String getGameId() {
         return gameId;
@@ -80,6 +85,14 @@ public class GameInfo {
 
     public void setMaxAllowedRewardVideosWatchPerGame(int maxAllowedRewardVideosWatchPerGame) {
         this.maxAllowedRewardVideosWatchPerGame = maxAllowedRewardVideosWatchPerGame;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }
 
