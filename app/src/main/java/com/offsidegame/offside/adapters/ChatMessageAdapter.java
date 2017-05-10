@@ -96,7 +96,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         public LinearLayout incomingBetPanelRoot;
 
-        public TextView[] betSizeOptionsTextViews = new TextView[3];
+        public LinearLayout[] betSizeOptionsRoots = new LinearLayout[2];
         public TextView incomingBalanceTextView;
 
         public LinearLayout incomingTimeToAnswerRoot;
@@ -206,10 +206,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 viewHolder.incomingBetPanelRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_bet_panel_root);
 
-                for (int i = 0; i < 3; i++) {
-                    final int optionNumber = i + 1;
-                    final int incomingBetOptionTextViewId = context.getResources().getIdentifier("cm_incoming_bet_option" + optionNumber + "_text_view", "id", context.getPackageName());
-                    viewHolder.betSizeOptionsTextViews[i] = (TextView) convertView.findViewById(incomingBetOptionTextViewId);
+                for (int i = 0; i < 2; i++) {
+                    final int optionNumber = i;
+                    final int incomingBetOptionTextViewId = context.getResources().getIdentifier("cm_incoming_bet_option_" + optionNumber + "_root", "id", context.getPackageName());
+                    viewHolder.betSizeOptionsRoots[i] = (LinearLayout) convertView.findViewById(incomingBetOptionTextViewId);
 
                 }
 
@@ -693,14 +693,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     }
 
                     //set on click event to bet options
-                    for (int i = 0; i < viewHolder.betSizeOptionsTextViews.length; i++) {
-                        viewHolder.betSizeOptionsTextViews[i].setTag(i);
-                        viewHolder.betSizeOptionsTextViews[i].setOnClickListener(new View.OnClickListener() {
+                    for (int i = 0; i < viewHolder.betSizeOptionsRoots.length; i++) {
+                        viewHolder.betSizeOptionsRoots[i].setTag(i);
+                        viewHolder.betSizeOptionsRoots[i].setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 int index = (int) view.getTag();
                                 //update answers return value based on betSize
-                                int betSize = minBetSize * (index + 1);
+                                int betSize = minBetSize * (index + 2);
                                 for (int i = 0; i < answers.length; i++) {
                                     final int returnValue = (int) Math.round(answers[i].getPointsMultiplier() * betSize);
                                     viewHolder.answerReturnTextViews[i].setText(String.valueOf(returnValue));
@@ -709,13 +709,13 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                 }
 
                                 //update betSize button background
-                                for (int j = 0; j < viewHolder.betSizeOptionsTextViews.length; j++) {
+                                for (int j = 0; j < viewHolder.betSizeOptionsRoots.length; j++) {
                                     if (j == index) {
-                                        viewHolder.betSizeOptionsTextViews[j].setBackgroundResource(R.drawable.shape_bg_circle_selected);
-                                        viewHolder.betSizeOptionsTextViews[j].setTextColor(ContextCompat.getColor(context, R.color.chatPrimary));
+                                        viewHolder.betSizeOptionsRoots[j].setBackgroundResource(R.drawable.shape_bg_rectangle_black_border);
+                                        //viewHolder.betSizeOptionsRoots[j].setTextColor(ContextCompat.getColor(context, R.color.chatPrimary));
                                     } else {
-                                        viewHolder.betSizeOptionsTextViews[j].setBackgroundResource(R.drawable.shape_bg_circle);
-                                        viewHolder.betSizeOptionsTextViews[j].setTextColor(ContextCompat.getColor(context, R.color.chatPrimary));
+                                        viewHolder.betSizeOptionsRoots[j].setBackgroundResource(R.drawable.shape_bg_rectangle_gray_border);
+                                        //viewHolder.betSizeOptionsRoots[j].setTextColor(ContextCompat.getColor(context, R.color.chatPrimary));
                                     }
 
                                 }
@@ -727,12 +727,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                             }
                         });
 
-                        viewHolder.betSizeOptionsTextViews[i].setVisibility(View.INVISIBLE);
+                        viewHolder.betSizeOptionsRoots[i].setVisibility(View.INVISIBLE);
 
                         //decide if to display a bet option, based on number of balls.
 
-                        if (OffsideApplication.getGameInfo().getPlayer().getPowerItems() >= i){
-                            viewHolder.betSizeOptionsTextViews[i].setVisibility(View.VISIBLE);
+                        if (OffsideApplication.getGameInfo().getPlayer().getPowerItems() > i){
+                            viewHolder.betSizeOptionsRoots[i].setBackgroundResource(R.drawable.shape_bg_rectangle_gray_border);
+                            viewHolder.betSizeOptionsRoots[i].setVisibility(View.VISIBLE);
+
                         }
 
                     }
@@ -744,7 +746,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                     //to set the default betsize 100 only if user has coins
                     if(OffsideApplication.getGameInfo().getPlayer().getPowerItems()==0)
-                        viewHolder.betSizeOptionsTextViews[0].performClick();
+                        viewHolder.betSizeOptionsRoots[0].performClick();
 
                     //set the timeToAskQuestion timer
                     //time to answer was attached to chat message and is updated in the server using timer

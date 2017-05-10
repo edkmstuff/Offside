@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Process;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
@@ -76,6 +77,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         try {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
+
+
+            //this part is for cases we are killing the app
+//            if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().getBoolean("EXIT", false)) {
+//                finish();
+//            }
+
+            ////////////////////////////////////////////////
+
 
             loadingRoot = (LinearLayout) findViewById(R.id.l_loading_root);
             loadingRoot.setVisibility(View.VISIBLE);

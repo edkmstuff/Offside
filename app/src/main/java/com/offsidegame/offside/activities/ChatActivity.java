@@ -89,8 +89,8 @@ public class ChatActivity extends AppCompatActivity {
     int powerItems;
 
 
-    private TextView scoreTextView;
-    private TextView scoreTextView1;
+    //private TextView scoreTextView;
+    //private TextView scoreTextView1;
     private TextView privateGameNameTextView;
     private TextView gameTitleTextView;
     private TextView positionTextView;
@@ -114,7 +114,7 @@ public class ChatActivity extends AppCompatActivity {
     private TextView powerItemsTextView;
     private TextView offsideCoinsTextView;
     private ImageView playerPictureImageView;
-    private ImageView playerPictureImageView1;
+    //private ImageView playerPictureImageView1;
     private ImageView offsideCoinsImageView;
     private ImageView trophiesImageView;
     private ImageView powerItemImageView;
@@ -157,8 +157,8 @@ public class ChatActivity extends AppCompatActivity {
 
             chatSendTextView = (TextView) findViewById(R.id.c_chatSendTextView);
             chatMessageEditText = (EditText) findViewById(R.id.c_chat_message_edit_text);
-            scoreTextView = (TextView) findViewById(R.id.c_score_text_view);
-            scoreTextView1 = (TextView) findViewById(R.id.c_score_text_view1);
+            //scoreTextView = (TextView) findViewById(R.id.c_score_text_view1);
+            //scoreTextView1 = (TextView) findViewById(R.id.c_score_text_view1);
             privateGameNameTextView = (TextView) findViewById(R.id.c_private_game_name_text_view);
             gameTitleTextView = (TextView) findViewById(R.id.c_game_title_text_view);
             positionTextView = (TextView) findViewById(R.id.c_position_text_view);
@@ -178,7 +178,7 @@ public class ChatActivity extends AppCompatActivity {
             gameTitleTextView.setText(homeTeam + " vs. " + awayTeam);
 
             playerPictureImageView = (ImageView) findViewById(R.id.c_player_picture_image_view);
-            playerPictureImageView1 = (ImageView) findViewById(R.id.c_player_picture_image_view1);
+            //playerPictureImageView1 = (ImageView) findViewById(R.id.c_player_picture_image_view1);
             offsideCoinsTextView = (TextView) findViewById(R.id.c_offside_coins_text_view);
             offsideCoinsImageView = (ImageView) findViewById(R.id.c_offside_coins_image_view);
             //trophiesTextView = (TextView) findViewById(R.id.c_trophies_text_view);
@@ -192,7 +192,7 @@ public class ChatActivity extends AppCompatActivity {
 
             settings = getSharedPreferences(getString(R.string.preference_name), 0);
             ImageHelper.loadImage(thisActivity, player != null? player.getImageUrl(): settings.getString(getString(R.string.player_profile_picture_url_key),null) , playerPictureImageView, "ChatActivity");
-            ImageHelper.loadImage(thisActivity, player != null? player.getImageUrl(): settings.getString(getString(R.string.player_profile_picture_url_key),null) , playerPictureImageView1, "ChatActivity");
+            //ImageHelper.loadImage(thisActivity, player != null? player.getImageUrl(): settings.getString(getString(R.string.player_profile_picture_url_key),null) , playerPictureImageView1, "ChatActivity");
 
             actionExitGameRoot = (LinearLayout) findViewById(R.id.c_action_exit_game_root);
 
@@ -699,8 +699,8 @@ public class ChatActivity extends AppCompatActivity {
             OffsideApplication.setPlayer(player);
             OffsideApplication.playerAnswers = player.getPlayerAnswers();
 
-            scoreTextView.setText(String.valueOf((int) player.getPoints()));
-            scoreTextView1.setText(String.valueOf((int) player.getPoints()));
+            //scoreTextView.setText(String.valueOf((int) player.getPoints()));
+            //scoreTextView1.setText(String.valueOf((int) player.getPoints()));
 
             createNewChatAdapter(false);
 
@@ -852,8 +852,8 @@ public class ChatActivity extends AppCompatActivity {
 
 
             OffsideApplication.playerAnswers = updatedPlayer.getPlayerAnswers();
-            scoreTextView.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
-            scoreTextView1.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
+            //scoreTextView.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
+            //scoreTextView1.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
 
             Player currentPlayer = OffsideApplication.getGameInfo().getPlayer();
 
@@ -883,7 +883,7 @@ public class ChatActivity extends AppCompatActivity {
                             Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
                             0.5f);
                     a.setRepeatCount(1);
-                    a.setDuration(3000);
+                    a.setDuration(1000);
                     powerItemImageView.startAnimation(a);
 
                 }
