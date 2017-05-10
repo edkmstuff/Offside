@@ -68,10 +68,10 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    public final String ip = new String("192.168.1.140:8080");
+    //public final String ip = new String("192.168.1.140:8080");
     //public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
-    //public final String ip = new String("offside.azurewebsites.net");
+    public final String ip = new String("offside.azurewebsites.net");
 
 
     public Boolean stoppedIntentionally = false;
@@ -432,10 +432,10 @@ public class SignalRService extends Service {
         });
     }
 
-    public void generatePrivateGame(String gameId, String groupName) {
+    public void generatePrivateGame(String gameId, String groupName, String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(String.class, "GeneratePrivateGame", gameId, groupName).done(new Action<String>() {
+        hub.invoke(String.class, "GeneratePrivateGame", gameId, groupName, playerId).done(new Action<String>() {
 
             @Override
             public void run(String privateGameCode) throws Exception {

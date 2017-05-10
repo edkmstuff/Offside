@@ -37,7 +37,7 @@ import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.Question;
-import com.offsidegame.offside.models.Winner;
+
 import com.squareup.picasso.Picasso;
 
 import org.acra.ACRA;
@@ -550,10 +550,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             viewHolder.incomingWinnerPointsTextView.setText(viewHolder.chatMessage.getMessageText());
 
-            List<Winner> winners = viewHolder.chatMessage.getWinners();
+            List<Player> winners = viewHolder.chatMessage.getWinners();
             viewHolder.incomingWinnersRoot.removeAllViews();
 
-            for(Winner winner: winners) {
+            for(Player winner: winners) {
 
                 ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.winner_item, viewHolder.incomingWinnersRoot,false);
                 ImageView imageView = (ImageView) layout.getChildAt(0);
@@ -736,6 +736,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                             viewHolder.betSizeOptionsRoots[i].setVisibility(View.VISIBLE);
 
                         }
+                        else {
+                            viewHolder.betSizeOptionsRoots[i].setOnClickListener(null);
+                        }
 
                     }
 
@@ -815,19 +818,17 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
 
                     //we don't have enough coins to play
-//                    if (OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize() && !isDebate ) {
-//                        viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
+                    if (OffsideApplication.getGameInfo().getPlayer().getPowerItems() == 0 && !isDebate ) {
+                        viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
+//                        viewHolder.incomingQuestionAskedNotEnoughCoinsTextView.setText("טיפ של אלופים: כדאי להשיג כדורי בונוס כדי להגדיל את הרווח");
 //                        viewHolder.incomingQuestionAskedNotEnoughCoinsTextView.setVisibility(View.VISIBLE);
-//                        for (int j = 0; j < 4; j++) {
-//                            viewHolder.answerRoots[j].getBackground().mutate().setAlpha(90);
-//                            viewHolder.answerRoots[j].setOnClickListener(null);
-//                        }
-//
-//
-//                    } else {
+
+
+
+                    } else {
                         viewHolder.incomingBetPanelRoot.setVisibility(View.VISIBLE);
 
-                    //}
+                    }
 
                     //hiding elements irrelevant to Debate question
                     if (isDebate){

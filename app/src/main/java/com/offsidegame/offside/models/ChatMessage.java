@@ -35,7 +35,7 @@ public class ChatMessage {
     private String sentByUserName;
 
     @com.google.gson.annotations.SerializedName("W")
-    private List<Winner> winners;
+    private List<Player> winners;
 
 
 
@@ -112,11 +112,11 @@ public class ChatMessage {
     }
 
 
-    public List<Winner> getWinners() {
+    public List<Player> getWinners() {
         return winners;
     }
 
-    public void setWinners(List<Winner> winners) {
+    public void setWinners(List<Player> winners) {
         this.winners = winners;
     }
 }

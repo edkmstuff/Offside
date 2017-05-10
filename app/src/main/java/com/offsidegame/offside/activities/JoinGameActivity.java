@@ -144,8 +144,9 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                     String groupName =  privateGameNameEditText.getText().toString();
                     groupName = groupName.length() > 20 ? groupName.substring(0,20) : groupName;
 
+
                     if (OffsideApplication.isBoundToSignalRService)
-                        OffsideApplication.signalRService.generatePrivateGame(gameId, groupName);
+                        OffsideApplication.signalRService.generatePrivateGame(gameId, groupName, playerId);
                     else
                         throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
                 }
