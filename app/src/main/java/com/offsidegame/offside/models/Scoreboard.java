@@ -9,11 +9,14 @@ public class Scoreboard {
     @com.google.gson.annotations.SerializedName("S")
     private Score[] scores;
 
+    @com.google.gson.annotations.SerializedName("FU")
+    private boolean forceUpdate;
+
     public Score[] getScores() {
         return scores;
     }
 
-    public void setScores(Score[] scores) {
-        this.scores = scores;
+    public boolean isForceUpdate() {
+        return forceUpdate;
     }
 }

@@ -423,7 +423,7 @@ public class ChatActivity extends AppCompatActivity {
                     if(player==null)
                         return;
                     if(player.getRewardVideoWatchCount() < OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame() ){
-                        loadingVideoTextView.setText("Loading "+Integer.toString(player.getRewardVideoWatchCount())+ " of "+ Integer.toString(OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame())+" allowed videos");
+                        loadingVideoTextView.setText("Loading "+Integer.toString(player.getRewardVideoWatchCount()+1)+ " of "+ Integer.toString(OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame())+" allowed videos");
                         actionsFlowLayout.setVisibility(View.GONE);
                         rewardVideoLoadingRoot.setVisibility(View.VISIBLE);
 
@@ -696,7 +696,7 @@ public class ChatActivity extends AppCompatActivity {
             if (player == null)
                 return;
 
-            OffsideApplication.setPlayer(player);
+            OffsideApplication.getGameInfo().setPlayer(player);
             OffsideApplication.playerAnswers = player.getPlayerAnswers();
 
             //scoreTextView.setText(String.valueOf((int) player.getPoints()));
@@ -903,37 +903,13 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onReceiveOffsideCoinsUpdated(Integer newOffsideCoinsValue) {
-//        try {
-//            Player player = OffsideApplication.getGameInfo().getPlayer();
-//            if (player == null)
-//                return;
-//
-//            int oldOffsideCoinsValue = player.getOffsideCoins();
-//            if (newOffsideCoinsValue != oldOffsideCoinsValue) {
-//                player.setOffsideCoins(newOffsideCoinsValue);
-//                OffsideApplication.setOffsideCoins(newOffsideCoinsValue);
-//                offsideCoinsTextView.setText(Integer.toString(newOffsideCoinsValue));
-//                offsideCoinsImageView.animate().rotationX(360.0f).setDuration(1000).start();
-//
-//            }
-//
-//
-//        } catch (Exception ex) {
-//            ACRA.getErrorReporter().handleSilentException(ex);
-//
-//        }
-//
-//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveScoreboard(ScoreboardEvent scoreboardEvent) {
         try {
 
-            scoreboardRoot.removeAllViewsInLayout();
-
             Scoreboard scoreboard = scoreboardEvent.getScoreboard();
+
             if (scoreboard == null)
                 return;
             Score[]  scores = scoreboard.getScores();
@@ -941,7 +917,28 @@ public class ChatActivity extends AppCompatActivity {
             if (scores == null || scores.length == 0)
                 return;
 
-            ArrayList<LinearLayout> elements = new ArrayList<>(scores.length);
+            //check if scoreboard was changed
+            Scoreboard currentScoreboard = OffsideApplication.getScoreboard();
+            boolean isScoreboardsEquals = false;
+            if (!scoreboard.isForceUpdate()&& currentScoreboard != null && currentScoreboard.getScores() != null && currentScoreboard.getScores().length == scores.length) {
+                Score [] currentScores = currentScoreboard.getScores();
+                for(int i=0; i<currentScores.length;i++){
+                    boolean isEqualScore = currentScores[i].getImageUrl().equals(scores[i].getImageUrl()) &&
+                            currentScores[i].getPosition() ==scores[i].getPosition() &&
+                            currentScores[i].getOffsideCoins()==scores[i].getOffsideCoins();
+
+                    if(!isEqualScore)
+                        break;
+                    if(i==currentScores.length-1)
+                        isScoreboardsEquals = true;
+                }
+
+            }
+            if(isScoreboardsEquals)
+                return;
+
+            OffsideApplication.setScoreboard(scoreboard);
+            scoreboardRoot.removeAllViewsInLayout();
 
             for(Score score: scores){
 

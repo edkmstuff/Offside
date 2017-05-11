@@ -35,6 +35,7 @@ import java.util.Map;
 )
 public class OffsideApplication extends Application {
 
+    private static String version = BuildConfig.VERSION_NAME;
     private static boolean isPlayerQuitGame = false;
     private static String messageTypeText = "TEXT";
     private static String messageTypeAskedQuestion = "ASKED_QUESTION";
@@ -57,15 +58,13 @@ public class OffsideApplication extends Application {
     private static String initialsProfilePictureUrl = "http://offside.azurewebsites.net/api/Offside/GetProfilePicture/";
     private static String defaultProfilePictureUrl = "http://offside.azurewebsites.net/Images/defaultImage.jpg";
 
-    private static Player player;
-
-    //private static int offsideCoins;
-
     private static GameInfo gameInfo;
 
     private static boolean isChatActivityVisible = false;
 
-    private static String version = BuildConfig.VERSION_NAME;
+    private static Scoreboard scoreboard;
+
+
 
 
     public static String getMessageTypeText() {
@@ -94,16 +93,6 @@ public class OffsideApplication extends Application {
 
     public static String getDefaultProfilePictureUrl() {
         return defaultProfilePictureUrl;
-    }
-
-    public static int getOffsideCoins() {
-
-        return player == null? 0 : player.getOffsideCoins();
-    }
-
-    public static void setOffsideCoins(int offsideCoins) {
-        if (player != null)
-            player.setOffsideCoins(offsideCoins);
     }
 
     public static GameInfo getGameInfo() {
@@ -142,14 +131,13 @@ public class OffsideApplication extends Application {
         return messageTypeWinner;
     }
 
-    public static Player getPlayer() {
-        return player;
+    public static Scoreboard getScoreboard() {
+        return scoreboard;
     }
 
-    public static void setPlayer(Player player) {
-        OffsideApplication.player = player;
+    public static void setScoreboard(Scoreboard scoreboard) {
+        OffsideApplication.scoreboard = scoreboard;
     }
-
 
     public void onCreate() {
 
@@ -214,4 +202,6 @@ public class OffsideApplication extends Application {
     public static String getVersion() {
         return version;
     }
+
+
 }

@@ -229,7 +229,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingQuestionProcessedQuestionTitleTextView = (TextView) convertView.findViewById(R.id.cm_incoming_question_processed_question_title_text_view);
                 viewHolder.incomingQuestionAskedNotEnoughCoinsTextView = (TextView) convertView.findViewById(R.id.cm_incoming_question_asked_not_enough_coins_text_view);
 
-
                 viewHolder.incomingProcessingQuestionTextView = (TextView) convertView.findViewById(R.id.cm_incoming_processing_question_text_view);
 
                 viewHolder.incomingClosedQuestionRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_closed_question_root);
@@ -393,7 +392,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     public void onClick(View view) {
                         viewHolder.incomingGetCoinsPlayerOptionsRoot.setVisibility(View.GONE);
                         viewHolder.incomingGetCoinsLoadingRoot.setVisibility(View.VISIBLE);
-                        viewHolder.incomingGetCoinsLoadingMessageTextView.setText("Loading "+Integer.toString(player.getRewardVideoWatchCount())+ " of "+ Integer.toString(OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame())+" allowed videos");
+                        viewHolder.incomingGetCoinsLoadingMessageTextView.setText("Loading "+Integer.toString(player.getRewardVideoWatchCount()+1)+ " of "+ Integer.toString(OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame())+" allowed videos");
 
                         loadRewardedVideoAd();
                     }
@@ -721,8 +720,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                 }
 
                                 //update balance
-                                int postBetOffsideCoins = OffsideApplication.getOffsideCoins() - betSize;
-                                viewHolder.incomingBalanceTextView.setText(String.valueOf(postBetOffsideCoins));
+//                                int postBetOffsideCoins = OffsideApplication.getOffsideCoins() - betSize;
+//                                viewHolder.incomingBalanceTextView.setText(String.valueOf(postBetOffsideCoins));
 
                             }
                         });

@@ -52,6 +52,8 @@ public class Answer implements Serializable {
 
 
     public double getScore() {
+        if(score ==0)
+            return OffsideApplication.getGameInfo().getMinBetSize();
         return score;
     }
 
