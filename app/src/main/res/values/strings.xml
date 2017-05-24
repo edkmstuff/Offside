@@ -101,6 +101,7 @@
     <string name="lbl_and_the_winner_is">והמנצח הוא...היא...הם...</string>
     <string name="lbl_exceed_allowed_reward_video_watch_message">צפית במקסימום סרטונים המותרים למשחק אחד.</string>
     <string name="lbl_failed_to_load_video">טעינת וידאו נכשלה</string>
+    <string name="lbl_select_language">בחר שפה</string>
 
 
 </resources>

@@ -17,6 +17,7 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.ChatActivity;
 import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.AvailableGamesEvent;
+import com.offsidegame.offside.events.AvailableLanguagesEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
@@ -42,6 +43,7 @@ import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
+import java.util.Locale;
 
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.ConnectionState;
@@ -68,8 +70,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
-    public final String ip = new String("10.0.0.17:8080");
+    public final String ip = new String("192.168.1.140:8080");
+    //public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
 
@@ -415,6 +417,22 @@ public class SignalRService extends Service {
     }
 
 
+    public void getAvailableLanguages() {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke(String[].class, "GetAvailableLanguages").done(new Action<String[]>() {
+
+            @Override
+            public void run(String[] availableLanguages) throws Exception {
+                EventBus.getDefault().post(new AvailableLanguagesEvent(availableLanguages));
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleSilentException(error);
+            }
+        });
+    }
     public void getAvailableGames() {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
@@ -432,10 +450,13 @@ public class SignalRService extends Service {
         });
     }
 
-    public void generatePrivateGame(String gameId, String groupName, String playerId) {
+    public void generatePrivateGame(String gameId, String groupName, String playerId, String selectedLanguage) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(String.class, "GeneratePrivateGame", gameId, groupName, playerId).done(new Action<String>() {
+
+        //String languageLocale = Locale.getDefault().getDisplayLanguage();
+
+        hub.invoke(String.class, "GeneratePrivateGame", gameId, groupName, playerId, selectedLanguage).done(new Action<String>() {
 
             @Override
             public void run(String privateGameCode) throws Exception {

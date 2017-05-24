@@ -1,17 +1,13 @@
 package com.offsidegame.offside.activities;
 
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -25,17 +21,16 @@ import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.AvailableGamesEvent;
+import com.offsidegame.offside.events.AvailableLanguagesEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.ImageHelper;
 
-import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.Player;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -57,6 +52,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
     private TextView createPrivateGameButtonTextView;
     private LinearLayout createPrivateGameRoot;
+    private Spinner availableLanguagesSpinner;
     private Spinner availableGamesSpinner;
     private EditText privateGameNameEditText;
     private TextView generatePrivateGameCodeButtonTextView;
@@ -67,6 +63,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private String playerProfilePictureUrl;
     private SharedPreferences settings;
     private AvailableGame[] availableGames ;
+    private String[] availableLanguages;
     private TextView noAvailableGamesReturnLaterTextView;
     private TextView versionTextView;
 
@@ -113,6 +110,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             createPrivateGameRoot = (LinearLayout) findViewById(R.id.jg_create_private_game_root);
 
             createPrivateGameButtonTextView = (TextView) findViewById(R.id.jg_create_private_game_button_text_view);
+
+            availableLanguagesSpinner = (Spinner) findViewById(R.id.jg_available_language_spinner);
             availableGamesSpinner = (Spinner) findViewById(R.id.jg_available_games_spinner);
             privateGameNameEditText = (EditText) findViewById(R.id.jg_private_game_name_edit_text);
             generatePrivateGameCodeButtonTextView = (TextView) findViewById(R.id.jg_generate_private_game_code_button_text_view);
@@ -136,6 +135,9 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             generatePrivateGameCodeButtonTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    //get language
+                    String selectedLanguage = availableLanguagesSpinner.getSelectedItem().toString();
+
                     //get game id
                     int selectedGamePosition = availableGamesSpinner.getSelectedItemPosition();
                     String gameId = getGameId(selectedGamePosition);
@@ -146,7 +148,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
 
                     if (OffsideApplication.isBoundToSignalRService)
-                        OffsideApplication.signalRService.generatePrivateGame(gameId, groupName, playerId);
+                        OffsideApplication.signalRService.generatePrivateGame(gameId, groupName, playerId, selectedLanguage);
                     else
                         throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
                 }
@@ -220,6 +222,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 String gameCode = settings.getString(getString(R.string.game_code_key), "");
                 if (OffsideApplication.isBoundToSignalRService) {
                     OffsideApplication.signalRService.isGameActive(gameId, gameCode);
+                    OffsideApplication.signalRService.getAvailableLanguages();
                     OffsideApplication.signalRService.getAvailableGames();
                 }
                 else
@@ -315,6 +318,21 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
         }
     }
 
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveAvailableLanguages(AvailableLanguagesEvent availableLanguagesEvent) {
+        try {
+            availableLanguages = availableLanguagesEvent.getAvailableLanquages();
+
+
+            setAvailableLanguageSpinnerAdapter(availableLanguages);
+        }
+        catch (Exception ex){
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+    }
+
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAvailableGames(AvailableGamesEvent availableGamesEvent) {
         try {
@@ -341,6 +359,15 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
         }
     }
 
+    private void setAvailableLanguageSpinnerAdapter(String [] languages) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, languages);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        availableLanguagesSpinner.setAdapter(adapter);
+        if(languages.length>0)
+            availableLanguagesSpinner.setSelection(0);
+    }
     private void setAvailableGamesSpinnerAdapter(String [] gameTitles) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, gameTitles);
         // Specify the layout to use when the list of choices appears
