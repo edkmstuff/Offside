@@ -88,9 +88,6 @@ public class ChatActivity extends AppCompatActivity {
     int trophies;
     int powerItems;
 
-
-    //private TextView scoreTextView;
-    //private TextView scoreTextView1;
     private TextView privateGameNameTextView;
     private TextView gameTitleTextView;
     private TextView positionTextView;
