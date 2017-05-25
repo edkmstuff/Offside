@@ -45,8 +45,8 @@
     <string name="lbl_correct_answer_feedback">צדקת!</string>
     <string name="lbl_wrong_answer_feedback">הפעם טעית...</string>
     <string name="lbl_you_earned">זכית ב-</string>
-    <string name="lbl_points">נקודות</string>
-    <string name="lbl_you_didnt_earn_points">לא זכית בנקודות</string>
+    <string name="lbl_points">מטבעות</string>
+    <string name="lbl_you_didnt_earn_points">לא זכית במטבעות</string>
     <string name="lbl_bet_level">גובה הימור</string>
     <string name="lbl_balance">יתרה</string>
     <string name="lbl_wrong_answer_encourage_feedback">לא נורא אולי בשאלה הבאה</string>
@@ -102,6 +102,8 @@
     <string name="lbl_exceed_allowed_reward_video_watch_message">צפית במקסימום סרטונים המותרים למשחק אחד.</string>
     <string name="lbl_failed_to_load_video">טעינת וידאו נכשלה</string>
     <string name="lbl_select_language">בחר שפה</string>
+    <string name="lbl_seems_like_you_skipped_this_question">נראה שבחרת לא לענות על השאלה</string>
+    <string name="lbl_you_are_out_of_coins">אין לך מספיק מטבעות , תוכל לחדש את המלאי במחצית</string>
 
 
 </resources>

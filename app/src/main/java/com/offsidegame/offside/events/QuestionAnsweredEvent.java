@@ -9,15 +9,16 @@ public class QuestionAnsweredEvent {
     private String gameId;
     private String questionId;
     private String answerId;
-    private boolean isRandomAnswer;
+    //private boolean isRandomAnswer;
+    private boolean isSkipped;
     private int betSize;
 
 
-    public QuestionAnsweredEvent(String gameId, String questionId, String answerId, boolean isRandomAnswer, int betSize) {
+    public QuestionAnsweredEvent(String gameId, String questionId, String answerId, boolean isSkipped, int betSize) {
         this.gameId = gameId;
         this.questionId = questionId;
         this.answerId = answerId;
-        this.isRandomAnswer = isRandomAnswer;
+        this.isSkipped = isSkipped;
         this.betSize= betSize;
     }
 
@@ -34,13 +35,7 @@ public class QuestionAnsweredEvent {
         return answerId;
     }
 
-    public boolean isRandomAnswer() {
-        return isRandomAnswer;
-    }
 
-    public void setRandomAnswer(boolean randomAnswer) {
-        isRandomAnswer = randomAnswer;
-    }
 
     public int getBetSize() {
         return betSize;
@@ -48,5 +43,13 @@ public class QuestionAnsweredEvent {
 
     public void setBetSize(int betSize) {
         this.betSize = betSize;
+    }
+
+    public boolean isSkipped() {
+        return isSkipped;
+    }
+
+    public void setSkipped(boolean skipped) {
+        isSkipped = skipped;
     }
 }

@@ -607,31 +607,45 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             if (isAskedQuestion) {
 
                 if(isPlayerAnsweredQuestion){
+                    String userAnswerId = null;
+                    final AnswerIdentifier answerIdentifier =  playerAnswers.get(questionId);
+                    if(!answerIdentifier.isSkipped()){
+                        userAnswerId = answerIdentifier.getAnswerId();
+                    }
 
-                    final String userAnswerId = playerAnswers.get(questionId).getAnswerId();
-                    int betSize = playerAnswers.get(questionId).getBetSize();
                     int answerNumber = getAnswerNumber(viewHolder.question, userAnswerId);
-                    if (answerNumber == 0)
-                        return;
 
-                    final Answer answerOfTheUser = viewHolder.question.getAnswers()[answerNumber - 1];
+                    int betSize = answerIdentifier.getBetSize();
+
+                    final Answer answerOfTheUser;
+                    int returnValue = 0;
+                    if (answerNumber != 0)
+                    {
+                        answerOfTheUser = viewHolder.question.getAnswers()[answerNumber - 1];
+                        viewHolder.incomingSelectedAnswerTextView.setText(answerOfTheUser.getAnswerText());
+                        returnValue = (int) (betSize * answerOfTheUser.getPointsMultiplier());
+                        final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
+                        viewHolder.incomingSelectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
+                    }
 
                     //set values to widgets
                     viewHolder.incomingProcessingQuestionTextView.setText(viewHolder.question.getQuestionText());
-                    viewHolder.incomingSelectedAnswerTextView.setText(answerOfTheUser.getAnswerText());
 
-                    int returnValue = (int) (betSize * answerOfTheUser.getPointsMultiplier());
-                    viewHolder.incomingSelectedAnswerReturnTextView.setText(String.valueOf(returnValue));
+                    viewHolder.incomingSelectedAnswerReturnTextView.setText(Integer.toString(returnValue));
 
-                    final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
-                    viewHolder.incomingSelectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
+                    if (answerIdentifier.isSkipped())
+                        //viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_randomly_selected_answer_title);
+                        viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_seems_like_you_skipped_this_question);
 
-                    if (playerAnswers.get(questionId).isRandomlySelected())
-                        viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_randomly_selected_answer_title);
                     else
-                        viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_user_selected_answer_title);
+                        {
+                            viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_user_selected_answer_title);
+                            viewHolder.incomingSelectedAnswerTextView.setVisibility(View.VISIBLE);
+                        }
+
 
                     //visibility set
+
                     viewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
                     viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
                     return;
@@ -648,8 +662,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             }
 
-            //final int minBetSize = OffsideApplication.getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize() ? 0 : OffsideApplication.getGameInfo().getMinBetSize();
-            final int minBetSize =  OffsideApplication.getGameInfo().getMinBetSize();
+            final int minBetSize = OffsideApplication.getGameInfo().getPlayer().getOffsideCoins() < OffsideApplication.getGameInfo().getMinBetSize() ? 0 : OffsideApplication.getGameInfo().getMinBetSize();
+            //final int minBetSize =  OffsideApplication.getGameInfo().getMinBetSize();
 
             final Answer[] answers = viewHolder.question.getAnswers();
 
@@ -699,7 +713,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                             public void onClick(View view) {
                                 int index = (int) view.getTag();
                                 //update answers return value based on betSize
-                                int betSize = minBetSize * (index + 2);
+                                int betSize = minBetSize * (index+1);
                                 for (int i = 0; i < answers.length; i++) {
                                     final int returnValue = (int) Math.round(answers[i].getPointsMultiplier() * betSize);
                                     viewHolder.answerReturnTextViews[i].setText(String.valueOf(returnValue));
@@ -710,10 +724,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                 //update betSize button background
                                 for (int j = 0; j < viewHolder.betSizeOptionsRoots.length; j++) {
                                     if (j == index) {
-                                        viewHolder.betSizeOptionsRoots[j].setBackgroundResource(R.drawable.shape_bg_rectangle_black_border);
+                                        viewHolder.betSizeOptionsRoots[j].setBackgroundResource(R.drawable.shape_bg_rectangle_gray_border);
                                         //viewHolder.betSizeOptionsRoots[j].setTextColor(ContextCompat.getColor(context, R.color.chatPrimary));
                                     } else {
-                                        viewHolder.betSizeOptionsRoots[j].setBackgroundResource(R.drawable.shape_bg_rectangle_gray_border);
+                                        viewHolder.betSizeOptionsRoots[j].setBackgroundResource(R.drawable.shape_bg_rectangle_gray_no_border);
                                         //viewHolder.betSizeOptionsRoots[j].setTextColor(ContextCompat.getColor(context, R.color.chatPrimary));
                                     }
 
@@ -730,23 +744,27 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                         //decide if to display a bet option, based on number of balls.
 
-                        if (OffsideApplication.getGameInfo().getPlayer().getPowerItems() > i){
+                        if(i==0 && OffsideApplication.getGameInfo().getPlayer().getOffsideCoins() >= minBetSize )
+                        {
                             viewHolder.betSizeOptionsRoots[i].setBackgroundResource(R.drawable.shape_bg_rectangle_gray_border);
+                            viewHolder.betSizeOptionsRoots[i].setVisibility(View.VISIBLE);
+                        }
+                        else if (i>0 && OffsideApplication.getGameInfo().getPlayer().getPowerItems() >= i && OffsideApplication.getGameInfo().getPlayer().getOffsideCoins()>=2*minBetSize){
+                            viewHolder.betSizeOptionsRoots[i].setBackgroundResource(R.drawable.shape_bg_rectangle_gray_no_border);
                             viewHolder.betSizeOptionsRoots[i].setVisibility(View.VISIBLE);
 
                         }
+
+
                         else {
                             viewHolder.betSizeOptionsRoots[i].setOnClickListener(null);
                         }
 
+
                     }
 
-//                    for (Answer answer : viewHolder.question.getAnswers()) {
-//                        answer.selectedBetSize = OffsideApplication.getGameInfo().getMinBetSize();
-//                    }
 
-
-                    //to set the default betsize 100 only if user has coins
+                    //to set the default betsize 10 only if user has coins
                     if(OffsideApplication.getGameInfo().getPlayer().getPowerItems()==0)
                         viewHolder.betSizeOptionsRoots[0].performClick();
 
@@ -793,11 +811,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                 viewHolder.incomingTimeToAnswerProgressBar.setProgress(0);
                                 boolean isAnswered = playerAnswers.containsKey(questionId);
                                 if (!isAnswered) {
-                                    int answersCount = viewHolder.question.getAnswers().length;
-                                    int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
-                                    Answer randomAnswer = viewHolder.question.getAnswers()[selectedAnswerIndex];
-                                    //final int returnValue = Integer.parseInt( viewHolder.answerReturnTextViews[selectedAnswerIndex].getText().toString());
-                                    postAnswer(viewHolder.question, randomAnswer, null, viewHolder);
+//                                    int answersCount = viewHolder.question.getAnswers().length;
+//                                    int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
+//                                    Answer randomAnswer = viewHolder.question.getAnswers()[selectedAnswerIndex];
+                                    postAnswer(viewHolder.question, null, null, viewHolder);
                                 }
                             }
                         }.start();
@@ -817,11 +834,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
 
                     //we don't have enough coins to play
-                    if (OffsideApplication.getGameInfo().getPlayer().getPowerItems() == 0 && !isDebate ) {
-                        viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
-//                        viewHolder.incomingQuestionAskedNotEnoughCoinsTextView.setText("טיפ של אלופים: כדאי להשיג כדורי בונוס כדי להגדיל את הרווח");
-//                        viewHolder.incomingQuestionAskedNotEnoughCoinsTextView.setVisibility(View.VISIBLE);
+                    if ((OffsideApplication.getGameInfo().getPlayer().getOffsideCoins() < minBetSize) && !isDebate) {
 
+                        viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
+                        viewHolder.incomingQuestionAskedNotEnoughCoinsTextView.setText(R.string.lbl_you_are_out_of_coins);
+                        viewHolder.incomingQuestionAskedNotEnoughCoinsTextView.setVisibility(View.VISIBLE);
 
 
                     } else {
@@ -903,13 +920,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                             @Override
                             public void onFinish() {
-                                //user did not answer this question, we select random answer
                                 viewHolder.chatMessage.setTimeLeftToAnswer(0);
                                 viewHolder.incomingTimeToAnswerProgressBar.setProgress(0);
                                 viewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
                                 viewHolder.incomingQuestionProcessedQuestionTimeExpiredMessageTextView.setVisibility(View.VISIBLE);
 
-                                //cancel();
 
 
                             }
@@ -971,12 +986,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                     viewHolder.incomingClosedQuestionRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_correct);
 
-
-
-                    //viewHolder.incomingPlayerAnswerRoot.setBackground(ContextCompat.getDrawable(context,R.drawable.shape_bg_incoming_bubble_correct));
                 } else {
-                    //viewHolder.incomingPlayerAnswerRoot.getBackground().mutate();
-                    //viewHolder.incomingPlayerAnswerRoot.setBackground(ContextCompat.getDrawable(context,R.drawable.shape_bg_incoming_bubble_wrong));
                     viewHolder.incomingClosedQuestionRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_wrong);
                     viewHolder.incomingPlayerAnswerTextView.setText(getAnswerText(viewHolder.question,userAnswerIdentifier.getAnswerId()));
                     viewHolder.incomingFeedbackPlayerTextView.setText(context.getString(R.string.lbl_wrong_answer_encourage_feedback));
@@ -1007,42 +1017,80 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             final ViewHolder myViewHolder = viewHolder;
             viewHolder.countDownTimer.cancel();
             viewHolder.countDownTimer = null;
-            final boolean isRandomlySelected = view == null;
-            if (isRandomlySelected)
-                viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_randomly_selected_answer_title);
-            else
-                viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_user_selected_answer_title);
 
-            viewHolder.incomingProcessingQuestionTextView.setText(question.getQuestionText());
-            viewHolder.incomingSelectedAnswerTextView.setText(answer.getAnswerText());
-
-            int answerNumber = getAnswerNumber(question, answer.getId());
-            int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
-            viewHolder.incomingSelectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
+            //final boolean isRandomlySelected = view == null;
+            final boolean isSkipped = answer == null;
 
             final String gameId = question.getGameId();
             final String questionId = question.getId();
-            final String answerId = answer.getId();
-            final int returnValue = (int) answer.getScore();
+            final String answerId = isSkipped ? null : answer.getId() ;
+            final int returnValue = isSkipped ? 0 : (int) answer.getScore();
 
-            final int betSize = answer.getSelectedBetSize();
+            final int betSize = isSkipped ? 0 : answer.getSelectedBetSize();
+
+            viewHolder.incomingProcessingQuestionTextView.setText(question.getQuestionText());
+
+
+            if(isSkipped){
+                viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_seems_like_you_skipped_this_question);
+
+            }
+            else
+            {
+                viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_user_selected_answer_title);
+
+                viewHolder.incomingSelectedAnswerTextView.setText(answer.getAnswerText());
+                int answerNumber = getAnswerNumber(question, answer.getId());
+                int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
+                viewHolder.incomingSelectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
+
+            }
 
             viewHolder.incomingSelectedAnswerReturnTextView.setText(String.valueOf(returnValue));
 
-            playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomlySelected, betSize, true));
-            if (view != null) //null when random answer was selected
+            playerAnswers.put(questionId, new AnswerIdentifier(answerId, isSkipped, betSize, true));
+            if (view != null) //null when question was skipped
                 view.animate().rotationX(360.0f).setDuration(200).start();
 
-            int delay = isRandomlySelected ? 0 : 500;
+            int delay = isSkipped ? 0 : 500;
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     myViewHolder.incomingQuestionRoot.setVisibility(View.GONE);
                     myViewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
-                    EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, isRandomlySelected, betSize));
+                    EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, isSkipped, betSize));
                 }
             }, delay);
+
+
+//            final boolean isRandomlySelected = view == null;
+//
+//            if (isRandomlySelected)
+//                viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_randomly_selected_answer_title);
+//            else
+//                viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_user_selected_answer_title);
+//
+//            viewHolder.incomingProcessingQuestionTextView.setText(question.getQuestionText());
+//            viewHolder.incomingSelectedAnswerTextView.setText(answer.getAnswerText());
+//            int answerNumber = getAnswerNumber(question, answer.getId());
+//            int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
+//            viewHolder.incomingSelectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
+
+//            playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomlySelected, betSize, true));
+//            if (view != null) //null when random answer was selected
+//                view.animate().rotationX(360.0f).setDuration(200).start();
+//
+//            int delay = isRandomlySelected ? 0 : 500;
+//
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    myViewHolder.incomingQuestionRoot.setVisibility(View.GONE);
+//                    myViewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
+//                    EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, isRandomlySelected, betSize));
+//                }
+//            }, delay);
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -1075,6 +1123,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingMissedQuestionRoot.setVisibility(View.GONE);
             viewHolder.incomingPlayerAnswerRoot.setVisibility(View.GONE);
             viewHolder.incomingWinnerMessageRoot.setVisibility(View.GONE);
+            viewHolder.incomingSelectedAnswerTextView.setVisibility(View.GONE);
 
 
 

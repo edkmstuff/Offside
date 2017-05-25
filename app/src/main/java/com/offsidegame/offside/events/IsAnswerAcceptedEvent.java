@@ -10,17 +10,18 @@ public class IsAnswerAcceptedEvent {
 
 
     private String gameId, playerId, questionId, answerId;
-    private boolean isRandomlySelected;
+    //private boolean isRandomlySelected;
+    private boolean isSkipped;
     private int betSize;
 
 
-    public IsAnswerAcceptedEvent(Boolean isWaitingForAnswers, String gameId, String playerId, String questionId, String answerId, boolean isRandomlySelected, int betSize) {
+    public IsAnswerAcceptedEvent(Boolean isWaitingForAnswers, String gameId, String playerId, String questionId, String answerId, boolean isSkipped, int betSize) {
         this.isAnswerAccepted = isWaitingForAnswers;
         this.gameId = gameId;
         this.playerId = playerId;
         this.questionId = questionId;
         this.answerId = answerId;
-        this.isRandomlySelected = isRandomlySelected;
+        this.isSkipped = isSkipped;
         this.betSize = betSize;
 
     }
@@ -47,8 +48,8 @@ public class IsAnswerAcceptedEvent {
         return answerId;
     }
 
-    public boolean isRandomlySelected() {
-        return isRandomlySelected;
+    public boolean isSkipped() {
+        return isSkipped;
     }
 
     public int getBetSize() {

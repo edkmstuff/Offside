@@ -33,6 +33,12 @@ public class Player {
     private int privateGamePosition;
     @com.google.gson.annotations.SerializedName("T")
     private int trophies;
+    @com.google.gson.annotations.SerializedName("FP")
+    private int firstPrize;
+    @com.google.gson.annotations.SerializedName("SP")
+    private int secondPrize;
+    @com.google.gson.annotations.SerializedName("TP")
+    private int thirdPrize;
     @com.google.gson.annotations.SerializedName("RVWC")
     private int rewardVideoWatchCount;
     @com.google.gson.annotations.SerializedName("PI")
@@ -162,6 +168,30 @@ public class Player {
 
     public void setPowerItems(int powerItems) {
         this.powerItems = powerItems;
+    }
+
+    public int getFirstPrize() {
+        return firstPrize;
+    }
+
+    public void setFirstPrize(int firstPrize) {
+        this.firstPrize = firstPrize;
+    }
+
+    public int getSecondPrize() {
+        return secondPrize;
+    }
+
+    public void setSecondPrize(int secondPrize) {
+        this.secondPrize = secondPrize;
+    }
+
+    public int getThirdPrize() {
+        return thirdPrize;
+    }
+
+    public void setThirdPrize(int thirdPrize) {
+        this.thirdPrize = thirdPrize;
     }
 }
 

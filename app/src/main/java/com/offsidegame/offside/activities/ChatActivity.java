@@ -775,14 +775,15 @@ public class ChatActivity extends AppCompatActivity {
         try {
             String gameId = questionAnsweredEvent.getGameId();
             String questionId = questionAnsweredEvent.getQuestionId();
-            boolean isRandomAnswer = questionAnsweredEvent.isRandomAnswer();
+            //boolean isRandomAnswer = questionAnsweredEvent.isRandomAnswer();
+            boolean isSkipped = questionAnsweredEvent.isSkipped();
             int betSize = questionAnsweredEvent.getBetSize();
 
             // this parameter will be null if the user does not answer
             String answerId = questionAnsweredEvent.getAnswerId();
-            OffsideApplication.signalRService.postAnswer(gameId, playerId, questionId, answerId, isRandomAnswer, betSize);
-            if (!OffsideApplication.playerAnswers.containsKey(questionId))
-                OffsideApplication.playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize, true));
+            OffsideApplication.signalRService.postAnswer(gameId, playerId, questionId, answerId, isSkipped, betSize);
+//            if (!OffsideApplication.playerAnswers.containsKey(questionId))
+//                OffsideApplication.playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize, true));
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -797,7 +798,7 @@ public class ChatActivity extends AppCompatActivity {
         try {
             boolean isAnswerAccepted = isAnswerAcceptedEvent.getIsAnswerAccepted();
             if (!isAnswerAccepted) {
-                String msg = "Answered not accepted! details: " + "gameid: " + isAnswerAcceptedEvent.getGameId() + " playerid: " + isAnswerAcceptedEvent.getPlayerId() + " questionid: " + isAnswerAcceptedEvent.getQuestionId() + " answerid: " + isAnswerAcceptedEvent.getAnswerId() + " israndomlyselected: " + isAnswerAcceptedEvent.isRandomlySelected() + " betsize: " + isAnswerAcceptedEvent.getBetSize();
+                String msg = "Answered not accepted! details: " + "gameid: " + isAnswerAcceptedEvent.getGameId() + " playerid: " + isAnswerAcceptedEvent.getPlayerId() + " questionid: " + isAnswerAcceptedEvent.getQuestionId() + " answerid: " + isAnswerAcceptedEvent.getAnswerId() + " isSkippped: " + isAnswerAcceptedEvent.isSkipped() + " betsize: " + isAnswerAcceptedEvent.getBetSize();
                 ACRA.getErrorReporter().handleSilentException(new Throwable(msg));
             }
 

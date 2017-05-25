@@ -363,15 +363,15 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
                                 android:orientation="horizontal"
-                                android:gravity="center">
-
-
+                                android:gravity="center"
+                                android:weightSum="2">
 
 
 
                                 <LinearLayout
                                     android:id="@+id/cm_incoming_bet_option_0_root"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/shape_bg_rectangle_gray_border"
                                     android:layout_marginLeft="5dp"
@@ -386,29 +386,20 @@
                                         android:layout_height="wrap_content"
                                         android:background="@drawable/shape_bg_circle"
                                         android:gravity="center"
-                                        android:text="x2"
+                                        android:text="10"
                                         android:textColor="@color/colorBlack"
-                                        android:textStyle="bold" />
+                                        android:textStyle="bold"
 
-
-
-                                    <ImageView
-                                        android:layout_width="50dp"
-                                        android:layout_height="50dp"
-                                        android:scaleType="centerCrop"
-                                        android:layout_marginRight="-22dp"
-                                        android:src="@mipmap/ic_cost_1_power_items"/>
-
-
+                                        />
 
                                 </LinearLayout>
-
 
                                 <LinearLayout
                                     android:id="@+id/cm_incoming_bet_option_1_root"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
                                     android:layout_height="wrap_content"
-                                    android:background="@drawable/shape_bg_rectangle_gray_border"
+                                    android:background="@drawable/shape_bg_rectangle_gray_no_border"
                                     android:layout_marginLeft="5dp"
                                     android:layout_marginRight="5dp"
                                     android:gravity="center"
@@ -417,28 +408,72 @@
                                     android:padding="5dp">
 
                                     <TextView
-
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-
                                         android:background="@drawable/shape_bg_circle"
                                         android:gravity="center"
-                                        android:text="x3"
+                                        android:text="20"
+                                        android:textColor="@color/colorBlack"
+                                        android:textStyle="bold" />
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="="
                                         android:textColor="@color/colorBlack"
                                         android:textStyle="bold" />
 
 
 
+
                                     <ImageView
-                                        android:layout_width="50dp"
-                                        android:layout_height="50dp"
+                                        android:layout_width="40dp"
+                                        android:layout_height="40dp"
                                         android:scaleType="centerCrop"
-                                        android:layout_marginRight="-22dp"
-                                        android:src="@mipmap/ic_cost_2_power_items"/>
+
+                                        android:src="@mipmap/ic_soccer_ball"/>
 
 
 
                                 </LinearLayout>
+
+
+                                <!--<LinearLayout-->
+                                    <!--android:id="@+id/cm_incoming_bet_option_2_root"-->
+                                    <!--android:layout_width="wrap_content"-->
+                                    <!--android:layout_height="wrap_content"-->
+                                    <!--android:background="@drawable/shape_bg_rectangle_gray_border"-->
+                                    <!--android:layout_marginLeft="5dp"-->
+                                    <!--android:layout_marginRight="5dp"-->
+                                    <!--android:gravity="center"-->
+                                    <!--android:layoutDirection="rtl"-->
+                                    <!--android:orientation="horizontal"-->
+                                    <!--android:padding="5dp"-->
+                                    <!--android:visibility="gone">-->
+
+                                    <!--<TextView-->
+
+                                        <!--android:layout_width="wrap_content"-->
+                                        <!--android:layout_height="wrap_content"-->
+
+                                        <!--android:background="@drawable/shape_bg_circle"-->
+                                        <!--android:gravity="center"-->
+                                        <!--android:text="x3"-->
+                                        <!--android:textColor="@color/colorBlack"-->
+                                        <!--android:textStyle="bold" />-->
+
+
+
+                                    <!--<ImageView-->
+                                        <!--android:layout_width="50dp"-->
+                                        <!--android:layout_height="50dp"-->
+                                        <!--android:scaleType="centerCrop"-->
+                                        <!--android:layout_marginRight="-22dp"-->
+                                        <!--android:src="@mipmap/ic_cost_2_power_items"/>-->
+
+
+
+                                <!--</LinearLayout>-->
 
 
 
@@ -687,7 +722,6 @@
 
                         </LinearLayout>
 
-
                     </LinearLayout>
 
                     <!--processing question root-->
@@ -736,7 +770,6 @@
                             android:minHeight="50dp"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
-                            android:text="no"
                             android:textColor="@color/colorWhite" />
 
                         <LinearLayout

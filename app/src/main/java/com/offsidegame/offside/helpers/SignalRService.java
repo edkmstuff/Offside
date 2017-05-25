@@ -70,8 +70,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    public final String ip = new String("192.168.1.140:8080");
-    //public final String ip = new String("10.0.0.17:8080");
+    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
 
@@ -471,13 +471,14 @@ public class SignalRService extends Service {
     }
 
 
-    public void postAnswer(final String gameId,final  String playerId,final  String questionId,final  String answerId,final  boolean isRandomlySelected,final  int betSize) {
+    public void postAnswer(final String gameId, final String playerId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
+
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Boolean.class, "PostAnswer", gameId, playerId ,questionId, answerId, isRandomlySelected, betSize).done(new Action<Boolean>() {
+        hub.invoke(Boolean.class, "PostAnswer", gameId, playerId, questionId, answerId, isSkipped, betSize).done(new Action<Boolean>() {
             @Override
             public void run(Boolean isAnswerAccepted) throws Exception {
-                EventBus.getDefault().post(new IsAnswerAcceptedEvent(isAnswerAccepted,gameId, playerId ,questionId, answerId, isRandomlySelected, betSize ));
+                EventBus.getDefault().post(new IsAnswerAcceptedEvent(isAnswerAccepted, gameId, playerId, questionId, answerId, isSkipped, betSize));
             }
 
         }).onError(new ErrorCallback() {
@@ -578,25 +579,25 @@ public class SignalRService extends Service {
         return true;
     }
 
-    public boolean setOffsideCoins(String gameId, String playerId, int offsideCoins, boolean isDueToRewardVideo) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return false;
-
-        hub.invoke(Integer.class, "SetOffsideCoins", gameId, playerId, offsideCoins, isDueToRewardVideo).done(new Action<Integer>() {
-            @Override
-            public void run(Integer newOffsideCoinsValue) throws Exception {
-                EventBus.getDefault().post(newOffsideCoinsValue);
-            }
-
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
-
-        return true;
-    }
+//    public boolean setOffsideCoins(String gameId, String playerId, int offsideCoins, boolean isDueToRewardVideo) {
+//        if (!(hubConnection.getState() == ConnectionState.Connected))
+//            return false;
+//
+//        hub.invoke(Integer.class, "SetOffsideCoins", gameId, playerId, offsideCoins, isDueToRewardVideo).done(new Action<Integer>() {
+//            @Override
+//            public void run(Integer newOffsideCoinsValue) throws Exception {
+//                EventBus.getDefault().post(newOffsideCoinsValue);
+//            }
+//
+//        }).onError(new ErrorCallback() {
+//            @Override
+//            public void onError(Throwable error) {
+//                ACRA.getErrorReporter().handleSilentException(error);
+//            }
+//        });
+//
+//        return true;
+//    }
 
     public boolean setPowerItems(String gameId, String playerId, int powerItems, boolean isDueToRewardVideo) {
         if (!(hubConnection.getState() == ConnectionState.Connected))

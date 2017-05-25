@@ -13,7 +13,7 @@
 
             <stroke
                 android:width="4dp"
-                android:color="@color/chatPrimary" />
+                android:color="@color/colorDivider" />
         </shape>
     </item>
 </layer-list>
