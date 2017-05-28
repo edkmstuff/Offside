@@ -15,8 +15,7 @@ public class Player {
     private String privateGameCode;
     @com.google.gson.annotations.SerializedName("PA")
     private Map<String, AnswerIdentifier> playerAnswers ;
-    @com.google.gson.annotations.SerializedName("P")
-    private double points;
+
     @com.google.gson.annotations.SerializedName("I")
     private String id ;
     @com.google.gson.annotations.SerializedName("IU")
@@ -31,8 +30,6 @@ public class Player {
     private int generalPosition;
     @com.google.gson.annotations.SerializedName("PGP")
     private int privateGamePosition;
-    @com.google.gson.annotations.SerializedName("T")
-    private int trophies;
     @com.google.gson.annotations.SerializedName("FP")
     private int firstPrize;
     @com.google.gson.annotations.SerializedName("SP")
@@ -51,14 +48,6 @@ public class Player {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public double getPoints() {
-        return points;
-    }
-
-    public void setPoints(double points) {
-        this.points = points;
     }
 
     public String getPrivateGameCode() {
@@ -140,14 +129,6 @@ public class Player {
 
     public void setPrivateGamePosition(int privateGamePosition) {
         this.privateGamePosition = privateGamePosition;
-    }
-
-    public int getTrophies() {
-        return trophies;
-    }
-
-    public void setTrophies(int trophies) {
-        this.trophies = trophies;
     }
 
     public int getRewardVideoWatchCount() {

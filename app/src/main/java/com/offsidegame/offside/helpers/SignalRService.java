@@ -563,10 +563,10 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return false;
 
-        hub.invoke(Boolean.class, "SaveLoggedInUser", user.getId(), user.getName(), user.getEmail()).done(new Action<Boolean>() {
+        hub.invoke(Player.class, "SaveLoggedInUser", user.getId(), user.getName(), user.getEmail()).done(new Action<Player>() {
             @Override
-            public void run(Boolean isUserSaved) throws Exception {
-                //EventBus.getDefault().post(new IsAnswerAcceptedEvent(isUserSaved));
+            public void run(Player player) throws Exception {
+                EventBus.getDefault().post(player);
             }
 
         }).onError(new ErrorCallback() {

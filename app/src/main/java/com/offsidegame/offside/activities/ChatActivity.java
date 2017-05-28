@@ -779,8 +779,8 @@ public class ChatActivity extends AppCompatActivity {
             // this parameter will be null if the user does not answer
             String answerId = questionAnsweredEvent.getAnswerId();
             OffsideApplication.signalRService.postAnswer(gameId, playerId, questionId, answerId, isSkipped, betSize);
-//            if (!OffsideApplication.playerAnswers.containsKey(questionId))
-//                OffsideApplication.playerAnswers.put(questionId, new AnswerIdentifier(answerId, isRandomAnswer, betSize, true));
+            if (!OffsideApplication.playerAnswers.containsKey(questionId))
+                OffsideApplication.playerAnswers.put(questionId, new AnswerIdentifier(answerId, isSkipped, betSize, true));
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);

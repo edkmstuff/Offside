@@ -31,6 +31,7 @@ import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.Player;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -66,6 +67,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private String[] availableLanguages;
     private TextView noAvailableGamesReturnLaterTextView;
     private TextView versionTextView;
+    //private TextView playerBalanceTextView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +77,6 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             setContentView(R.layout.activity_join_game);
 
             settings = getSharedPreferences(getString(R.string.preference_name), 0);
-
-            //toolbar = (Toolbar) findViewById((R.id.app_bar));
-            //setSupportActionBar(toolbar);
 
             FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
             playerDisplayName = player.getDisplayName();
@@ -90,6 +90,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             playerProfilePictureUrl = settings.getString(getString(R.string.player_profile_picture_url_key),null);
             playerProfilePictureUrl = playerProfilePictureUrl== null ? OffsideApplication.getDefaultProfilePictureUrl()  : playerProfilePictureUrl;
             ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName);
+
+            //playerBalanceTextView = (TextView) findViewById(R.id.jg_player_balance_text_view);
 
             gameCodeEditText = (EditText) findViewById(R.id.jg_game_code_edit_text);
             joinTextView = (TextView) findViewById(R.id.jg_join_text_view);
@@ -191,6 +193,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
             OffsideApplication.setIsPlayerQuitGame(false);
             String androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+
             OffsideApplication.signalRService.joinGame(privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl,isPrivateGameCreator, androidDeviceId );
             loadingGameRoot.setVisibility(View.VISIBLE);
             joinGameRoot.setVisibility(View.GONE);
@@ -368,6 +371,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
         if(languages.length>0)
             availableLanguagesSpinner.setSelection(0);
     }
+
     private void setAvailableGamesSpinnerAdapter(String [] gameTitles) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, gameTitles);
         // Specify the layout to use when the list of choices appears
@@ -393,6 +397,23 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             ACRA.getErrorReporter().handleSilentException(ex);
         }
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePlayer(Player player) {
+        try {
+
+//            OffsideApplication.setGameInfo(new GameInfo());
+//            OffsideApplication.getGameInfo().setPlayer(player);
+//            playerDisplayName = OffsideApplication.getGameInfo().getPlayer().getUserName();
+//            playerId = OffsideApplication.getGameInfo().getPlayer().getId();
+//            balance = OffsideApplication.getGameInfo().getPlayer().getBalance();
+//            playerBalanceTextView.setText(Integer.toString(balance));
+
+        }
+        catch (Exception ex){
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
     }
 
 

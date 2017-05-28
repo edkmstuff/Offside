@@ -599,7 +599,9 @@
                         android:layout_margin="5dp"
                         android:minHeight="80dp"
                         android:minWidth="80dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        >
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -625,7 +627,8 @@
 
                         android:minHeight="80dp"
                         android:minWidth="80dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
                         <ImageView
 

@@ -21,7 +21,7 @@ public class Answer implements Serializable {
     @com.google.gson.annotations.SerializedName("PM")
     private double pointsMultiplier;
 
-    public int selectedBetSize = OffsideApplication.getGameInfo().getMinBetSize();
+    public int selectedBetSize = 0;
 
 
 
@@ -52,8 +52,8 @@ public class Answer implements Serializable {
 
 
     public double getScore() {
-        if(score ==0)
-            return OffsideApplication.getGameInfo().getMinBetSize();
+//        if(score ==0)
+//            return OffsideApplication.getGameInfo().getMinBetSize();
         return score;
     }
 

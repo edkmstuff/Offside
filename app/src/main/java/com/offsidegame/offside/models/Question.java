@@ -133,4 +133,9 @@ public class Question implements Serializable {
     public String getCorrectAnswerId() {
         return correctAnswerId;
     }
+
+    public boolean isDebate() {
+        return questionType.equals(OffsideApplication.getQuestionTypeDebate());
+
+    }
 }
