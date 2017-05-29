@@ -140,7 +140,7 @@
             android:weightSum="5"
 
             android:textDirection="rtl"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="30dp"
             android:orientation="horizontal">
 
             <EditText
@@ -163,11 +163,12 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
-                android:background="@color/chatText"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="הצטרף"
-                android:textColor="@color/grayText"
+                android:textColor="@color/chatPrimary"
+                android:background="@color/colorAccent"
+
                 />
 
 
@@ -206,13 +207,88 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:background="@color/chatText"
             android:gravity="center"
             android:padding="5dp"
             android:minHeight="50dp"
             android:text="@string/lbl_create_private_game"
+            android:textColor="@color/chatPrimary"
+            android:background="@color/colorAccent"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layoutDirection="rtl"
+            android:layout_marginTop="15dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="איך משחקים?"
+                android:textColor="@color/colorWhite"
+                android:textSize="14dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="מטרתך - לזכות במספר הגבוה ביותר של מטבעות בתום המשחק"
+                android:textColor="@color/colorWhite"
+                android:textSize="12dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="איך זה עובד?"
+                android:textColor="@color/colorWhite"
+                android:textSize="14dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1. יוצרים קבוצה עבור החברים או מצטרפים לקבוצה קיימת באמצעות קוד"
+                android:textColor="@color/colorWhite"
+                android:textSize="12dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2. כל משתתף מקבל בתחילת כל מחצית 200 מטבעות ו-3 כדורים מכפילי כח"
+                android:textColor="@color/colorWhite"
+                android:textSize="12dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3. לקראת תחילת המשחק ובמהלכו נשלח לכם שאלות שמתייחסות לארועים שונים במשחק"
+                android:textColor="@color/colorWhite"
+                android:textSize="12dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4. עליכם לענות על שאלה בפרק זמן של 30 שניות (לעיתים אף פחות)"
+                android:textColor="@color/colorWhite"
+                android:textSize="12dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5. ניתן להשתמש בכדור כדי להגדיל את גובה הזכייה"
+                android:textColor="@color/colorWhite"
+                android:textSize="12dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="תבלו!!!"
+                android:textColor="@color/colorWhite"
+                android:textSize="14dp"
+                />
 
-            android:textColor="@color/grayText" />
+
+
+
+
+        </LinearLayout>
 
 
         <LinearLayout
@@ -249,7 +325,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="10dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
 
         <ImageView
@@ -319,16 +395,19 @@
 
         <TextView
             android:id="@+id/jg_generate_private_game_code_button_text_view"
-            android:background="@color/chatText"
             android:gravity="center"
-            android:textColor="@color/grayText"
+            android:textColor="@color/chatPrimary"
+            android:background="@color/colorAccent"
             android:layout_width="match_parent"
             android:padding="5dp"
             android:minHeight="50dp"
             android:minWidth="100dp"
             android:layout_height="wrap_content"
             android:textDirection="rtl"
-            android:text="@string/lbl_create_private_game_and_join" />
+            android:text="@string/lbl_create_private_game_and_join"
+
+
+            />
 
         <!--<TextView-->
             <!--android:id="@+id/jg_private_game_code_text_view"-->

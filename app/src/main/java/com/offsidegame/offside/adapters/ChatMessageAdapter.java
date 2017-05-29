@@ -264,7 +264,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 //winner message
                 viewHolder.incomingWinnerMessageRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_winner_message_root);
-                viewHolder.incomingWinnerPointsTextView = (TextView) convertView.findViewById(R.id.cm_incoming_winner_points_text_view);
+                //viewHolder.incomingWinnerPointsTextView = (TextView) convertView.findViewById(R.id.cm_incoming_winner_points_text_view);
                 viewHolder.incomingWinnersRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_winners_root);
 
                 //viewHolder.incomingWinnerTrophyGifImageView = (GifImageView) convertView.findViewById(R.id.cm_incoming_winner_trophy_gif_image_view);
@@ -547,7 +547,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
             viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
 
-            viewHolder.incomingWinnerPointsTextView.setText(viewHolder.chatMessage.getMessageText());
+            //viewHolder.incomingWinnerPointsTextView.setText(viewHolder.chatMessage.getMessageText());
 
             List<Player> winners = viewHolder.chatMessage.getWinners();
             viewHolder.incomingWinnersRoot.removeAllViews();
@@ -555,11 +555,16 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             for(Player winner: winners) {
 
                 ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.winner_item, viewHolder.incomingWinnersRoot,false);
-                ImageView imageView = (ImageView) layout.getChildAt(0);
-                TextView  winnerNameTextView = (TextView) layout.getChildAt(1);
+                TextView winnerScoreTextView = (TextView) layout.getChildAt(0);
+                ImageView winnerPrizeImageView = (ImageView) layout.getChildAt(1);
+                ImageView winnerPictureImageView = (ImageView) layout.getChildAt(2);
+                TextView  winnerNameTextView = (TextView) layout.getChildAt(3);
 
                 Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
-                loadFbImage(imageView, winnerProfilePictureUri);
+                winnerScoreTextView.setText(Integer.toString(winner.getOffsideCoins()));
+                int resourceId = winner.getPrivateGamePosition()==1 ? R.mipmap.ic_offside_trophy : winner.getPrivateGamePosition()==2 ? R.mipmap.ic_offside_trophy_silver : R.mipmap.ic_offside_trophy_bronze;
+                winnerPrizeImageView.setImageResource(resourceId);
+                loadFbImage(winnerPictureImageView, winnerProfilePictureUri);
                 winnerNameTextView.setText(winner.getUserName());
                 viewHolder.incomingWinnersRoot.addView(layout);
             }

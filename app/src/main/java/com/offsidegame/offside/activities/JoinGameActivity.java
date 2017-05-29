@@ -128,7 +128,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 @Override
                 public void onClick(View view) {
 
-                    privateGameNameEditText.setText(playerDisplayName.split(" ")[0] + "'s" + " gang");
+                    privateGameNameEditText.setText(playerDisplayName.split(" ")[0] + "'s" + " friends");
                     joinGameRoot.setVisibility(View.GONE);
                     createPrivateGameRoot.setVisibility(View.VISIBLE);
                 }

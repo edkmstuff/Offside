@@ -51,11 +51,11 @@
     <string name="lbl_balance">יתרה</string>
     <string name="lbl_wrong_answer_encourage_feedback">לא נורא אולי בשאלה הבאה</string>
     <string name="lbl_select_game">בחר משחק</string>
-    <string name="lbl_select_name_for_club">בחר שם למועדון</string>
-    <string name="lbl_create_private_game">צור משחק פרטי</string>
-    <string name="lbl_create_private_game_and_join">צור והתחל לשחק</string>
+    <string name="lbl_select_name_for_club">בחר שם לקבוצה</string>
+    <string name="lbl_create_private_game">פתח קבוצה חדשה וקבל קוד</string>
+    <string name="lbl_create_private_game_and_join">שמור והתחל במשחק</string>
     <string name="lbl_no_available_games">לא נמצאו משחקים זמינים</string>
-    <string name="lbl_you_dont_have_code">אין לך קוד?</string>
+    <string name="lbl_you_dont_have_code">אין לך קוד קבוצה?</string>
     <string name="lbl_no_available_game_message_return_later">כרגע איו משחקים זמינים, אנא חזור במועד מאוחר יותר</string>
     <string name="lbl_type_message">הקלד הודעה</string>
     <string name="lbl_send">שלח</string>
@@ -64,7 +64,7 @@
     <string name="lbl_question_time_expired_message">תם הזמן לשאלה זו</string>
     <string name="lbl_we_have_an_answer">התשובה הנכונה לשאלה</string>
     <string name="lbl_in_few_seconds_you_will_see_others_answers">בעוד מספר שניות תראה כיצד חושבים כולם...</string>
-    <string name="lbl_type_in_game_code">הזן קוד משחק פרטי</string>
+    <string name="lbl_type_in_game_code">הזן קוד קבוצה והצטרף</string>
     <string name="lbl_commands_leaders">מובילים</string>
     <string name="lbl_command_current_question">שאלה נוכחית</string>
     <string name="lbl_command_offside_coins">היתרה שלי</string>
@@ -98,7 +98,7 @@
     <string name="lbl_is">היא</string>
     <string name="lbl_your_answer_was">תשובתך היתה</string>
     <string name="lbl_press_back_again_to_exit">לחץ שוב על חזרה כדי לצאת</string>
-    <string name="lbl_and_the_winner_is">והמנצח הוא...היא...הם...</string>
+    <string name="lbl_and_the_winner_is">והמנצחים שלנו הם...</string>
     <string name="lbl_exceed_allowed_reward_video_watch_message">צפית במקסימום סרטונים המותרים למשחק אחד.</string>
     <string name="lbl_failed_to_load_video">טעינת וידאו נכשלה</string>
     <string name="lbl_select_language">בחר שפה</string>
