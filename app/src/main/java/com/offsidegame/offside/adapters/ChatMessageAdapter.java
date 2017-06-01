@@ -604,6 +604,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             final boolean isPlayerAnsweredQuestion = playerAnswers.containsKey(questionId);
             final boolean isDebate = viewHolder.question.getQuestionType().equals(OffsideApplication.getQuestionTypeDebate());
             final boolean isOpenForAnswering = viewHolder.chatMessage.getTimeLeftToAnswer()>0;
+            final boolean isTimerRequired = (viewHolder.question.getGamePhase().equals(OffsideApplication.getInGamePhaseName()) && (
+                                             viewHolder.question.getQuestionType().equals(OffsideApplication.getQuestionTypeFun()) ||
+                                             viewHolder.question.getQuestionType().equals(OffsideApplication.getQuestionTypePrediction()))
+                                                );
 
 
             resetWidgetsVisibility(viewHolder);
@@ -865,6 +869,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         viewHolder.incomingProcessingQuestionPossibleReturnValueMessageRoot.setVisibility(View.GONE);
                     }
 
+                    viewHolder.incomingTimeToAnswerRoot.setVisibility(View.VISIBLE);
+
 
 
                     //</editor-fold>
@@ -896,56 +902,59 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         }
                     }
 
+                    if(isTimerRequired){
 
-                    viewHolder.timeToAnswer = viewHolder.chatMessage.getTimeLeftToAnswer();
-                    int progressBarMaxValue = viewHolder.timeToAnswer;
-                    viewHolder.incomingTimeToAnswerProgressBar.setMax(progressBarMaxValue);
+                        viewHolder.timeToAnswer = viewHolder.chatMessage.getTimeLeftToAnswer();
+                        int progressBarMaxValue = viewHolder.timeToAnswer;
+                        viewHolder.incomingTimeToAnswerProgressBar.setMax(progressBarMaxValue);
 
-                    //timer of current question
-                    if (viewHolder.timeToAnswer > 0) {
-                        if (viewHolder.countDownTimer != null) {
-                            //Log.i("offside", "CANCELLING!!! timerId: " + String.valueOf(viewHolder.countDownTimer.hashCode()));
-                            viewHolder.countDownTimer.cancel();
-                            viewHolder.countDownTimer = null;
+                        //timer of current question
+                        if (viewHolder.timeToAnswer > 0) {
+                            if (viewHolder.countDownTimer != null) {
+                                //Log.i("offside", "CANCELLING!!! timerId: " + String.valueOf(viewHolder.countDownTimer.hashCode()));
+                                viewHolder.countDownTimer.cancel();
+                                viewHolder.countDownTimer = null;
+                            }
+
+                            viewHolder.countDownTimer = new CountDownTimer(viewHolder.timeToAnswer, 100) {
+                                @Override
+                                public void onTick(long millisUntilFinished) {
+                                    String questionId = viewHolder.question.getId();
+                                    if (playerAnswers.containsKey(questionId) && !playerAnswers.get(questionId).getQuestionIsActive()) {
+                                        this.onFinish();
+                                    }
+                                    viewHolder.chatMessage.setTimeLeftToAnswer((int) millisUntilFinished);
+                                    //Log.i("offside", "timerId: " + String.valueOf(this.hashCode()) + " question text: " + viewHolder.question.getQuestionText() + " - secondsLeft: " + Math.round((int) millisUntilFinished / 1000.0f));
+                                    viewHolder.incomingTimeToAnswerProgressBar.setProgress(Math.round((float) millisUntilFinished));
+
+                                    String formattedTimerDisplay = formatTimerDisplay(millisUntilFinished);
+
+                                    viewHolder.incomingTimeToAnswerTextDisplayTextView.setText(formattedTimerDisplay);
+//
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    viewHolder.chatMessage.setTimeLeftToAnswer(0);
+                                    viewHolder.incomingTimeToAnswerProgressBar.setProgress(0);
+                                    viewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
+                                    viewHolder.incomingQuestionProcessedQuestionTimeExpiredMessageTextView.setVisibility(View.VISIBLE);
+
+
+
+                                }
+                            }.start();
                         }
 
-                        viewHolder.countDownTimer = new CountDownTimer(viewHolder.timeToAnswer, 100) {
-                            @Override
-                            public void onTick(long millisUntilFinished) {
-                                String questionId = viewHolder.question.getId();
-                                if (playerAnswers.containsKey(questionId) && !playerAnswers.get(questionId).getQuestionIsActive()) {
-                                    this.onFinish();
-                                }
-                                viewHolder.chatMessage.setTimeLeftToAnswer((int) millisUntilFinished);
-                                //Log.i("offside", "timerId: " + String.valueOf(this.hashCode()) + " question text: " + viewHolder.question.getQuestionText() + " - secondsLeft: " + Math.round((int) millisUntilFinished / 1000.0f));
-                                viewHolder.incomingTimeToAnswerProgressBar.setProgress(Math.round((float) millisUntilFinished));
+                        viewHolder.incomingTimeToAnswerRoot.setVisibility(View.VISIBLE);
 
-                                String formattedTimerDisplay = formatTimerDisplay(millisUntilFinished);
-
-                                viewHolder.incomingTimeToAnswerTextDisplayTextView.setText(formattedTimerDisplay);
-//
-                            }
-
-                            @Override
-                            public void onFinish() {
-                                viewHolder.chatMessage.setTimeLeftToAnswer(0);
-                                viewHolder.incomingTimeToAnswerProgressBar.setProgress(0);
-                                viewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
-                                viewHolder.incomingQuestionProcessedQuestionTimeExpiredMessageTextView.setVisibility(View.VISIBLE);
-
-
-
-                            }
-                        }.start();
                     }
 
 
 
                     //</editor-fold>
-
                 }
 
-                viewHolder.incomingTimeToAnswerRoot.setVisibility(View.VISIBLE);
                 viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
                 viewHolder.incomingQuestionRoot.setVisibility(View.VISIBLE);
 

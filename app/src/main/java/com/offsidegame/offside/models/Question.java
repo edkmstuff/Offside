@@ -32,6 +32,8 @@ public class Question implements Serializable {
     private String questionType;
     @com.google.gson.annotations.SerializedName("CAI")
     private String correctAnswerId;
+    @com.google.gson.annotations.SerializedName("GP")
+    private String gamePhase;
 
 
 
@@ -137,5 +139,13 @@ public class Question implements Serializable {
     public boolean isDebate() {
         return questionType.equals(OffsideApplication.getQuestionTypeDebate());
 
+    }
+
+    public String getGamePhase() {
+        return gamePhase;
+    }
+
+    public void setGamePhase(String gamePhase) {
+        this.gamePhase = gamePhase;
     }
 }

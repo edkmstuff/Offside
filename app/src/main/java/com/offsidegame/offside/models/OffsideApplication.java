@@ -44,6 +44,10 @@ public class OffsideApplication extends Application {
     private static String messageTypeGetCoins = "GET_COINS";
     private static String messageTypeWinner = "WINNER";
     private static String questionTypeDebate = "Debate";
+    private static String inGamePhaseName = "GamePlay";
+
+    private static String questionTypePrediction = "Prediction";
+    private static String questionTypeFun = "Fun";
 
     private static String profileImageFileName = "profileImage.jpg";
     //private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
@@ -138,6 +142,19 @@ public class OffsideApplication extends Application {
     public static void setScoreboard(Scoreboard scoreboard) {
         OffsideApplication.scoreboard = scoreboard;
     }
+
+    public static String getInGamePhaseName() {
+        return inGamePhaseName;
+    }
+
+    public static String getQuestionTypePrediction() {
+        return questionTypePrediction;
+    }
+
+    public static String getQuestionTypeFun() {
+        return questionTypeFun;
+    }
+
 
     public void onCreate() {
 
