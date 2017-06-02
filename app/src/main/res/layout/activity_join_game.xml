@@ -101,7 +101,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="25dp"
             android:scaleType="centerCrop" />
 
         <!--<LinearLayout-->
@@ -137,56 +137,54 @@
             android:layout_height="wrap_content"
             android:layoutDirection="rtl"
             android:minHeight="50dp"
-            android:weightSum="5"
-
             android:textDirection="rtl"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/jg_game_code_edit_text"
                 style="@style/editTextClassic"
-                android:layout_width="0dp"
-                android:layout_weight="4"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="50dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:background="@color/colorWhite"
                 android:ems="10"
                 android:hint="@string/lbl_type_in_game_code"
                 android:inputType="phone"
-                android:textDirection="rtl" />
-
-            <TextView
-                android:id="@+id/jg_join_text_view"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="הצטרף"
-                android:textColor="@color/chatPrimary"
-                android:background="@color/colorAccent"
-
-                />
-
+                android:textDirection="rtl"
+                android:paddingRight="5dp"/>
 
         </LinearLayout>
 
-        <!--<TextView-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:text="Or"/>-->
+        <TextView
+            android:id="@+id/jg_join_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="50dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="הצטרף"
+            android:textColor="@color/chatPrimary"
+            android:background="@color/colorAccent"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/grayText"
             android:text="@string/lbl_you_dont_have_code"
-            android:layout_margin="5dp"
-            android:layout_gravity="right">
+
+            android:layout_gravity="right"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            >
 
         </TextView>
 
@@ -196,7 +194,8 @@
             android:layout_height="wrap_content"
             android:textColor="@color/grayText"
             android:text="@string/lbl_no_available_game_message_return_later"
-            android:layout_margin="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_gravity="right" >
 
         </TextView>
@@ -213,13 +212,18 @@
             android:text="@string/lbl_create_private_game"
             android:textColor="@color/chatPrimary"
             android:background="@color/colorAccent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layoutDirection="rtl"
-            android:layout_marginTop="15dp">
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -325,7 +329,10 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="10dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        >
 
 
         <ImageView
@@ -374,6 +381,7 @@
             android:background="@color/colorWhite"
             android:textDirection="rtl"
             android:layout_marginBottom="20dp"
+            android:paddingRight="5dp"
             />
 
         <TextView

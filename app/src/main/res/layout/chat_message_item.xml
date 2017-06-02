@@ -203,7 +203,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
                         android:textColor="@color/chatText"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
 
                         <LinearLayout
@@ -249,7 +249,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal">
-                                <!--winners images are populated dynamically childAt(0) -->
+                                <!--winners list is populated dynamically using winner_item -->
                             </LinearLayout>
                         </LinearLayout>
 
@@ -267,7 +267,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
                         android:textColor="@color/chatText"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <LinearLayout
                             android:id="@+id/cm_incoming_time_to_answer_root"
@@ -311,7 +311,7 @@
                             android:text="@string/lbl_question_time_expired_message"
                             android:textColor="@color/answer4backgroundColor"
                             android:textSize="16dp" />
-
+                        <!--stats-->
                         <LinearLayout
                             android:id="@+id/cm_incoming_question_stat_root"
                             android:layout_width="match_parent"
@@ -719,6 +719,17 @@
 
                             </LinearLayout>
 
+
+                        </LinearLayout>
+
+                        <!--processed question answers-->
+                        <LinearLayout
+                            android:id="@+id/cm_incoming_processed_question_answers_bars_root"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layoutDirection="rtl"
+                            >
 
                         </LinearLayout>
 

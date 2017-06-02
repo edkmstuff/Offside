@@ -2,8 +2,11 @@ package com.offsidegame.offside.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -154,6 +157,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public LinearLayout incomingWinnersRoot;
         //public GifImageView incomingWinnerTrophyGifImageView;
 
+        //bars display for processed question
+        public LinearLayout incomingProcessedQuestionAnswersBarsRoot;
+
+
 
 
         //</editor-fold>
@@ -268,6 +275,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingWinnersRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_winners_root);
 
                 //viewHolder.incomingWinnerTrophyGifImageView = (GifImageView) convertView.findViewById(R.id.cm_incoming_winner_trophy_gif_image_view);
+
+                viewHolder.incomingProcessedQuestionAnswersBarsRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_processed_question_answers_bars_root);
 
                 //</editor-fold>
 
@@ -527,18 +536,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
             Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
 
-            //animated gif
-            /*
-            new GifDataDownloader() {
-                @Override protected void onPostExecute(final byte[] bytes) {
-                    viewHolder.incomingWinnerTrophyGifImageView.setBytes(bytes);
-                    viewHolder.incomingWinnerTrophyGifImageView.startAnimation();
-                    Log.d(TAG, "GIF width is " + viewHolder.incomingWinnerTrophyGifImageView.getGifWidth());
-                    Log.d(TAG, "GIF height is " + viewHolder.incomingWinnerTrophyGifImageView.getGifHeight());
-                }
-            }.execute("http://10.0.0.17:8080/Images/animated_won_trophy.gif");
-//
-            viewHolder.incomingWinnerTrophyGifImageView.setBytes(bitmapData);*/
 
             //visibility reset
             resetWidgetsVisibility(viewHolder);
@@ -869,6 +866,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         viewHolder.incomingProcessingQuestionPossibleReturnValueMessageRoot.setVisibility(View.GONE);
                     }
 
+                    viewHolder.incomingAnswersRoot.setVisibility(View.VISIBLE);
                     viewHolder.incomingTimeToAnswerRoot.setVisibility(View.VISIBLE);
 
 
@@ -882,13 +880,15 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     //<editor-fold desc="PROCESSED QUESTION">
                     viewHolder.incomingQuestionProcessedQuestionTitleTextView.setVisibility(View.VISIBLE);
 
-                    for (int i = 0; i < 4; i++) {
+                    for (int i = 0; i < viewHolder.answerRoots.length; i++) {
                         viewHolder.answerRoots[i].getBackground().mutate().setAlpha(90);
                         viewHolder.answerRoots[i].setOnClickListener(null);
                     }
 
+                    String userAnswerId = "";
+
                     if (playerAnswers.containsKey(questionId)) {
-                        String userAnswerId = playerAnswers.get(questionId).getAnswerId();
+                        userAnswerId = playerAnswers.get(questionId).getAnswerId();
 
                         for (int i = 0; i < answers.length; i++) {
                             if (answers[i].getId().equals(userAnswerId)) {
@@ -900,9 +900,73 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                             }
 
                         }
+
                     }
 
+                    /*  new answers layout as bars*/
+                    viewHolder.incomingProcessedQuestionAnswersBarsRoot.removeAllViews();
+                    int j=1;
+                    for( Answer answer : answers){
+                        ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.processed_answer_item, viewHolder.incomingProcessedQuestionAnswersBarsRoot,false);
+                        LinearLayout answerTextRoot = (LinearLayout) layout.getChildAt(2);
+                        LinearLayout progressBarRoot = (LinearLayout) layout.getChildAt(1);
+                        LinearLayout percentValueRoot = (LinearLayout) layout.getChildAt(0);
+
+                        TextView answerTextTextView = (TextView) answerTextRoot.getChildAt(0);
+                        ProgressBar percentAnsweredDisplayBar = (ProgressBar) progressBarRoot.getChildAt(0);
+                        TextView answerPercentAnsweredTextView = (TextView) percentValueRoot.getChildAt(0);
+
+                        int answerNumber = getAnswerNumber(viewHolder.question, answer.getId());
+
+                        int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
+
+                        answerTextRoot.setBackgroundResource(backgroundColorResourceId);
+                        progressBarRoot.setBackgroundResource(backgroundColorResourceId);
+                        percentValueRoot.setBackgroundResource(backgroundColorResourceId);
+
+                        answerTextTextView.setText(answer.getAnswerText());
+                        final String percentUserAnsweredDisplay = Integer.toString((int) answer.getPercentUsersAnswered()) + "%";
+                        answerPercentAnsweredTextView.setText(percentUserAnsweredDisplay);
+                        percentAnsweredDisplayBar.setMax(100);
+                        int percentUserAnswered = (int)answer.getPercentUsersAnswered();
+                        percentAnsweredDisplayBar.setProgress(percentUserAnswered);
+
+                        Drawable drawable;
+
+                        if (answer.getId().equals(userAnswerId))
+                            drawable = ContextCompat.getDrawable(context, R.drawable.shape_bg_rectangle_processed_answer_selected);
+                        else
+                            drawable = ContextCompat.getDrawable(context, R.drawable.shape_bg_rectangle_processed_answer);
+
+                        percentAnsweredDisplayBar.setProgressDrawable(drawable);
+
+                        answerTextRoot.getBackground().mutate().setAlpha(90);
+                        progressBarRoot.getBackground().mutate().setAlpha(90);
+                        percentValueRoot.getBackground().mutate().setAlpha(90);
+
+                        percentAnsweredDisplayBar.getProgressDrawable().setAlpha(90);
+                        if (answer.getId().equals(userAnswerId)){
+                            answerTextRoot.getBackground().mutate().setAlpha(255);
+                            progressBarRoot.getBackground().mutate().setAlpha(255);
+                            percentValueRoot.getBackground().mutate().setAlpha(255);
+                            percentAnsweredDisplayBar.getProgressDrawable().setAlpha(255);
+                        }
+
+                        j++;
+
+                        viewHolder.incomingProcessedQuestionAnswersBarsRoot.addView(layout);
+                    }
+
+                    viewHolder.incomingProcessedQuestionAnswersBarsRoot.setVisibility(View.VISIBLE);
+
+                    /*--------------------*/
+
+
+
+
+
                     if(isTimerRequired){
+
 
                         viewHolder.timeToAnswer = viewHolder.chatMessage.getTimeLeftToAnswer();
                         int progressBarMaxValue = viewHolder.timeToAnswer;
@@ -1162,6 +1226,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingPlayerAnswerRoot.setVisibility(View.GONE);
             viewHolder.incomingWinnerMessageRoot.setVisibility(View.GONE);
             viewHolder.incomingSelectedAnswerTextView.setVisibility(View.GONE);
+            viewHolder.incomingAnswersRoot.setVisibility(View.GONE);
+            viewHolder.incomingProcessedQuestionAnswersBarsRoot.setVisibility(View.GONE);
 
 
 

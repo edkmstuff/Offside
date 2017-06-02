@@ -1,0 +1,90 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layoutDirection="ltr"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    tools:context="com.offsidegame.offside.adapters.ChatMessageAdapter"
+    android:paddingTop="3dp"
+    android:paddingBottom="3dp"
+    android:weightSum="10">
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="2"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="20%"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/OffsideMediumText"
+            android:gravity="center"
+            android:padding="4dp"
+            />
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:orientation="vertical"
+        android:gravity="center"
+
+        >
+        <ProgressBar
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:max="100"
+            android:progress="10"
+            android:progressDrawable="@drawable/shape_bg_rectangle_processed_answer"
+            android:textColor="@color/colorWhite"
+            android:layoutDirection="rtl"
+            android:gravity="center_vertical"
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:orientation="vertical"
+
+
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="שתי הקבוצות"
+            android:textColor="@color/colorWhite"
+            android:gravity="center_vertical"
+            android:padding="4dp"
+
+            />
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+
+ </LinearLayout>
+
+
+
+
+
+
+
