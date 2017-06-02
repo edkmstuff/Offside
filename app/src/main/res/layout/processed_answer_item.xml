@@ -45,7 +45,7 @@
             android:progress="10"
             android:progressDrawable="@drawable/shape_bg_rectangle_processed_answer"
             android:textColor="@color/colorWhite"
-            android:layoutDirection="rtl"
+
             android:gravity="center_vertical"
             />
 

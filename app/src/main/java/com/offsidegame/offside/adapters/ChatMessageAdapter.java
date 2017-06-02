@@ -560,6 +560,13 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
                 winnerScoreTextView.setText(Integer.toString(winner.getOffsideCoins()));
                 int resourceId = winner.getPrivateGamePosition()==1 ? R.mipmap.ic_offside_trophy : winner.getPrivateGamePosition()==2 ? R.mipmap.ic_offside_trophy_silver : R.mipmap.ic_offside_trophy_bronze;
+                if (winner.getPrivateGamePosition()==2 )
+                    layout.setPadding(0,30,0,0);
+
+
+                if (winner.getPrivateGamePosition()==3 )
+                    layout.setPadding(0,60,0,0);
+
                 winnerPrizeImageView.setImageResource(resourceId);
                 loadFbImage(winnerPictureImageView, winnerProfilePictureUri);
                 winnerNameTextView.setText(winner.getUserName());
@@ -943,13 +950,13 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         answerTextRoot.getBackground().mutate().setAlpha(90);
                         progressBarRoot.getBackground().mutate().setAlpha(90);
                         percentValueRoot.getBackground().mutate().setAlpha(90);
+                        //percentAnsweredDisplayBar.getProgressDrawable().setAlpha(90);
 
-                        percentAnsweredDisplayBar.getProgressDrawable().setAlpha(90);
                         if (answer.getId().equals(userAnswerId)){
                             answerTextRoot.getBackground().mutate().setAlpha(255);
                             progressBarRoot.getBackground().mutate().setAlpha(255);
                             percentValueRoot.getBackground().mutate().setAlpha(255);
-                            percentAnsweredDisplayBar.getProgressDrawable().setAlpha(255);
+                          //  percentAnsweredDisplayBar.getProgressDrawable().setAlpha(255);
                         }
 
                         j++;
