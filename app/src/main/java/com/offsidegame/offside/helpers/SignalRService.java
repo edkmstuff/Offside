@@ -71,9 +71,9 @@ public class SignalRService extends Service {
     private Date startReconnecting = null;
 
     //public final String ip = new String("192.168.1.140:8080");
-    //public final String ip = new String("10.0.0.17:8080");
+    public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
-    public final String ip = new String("offside.azurewebsites.net");
+    //public final String ip = new String("offside.azurewebsites.net");
 
 
     public Boolean stoppedIntentionally = false;
@@ -243,6 +243,13 @@ public class SignalRService extends Service {
             }
         }, Scoreboard.class);
 
+        hub.on("UpdateGameInfo", new SubscriptionHandler1<GameInfo>() {
+            @Override
+            public void run(GameInfo gameInfo) {
+                EventBus.getDefault().post(new JoinGameEvent(gameInfo));
+            }
+        }, GameInfo.class);
+
 
 
         /*
@@ -373,11 +380,11 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
-        hub.invoke(GameInfo.class, "JoinGame", gameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId).done(new Action<GameInfo>() {
+        hub.invoke(GameInfo.class, "JoinPrivateGame", gameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId).done(new Action<GameInfo>() {
 
             @Override
             public void run(GameInfo gameInfo) throws Exception {
-                EventBus.getDefault().post(new JoinGameEvent(gameInfo));
+                //EventBus.getDefault().post(new JoinGameEvent(gameInfo));
             }
         }).onError(new ErrorCallback() {
             @Override
