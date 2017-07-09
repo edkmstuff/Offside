@@ -33,7 +33,9 @@ import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Player;
+import com.offsidegame.offside.models.PlayerInfo;
 import com.offsidegame.offside.models.Position;
+import com.offsidegame.offside.models.PrivateGameCreationInfo;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.Scoreboard;
 import com.offsidegame.offside.events.ScoreboardEvent;
@@ -70,8 +72,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
-    public final String ip = new String("10.0.0.17:8080");
+    public final String ip = new String("192.168.1.140:8080");
+    //public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
 
@@ -243,12 +245,18 @@ public class SignalRService extends Service {
             }
         }, Scoreboard.class);
 
-        hub.on("UpdateGameInfo", new SubscriptionHandler1<GameInfo>() {
+        hub.on("JoinedPrivateGame", new SubscriptionHandler1<GameInfo>() {
             @Override
             public void run(GameInfo gameInfo) {
                 EventBus.getDefault().post(new JoinGameEvent(gameInfo));
             }
         }, GameInfo.class);
+        hub.on("PrivateGameCreated", new SubscriptionHandler1<String>() {
+            @Override
+            public void run(String privateGameCode) {
+                EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameCode) );
+            }
+        }, String.class);
 
 
 
@@ -376,11 +384,13 @@ public class SignalRService extends Service {
     //<editor-fold desc="methods for client activities">
 
 
-    public void joinGame(String gameCode, String playerId, String playerDisplayName, String playerProfilePictureUrl, boolean isPrivateGameCreator, String androidDeviceId) {
+    public void joinGame(String privateGameCode, String playerId, String playerDisplayName, String playerProfilePictureUrl, boolean isPrivateGameCreator, String androidDeviceId) {
+        PlayerInfo playerInfo = new PlayerInfo(playerId, privateGameCode, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId, null);
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
-        hub.invoke(GameInfo.class, "JoinPrivateGame", gameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId).done(new Action<GameInfo>() {
+        //hub.invoke(GameInfo.class, "JoinPrivateGame", privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId).done(new Action<GameInfo>() {
+        hub.invoke(GameInfo.class, "JoinPrivateGame", playerInfo).done(new Action<GameInfo>() {
 
             @Override
             public void run(GameInfo gameInfo) throws Exception {
@@ -463,11 +473,14 @@ public class SignalRService extends Service {
 
         //String languageLocale = Locale.getDefault().getDisplayLanguage();
 
-        hub.invoke(String.class, "GeneratePrivateGame", gameId, groupName, playerId, selectedLanguage).done(new Action<String>() {
+        PrivateGameCreationInfo privateGameCreationInfo = new PrivateGameCreationInfo(gameId, groupName, playerId, selectedLanguage);
+
+
+        hub.invoke(String.class, "CreatePrivateGame", privateGameCreationInfo).done(new Action<String>() {
 
             @Override
             public void run(String privateGameCode) throws Exception {
-                EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameCode));
+                //EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameCode));
             }
         }).onError(new ErrorCallback() {
             @Override

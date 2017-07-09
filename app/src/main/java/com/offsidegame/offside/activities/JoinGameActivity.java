@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
@@ -32,6 +33,7 @@ import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Player;
+import com.offsidegame.offside.models.PlayerInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -63,7 +65,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     private String playerDisplayName;
     private String playerProfilePictureUrl;
     private SharedPreferences settings;
-    private AvailableGame[] availableGames ;
+    private AvailableGame[] availableGames;
     private String[] availableLanguages;
     private TextView noAvailableGamesReturnLaterTextView;
     private TextView versionTextView;
@@ -87,8 +89,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
             playerPictureImageView = (ImageView) findViewById(R.id.jg_player_picture_image_view);
 
-            playerProfilePictureUrl = settings.getString(getString(R.string.player_profile_picture_url_key),null);
-            playerProfilePictureUrl = playerProfilePictureUrl== null ? OffsideApplication.getDefaultProfilePictureUrl()  : playerProfilePictureUrl;
+            playerProfilePictureUrl = settings.getString(getString(R.string.player_profile_picture_url_key), null);
+            playerProfilePictureUrl = playerProfilePictureUrl == null ? OffsideApplication.getDefaultProfilePictureUrl() : playerProfilePictureUrl;
             ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName);
 
             //playerBalanceTextView = (TextView) findViewById(R.id.jg_player_balance_text_view);
@@ -100,13 +102,13 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 @Override
                 public void onClick(View view) {
                     String gameCodeString = gameCodeEditText.getText().toString();
-                    joinGame(gameCodeString,false);
+                    joinGame(gameCodeString, false);
                 }
             });
 
 
             versionTextView = (TextView) findViewById(R.id.jg_version_text_view);
-            versionTextView.setText(OffsideApplication.getVersion()== null? "0.0" : OffsideApplication.getVersion());
+            versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
             joinGameRoot = (LinearLayout) findViewById(R.id.jg_join_game_root);
             loadingGameRoot = (LinearLayout) findViewById(R.id.jg_loading_root);
             createPrivateGameRoot = (LinearLayout) findViewById(R.id.jg_create_private_game_root);
@@ -145,8 +147,8 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                     String gameId = getGameId(selectedGamePosition);
                     //get group messageText
 
-                    String groupName =  privateGameNameEditText.getText().toString();
-                    groupName = groupName.length() > 20 ? groupName.substring(0,20) : groupName;
+                    String groupName = privateGameNameEditText.getText().toString();
+                    groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;
 
 
                     if (OffsideApplication.isBoundToSignalRService)
@@ -187,14 +189,15 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     }
 
 
-
-    private void joinGame( String privateGameCode, boolean isPrivateGameCreator) {
+    private void joinGame(String privateGameCode, boolean isPrivateGameCreator) {
         if (OffsideApplication.isBoundToSignalRService) {
 
             OffsideApplication.setIsPlayerQuitGame(false);
             String androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 
-            OffsideApplication.signalRService.joinGame(privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl,isPrivateGameCreator, androidDeviceId );
+
+
+            OffsideApplication.signalRService.joinGame(privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId);
             loadingGameRoot.setVisibility(View.VISIBLE);
             joinGameRoot.setVisibility(View.GONE);
             createPrivateGameRoot.setVisibility(View.GONE);
@@ -212,7 +215,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 return;
 
             Context eventContext = signalRServiceBoundEvent.getContext();
-            if (eventContext == context || eventContext == getApplicationContext() ) {
+            if (eventContext == context || eventContext == getApplicationContext()) {
 
                 if (OffsideApplication.isPlayerQuitGame()) {
                     loadingGameRoot.setVisibility(View.GONE);
@@ -227,17 +230,15 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                     OffsideApplication.signalRService.isGameActive(gameId, gameCode);
                     OffsideApplication.signalRService.getAvailableLanguages();
                     OffsideApplication.signalRService.getAvailableGames();
-                }
-                else
+                } else
                     throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");
 
-                String [] emptyAvailableGames= new String[]{getString(R.string.lbl_no_available_games)};
+                String[] emptyAvailableGames = new String[]{getString(R.string.lbl_no_available_games)};
                 setAvailableGamesSpinnerAdapter(emptyAvailableGames);
 
             }
 
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
@@ -250,8 +251,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
@@ -294,8 +294,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
@@ -309,14 +308,13 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 //Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
                 SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
                 String gameCode = settings.getString(getString(R.string.game_code_key), "");
-                joinGame(gameCode,false);
+                joinGame(gameCode, false);
 
             } else {
                 loadingGameRoot.setVisibility(View.GONE);
                 joinGameRoot.setVisibility(View.VISIBLE);
             }
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
@@ -329,8 +327,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 
 
             setAvailableLanguageSpinnerAdapter(availableLanguages);
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
@@ -340,9 +337,9 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     public void onReceiveAvailableGames(AvailableGamesEvent availableGamesEvent) {
         try {
             availableGames = availableGamesEvent.getAvailableGames();
-            if (availableGames.length == 0){
+            if (availableGames.length == 0) {
                 noAvailableGamesReturnLaterTextView.setVisibility(View.VISIBLE);
-                throw new Exception(activityName+ " - onReceiveAvailableGames - Error: available games is empty ");
+                throw new Exception(activityName + " - onReceiveAvailableGames - Error: available games is empty ");
             }
 
             createPrivateGameButtonTextView.setVisibility(View.VISIBLE);
@@ -356,29 +353,28 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             }
 
             setAvailableGamesSpinnerAdapter(gameTitles);
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
-    private void setAvailableLanguageSpinnerAdapter(String [] languages) {
+    private void setAvailableLanguageSpinnerAdapter(String[] languages) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, languages);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         availableLanguagesSpinner.setAdapter(adapter);
-        if(languages.length>0)
+        if (languages.length > 0)
             availableLanguagesSpinner.setSelection(0);
     }
 
-    private void setAvailableGamesSpinnerAdapter(String [] gameTitles) {
+    private void setAvailableGamesSpinnerAdapter(String[] gameTitles) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, gameTitles);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         availableGamesSpinner.setAdapter(adapter);
-        if(gameTitles.length>0)
+        if (gameTitles.length > 0)
             availableGamesSpinner.setSelection(0);
     }
 
@@ -392,8 +388,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             //gameCodeEditText.setText(privateGameCode);
             //privateGameCodeTextView.setVisibility(View.VISIBLE);
 
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
 
@@ -410,14 +405,14 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 //            balance = OffsideApplication.getGameInfo().getPlayer().getBalance();
 //            playerBalanceTextView.setText(Integer.toString(balance));
 
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
 
     private Boolean exit = false;
+
     @Override
     public void onBackPressed() {
 
