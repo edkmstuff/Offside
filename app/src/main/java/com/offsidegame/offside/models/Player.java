@@ -7,7 +7,7 @@ import java.util.Map;
  */
 public class Player {
 
-    @com.google.gson.annotations.SerializedName("UN")
+    @com.google.gson.annotations.SerializedName("N")
     private String userName;
     @com.google.gson.annotations.SerializedName("GI")
     private String gameId ;

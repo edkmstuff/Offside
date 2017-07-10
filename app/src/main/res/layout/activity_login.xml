@@ -6,7 +6,9 @@
     android:background="@color/chatPrimary"
     android:keepScreenOn="true"
     android:layoutDirection="ltr"
-    tools:context="com.offsidegame.offside.activities.LoginActivity">
+    tools:context="com.offsidegame.offside.activities.LoginActivity"
+
+    >
 
 
     <LinearLayout
@@ -19,7 +21,9 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/logo_25"
+            android:src="@mipmap/app_logo"
+            android:minHeight="200dp"
+            android:minWidth="200dp"
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
             />

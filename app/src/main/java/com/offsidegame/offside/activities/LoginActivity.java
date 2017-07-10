@@ -205,7 +205,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                         .setIsSmartLockEnabled(false)
                         //.setIsSmartLockEnabled(!BuildConfig.DEBUG)
                         .setTheme(R.style.GreenTheme)
-                        .setLogo(R.drawable.logo)
+                        .setLogo(R.drawable.app_logo_25)
                         .build(), RC_SIGN_IN);
             }
         } catch (Exception ex) {

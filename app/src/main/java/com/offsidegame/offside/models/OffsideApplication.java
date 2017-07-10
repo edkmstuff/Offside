@@ -7,16 +7,24 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.offsidegame.offside.BuildConfig;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.ScoreboardEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.helpers.SignalRService;
 
 import org.acra.*;
 import org.acra.annotation.*;
 import org.acra.sender.HttpSender;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Map;
 
@@ -43,6 +51,7 @@ public class OffsideApplication extends Application {
     private static String messageTypeClosedQuestion = "CLOSED_QUESTION";
     private static String messageTypeGetCoins = "GET_COINS";
     private static String messageTypeWinner = "WINNER";
+    private static String messageTypeSocialFeed = "SOCIAL_FEED";
     private static String questionTypeDebate = "Debate";
     private static String inGamePhaseName = "GamePlay";
 
@@ -50,17 +59,25 @@ public class OffsideApplication extends Application {
     private static String questionTypeFun = "Fun";
 
     private static String profileImageFileName = "profileImage.jpg";
-    //private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
-    //private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
+
+    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
+    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
+    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
 
 //    private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/Images/defaultImage.jpg";
+//    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
 
 //    private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";
+//    private static String defaultProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/default";
+//
 
-    private static String initialsProfilePictureUrl = "http://offside.azurewebsites.net/api/Offside/GetProfilePicture/";
-    private static String defaultProfilePictureUrl = "http://offside.azurewebsites.net/Images/defaultImage.jpg";
+//    private static String initialsProfilePictureUrl = "http://offside.azurewebsites.net/api/Offside/GetProfilePicture/";
+//    private static String defaultProfilePictureUrl = "http://offside.azurewebsites.net/Images/defaultImage.jpg";
+//    private static String defaultProfilePictureUrl = "http://offside.azurewebsites.net/api/Offside/GetProfilePicture/default";
+
+    private static String appLogoPictureUrl = "http://www.sidekickgame.com/img/logo.png";
 
     private static GameInfo gameInfo;
 
@@ -155,6 +172,14 @@ public class OffsideApplication extends Application {
         return questionTypeFun;
     }
 
+    public static String getMessageTypeSocialFeed() {
+        return messageTypeSocialFeed;
+    }
+
+    public static String getAppLogoPictureUrl() {
+        return appLogoPictureUrl;
+    }
+
 
     public void onCreate() {
 
@@ -215,6 +240,49 @@ public class OffsideApplication extends Application {
 
 
     };
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveScoreboard(ScoreboardEvent scoreboardEvent) {
+        try {
+
+            Scoreboard scoreboard = scoreboardEvent.getScoreboard();
+
+            if (scoreboard == null)
+                return;
+            Score[]  scores = scoreboard.getScores();
+
+            if (scores == null || scores.length == 0)
+                return;
+
+            //check if scoreboard was changed
+            Scoreboard currentScoreboard = OffsideApplication.getScoreboard();
+            boolean isScoreboardsEquals = false;
+            if (!scoreboard.isForceUpdate()&& currentScoreboard != null && currentScoreboard.getScores() != null && currentScoreboard.getScores().length == scores.length) {
+                Score [] currentScores = currentScoreboard.getScores();
+                for(int i=0; i<currentScores.length;i++){
+                    boolean isEqualScore = currentScores[i].getImageUrl().equals(scores[i].getImageUrl()) &&
+                            currentScores[i].getPosition() ==scores[i].getPosition() &&
+                            currentScores[i].getOffsideCoins()==scores[i].getOffsideCoins();
+
+                    if(!isEqualScore)
+                        break;
+                    if(i==currentScores.length-1)
+                        isScoreboardsEquals = true;
+                }
+
+            }
+            if(isScoreboardsEquals)
+                return;
+
+            OffsideApplication.setScoreboard(scoreboard);
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
 
     public static String getVersion() {
         return version;

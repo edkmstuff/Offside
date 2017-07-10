@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.offsidegame.offside">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -9,10 +10,18 @@
     <application
         android:name=".models.OffsideApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_offside_logo"
+        android:icon="@mipmap/app_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:extractNativeLibs="false"
+        >
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_application_id"/>
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider523024471208542"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" />
 
         <!--
              Set custom default icon. This is used when no icon is set for incoming notification messages.
@@ -33,7 +42,7 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".activities.LoginActivity"
-            android:label="Offside"
+            android:label="Sidekick"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -58,6 +67,16 @@
             android:value="@integer/google_play_services_version" />
 
         <activity android:name=".activities.ViewPlayerActivity"></activity>
+        
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            tools:replace ="android:theme,android:configChanges"
+
+
+            />
 
         <!--<activity-->
             <!--android:name="com.ironsource.sdk.controller.ControllerActivity"-->

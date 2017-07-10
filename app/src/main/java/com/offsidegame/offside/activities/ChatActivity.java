@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +26,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareButton;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
@@ -119,6 +127,8 @@ public class ChatActivity extends AppCompatActivity {
 
     private FlowLayout actionsFlowLayout;
 
+    private ShareButton facebookShareButton;
+
 
     //</editor-fold>
 
@@ -182,6 +192,11 @@ public class ChatActivity extends AppCompatActivity {
             //trophiesImageView = (ImageView) findViewById(R.id.c_trophies_image_view);
             powerItemsTextView = (TextView) findViewById(R.id.c_power_items_text_view);
             powerItemImageView = (ImageView) findViewById(R.id.c_power_item_image_view);
+
+            facebookShareButton =(ShareButton) findViewById(R.id.c_facebook_share_button);
+
+            shareOnFacebook();
+
 
             offsideCoinsTextView.setText(Integer.toString(offsideCoins));
             //trophiesTextView.setText(Integer.toString(trophies));
@@ -960,6 +975,26 @@ public class ChatActivity extends AppCompatActivity {
             ACRA.getErrorReporter().handleSilentException(ex);
 
         }
+
+    }
+
+    public void shareOnFacebook(){
+//        ShareLinkContent content = new ShareLinkContent.Builder()
+//                .setContentUrl(Uri.parse("http://www.sidekickgame.com/"))
+//                .setQuote("this is a set Quote")
+//                .build();
+
+        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.app_logo_25);
+        SharePhoto photo = new SharePhoto.Builder()
+                .setBitmap(image)
+
+                .build();
+        SharePhotoContent content = new SharePhotoContent.Builder()
+                .addPhoto(photo)
+                .build();
+
+        //ShareDialog.show(thisActivity, content);
+        facebookShareButton.setShareContent(content);
 
     }
 

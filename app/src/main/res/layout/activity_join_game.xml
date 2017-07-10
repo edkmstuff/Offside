@@ -24,7 +24,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/logo_25"
+            android:src="@drawable/app_logo_25"
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
             />
@@ -51,7 +51,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="5dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <!-- Greeting -->
         <LinearLayout
@@ -329,7 +329,7 @@
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="10dp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         >

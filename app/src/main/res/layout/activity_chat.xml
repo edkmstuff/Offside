@@ -104,7 +104,7 @@
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/logo" />
+                            android:src="@drawable/app_logo" />
 
                     </LinearLayout>
 
@@ -671,6 +671,24 @@
                             android:text="@string/lbl_leave_game" />
 
                     </LinearLayout>
+                    <!--Share On Facebook-->
+                    <LinearLayout
+                        android:id="@+id/c_action_share_on_facebook_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <com.facebook.share.widget.ShareButton
+                            android:id="@+id/c_facebook_share_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+
 
                 </org.apmem.tools.layouts.FlowLayout>
                 <!--Loading video progressbar-->

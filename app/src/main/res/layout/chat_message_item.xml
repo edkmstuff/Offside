@@ -25,18 +25,20 @@
             android:orientation="horizontal"
             android:visibility="visible">
 
+            <!--sender image-->
             <ImageView
 
                 android:id="@+id/cm_incoming_profile_picture_image_view"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:scaleType="centerCrop" />
-
+            <!--sender name | message content | time sent -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <!--sender name-->
                 <TextView
                     android:id="@+id/cm_incoming_user_sent_text_view"
                     android:layout_width="wrap_content"
@@ -44,16 +46,16 @@
                     android:layout_gravity="left"
                     android:layout_marginLeft="5dp"
                     android:layout_marginBottom="2dp"
-                    android:text="10:23"
+                    android:text="Shuli"
                     android:textColor="@color/chatActions"
-                    android:textSize="12dp" />
-
+                    android:textSize="12dp"
+                    />
+                <!--message bubble-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="5dp"
                     android:orientation="vertical">
-
 
                     <!-- Text messages-->
                     <TextView
@@ -66,7 +68,9 @@
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
                         android:textColor="@color/chatText"
-                        android:visibility="gone" />
+                        android:text="I am just a dummy text so you can see the bubble"
+                        android:visibility="gone"
+                        />
 
                     <!-- Get Coins message Root-->
                     <LinearLayout
@@ -267,7 +271,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
                         android:textColor="@color/chatText"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:id="@+id/cm_incoming_time_to_answer_root"
@@ -995,6 +999,43 @@
                             />
 
                     </LinearLayout>
+
+                    <!--Social feed message root-->
+                    <LinearLayout
+                        android:id="@+id/cm_incoming_social_feed_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/shape_bg_incoming_bubble"
+                        android:orientation="vertical"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:paddingTop="5dp"
+                        android:textColor="@color/chatText">
+                        <TextView
+                            android:id="@+id/cm_incoming_social_feed_text_message_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="I am a dummy text message, i m here so you can see the bubble"/>
+
+                        <ImageView
+                            android:id="@+id/cm_incoming_social_feed_image_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:src="@mipmap/app_logo"
+                            android:minHeight="100dp"
+
+                            />
+                        <com.facebook.share.widget.ShareButton
+                            android:id="@+id/cm_facebook_share_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@color/com_facebook_blue"
+                            android:layout_marginTop="5dp"/>
+
+                    </LinearLayout>
+
+
 
 
                     <!--Time msg sent-->
