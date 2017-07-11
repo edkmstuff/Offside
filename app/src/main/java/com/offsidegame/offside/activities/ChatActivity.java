@@ -208,6 +208,8 @@ public class ChatActivity extends AppCompatActivity {
 
             actionExitGameRoot = (LinearLayout) findViewById(R.id.c_action_exit_game_root);
 
+
+
             chatMessageEditText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -620,6 +622,17 @@ public class ChatActivity extends AppCompatActivity {
 
             EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
 
+
+            // updating scoreboard in ui
+            Scoreboard scoreboard = OffsideApplication.getScoreboard();
+            if (scoreboard != null)
+                generateScoreboard();
+// updating player data in ui
+            if (player != null)
+                onReceivePlayer(player);
+
+
+
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 
@@ -873,8 +886,8 @@ public class ChatActivity extends AppCompatActivity {
             if (currentPlayer != null) {
                 int oldOffsideCoinsValue = currentPlayer.getOffsideCoins();
                 int newOffsideCoinsValue = updatedPlayer.getOffsideCoins();
+                offsideCoinsTextView.setText(Integer.toString(newOffsideCoinsValue));
                 if (newOffsideCoinsValue != oldOffsideCoinsValue) {
-                    offsideCoinsTextView.setText(Integer.toString(newOffsideCoinsValue));
                     offsideCoinsImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
 
                 }
@@ -889,8 +902,9 @@ public class ChatActivity extends AppCompatActivity {
 
                 int oldPowerItems = currentPlayer.getPowerItems();
                 int newPowerItems = updatedPlayer.getPowerItems();
+                powerItemsTextView.setText(Integer.toString(newPowerItems));
                 if (newPowerItems != oldPowerItems) {
-                    powerItemsTextView.setText(Integer.toString(newPowerItems));
+
                     //powerItemImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
                     Animation a = new RotateAnimation(0.0f, 360.0f,
                             Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
@@ -951,24 +965,9 @@ public class ChatActivity extends AppCompatActivity {
                 return;
 
             OffsideApplication.setScoreboard(scoreboard);
-            scoreboardRoot.removeAllViewsInLayout();
-
-            for(Score score: scores){
-
-                ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.scoreboard_item, scoreboardRoot,false);
-
-                TextView rankTextView = (TextView) layout.getChildAt(0);
-                ImageView imageView = (ImageView) layout.getChildAt(1);
-                TextView textView = (TextView) layout.getChildAt(2);
-
-                rankTextView.setText(Integer.toString(score.getPosition()));
-                ImageHelper.loadImage(thisActivity, score.getImageUrl(), imageView, "ChatActivity");
-                textView.setText(Integer.toString(score.getOffsideCoins()));
-
-                scoreboardRoot.addView(layout);
 
 
-            }
+            generateScoreboard();
 
 
         } catch (Exception ex) {
@@ -976,6 +975,25 @@ public class ChatActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    private void generateScoreboard() {
+        scoreboardRoot.removeAllViewsInLayout();
+
+        for(Score score: OffsideApplication.getScoreboard().getScores()){
+
+            ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.scoreboard_item, scoreboardRoot,false);
+
+            TextView rankTextView = (TextView) layout.getChildAt(0);
+            ImageView imageView = (ImageView) layout.getChildAt(1);
+            TextView textView = (TextView) layout.getChildAt(2);
+
+            rankTextView.setText(Integer.toString(score.getPosition()));
+            ImageHelper.loadImage(thisActivity, score.getImageUrl(), imageView, "ChatActivity");
+            textView.setText(Integer.toString(score.getOffsideCoins()));
+
+            scoreboardRoot.addView(layout);
+        }
     }
 
     public void shareOnFacebook(){

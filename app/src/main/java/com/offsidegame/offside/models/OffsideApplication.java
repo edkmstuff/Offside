@@ -9,6 +9,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -60,13 +62,13 @@ public class OffsideApplication extends Application {
 
     private static String profileImageFileName = "profileImage.jpg";
 
-    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
+//    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
     //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
-    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
+//    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
 
-//    private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
+    private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/Images/defaultImage.jpg";
-//    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
+    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
 
 //    private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";
@@ -197,6 +199,7 @@ public class OffsideApplication extends Application {
             Intent intent = new Intent();
             intent.setClass(getApplicationContext(), SignalRService.class);
             bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+            EventBus.getDefault().register(getApplicationContext());
 
         } catch (Exception ex) {
 
@@ -241,7 +244,7 @@ public class OffsideApplication extends Application {
 
     };
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe
     public void onReceiveScoreboard(ScoreboardEvent scoreboardEvent) {
         try {
 
@@ -276,6 +279,22 @@ public class OffsideApplication extends Application {
 
             OffsideApplication.setScoreboard(scoreboard);
 
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePlayer(Player updatedPlayer) {
+        try {
+            if (updatedPlayer == null)
+                return;
+
+            playerAnswers = updatedPlayer.getPlayerAnswers();
+            gameInfo.setPlayer(updatedPlayer);
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
