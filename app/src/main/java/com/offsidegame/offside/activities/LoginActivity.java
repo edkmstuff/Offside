@@ -231,14 +231,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         // in case user does not have profile picture, we generate image with Initials
         if (playerProfilePictureUrl == null) {
+
+
+
             String displayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().toUpperCase();
             String[] displayNameParts = displayName.trim().split(" ");
             String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
             Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context);
             byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
             String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
-
-
 
             isUserImageSaved = OffsideApplication.signalRService.saveImageInDatabase(playerId, imageString);
             //ImageHelper.storeImage(profilePicture, context);
@@ -255,7 +256,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         isUserDetailsSaved = OffsideApplication.signalRService.saveLoggedInUser(user);
 
         if (isUserDetailsSaved && isUserImageSaved) {
-            Intent intent = new Intent(context, JoinGameActivity.class);
+            Intent intent = new Intent(context, LobbyActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

@@ -58,6 +58,11 @@
             android:label="Match field"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".activities.LobbyActivity"
+            android:label="Match field"
+            android:screenOrientation="portrait" />
+
         <service
             android:name=".helpers.SignalRService"
             android:exported="false" />

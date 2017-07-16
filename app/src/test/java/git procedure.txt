@@ -1,0 +1,30 @@
+git add . (stage all unstaged files, files that are edidtd/added changes)
+add means I add the file to be tracked by git if exists it will overwrite what is already on git
+git commit  - m (comment)  -a (shortcut to git add, will work only on existing files, new files should be added)
+
+the flow:
+do change -> git add .--> got commit -m
+
+git branch  MyBranch   (create a branch)
+git checkout MyBranch ( switch to MyBranch code version)
+
+to do merge you need to be on the master first:
+git checkout master
+git merge MyBranch
+
+when working on branch and I am not ready to commit and then need to go and work on master or oher branch
+I need to stash my changes so all the dirty part of my code(changes I made that are not complete) will be excluded.
+then I can go work in other branch (also master) and it will not see my stashed stuff (dirty stuff) hence no conflict.
+once I come back to my branch I need to do:
+git stash apply (will reinclude all my dirdty stuff i stashed)
+
+working remote:
+git fetch - get lateast version from git (need to merge manally)
+git pull  - fetch and merge
+
+git push origin master  (origin is our repository)
+
+
+
+
+touch .gitignore (texxt file to hold all files we dont want to rack in git. .log etc)

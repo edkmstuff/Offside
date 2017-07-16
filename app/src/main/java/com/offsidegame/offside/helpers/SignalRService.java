@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
+import com.google.android.gms.common.api.BooleanResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.offsidegame.offside.R;
@@ -36,6 +37,8 @@ import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.PlayerInfo;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PrivateGameCreationInfo;
+import com.offsidegame.offside.models.PrivateGroup;
+import com.offsidegame.offside.models.PrivateGroupInfo;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.Scoreboard;
 import com.offsidegame.offside.events.ScoreboardEvent;
@@ -72,8 +75,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    public final String ip = new String("192.168.1.140:8080");
-    //public final String ip = new String("10.0.0.17:8080");
+    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
 
@@ -258,6 +261,13 @@ public class SignalRService extends Service {
             }
         }, String.class);
 
+        hub.on("PrivateGroupsReceived", new SubscriptionHandler1<PrivateGroupInfo>() {
+            @Override
+            public void run(PrivateGroupInfo privateGroupInfo) {
+                EventBus.getDefault().post(privateGroupInfo);
+            }
+        }, PrivateGroupInfo.class);
+
 
 
         /*
@@ -390,7 +400,7 @@ public class SignalRService extends Service {
             return;
 
         //hub.invoke(GameInfo.class, "JoinPrivateGame", privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId).done(new Action<GameInfo>() {
-        hub.invoke(GameInfo.class, "JoinPrivateGame", playerInfo).done(new Action<GameInfo>() {
+        hub.invoke(GameInfo.class, "RequestJoinPrivateGame", playerInfo).done(new Action<GameInfo>() {
 
             @Override
             public void run(GameInfo gameInfo) throws Exception {
@@ -658,6 +668,13 @@ public class SignalRService extends Service {
         return true;
 
     }
+
+    public void RequestPrivateGamesInfo(String playerId) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke("RequestPrivateGroupsInfo", playerId);
+    }
+
 
     //</editor-fold>
 
