@@ -75,8 +75,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
-    public final String ip = new String("10.0.0.17:8080");
+    public final String ip = new String("192.168.1.140:8080");
+    //public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
 
@@ -261,12 +261,12 @@ public class SignalRService extends Service {
             }
         }, String.class);
 
-        hub.on("PrivateGroupsReceived", new SubscriptionHandler1<PrivateGroupInfo>() {
+        hub.on("PrivateGroupsReceived", new SubscriptionHandler1<PrivateGroup[]>() {
             @Override
-            public void run(PrivateGroupInfo privateGroupInfo) {
-                EventBus.getDefault().post(privateGroupInfo);
+            public void run(PrivateGroup[] privateGroupsInfo) {
+                EventBus.getDefault().post(privateGroupsInfo);
             }
-        }, PrivateGroupInfo.class);
+        }, PrivateGroup[].class);
 
 
 
