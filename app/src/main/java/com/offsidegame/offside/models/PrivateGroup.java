@@ -13,22 +13,23 @@ public class PrivateGroup {
     @com.google.gson.annotations.SerializedName("N")
     private String name;
     @com.google.gson.annotations.SerializedName("PI")
-    private PlayerInfo [] playerInfos;
+    private PlayerInfo [] playersInfo;
+
     @com.google.gson.annotations.SerializedName("LP")
     private Date lastPlayed;
 
     public int getPlayersCount(){
-        if(playerInfos == null)
+        if(playersInfo == null)
             return 0;
-        return playerInfos.length;
+        return playersInfo.length;
 
     }
 
     public int getActivePlayersCount(){
-        if(playerInfos == null)
+        if(playersInfo == null)
             return 0;
         int activePlayersCount=0;
-        for(PlayerInfo player : playerInfos){
+        for(PlayerInfo player : playersInfo){
             if(player.getPrivateGameCode() !=null && player.getPrivateGameCode().length()>0 )
                 activePlayersCount++;
         }
@@ -56,12 +57,12 @@ public class PrivateGroup {
         this.name = name;
     }
 
-    public PlayerInfo[] getPlayerInfos() {
-        return playerInfos;
+    public PlayerInfo[] getPlayersInfo() {
+        return playersInfo;
     }
 
-    public void setPlayerInfos(PlayerInfo[] playerInfos) {
-        this.playerInfos = playerInfos;
+    public void setPlayersInfo(PlayerInfo[] playersInfo) {
+        this.playersInfo = playersInfo;
     }
 
     public Date getLastPlayed() {
@@ -71,4 +72,6 @@ public class PrivateGroup {
     public void setLastPlayed(Date lastPlayed) {
         this.lastPlayed = lastPlayed;
     }
+
+
 }

@@ -1,0 +1,76 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:components="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:gravity="center"
+    android:layoutDirection="ltr"
+    android:orientation="vertical"
+    android:padding="2dp"
+    tools:context="com.offsidegame.offside.activities.LobbyActivity">
+
+    <LinearLayout
+        android:id="@+id/pg_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:gravity="center_vertical"
+        android:layoutDirection="ltr"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/pg_group_name_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/OffsideLargeText"
+            android:textColor="@color/privateGameTitle"
+            android:text="the sharks"/>
+        <TextView
+            android:id="@+id/pg_group_game_status_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="משחק פעיל"
+            android:textColor="@color/privateGameTitle"
+            android:background="@color/colorBlue"
+            />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/pg_players_play_in_group_root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
+                android:gravity="center_vertical"
+                android:layoutDirection="ltr"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+
+
+        <TextView
+            android:id="@+id/pg_total_playing_players_in_group_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/colorWhite"
+            android:text="12 חברים"/>
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+</LinearLayout>

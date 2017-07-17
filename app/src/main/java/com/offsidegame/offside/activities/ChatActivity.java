@@ -786,13 +786,9 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-
-
     public void removeButton (View view){
         view.setVisibility(View.GONE);
     }
-
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onQuestionAnsweredEvent(QuestionAnsweredEvent questionAnsweredEvent) {
@@ -848,8 +844,6 @@ public class ChatActivity extends AppCompatActivity {
 
     }
 
-
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveRewardEvent(RewardEvent rewardEvent) {
         try {
@@ -868,7 +862,6 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayer(Player updatedPlayer) {
@@ -928,7 +921,6 @@ public class ChatActivity extends AppCompatActivity {
         }
 
     }
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)

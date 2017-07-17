@@ -62,13 +62,13 @@ public class OffsideApplication extends Application {
 
     private static String profileImageFileName = "profileImage.jpg";
 
-    //private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
+    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
     //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
-    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
+    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
 
-    private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
+//    private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/Images/defaultImage.jpg";
-    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
+//    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
 
 //    private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";
@@ -86,6 +86,8 @@ public class OffsideApplication extends Application {
     private static boolean isChatActivityVisible = false;
 
     private static Scoreboard scoreboard;
+
+    private static PrivateGroup[] privateGroups;
 
 
 
@@ -180,6 +182,14 @@ public class OffsideApplication extends Application {
 
     public static String getAppLogoPictureUrl() {
         return appLogoPictureUrl;
+    }
+
+    public static PrivateGroup[] getPrivateGroups() {
+        return privateGroups;
+    }
+
+    public static void setPrivateGroups(PrivateGroup[] privateGroups) {
+        OffsideApplication.privateGroups = privateGroups;
     }
 
 

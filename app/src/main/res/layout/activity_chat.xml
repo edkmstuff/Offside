@@ -261,48 +261,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
 
-                    <!--xmlns:tools="http://schemas.android.com/tools"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:background="@color/chatText"-->
-                    <!--android:gravity="center"-->
-                    <!--android:layoutDirection="ltr"-->
-                    <!--android:orientation="vertical"-->
-                    <!--android:paddingBottom="5dp"-->
-
-                    <!--android:paddingLeft="10dp"-->
-                    <!--android:paddingRight="10dp"-->
-                    <!--android:paddingTop="5dp"-->
-                    <!--android:visibility="gone"-->
-                    <!--tools:context="com.offsidegame.offside.activities.ChatActivity">-->
-
-                    <!--<TextView-->
-                        <!--android:id="@+id/c_position_text_view1"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="1/477"-->
-                        <!--android:textColor="@color/privateGameTitle"-->
-                        <!--android:textSize="8sp" />-->
-
-                    <!--<ImageView-->
-                        <!--android:id="@+id/c_player_picture_image_view1"-->
-                        <!--android:layout_width="40dp"-->
-                        <!--android:layout_height="40dp"-->
-                        <!--android:scaleType="centerCrop"-->
-                        <!--android:src="@drawable/logo" />-->
-
-                    <!--<TextView-->
-                        <!--android:id="@+id/c_score_text_view1"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:text="1234"-->
-                        <!--android:textColor="@color/colorWhite"-->
-                        <!--android:textSize="12sp" />-->
-
-
-                <!--</LinearLayout>-->
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"

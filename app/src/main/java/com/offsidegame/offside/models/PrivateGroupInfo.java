@@ -6,13 +6,15 @@ package com.offsidegame.offside.models;
 
 public class PrivateGroupInfo {
     @com.google.gson.annotations.SerializedName("PGI")
-    private PrivateGroup[] privateGroupInfo;
+    private PrivateGroup[] privateGroupsInfo;
 
-    public PrivateGroup[] getPrivateGroupInfo() {
-        return privateGroupInfo;
+
+
+    public PrivateGroup[] getPrivateGroupsInfo() {
+        return privateGroupsInfo;
     }
 
-    public void setPrivateGroupInfo(PrivateGroup[] privateGroupInfo) {
-        this.privateGroupInfo = privateGroupInfo;
+    public void setPrivateGroupsInfo(PrivateGroup[] privateGroupsInfo) {
+        this.privateGroupsInfo = privateGroupsInfo;
     }
 }

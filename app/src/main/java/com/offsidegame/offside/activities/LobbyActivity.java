@@ -8,11 +8,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +23,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.adapters.PrivateGroupAdapter;
 import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.AvailableGamesEvent;
 import com.offsidegame.offside.events.AvailableLanguagesEvent;
@@ -32,6 +36,8 @@ import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Player;
+import com.offsidegame.offside.models.PlayerInfo;
+import com.offsidegame.offside.models.PrivateGroup;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -39,6 +45,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class LobbyActivity extends AppCompatActivity implements Serializable {
     private final String activityName = "LobbyActivity";
@@ -68,19 +76,31 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private TextView noAvailableGamesReturnLaterTextView;
     private TextView versionTextView;
     //private TextView playerBalanceTextView;
+////////////////////////////////////////////////////////
+    private PrivateGroupAdapter privateGroupAdapter;
+    private LinearLayout privateGroupRoot;
+    private LinearLayout playersPlayingInPrivateGroupRoot;
+    private ArrayList privateGroupsArrayList;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
             super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_join_game);
+            setContentView(R.layout.activity_lobby);
 
             settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
             FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
             playerDisplayName = player.getDisplayName();
             playerId = player.getUid();
+//////////////////////////////////////////////////////////////////////////////////////////////
+            privateGroupRoot = (LinearLayout) findViewById(R.id.l_private_group_root);
+            playersPlayingInPrivateGroupRoot = (LinearLayout) findViewById(R.id.l_players_playing_in_private_group_root);
+
+
+
 
 //            userNameTextView = (TextView) findViewById(R.id.jg_user_name_text_view);
 //            userNameTextView.setText(playerDisplayName);
@@ -413,6 +433,81 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
+
+
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePrivateGroupsInfo(PrivateGroup[] privateGroups) {
+        try {
+
+            privateGroupsArrayList = new ArrayList<PrivateGroup>(Arrays.asList(privateGroups));
+
+
+
+            if (privateGroups == null)
+                return;
+
+
+            OffsideApplication.setPrivateGroups(privateGroups);
+
+            privateGroupAdapter = new PrivateGroupAdapter(context, privateGroupsArrayList);
+
+            ListView privateGroupsListView = (ListView) findViewById(R.id.l_private_groups_list_view);
+
+            privateGroupsListView.setAdapter(privateGroupAdapter);
+
+
+            //generatePrivateGroups();
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+    private void generatePrivateGroups() {
+        privateGroupRoot.removeAllViewsInLayout();
+
+        PrivateGroup[] privateGroups = OffsideApplication.getPrivateGroups();
+        for(PrivateGroup privateGroup: privateGroups ){
+
+            ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.private_group_item, privateGroupRoot,false);
+
+            TextView groupNameTextView = (TextView) layout.getChildAt(0);
+            TextView gameStatusTextView = (TextView) layout.getChildAt(1);
+            TextView isPlayersJoinedTextView = (TextView) layout.getChildAt(2);
+            groupNameTextView.setText(privateGroup.getName());
+            int countActivePlayersInPrivateGroup= privateGroup.getPlayersInfo().length;
+            if(countActivePlayersInPrivateGroup>0){
+                isPlayersJoinedTextView.setText("playing now " + Integer.toString(privateGroup.getPlayersInfo().length));
+                gameStatusTextView.setText("ACTIVE");
+            }
+
+            else{
+                isPlayersJoinedTextView.setText("no players yet");
+            }
+
+
+            //playersPlayingInPrivateGroupRoot.removeAllViews();
+            for(PlayerInfo playerInfo: privateGroup.getPlayersInfo() ){
+
+                ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, playersPlayingInPrivateGroupRoot,false);
+                ImageView playerImageImageView = (ImageView) playerLayout.getChildAt(0);
+                TextView playerNameTextView = (TextView) playerLayout.getChildAt(1);
+                String imageUrl = playerInfo.getImageUrl() == null ? OffsideApplication.getDefaultProfilePictureUrl(): playerInfo.getImageUrl();
+                ImageHelper.loadImage(thisActivity, imageUrl, playerImageImageView, "LobbyActivity");
+                playerNameTextView.setText(playerInfo.getUserName());
+                playersPlayingInPrivateGroupRoot.addView(playerLayout);
+            }
+
+            privateGroupRoot.addView(layout);
+        }
+    }
+
+
 
 
     private Boolean exit = false;
