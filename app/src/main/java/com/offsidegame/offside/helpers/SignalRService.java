@@ -39,6 +39,7 @@ import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PrivateGameCreationInfo;
 import com.offsidegame.offside.models.PrivateGroup;
 
+import com.offsidegame.offside.models.PrivateGroupsInfo;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.Scoreboard;
 import com.offsidegame.offside.events.ScoreboardEvent;
@@ -261,12 +262,12 @@ public class SignalRService extends Service {
             }
         }, String.class);
 
-        hub.on("PrivateGroupsReceived", new SubscriptionHandler1<PrivateGroup[]>() {
+        hub.on("PrivateGroupsReceived", new SubscriptionHandler1<PrivateGroupsInfo>() {
             @Override
-            public void run(PrivateGroup[] privateGroupsInfo) {
+            public void run(PrivateGroupsInfo privateGroupsInfo) {
                 EventBus.getDefault().post(privateGroupsInfo);
             }
-        }, PrivateGroup[].class);
+        }, PrivateGroupsInfo.class);
 
 
 
