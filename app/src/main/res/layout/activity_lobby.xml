@@ -195,6 +195,11 @@ android:gravity="center"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/app_logo"
                 />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FONT"
+                android:textColor="@color/colorWhite"/>
 
         </LinearLayout>
 

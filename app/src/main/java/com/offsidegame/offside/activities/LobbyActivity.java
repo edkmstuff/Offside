@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.AssetManager;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -44,10 +46,13 @@ import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
+
 
 public class LobbyActivity extends AppCompatActivity implements Serializable {
     private final String activityName = "LobbyActivity";
@@ -99,6 +104,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 //////////////////////////////////////////////////////////////////////////////////////////////
             privateGroupRoot = (LinearLayout) findViewById(R.id.l_private_group_root);
             playersPlayingInPrivateGroupRoot = (LinearLayout) findViewById(R.id.l_players_playing_in_private_group_root);
+
+
+//            AssetManager am = context.getApplicationContext().getAssets();
+//
+//            TypeFace typeface = Typeface.createFromAsset(am, "fonts/OpenSansHebrew-Regular.ttf");
+//
+//            setTypeface(typeface1);
 
 
 

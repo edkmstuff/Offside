@@ -18,8 +18,10 @@ import com.offsidegame.offside.BuildConfig;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ScoreboardEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.helpers.FontsOverride;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.helpers.TypefaceUtil;
 
 import org.acra.*;
 import org.acra.annotation.*;
@@ -62,13 +64,13 @@ public class OffsideApplication extends Application {
 
     private static String profileImageFileName = "profileImage.jpg";
 
-    //private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
+    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
     //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
-    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
+    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
 
-    private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
+//    private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/Images/defaultImage.jpg";
-    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
+//    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
 
 //    private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";
@@ -210,6 +212,17 @@ public class OffsideApplication extends Application {
             intent.setClass(getApplicationContext(), SignalRService.class);
             bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
             EventBus.getDefault().register(getApplicationContext());
+
+            //override fonts
+            FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/opensanshebrewcondensed-extrabolditalic.ttf");
+            FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/opensanshebrewcondensed-extrabolditalic.ttf");
+            FontsOverride.setDefaultFont(this, "SERIF", "fonts/opensanshebrewcondensed-extrabolditalic.ttf");
+            FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/opensanshebrewcondensed-extrabolditalic.ttf");
+
+            TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/opensanshebrewcondensed-extrabolditalic.ttf");
+
+
+
 
         } catch (Exception ex) {
 

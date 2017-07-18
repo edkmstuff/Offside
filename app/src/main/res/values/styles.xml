@@ -1,8 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="AppTheme.Base">
+    <!--<style name="AppTheme" parent="AppTheme.Base">-->
+        <!--<item name="android:typeface">serif</item>-->
 
+    <!--</style>-->
+
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:typeface">serif</item>
 
     </style>
 
@@ -79,6 +84,9 @@
         <item name="android:textColor">@color/colorWhite</item>
 
     </style>
+
+
+
 
 
 
