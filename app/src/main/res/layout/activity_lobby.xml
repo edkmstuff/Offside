@@ -5,15 +5,14 @@
     android:id="@+id/activity_lobby"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/lobby_background"
     android:keepScreenOn="true"
     android:layoutDirection="ltr"
     android:orientation="vertical"
-    android:background="@color/chatPrimary"
     tools:context="com.offsidegame.offside.activities.LobbyActivity">
 
 
-
-<!-- Progress bar -->
+    <!-- Progress bar -->
     <LinearLayout
         android:id="@+id/l_loading_root"
         android:layout_width="match_parent"
@@ -24,36 +23,35 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/app_logo_25"
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
-            />
+            android:src="@drawable/app_logo_25" />
 
         <ProgressBar
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp">
 
         </ProgressBar>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="bottom">
+            android:gravity="bottom"
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/jg_version_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="v3.1"
-                android:textSize="12dp"
-                android:textColor="@color/grayText"
                 android:layout_gravity="center"
                 android:layout_marginBottom="2dp"
-
-
+                android:gravity="center"
+                android:text="v3.1"
+                android:textColor="@color/grayText"
+                android:textSize="12dp"
 
 
                 />
@@ -71,108 +69,120 @@
         android:orientation="vertical"
         android:padding="5dp"
         android:visibility="visible">
-        <!--player info-->
+        <!--player info and settings-->
         <LinearLayout
             android:id="@+id/l_player_info_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:weightSum="10"
             android:orientation="horizontal">
 
             <!-- group name + players status icons -->
+
+
+            <!-- player status -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_weight="8"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:gravity="center_vertical"
-                >
+                android:orientation="horizontal">
 
-                <!-- player status -->
+                <!-- powers-->
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center">
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="center"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
 
-                    <!-- powers-->
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/c_power_items_text_view"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="right"
-                        android:layout_marginLeft="2dp"
-                        android:gravity="center"
-                        android:layoutDirection="rtl"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="-14dp"
+                        android:background="@drawable/shape_bg_rectangle_primary_dark"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="2dp"
+                        android:text="2"
+                        android:textColor="@color/colorWhite" />
 
-                        <TextView
-                            android:id="@+id/c_power_items_text_view"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="-14dp"
-                            android:background="@drawable/shape_bg_rectangle_primary_dark"
-                            android:paddingBottom="2dp"
-                            android:paddingLeft="15dp"
-                            android:paddingRight="5dp"
-                            android:paddingTop="2dp"
-                            android:text="2"
-                            android:textColor="@color/colorWhite" />
+                    <ImageView
+                        android:id="@+id/c_power_item_image_view"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_soccer_ball" />
 
-                        <ImageView
-                            android:id="@+id/c_power_item_image_view"
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_soccer_ball" />
+                </LinearLayout>
+                <!-- coins -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="center"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
 
-                    </LinearLayout>
-                    <!-- coins -->
-                    <LinearLayout
+
+                    <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="2dp"
+
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorButton1"
                         android:gravity="center"
-                        android:layoutDirection="rtl"
-                        android:orientation="horizontal">
+                        android:minWidth="20dp"
+                        android:padding="2dp"
+                        android:text="+"
+
+                        android:textColor="@color/colorWhite"
 
 
-                        <TextView
-                            android:text="+"
+                        />
 
-                            android:background="@color/colorButton1"
-                            android:textColor="@color/colorWhite"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="2dp"
-                            android:gravity="center"
+                    <TextView
+                        android:id="@+id/c_offside_coins_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="-12dp"
+                        android:background="@drawable/shape_bg_rectangle_primary_dark"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="2dp"
+                        android:text="4000"
+                        android:textColor="@color/colorWhite" />
 
-                            android:minWidth="20dp"
-
-
-                            />
-                        <TextView
-                            android:id="@+id/c_offside_coins_text_view"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="-12dp"
-                            android:background="@drawable/shape_bg_rectangle_primary_dark"
-                            android:paddingBottom="2dp"
-                            android:paddingLeft="12dp"
-                            android:paddingRight="5dp"
-                            android:paddingTop="2dp"
-                            android:text="4000"
-                            android:textColor="@color/colorWhite" />
-
-                        <ImageView
-                            android:id="@+id/c_offside_coins_image_view"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_offside_coin_with_logo" />
-
-                    </LinearLayout>
-
-
+                    <ImageView
+                        android:id="@+id/c_offside_coins_image_view"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_offside_coin_with_logo" />
 
                 </LinearLayout>
 
+
+            </LinearLayout>
+
+            <!--settings button-->
+            <LinearLayout
+                android:layoutDirection="rtl"
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/l_settings_button_image_view"
+                    android:layout_gravity="left"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_settings_button" />
 
             </LinearLayout>
 
@@ -184,22 +194,21 @@
             android:id="@+id/l_title_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-android:gravity="center"
-            >
+            android:gravity="center"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/l_player_picture_image_view"
                 android:layout_width="70dp"
                 android:layout_height="70dp"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/app_logo"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="FONT"
-                android:textColor="@color/colorWhite"/>
+                android:src="@mipmap/ic_logo_lobby" />
+
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="FONT"-->
+                <!--android:textColor="@color/colorWhite" />-->
 
         </LinearLayout>
 
@@ -210,6 +219,7 @@ android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <ListView
                 android:id="@+id/l_private_groups_list_view"
                 android:layout_width="match_parent"
@@ -222,48 +232,42 @@ android:gravity="center"
 
             </ListView>
 
-                <LinearLayout
-                    android:id="@+id/l_private_group_root"
+            <LinearLayout
+                android:id="@+id/l_private_group_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:gravity="center_vertical"
+                android:layoutDirection="ltr"
+                android:orientation="vertical"
+                android:padding="5dp">
+                <!--
+                private_group_item.xml
+                linearLaout - with small padding to sperate between items
+                text- group name
+                text - indicates activegame or not or last played
+                scrollable horizontal or list of images - participants pictures
+                -->
+
+                <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:gravity="center_vertical"
-                    android:layoutDirection="ltr"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-                    <!--
-                    private_group_item.xml
-                    linearLaout - with small padding to sperate between items
-                    text- group name
-                    text - indicates activegame or not or last played
-                    scrollable horizontal or list of images - participants pictures
-                    -->
+                    android:layout_height="wrap_content">
 
-                    <HorizontalScrollView
+                    <LinearLayout
+                        android:id="@+id/l_players_playing_in_private_group_root"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="match_parent"
+                        android:animateLayoutChanges="true"
+                        android:gravity="center_vertical"
+                        android:layoutDirection="ltr"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
 
-                        <LinearLayout
-                            android:id="@+id/l_players_playing_in_private_group_root"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:animateLayoutChanges="true"
-                            android:gravity="center_vertical"
-                            android:layoutDirection="ltr"
-                            android:orientation="horizontal"
-                            android:padding="5dp">
+                    </LinearLayout>
 
-                        </LinearLayout>
+                </HorizontalScrollView>
 
-                    </HorizontalScrollView>
-
-                </LinearLayout>
-
-
-
-
-
-
+            </LinearLayout>
 
 
         </LinearLayout>
@@ -277,16 +281,16 @@ android:gravity="center"
 
             <TextView
                 android:id="@+id/l_create_private_group_button_text_view"
-                android:gravity="center"
-                android:textColor="@color/colorWhite"
-                android:background="@color/colorButton1"
                 android:layout_width="match_parent"
-                android:padding="5dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorButton1"
+                android:gravity="center"
                 android:minHeight="50dp"
                 android:minWidth="100dp"
-                android:layout_height="wrap_content"
-                android:textDirection="rtl"
+                android:padding="5dp"
                 android:text="צור קבוצה"
+                android:textColor="@color/colorWhite"
+                android:textDirection="rtl"
 
 
                 />
@@ -303,154 +307,146 @@ android:gravity="center"
 
             <TextView
                 android:id="@+id/l_nav_private_groups_button_text_view"
-                android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                android:padding="5dp"
-                android:gravity="center"
-                android:background="@mipmap/ic_soccer_ball"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                />
+                android:background="@mipmap/ic_soccer_ball"
+                android:gravity="center"
+                android:padding="5dp" />
+
             <TextView
                 android:id="@+id/l_nav_user_profile_button_text_view"
-                android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                android:padding="5dp"
-                android:gravity="center"
-                android:background="@mipmap/ic_soccer_ball"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                />
+                android:background="@mipmap/ic_soccer_ball"
+                android:gravity="center"
+                android:padding="5dp" />
+
             <TextView
                 android:id="@+id/l_nav_shop_button_text_view"
-                android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                android:padding="5dp"
-                android:gravity="center"
-                android:background="@mipmap/ic_soccer_ball"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@mipmap/ic_soccer_ball"
+                android:gravity="center"
+                android:padding="5dp"
 
                 />
+
             <TextView
                 android:id="@+id/l_nav_active_game_button_text_view"
-                android:layout_height="wrap_content"
                 android:layout_width="0dp"
-                android:padding="5dp"
-                android:gravity="center"
-                android:background="@mipmap/ic_soccer_ball"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                />
+                android:background="@mipmap/ic_soccer_ball"
+                android:gravity="center"
+                android:padding="5dp" />
 
         </LinearLayout>
 
 
-
     </LinearLayout>
 
-     <!--Private game creation form-->
+    <!--Private game creation form-->
     <LinearLayout
         android:id="@+id/jg_create_private_game_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         android:padding="10dp"
-        android:visibility="gone"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        >
+        android:visibility="gone">
 
 
         <ImageView
-            android:src="@drawable/friends_blue_transparent"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_gravity="center"
             android:layout_marginBottom="40dp"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/friends_blue_transparent" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/lbl_select_language"
-            android:textColor="@color/grayText"
             android:layout_marginBottom="10dp"
-            />
+            android:text="@string/lbl_select_language"
+            android:textColor="@color/grayText" />
 
         <Spinner
             android:id="@+id/jg_available_language_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="50dp"
-            android:background="@color/colorWhite"
             android:layout_marginBottom="20dp"
-            />
+            android:background="@color/colorWhite"
+            android:minHeight="50dp" />
 
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/lbl_select_name_for_club"
-            android:textColor="@color/grayText"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="20dp"
-            />
+            android:text="@string/lbl_select_name_for_club"
+            android:textColor="@color/grayText" />
+
         <EditText
-            style="@style/editTextClassic"
             android:id="@+id/jg_private_game_name_edit_text"
+            style="@style/editTextClassic"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorWhite"
             android:ems="10"
-            android:minHeight="50dp"
             android:hint="הכרישים"
             android:inputType="textEmailAddress"
-            android:background="@color/colorWhite"
-            android:textDirection="rtl"
-            android:layout_marginBottom="20dp"
+            android:minHeight="50dp"
             android:paddingRight="5dp"
-            />
+            android:textDirection="rtl" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/lbl_select_game"
-            android:textColor="@color/grayText"
             android:layout_marginBottom="10dp"
-            />
+            android:text="@string/lbl_select_game"
+            android:textColor="@color/grayText" />
 
         <Spinner
             android:id="@+id/jg_available_games_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="50dp"
-            android:background="@color/colorWhite"
             android:layout_marginBottom="20dp"
-            />
+            android:background="@color/colorWhite"
+            android:minHeight="50dp" />
 
         <TextView
             android:id="@+id/jg_generate_private_game_code_button_text_view"
-            android:gravity="center"
-            android:textColor="@color/chatPrimary"
-            android:background="@color/colorAccent"
             android:layout_width="match_parent"
-            android:padding="5dp"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:gravity="center"
             android:minHeight="50dp"
             android:minWidth="100dp"
-            android:layout_height="wrap_content"
-            android:textDirection="rtl"
+            android:padding="5dp"
             android:text="@string/lbl_create_private_game_and_join"
+            android:textColor="@color/chatPrimary"
+            android:textDirection="rtl"
 
 
             />
 
         <!--<TextView-->
-            <!--android:id="@+id/jg_private_game_code_text_view"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="12345"-->
-            <!--android:textSize="@dimen/OffsideLargeText" />-->
+        <!--android:id="@+id/jg_private_game_code_text_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="12345"-->
+        <!--android:textSize="@dimen/OffsideLargeText" />-->
 
 
     </LinearLayout>
-
 
 
 </LinearLayout>

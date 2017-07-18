@@ -41,6 +41,7 @@ import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.PlayerInfo;
 import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupPlayer;
+import com.offsidegame.offside.models.PrivateGroupsInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -451,16 +452,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceivePrivateGroupsInfo(PrivateGroup[] privateGroups) {
+    public void onReceivePrivateGroupsInfo(PrivateGroupsInfo privateGroupsInfo) {
         try {
-
-            privateGroupsArrayList = new ArrayList<PrivateGroup>(Arrays.asList(privateGroups));
-
-
-
-            if (privateGroups == null)
+            if (privateGroupsInfo == null || privateGroupsInfo.getPrivateGroups() == null || privateGroupsInfo.getPlayerAssets() == null)
                 return;
 
+            PrivateGroup[] privateGroups = privateGroupsInfo.getPrivateGroups();
+            privateGroupsArrayList = new ArrayList<PrivateGroup>(Arrays.asList(privateGroups));
 
             OffsideApplication.setPrivateGroups(privateGroups);
 
