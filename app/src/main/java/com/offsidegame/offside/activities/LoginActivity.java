@@ -220,7 +220,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             return;
 
 
-
         String playerId = player.getUid();
         String playerDisplayName = player.getDisplayName();
         String playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
@@ -232,8 +231,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         // in case user does not have profile picture, we generate image with Initials
         if (playerProfilePictureUrl == null) {
 
-
-
             String displayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().toUpperCase();
             String[] displayNameParts = displayName.trim().split(" ");
             String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
@@ -242,10 +239,17 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
 
             isUserImageSaved = OffsideApplication.signalRService.saveImageInDatabase(playerId, imageString);
-            //ImageHelper.storeImage(profilePicture, context);
             playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
 
         }
+//        else {
+//
+//            Bitmap profilePicture = ImageHelper.getBitmapFromURL(playerProfilePictureUrl);
+//            byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
+//            String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
+//            isUserImageSaved = OffsideApplication.signalRService.saveImageInDatabase(playerId, imageString);
+//
+//        }
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();

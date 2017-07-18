@@ -1,5 +1,7 @@
 package com.offsidegame.offside.adapters;
+
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,18 +11,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.helpers.ImageHelper;
+import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
+import com.offsidegame.offside.models.PrivateGroupPlayer;
 
 import org.acra.ACRA;
 
 import java.util.ArrayList;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 /**
  * Created by user on 7/17/2017.
  */
 
-public class PrivateGroupAdapter  extends ArrayAdapter<PrivateGroup> {
+public class PrivateGroupAdapter extends ArrayAdapter<PrivateGroup> {
 
     private Context context;
 
@@ -35,9 +42,9 @@ public class PrivateGroupAdapter  extends ArrayAdapter<PrivateGroup> {
         PrivateGroup privateGroup;
         TextView groupNameTextView;
         TextView groupGameStatusTextView;
-        LinearLayout playersPlayInGroupRoot;
-        TextView totalPlayingPlayersInGroupTextView;
 
+        TextView totalPlayingPlayersInGroupTextView;
+        LinearLayout playersPlayInGroupRoot;
 
 
     }
@@ -55,9 +62,9 @@ public class PrivateGroupAdapter  extends ArrayAdapter<PrivateGroup> {
                 viewHolder.groupGameStatusTextView = (TextView) convertView.findViewById(R.id.pg_group_game_status_text_view);
                 viewHolder.playersPlayInGroupRoot = (LinearLayout) convertView.findViewById(R.id.pg_players_play_in_group_root);
                 viewHolder.totalPlayingPlayersInGroupTextView = (TextView) convertView.findViewById(R.id.pg_total_playing_players_in_group_text_view);
+                viewHolder.playersPlayInGroupRoot = (LinearLayout) convertView.findViewById(R.id.pg_players_play_in_group_root);
 
                 convertView.setTag(viewHolder);
-
 
 
             } else
@@ -69,17 +76,29 @@ public class PrivateGroupAdapter  extends ArrayAdapter<PrivateGroup> {
 
             viewHolder.groupNameTextView.setText(viewHolder.privateGroup.getName());
 
-            int countActivePlayersInPrivateGroup= viewHolder.privateGroup.getPlayersInfo().length;
-            if(countActivePlayersInPrivateGroup>0){
+            int countActivePlayersInPrivateGroup = viewHolder.privateGroup.getActivePlayersCount();
+            if (countActivePlayersInPrivateGroup > 0) {
                 viewHolder.totalPlayingPlayersInGroupTextView.setText("playing now " + Integer.toString(countActivePlayersInPrivateGroup));
                 viewHolder.groupGameStatusTextView.setText("ACTIVE");
-            }
-
-            else{
+            } else {
                 viewHolder.totalPlayingPlayersInGroupTextView.setText("no players yet");
             }
 
             //ToDo: go over playerInfo and display the playing players profile pictures(like in the winners in chatmessage adapter
+
+
+
+            viewHolder.playersPlayInGroupRoot.removeAllViews();
+            for(PrivateGroupPlayer privateGroupPlayer: viewHolder.privateGroup.getPrivateGroupPlayers()){
+
+                ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, viewHolder.playersPlayInGroupRoot,false);
+                ImageView playerImageImageView = (ImageView) playerLayout.getChildAt(0);
+                String imageUrl = privateGroupPlayer.getImageUrl() == null || privateGroupPlayer.getImageUrl().equals("")  ? OffsideApplication.getDefaultProfilePictureUrl(): privateGroupPlayer.getImageUrl();
+                Uri imageUri = Uri.parse(imageUrl);
+                ImageHelper.loadImage(context,playerImageImageView,imageUri);
+                viewHolder.playersPlayInGroupRoot.addView(playerLayout);
+            }
+
 
             return convertView;
 

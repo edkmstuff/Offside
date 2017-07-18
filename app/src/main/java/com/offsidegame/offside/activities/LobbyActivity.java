@@ -38,6 +38,7 @@ import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.PlayerInfo;
 import com.offsidegame.offside.models.PrivateGroup;
+import com.offsidegame.offside.models.PrivateGroupPlayer;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -480,9 +481,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             TextView gameStatusTextView = (TextView) layout.getChildAt(1);
             TextView isPlayersJoinedTextView = (TextView) layout.getChildAt(2);
             groupNameTextView.setText(privateGroup.getName());
-            int countActivePlayersInPrivateGroup= privateGroup.getPlayersInfo().length;
+            int countActivePlayersInPrivateGroup= privateGroup.getPrivateGroupPlayers().length;
             if(countActivePlayersInPrivateGroup>0){
-                isPlayersJoinedTextView.setText("playing now " + Integer.toString(privateGroup.getPlayersInfo().length));
+                isPlayersJoinedTextView.setText("playing now " + Integer.toString(privateGroup.getPrivateGroupPlayers().length));
                 gameStatusTextView.setText("ACTIVE");
             }
 
@@ -492,14 +493,14 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
             //playersPlayingInPrivateGroupRoot.removeAllViews();
-            for(PlayerInfo playerInfo: privateGroup.getPlayersInfo() ){
+            for(PrivateGroupPlayer privateGroupPlayer: privateGroup.getPrivateGroupPlayers() ){
 
                 ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, playersPlayingInPrivateGroupRoot,false);
                 ImageView playerImageImageView = (ImageView) playerLayout.getChildAt(0);
                 TextView playerNameTextView = (TextView) playerLayout.getChildAt(1);
-                String imageUrl = playerInfo.getImageUrl() == null ? OffsideApplication.getDefaultProfilePictureUrl(): playerInfo.getImageUrl();
+                String imageUrl = privateGroupPlayer.getImageUrl() == null ? OffsideApplication.getDefaultProfilePictureUrl(): privateGroupPlayer.getImageUrl();
                 ImageHelper.loadImage(thisActivity, imageUrl, playerImageImageView, "LobbyActivity");
-                playerNameTextView.setText(playerInfo.getUserName());
+                playerNameTextView.setText(privateGroupPlayer.getPlayerName());
                 playersPlayingInPrivateGroupRoot.addView(playerLayout);
             }
 

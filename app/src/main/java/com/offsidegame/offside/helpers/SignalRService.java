@@ -75,8 +75,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:8080");
-    public final String ip = new String("10.0.0.17:8080");
+    public final String ip = new String("192.168.1.140:8080");
+    //public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
 
@@ -593,7 +593,7 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return false;
 
-        hub.invoke(Player.class, "SaveLoggedInUser", user.getId(), user.getName(), user.getEmail()).done(new Action<Player>() {
+        hub.invoke(Player.class, "SaveLoggedInUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri()).done(new Action<Player>() {
             @Override
             public void run(Player player) throws Exception {
                 EventBus.getDefault().post(player);

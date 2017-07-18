@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
@@ -99,6 +100,23 @@ public class ImageHelper {
         });
     }
 
+    public static void loadImage(Context context, final ImageView fbProfilePicture, Uri fbImageUri) {
+        Picasso.with(context).load(fbImageUri).into(fbProfilePicture, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
+                RoundImage roundedImage = new RoundImage(bm);
+                fbProfilePicture.setImageDrawable(roundedImage);
+                //fbProfilePicture.animate().alpha(1.1f).setDuration(200).start();
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
     public static void storeImage(Bitmap image, Context context) {
         String filename = OffsideApplication.getProfileImageFileName();
         FileOutputStream outputStream;
@@ -149,7 +167,20 @@ public class ImageHelper {
         return stream.toByteArray();
     }
 
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+            return null;
 
-
+        }
+    }
 
 }
