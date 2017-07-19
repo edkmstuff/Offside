@@ -6,9 +6,8 @@
 
 
 <resources>
-    <color name="colorPrimary">#212121</color>
+
     <color name="colorSecondary">#404040</color>
-    <color name="colorPrimaryDark">#333333</color>
     <color name="windowBackground">#404040</color>
     <color name="colorAccent">#80D8FF</color>
     <color name="colorDivider">#BDBDBD</color>
@@ -39,8 +38,16 @@
 
 
     <!--new colors-->
-    <color name="colorPrimary1">#0C155F</color>
-    <color name="colorButton1">#448AFF</color>
+    <color name="colorPrimary">#0C155F</color>
+    <color name="colorButton">#4061A9</color>
+    <color name="colorPrimaryDark">#1A237E</color>
+    <color name="colorActive">#00C520</color>
+    <color name="navigationMenu">#151A50</color>
+    <color name="navigationMenuSelectedItem">#383C69</color>
+
+
+
+
 
 
 

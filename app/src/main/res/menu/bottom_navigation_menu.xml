@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+
+        android:id="@+id/nav_action_groups"
+        android:enabled="true"
+        android:icon="@drawable/ic_action_groups"
+        android:title="@string/lbl_my_groups"
+        app:showAsAction="always">
+
+    </item>
+    <item
+        android:id="@+id/nav_action_profile"
+        android:enabled="true"
+        android:icon="@drawable/ic_action_profile"
+        android:title="@string/lbl_my_profile"
+
+        app:showAsAction="always">
+
+    </item>
+    <item
+        android:id="@+id/nav_action_shop"
+        android:enabled="true"
+        android:icon="@drawable/ic_action_shop"
+        android:title="@string/lbl_shop"
+        app:showAsAction="always">
+
+    </item>
+    <item
+        android:id="@+id/nav_action_play"
+        android:enabled="true"
+        android:icon="@drawable/ic_action_play"
+        android:title="@string/lbl_play"
+        app:showAsAction="always"
+
+
+        >
+
+    </item>
+
+</menu>

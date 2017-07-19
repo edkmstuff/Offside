@@ -14,8 +14,8 @@
         android:layout_height="40dp"
         android:scaleType="centerCrop"
         android:src="@drawable/app_logo"
-        />
 
+        />
 
 
 

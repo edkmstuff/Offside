@@ -104,6 +104,14 @@
     <string name="lbl_select_language">בחר שפה</string>
     <string name="lbl_seems_like_you_skipped_this_question">נראה שבחרת לא לענות על השאלה</string>
     <string name="lbl_you_are_out_of_coins">אין לך מספיק מטבעות , תוכל לחדש את המלאי במחצית</string>
+    <string name="lbl_game_is_active">משחק פעיל</string>
+    <string name="lbl_no_playing_players">אין שחקנים</string>
+    <string name="lbl_now_playing">חברים כבר משחקים</string>
+    <string name="lbl_my_groups">הקבוצות שלי</string>
+    <string name="lbl_my_profile">פרופיל</string>
+    <string name="lbl_shop">חנות</string>
+    <string name="lbl_play">שחק</string>
+    <string name="lbl_invite_friends">הזמן חברים</string>
 
 
 </resources>

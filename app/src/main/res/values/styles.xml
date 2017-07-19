@@ -1,22 +1,11 @@
 <resources>
 
     <!-- Base application theme. -->
-    <!--<style name="AppTheme" parent="AppTheme.Base">-->
-        <!--<item name="android:typeface">serif</item>-->
-
-    <!--</style>-->
-
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <item name="android:typeface">serif</item>
+    <style name="AppTheme" parent="AppTheme.Base">
 
     </style>
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/chatPrimary</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/windowBackground</item>
-        <item name="android:textColor">@color/chatPrimary</item>
 
     </style>
 

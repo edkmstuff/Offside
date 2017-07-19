@@ -76,28 +76,39 @@ public class PrivateGroupAdapter extends ArrayAdapter<PrivateGroup> {
 
             viewHolder.groupNameTextView.setText(viewHolder.privateGroup.getName());
 
-            int countActivePlayersInPrivateGroup = viewHolder.privateGroup.getActivePlayersCount();
-            if (countActivePlayersInPrivateGroup > 0) {
-                viewHolder.totalPlayingPlayersInGroupTextView.setText("playing now " + Integer.toString(countActivePlayersInPrivateGroup));
-                viewHolder.groupGameStatusTextView.setText("ACTIVE");
+
+            if (viewHolder.privateGroup.isActive()) {
+
+                viewHolder.playersPlayInGroupRoot.removeAllViews();
+                for(PrivateGroupPlayer privateGroupPlayer: viewHolder.privateGroup.getPrivateGroupPlayers()){
+
+                    ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, viewHolder.playersPlayInGroupRoot,false);
+                    ImageView playerImageImageView = (ImageView) playerLayout.getChildAt(0);
+                    playerImageImageView.getLayoutParams().height = 100;
+                    playerImageImageView.getLayoutParams().width = 100;
+                    playerImageImageView.requestLayout();
+                    String imageUrl = privateGroupPlayer.getImageUrl() == null || privateGroupPlayer.getImageUrl().equals("")  ? OffsideApplication.getDefaultProfilePictureUrl(): privateGroupPlayer.getImageUrl();
+                    Uri imageUri = Uri.parse(imageUrl);
+                    ImageHelper.loadImage(context,playerImageImageView,imageUri);
+
+                    viewHolder.playersPlayInGroupRoot.addView(playerLayout);
+                }
+
+
+                int countActivePlayersInPrivateGroup = viewHolder.privateGroup.getActivePlayersCount();
+                viewHolder.totalPlayingPlayersInGroupTextView.setText(Integer.toString(countActivePlayersInPrivateGroup) +" "+context.getString(R.string.lbl_now_playing));
+                viewHolder.groupGameStatusTextView.setText(R.string.lbl_game_is_active);
+                //viewHolder.groupGameStatusTextView.setVisibility(View.VISIBLE);
             } else {
-                viewHolder.totalPlayingPlayersInGroupTextView.setText("no players yet");
+                viewHolder.totalPlayingPlayersInGroupTextView.setText(R.string.lbl_no_playing_players);
+                //viewHolder.groupGameStatusTextView.setVisibility(View.GONE);
+                viewHolder.groupGameStatusTextView.setText(R.string.lbl_invite_friends);
+                viewHolder.groupGameStatusTextView.setBackgroundResource(R.color.navigationMenuSelectedItem);
+
             }
 
-            //ToDo: go over playerInfo and display the playing players profile pictures(like in the winners in chatmessage adapter
 
 
-
-            viewHolder.playersPlayInGroupRoot.removeAllViews();
-            for(PrivateGroupPlayer privateGroupPlayer: viewHolder.privateGroup.getPrivateGroupPlayers()){
-
-                ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, viewHolder.playersPlayInGroupRoot,false);
-                ImageView playerImageImageView = (ImageView) playerLayout.getChildAt(0);
-                String imageUrl = privateGroupPlayer.getImageUrl() == null || privateGroupPlayer.getImageUrl().equals("")  ? OffsideApplication.getDefaultProfilePictureUrl(): privateGroupPlayer.getImageUrl();
-                Uri imageUri = Uri.parse(imageUrl);
-                ImageHelper.loadImage(context,playerImageImageView,imageUri);
-                viewHolder.playersPlayInGroupRoot.addView(playerLayout);
-            }
 
 
             return convertView;

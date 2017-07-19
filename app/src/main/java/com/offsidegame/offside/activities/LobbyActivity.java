@@ -9,15 +9,20 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +43,7 @@ import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Player;
+import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PlayerInfo;
 import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupPlayer;
@@ -52,6 +58,7 @@ import org.w3c.dom.Text;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 
@@ -85,10 +92,21 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     //private TextView playerBalanceTextView;
 ////////////////////////////////////////////////////////
     private PrivateGroupAdapter privateGroupAdapter;
-    private LinearLayout privateGroupRoot;
-    private LinearLayout playersPlayingInPrivateGroupRoot;
-    private ArrayList privateGroupsArrayList;
 
+
+    private ArrayList privateGroupsArrayList;
+    private TextView balanceTextView;
+    private TextView powerItemsTextView;
+    private BottomNavigationView bottomNavigationView;
+
+    private ScrollView privateGroupsScrollView;
+    private ListView privateGroupsListView;
+
+    private LinearLayout [] viewRoots = new LinearLayout[4];
+//    private LinearLayout selectedGroupRoot;
+//    private LinearLayout profileRoot
+//    private LinearLayout shopRoot;
+//    private LinearLayout playRoot;
 
 
     @Override
@@ -102,9 +120,65 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
             playerDisplayName = player.getDisplayName();
             playerId = player.getUid();
+
 //////////////////////////////////////////////////////////////////////////////////////////////
-            privateGroupRoot = (LinearLayout) findViewById(R.id.l_private_group_root);
-            playersPlayingInPrivateGroupRoot = (LinearLayout) findViewById(R.id.l_players_playing_in_private_group_root);
+
+            playerPictureImageView = (ImageView) findViewById(R.id.l_player_picture_image_view);
+            balanceTextView = (TextView) findViewById(R.id.l_balance_text_view);
+            powerItemsTextView = (TextView) findViewById(R.id.l_power_items_text_view);
+            privateGroupsScrollView = (ScrollView) findViewById(R.id.l_private_groups_scroll_view);
+            privateGroupsListView = (ListView) findViewById(R.id.l_private_groups_list_view);
+
+
+            viewRoots[0] = (LinearLayout) findViewById(R.id.l_private_groups_root);
+            viewRoots[1] = (LinearLayout) findViewById(R.id.l_profile_root);
+            viewRoots[2] = (LinearLayout) findViewById(R.id.l_shop_root);
+            viewRoots[3] = (LinearLayout) findViewById(R.id.l_play_root);
+
+            resetVisibility();
+            viewRoots[0].setVisibility(View.VISIBLE);
+
+
+            bottomNavigationView = (BottomNavigationView) findViewById(R.id.l_bottom_navigation_view);
+
+
+            bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                    resetVisibility();
+                    switch (item.getItemId()) {
+                        case R.id.nav_action_groups:
+                            viewRoots[0].setVisibility(View.VISIBLE);
+                            privateGroupsScrollView.setVisibility(View.VISIBLE);
+
+                            break;
+                        case R.id.nav_action_profile:
+                            viewRoots[1].setVisibility(View.VISIBLE);
+                            break;
+                        case R.id.nav_action_shop:
+                            viewRoots[2].setVisibility(View.VISIBLE);
+                            break;
+                        case R.id.nav_action_play:
+                            viewRoots[3].setVisibility(View.VISIBLE);
+                            break;
+
+
+                    }
+
+                    return true;
+                }
+            });
+
+            privateGroupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    //todo: setSelectedGroup , open activity viewPrivateGroup and get data on group from server based on groupId
+
+
+                }
+            });
 
 
 //            AssetManager am = context.getApplicationContext().getAssets();
@@ -112,8 +186,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 //            TypeFace typeface = Typeface.createFromAsset(am, "fonts/OpenSansHebrew-Regular.ttf");
 //
 //            setTypeface(typeface1);
-
-
 
 
 //            userNameTextView = (TextView) findViewById(R.id.jg_user_name_text_view);
@@ -196,6 +268,14 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         }
 
 
+    }
+
+    private void resetVisibility() {
+
+        for(LinearLayout layout : viewRoots){
+            layout.setVisibility(View.GONE);
+
+        }
     }
 
     @Override
@@ -432,24 +512,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceivePlayer(Player player) {
-        try {
-
-//            OffsideApplication.setGameInfo(new GameInfo());
-//            OffsideApplication.getGameInfo().setPlayer(player);
-//            playerDisplayName = OffsideApplication.getGameInfo().getPlayer().getUserName();
-//            playerId = OffsideApplication.getGameInfo().getPlayer().getId();
-//            balance = OffsideApplication.getGameInfo().getPlayer().getBalance();
-//            playerBalanceTextView.setText(Integer.toString(balance));
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
-
-
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePrivateGroupsInfo(PrivateGroupsInfo privateGroupsInfo) {
@@ -457,10 +519,24 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             if (privateGroupsInfo == null || privateGroupsInfo.getPrivateGroups() == null || privateGroupsInfo.getPlayerAssets() == null)
                 return;
 
-            PrivateGroup[] privateGroups = privateGroupsInfo.getPrivateGroups();
-            privateGroupsArrayList = new ArrayList<PrivateGroup>(Arrays.asList(privateGroups));
+            OffsideApplication.setPrivateGroupsInfo(privateGroupsInfo);
 
-            OffsideApplication.setPrivateGroups(privateGroups);
+
+            //update player stuff
+            PlayerAssets playerAssets = privateGroupsInfo.getPlayerAssets();
+            int balance = playerAssets.getBalance();
+            int powerItems = playerAssets.getPowerItems();
+            String playerImageUrl = playerAssets.getImageUrl();
+            balanceTextView.setText(Integer.toString(balance));
+            powerItemsTextView.setText(Integer.toString(powerItems));
+            playerProfilePictureUrl = settings.getString(getString(R.string.player_profile_picture_url_key), null);
+            playerProfilePictureUrl = playerProfilePictureUrl == null ? playerImageUrl : playerProfilePictureUrl;
+            ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName);
+
+            //update groups stuff
+            PrivateGroup[] privateGroups = privateGroupsInfo.getPrivateGroups();
+
+            privateGroupsArrayList = new ArrayList(Arrays.asList(privateGroups));
 
             privateGroupAdapter = new PrivateGroupAdapter(context, privateGroupsArrayList);
 
@@ -469,56 +545,12 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             privateGroupsListView.setAdapter(privateGroupAdapter);
 
 
-            //generatePrivateGroups();
-
-
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
     }
-
-    private void generatePrivateGroups() {
-        privateGroupRoot.removeAllViewsInLayout();
-
-        PrivateGroup[] privateGroups = OffsideApplication.getPrivateGroups();
-        for(PrivateGroup privateGroup: privateGroups ){
-
-            ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.private_group_item, privateGroupRoot,false);
-
-            TextView groupNameTextView = (TextView) layout.getChildAt(0);
-            TextView gameStatusTextView = (TextView) layout.getChildAt(1);
-            TextView isPlayersJoinedTextView = (TextView) layout.getChildAt(2);
-            groupNameTextView.setText(privateGroup.getName());
-            int countActivePlayersInPrivateGroup= privateGroup.getPrivateGroupPlayers().length;
-            if(countActivePlayersInPrivateGroup>0){
-                isPlayersJoinedTextView.setText("playing now " + Integer.toString(privateGroup.getPrivateGroupPlayers().length));
-                gameStatusTextView.setText("ACTIVE");
-            }
-
-            else{
-                isPlayersJoinedTextView.setText("no players yet");
-            }
-
-
-            //playersPlayingInPrivateGroupRoot.removeAllViews();
-            for(PrivateGroupPlayer privateGroupPlayer: privateGroup.getPrivateGroupPlayers() ){
-
-                ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, playersPlayingInPrivateGroupRoot,false);
-                ImageView playerImageImageView = (ImageView) playerLayout.getChildAt(0);
-                TextView playerNameTextView = (TextView) playerLayout.getChildAt(1);
-                String imageUrl = privateGroupPlayer.getImageUrl() == null ? OffsideApplication.getDefaultProfilePictureUrl(): privateGroupPlayer.getImageUrl();
-                ImageHelper.loadImage(thisActivity, imageUrl, playerImageImageView, "LobbyActivity");
-                playerNameTextView.setText(privateGroupPlayer.getPlayerName());
-                playersPlayingInPrivateGroupRoot.addView(playerLayout);
-            }
-
-            privateGroupRoot.addView(layout);
-        }
-    }
-
-
 
 
     private Boolean exit = false;

@@ -12,6 +12,9 @@ public class PlayerAssets {
     @com.google.gson.annotations.SerializedName("PI")
     private int powerItems;
 
+    @com.google.gson.annotations.SerializedName("IU")
+    private String ImageUrl;
+
 
     public int getBalance() {
         return balance;
@@ -27,5 +30,13 @@ public class PlayerAssets {
 
     public void setPowerItems(int powerItems) {
         this.powerItems = powerItems;
+    }
+
+    public String getImageUrl() {
+        return ImageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        ImageUrl = imageUrl;
     }
 }
