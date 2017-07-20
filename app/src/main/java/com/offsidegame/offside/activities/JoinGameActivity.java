@@ -33,7 +33,6 @@ import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Player;
-import com.offsidegame.offside.models.PlayerInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -107,7 +106,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             });
 
 
-            versionTextView = (TextView) findViewById(R.id.jg_version_text_view);
+            versionTextView = (TextView) findViewById(R.id.l_version_text_view);
             versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
             joinGameRoot = (LinearLayout) findViewById(R.id.jg_join_game_root);
             loadingGameRoot = (LinearLayout) findViewById(R.id.jg_loading_root);

@@ -4,25 +4,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +25,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.adapters.GroupsPagerAdapterFragment;
 import com.offsidegame.offside.adapters.PrivateGroupAdapter;
 import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.AvailableGamesEvent;
@@ -38,31 +34,31 @@ import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.fragments.PrivateGroupsFragment;
+
+import com.offsidegame.offside.fragments.PublicGroupsFragment;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.PlayerAssets;
-import com.offsidegame.offside.models.PlayerInfo;
-import com.offsidegame.offside.models.PrivateGroup;
-import com.offsidegame.offside.models.PrivateGroupPlayer;
 import com.offsidegame.offside.models.PrivateGroupsInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.w3c.dom.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
 
 public class LobbyActivity extends AppCompatActivity implements Serializable {
+
+    //<editor-fold desc="REGION PROPERTIES">
+
+
+
     private final String activityName = "LobbyActivity";
     private final Context context = this;
     private final Activity thisActivity = this;
@@ -91,22 +87,30 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private TextView versionTextView;
     //private TextView playerBalanceTextView;
 ////////////////////////////////////////////////////////
-    private PrivateGroupAdapter privateGroupAdapter;
 
 
-    private ArrayList privateGroupsArrayList;
     private TextView balanceTextView;
     private TextView powerItemsTextView;
+    private TextView createPrivateGroupButtonTextView;
+    private TextView savePrivateGroupButtonTextView;
+
+
+    private LinearLayout privateGroupsRoot;
+
+
+
     private BottomNavigationView bottomNavigationView;
 
-    private ScrollView privateGroupsScrollView;
-    private ListView privateGroupsListView;
+    private LinearLayout[] viewRoots = new LinearLayout[4];
 
-    private LinearLayout [] viewRoots = new LinearLayout[4];
-//    private LinearLayout selectedGroupRoot;
-//    private LinearLayout profileRoot
-//    private LinearLayout shopRoot;
-//    private LinearLayout playRoot;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private TabLayout.OnTabSelectedListener listener;
+
+
+
+
+    //</editor-fold>
 
 
     @Override
@@ -123,12 +127,48 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 
+            //<editor-fold desc="REGION TABS ELEMENTS">
+
+            //set up viewPager
+            viewPager = (ViewPager) findViewById(R.id.l_tabs_container_view_pager);
+
+            //setup tabLayout
+            tabLayout = (TabLayout) findViewById(R.id.l_groups_tab_layout);
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            tabLayout.setupWithViewPager(viewPager);
+
+            listener = new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+
+                    viewPager.setCurrentItem(tab.getPosition());
+
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                }
+            };
+
+
+            //</editor-fold>
+
             playerPictureImageView = (ImageView) findViewById(R.id.l_player_picture_image_view);
             balanceTextView = (TextView) findViewById(R.id.l_balance_text_view);
             powerItemsTextView = (TextView) findViewById(R.id.l_power_items_text_view);
-            privateGroupsScrollView = (ScrollView) findViewById(R.id.l_private_groups_scroll_view);
-            privateGroupsListView = (ListView) findViewById(R.id.l_private_groups_list_view);
+            createPrivateGroupButtonTextView = (TextView) findViewById(R.id.l_create_private_group_button_text_view);
+            savePrivateGroupButtonTextView = (TextView) findViewById(R.id.l_save_private_group_button_text_view);
 
+            privateGroupsRoot = (LinearLayout) findViewById(R.id.l_private_groups_root);
+
+//            privateGroupsScrollView = (ScrollView) findViewById(R.id.l_private_groups_scroll_view);
+//            privateGroupsListView = (ListView) findViewById(R.id.l_private_groups_list_view);
 
             viewRoots[0] = (LinearLayout) findViewById(R.id.l_private_groups_root);
             viewRoots[1] = (LinearLayout) findViewById(R.id.l_profile_root);
@@ -137,7 +177,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             resetVisibility();
             viewRoots[0].setVisibility(View.VISIBLE);
-
 
             bottomNavigationView = (BottomNavigationView) findViewById(R.id.l_bottom_navigation_view);
 
@@ -150,7 +189,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     switch (item.getItemId()) {
                         case R.id.nav_action_groups:
                             viewRoots[0].setVisibility(View.VISIBLE);
-                            privateGroupsScrollView.setVisibility(View.VISIBLE);
+                            //privateGroupsScrollView.setVisibility(View.VISIBLE);
 
                             break;
                         case R.id.nav_action_profile:
@@ -170,22 +209,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 }
             });
 
-            privateGroupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                    //todo: setSelectedGroup , open activity viewPrivateGroup and get data on group from server based on groupId
-
-
-                }
-            });
-
-
-//            AssetManager am = context.getApplicationContext().getAssets();
-//
-//            TypeFace typeface = Typeface.createFromAsset(am, "fonts/OpenSansHebrew-Regular.ttf");
-//
-//            setTypeface(typeface1);
 
 
 //            userNameTextView = (TextView) findViewById(R.id.jg_user_name_text_view);
@@ -197,9 +221,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 //            playerProfilePictureUrl = playerProfilePictureUrl == null ? OffsideApplication.getDefaultProfilePictureUrl() : playerProfilePictureUrl;
 //            ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName);
 //
-//            //playerBalanceTextView = (TextView) findViewById(R.id.jg_player_balance_text_view);
+
 //
-//            gameCodeEditText = (EditText) findViewById(R.id.jg_game_code_edit_text);
+
 //            joinTextView = (TextView) findViewById(R.id.jg_join_text_view);
 //
 //            joinTextView.setOnClickListener(new View.OnClickListener() {
@@ -211,11 +235,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 //            });
 //
 //
-//            versionTextView = (TextView) findViewById(R.id.jg_version_text_view);
-//            versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
+            versionTextView = (TextView) findViewById(R.id.l_version_text_view);
+            versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
 //            joinGameRoot = (LinearLayout) findViewById(R.id.jg_join_game_root);
 //            loadingGameRoot = (LinearLayout) findViewById(R.id.jg_loading_root);
-//            createPrivateGameRoot = (LinearLayout) findViewById(R.id.jg_create_private_game_root);
+            createPrivateGameRoot = (LinearLayout) findViewById(R.id.l_create_private_game_root);
 //
 //            createPrivateGameButtonTextView = (TextView) findViewById(R.id.jg_create_private_game_button_text_view);
 //
@@ -226,7 +250,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 //            noAvailableGamesReturnLaterTextView = (TextView) findViewById(R.id.jg_no_available_games_return_later_text_view);
 //            loadingGameRoot.setVisibility(View.VISIBLE);
 //            joinGameRoot.setVisibility(View.GONE);
-//            createPrivateGameRoot.setVisibility(View.GONE);
+            createPrivateGameRoot.setVisibility(View.GONE);
 //            createPrivateGameButtonTextView.setVisibility(View.GONE);
 //            noAvailableGamesReturnLaterTextView.setVisibility(View.GONE);
 //
@@ -240,27 +264,28 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 //                }
 //            });
 //
-//            generatePrivateGameCodeButtonTextView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    //get language
-//                    String selectedLanguage = availableLanguagesSpinner.getSelectedItem().toString();
-//
-//                    //get game id
-//                    int selectedGamePosition = availableGamesSpinner.getSelectedItemPosition();
-//                    String gameId = getGameId(selectedGamePosition);
-//                    //get group messageText
-//
-//                    String groupName = privateGameNameEditText.getText().toString();
-//                    groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;
-//
-//
-//                    if (OffsideApplication.isBoundToSignalRService)
-//                        OffsideApplication.signalRService.generatePrivateGame(gameId, groupName, playerId, selectedLanguage);
-//                    else
-//                        throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
-//                }
-//            });
+            createPrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //get language
+                    String selectedLanguage = availableLanguagesSpinner.getSelectedItem().toString();
+
+                    String groupName = privateGameNameEditText.getText().toString();
+                    groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;
+
+                    //todo: change this call to a method that create the group only , no game entry is required
+
+                    if (OffsideApplication.isBoundToSignalRService)
+                        OffsideApplication.signalRService.createPrivateGroup( groupName, playerId, selectedLanguage);
+                    else
+                        throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
+
+                    createPrivateGameRoot.setVisibility(View.GONE);
+                    privateGroupsRoot.setVisibility(View.VISIBLE);
+                }
+            });
+
+
 
 
         } catch (Exception ex) {
@@ -272,7 +297,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     private void resetVisibility() {
 
-        for(LinearLayout layout : viewRoots){
+        privateGroupsRoot.setVisibility(View.VISIBLE);
+        createPrivateGameRoot.setVisibility(View.VISIBLE);
+        createPrivateGameButtonTextView.setVisibility(View.VISIBLE);
+
+        for (LinearLayout layout : viewRoots) {
             layout.setVisibility(View.GONE);
 
         }
@@ -297,6 +326,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(context);
+        tabLayout.removeOnTabSelectedListener(listener);
         super.onStop();
     }
 
@@ -534,15 +564,17 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName);
 
             //update groups stuff
-            PrivateGroup[] privateGroups = privateGroupsInfo.getPrivateGroups();
+//            PrivateGroup[] privateGroups = privateGroupsInfo.getPrivateGroups();
+//
+//            privateGroupsArrayList = new ArrayList(Arrays.asList(privateGroups));
+//
+//            privateGroupAdapter = new PrivateGroupAdapter(context, privateGroupsArrayList);
+//
+//            privateGroupsListView.setAdapter(privateGroupAdapter);
 
-            privateGroupsArrayList = new ArrayList(Arrays.asList(privateGroups));
+            this.addGroupsCategories();
+            tabLayout.addOnTabSelectedListener(listener);
 
-            privateGroupAdapter = new PrivateGroupAdapter(context, privateGroupsArrayList);
-
-            ListView privateGroupsListView = (ListView) findViewById(R.id.l_private_groups_list_view);
-
-            privateGroupsListView.setAdapter(privateGroupAdapter);
 
 
         } catch (Exception ex) {
@@ -577,6 +609,17 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         }
 
     }
+
+    private void addGroupsCategories(){
+
+        GroupsPagerAdapterFragment pagerAdapterFragment = new GroupsPagerAdapterFragment(this.getSupportFragmentManager());
+        pagerAdapterFragment.addFragment(new PrivateGroupsFragment());
+        pagerAdapterFragment.addFragment(new PublicGroupsFragment());
+        //set adapter to ViePager
+        viewPager.setAdapter(pagerAdapterFragment);
+    }
+
+
 
 
 }

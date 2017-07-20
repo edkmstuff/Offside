@@ -47,6 +47,7 @@ import java.util.Map;
 )
 public class OffsideApplication extends Application {
 
+    private static  Context context;
     private static String version = BuildConfig.VERSION_NAME;
     private static boolean isPlayerQuitGame = false;
     private static String messageTypeText = "TEXT";
@@ -198,11 +199,16 @@ public class OffsideApplication extends Application {
         OffsideApplication.privateGroupsInfo = privateGroupsInfo;
     }
 
+    public static Context getContext() {
+        return context;
+    }
+
 
     public void onCreate() {
 
         try {
             super.onCreate();
+            context = getApplicationContext();
             // Setup handler for uncaught exceptions.
             Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
                 @Override

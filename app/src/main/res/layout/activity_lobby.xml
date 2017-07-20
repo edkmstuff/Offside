@@ -44,7 +44,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/jg_version_text_view"
+                android:id="@+id/l_version_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -89,6 +89,26 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
+                <!-- profile picture-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="center"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
+
+
+                    <ImageView
+                        android:id="@+id/l_player_picture_image_view"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_card" />
+
+                </LinearLayout>
+
                 <!-- powers-->
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -120,6 +140,7 @@
                         android:src="@mipmap/ic_card" />
 
                 </LinearLayout>
+
                 <!-- coins -->
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -197,28 +218,15 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <!--<ImageView-->
-                <!--android:id="@+id/l_player_picture_image_view"-->
-                <!--android:layout_width="70dp"-->
-                <!--android:layout_height="70dp"-->
-                <!--android:scaleType="centerCrop"-->
-                <!--android:src="@mipmap/ic_logo_lobby" />-->
-
             <ImageView
-                android:id="@+id/l_player_picture_image_view"
-                android:layout_width="70dp"
+                android:layout_width="140dp"
                 android:layout_height="70dp"
                 android:scaleType="centerCrop"
-                 />
-
-            <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="FONT"-->
-                <!--android:textColor="@color/colorWhite" />-->
+                android:src="@mipmap/ic_app_logo_name_only" />
 
         </LinearLayout>
         <!--*************************************************-->
+
 
         <RelativeLayout
 
@@ -226,43 +234,58 @@
             android:layout_height="wrap_content">
 
 
-
-            <!--***************PRIVATE GROUPS*********************************************-->
+                <!--***************PRIVATE GROUPS*********************************************-->
             <LinearLayout
-                android:id="@+id/l_private_groups_root"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:layout_above="@+id/l_actions_root"
-
-                >
-
-                <!--list of groups-->
-                <ScrollView
-                    android:id="@+id/l_private_groups_scroll_view"
+                    android:id="@+id/l_private_groups_root"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scrollbars="none"
-                    android:scrollbarSize="0dp"
-                    android:fillViewport="true"
-
-
+                    android:orientation="vertical"
+                    android:layout_above="@+id/l_actions_root"
+                    android:visibility="visible"
                     >
-                    <ListView
-                        android:id="@+id/l_private_groups_list_view"
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/l_groups_tab_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:divider="@null"
-                        android:dividerHeight="0dp"
-                        android:listSelector="@android:color/transparent"
-                        android:transcriptMode="alwaysScroll"
-                        >
-
-                    </ListView>
-                </ScrollView>
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        app:tabMode="fixed"
+                        app:tabGravity="fill"
+                        />
 
 
-            </LinearLayout>
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/l_tabs_container_view_pager"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/l_groups_tab_layout"
+                        android:layout_centerHorizontal="true">
+                    </android.support.v4.view.ViewPager>
+                    <!--list of groups-->
+                    <!--<ScrollView-->
+                        <!--android:id="@+id/l_private_groups_scroll_view"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:scrollbars="none"-->
+                        <!--android:scrollbarSize="0dp"-->
+                        <!--android:fillViewport="true">-->
+                        <!--<ListView-->
+                            <!--android:id="@+id/l_private_groups_list_view"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:divider="@null"-->
+                            <!--android:dividerHeight="0dp"-->
+                            <!--android:listSelector="@android:color/transparent"-->
+                            <!--android:transcriptMode="alwaysScroll"-->
+                            <!--&gt;-->
+
+                        <!--</ListView>-->
+                    <!--</ScrollView>-->
+
+
+                </LinearLayout>
+
+
 
 
             <!--***************PROFILE*********************************************-->
@@ -328,7 +351,7 @@
 
                 <!--create  group-->
                 <LinearLayout
-                    android:id="@+id/l_create_team_root"
+                    android:id="@+id/l_create_private_group_root"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -346,7 +369,6 @@
                         android:text="צור קבוצה"
                         android:textColor="@color/colorWhite"
                         android:textDirection="rtl"
-
 
                         />
 
@@ -366,121 +388,85 @@
             </LinearLayout>
 
 
+            <!--Private game creation form-->
+            <LinearLayout
+                android:id="@+id/l_create_private_game_root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:visibility="gone">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/lbl_select_language"
+                    android:textColor="@color/grayText" />
+
+                <Spinner
+                    android:id="@+id/l_available_language_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/colorWhite"
+                    android:minHeight="50dp" />
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/lbl_select_name_for_club"
+                    android:textColor="@color/grayText" />
+
+                <EditText
+                    android:id="@+id/l_private_game_name_edit_text"
+                    style="@style/editTextClassic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/colorWhite"
+                    android:ems="10"
+                    android:hint="הכרישים"
+                    android:inputType="textEmailAddress"
+                    android:minHeight="50dp"
+                    android:paddingRight="5dp"
+                    android:textDirection="rtl" />
+
+                <TextView
+                    android:id="@+id/l_save_private_group_button_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorAccent"
+                    android:gravity="center"
+                    android:minHeight="50dp"
+                    android:minWidth="100dp"
+                    android:padding="5dp"
+                    android:text="@string/lbl_create_private_game_and_join"
+                    android:textColor="@color/chatPrimary"
+                    android:textDirection="rtl"
+
+
+                    />
+
+
+
+
+            </LinearLayout>
 
         </RelativeLayout>
 
 
 
-
-
-
-
-
-
-
-
-
     </LinearLayout>
 
-    <!--Private game creation form-->
-    <LinearLayout
-        android:id="@+id/jg_create_private_game_root"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="10dp"
-        android:visibility="gone">
 
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="40dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/friends_blue_transparent" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/lbl_select_language"
-            android:textColor="@color/grayText" />
-
-        <Spinner
-            android:id="@+id/jg_available_language_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:background="@color/colorWhite"
-            android:minHeight="50dp" />
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/lbl_select_name_for_club"
-            android:textColor="@color/grayText" />
-
-        <EditText
-            android:id="@+id/jg_private_game_name_edit_text"
-            style="@style/editTextClassic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:background="@color/colorWhite"
-            android:ems="10"
-            android:hint="הכרישים"
-            android:inputType="textEmailAddress"
-            android:minHeight="50dp"
-            android:paddingRight="5dp"
-            android:textDirection="rtl" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/lbl_select_game"
-            android:textColor="@color/grayText" />
-
-        <Spinner
-            android:id="@+id/jg_available_games_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:background="@color/colorWhite"
-            android:minHeight="50dp" />
-
-        <TextView
-            android:id="@+id/jg_generate_private_game_code_button_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorAccent"
-            android:gravity="center"
-            android:minHeight="50dp"
-            android:minWidth="100dp"
-            android:padding="5dp"
-            android:text="@string/lbl_create_private_game_and_join"
-            android:textColor="@color/chatPrimary"
-            android:textDirection="rtl"
-
-
-            />
-
-        <!--<TextView-->
-        <!--android:id="@+id/jg_private_game_code_text_view"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="12345"-->
-        <!--android:textSize="@dimen/OffsideLargeText" />-->
-
-
-    </LinearLayout>
 
 
 </LinearLayout>

@@ -107,11 +107,14 @@
     <string name="lbl_game_is_active">משחק פעיל</string>
     <string name="lbl_no_playing_players">אין שחקנים</string>
     <string name="lbl_now_playing">חברים כבר משחקים</string>
-    <string name="lbl_my_groups">הקבוצות שלי</string>
+    <string name="lbl_private_groups">קבוצות</string>
     <string name="lbl_my_profile">פרופיל</string>
     <string name="lbl_shop">חנות</string>
     <string name="lbl_play">שחק</string>
-    <string name="lbl_invite_friends">הזמן חברים</string>
+    <string name="lbl_start_a_game">התחל משחק</string>
+    <string name="title_activity_lobby_main">LobbyMainActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
 
 </resources>

@@ -501,6 +501,28 @@ public class SignalRService extends Service {
         });
     }
 
+    public void createPrivateGroup(String groupName, String playerId, String selectedLanguage) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+//Todo: implement this method - called by user create new private group
+
+//        PrivateGameCreationInfo privateGameCreationInfo = new PrivateGameCreationInfo(gameId, groupName, playerId, selectedLanguage);
+//
+//
+//        hub.invoke(String.class, "CreatePrivateGame", privateGameCreationInfo).done(new Action<String>() {
+//
+//            @Override
+//            public void run(String privateGameCode) throws Exception {
+//                //EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameCode));
+//            }
+//        }).onError(new ErrorCallback() {
+//            @Override
+//            public void onError(Throwable error) {
+//                ACRA.getErrorReporter().handleSilentException(error);
+//            }
+//        });
+    }
+
 
     public void postAnswer(final String gameId, final String playerId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
 

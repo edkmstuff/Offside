@@ -57,6 +57,10 @@ public class PrivateGroup {
         this.name = name;
     }
 
+    public String getGroupClassification(){
+        return name.length()> 6 ? "PRIVATE_GROUP" : "PUBLIC_GROUP";
+    }
+
 
 
 

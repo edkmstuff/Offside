@@ -7,7 +7,7 @@
         android:id="@+id/nav_action_groups"
         android:enabled="true"
         android:icon="@drawable/ic_action_groups"
-        android:title="@string/lbl_my_groups"
+        android:title="@string/lbl_private_groups"
         app:showAsAction="always">
 
     </item>
