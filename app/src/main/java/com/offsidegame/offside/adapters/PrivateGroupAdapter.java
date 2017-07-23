@@ -5,11 +5,10 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.ImageHelper;
@@ -21,19 +20,34 @@ import org.acra.ACRA;
 
 import java.util.ArrayList;
 
-
 /**
- * Created by user on 7/17/2017.
+ * Created by user on 7/20/2017.
  */
 
-public class PrivateGroupAdapter extends ArrayAdapter<PrivateGroup> {
+public class PrivateGroupAdapter extends BaseAdapter {
 
     private Context context;
+    private ArrayList<PrivateGroup> privateGroups;
+
 
     public PrivateGroupAdapter(Context context, ArrayList<PrivateGroup> privateGroups) {
-        super(context, 0, privateGroups);
         this.context = context;
+        this.privateGroups = privateGroups;
+    }
 
+    @Override
+    public int getCount() {
+        return privateGroups.size();
+    }
+
+    @Override
+    public PrivateGroup getItem(int position) {
+        return privateGroups.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     private class ViewHolder {
@@ -51,10 +65,10 @@ public class PrivateGroupAdapter extends ArrayAdapter<PrivateGroup> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         try {
-            ViewHolder viewHolder;
+            PrivateGroupAdapter.ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.private_group_item_1, parent, false);
-                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(context).inflate(R.layout.private_group_item_1, parent, false);
+                viewHolder = new PrivateGroupAdapter.ViewHolder();
 
                 //viewHolder.incomingProfilePictureImageView = (ImageView) convertView.findViewById(R.id.cm_incoming_profile_picture_image_view);
                 viewHolder.groupNameTextView = (TextView) convertView.findViewById(R.id.pg_group_name_text_view);
@@ -67,7 +81,7 @@ public class PrivateGroupAdapter extends ArrayAdapter<PrivateGroup> {
 
 
             } else
-                viewHolder = (ViewHolder) convertView.getTag();
+                viewHolder = (PrivateGroupAdapter.ViewHolder) convertView.getTag();
 
             viewHolder.privateGroup = getItem(position);
             if (viewHolder.privateGroup == null)
@@ -109,7 +123,8 @@ public class PrivateGroupAdapter extends ArrayAdapter<PrivateGroup> {
             convertView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context,"item clicked" ,Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(context,"item clicked" ,Toast.LENGTH_SHORT).show();
+                    //ToDo: open the group detailed activity
                 }
             });
 
@@ -127,8 +142,6 @@ public class PrivateGroupAdapter extends ArrayAdapter<PrivateGroup> {
         return null;
 
     }
-
-
 
 
 }

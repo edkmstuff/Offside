@@ -2,11 +2,9 @@ package com.offsidegame.offside.activities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
@@ -25,21 +23,15 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.adapters.GroupsPagerAdapterFragment;
+import com.offsidegame.offside.adapters.CustomTabsFragmentPagerAdapter;
 
-import com.offsidegame.offside.events.ActiveGameEvent;
-import com.offsidegame.offside.events.AvailableGamesEvent;
 import com.offsidegame.offside.events.AvailableLanguagesEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
-import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.fragments.PrivateGroupsFragment;
 
-import com.offsidegame.offside.fragments.PublicGroupsFragment;
 import com.offsidegame.offside.helpers.ImageHelper;
-import com.offsidegame.offside.models.AvailableGame;
-import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PrivateGroupsInfo;
@@ -69,6 +61,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private TabLayout.OnTabSelectedListener listener;
+
+    private TabLayout leaguesSelectionTabLayout;
+    private ViewPager leaguesPagesViewPager;
+    private TabLayout.OnTabSelectedListener leaguesSelectionListener;
 
     //loading
     private LinearLayout loadingGameRoot;
@@ -116,6 +112,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             //set up viewPager
             viewPager = (ViewPager) findViewById(R.id.l_tabs_container_view_pager);
 
+
             //setup tabLayout
             tabLayout = (TabLayout) findViewById(R.id.l_groups_tab_layout);
             tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -142,6 +139,42 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
             //</editor-fold>
+
+            //<editor-fold desc="REGION TABS LEAGUES SELECTION">
+
+            //set up viewPager
+            leaguesPagesViewPager = (ViewPager) findViewById(R.id.l_leagues_pages_view_pager);
+
+
+            //setup tabLayout
+            leaguesSelectionTabLayout = (TabLayout) findViewById(R.id.l_leagues_selection_tab_layout);
+            leaguesSelectionTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            leaguesSelectionTabLayout.setupWithViewPager(leaguesPagesViewPager);
+
+            leaguesSelectionListener = new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+
+                    leaguesPagesViewPager.setCurrentItem(tab.getPosition());
+
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                    //leaguesPagesViewPager.setCurrentItem(tab.getPosition());
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                    //leaguesPagesViewPager.setCurrentItem(tab.getPosition());
+                }
+            };
+
+
+            //</editor-fold>
+
+
+
 
 
             versionTextView = (TextView) findViewById(R.id.l_version_text_view);
@@ -291,6 +324,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     public void onStop() {
         EventBus.getDefault().unregister(context);
         tabLayout.removeOnTabSelectedListener(listener);
+        leaguesSelectionTabLayout.removeOnTabSelectedListener(leaguesSelectionListener);
         super.onStop();
     }
 
@@ -475,9 +509,20 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     private void addGroupsCategories(){
 
-        GroupsPagerAdapterFragment pagerAdapterFragment = new GroupsPagerAdapterFragment(this.getSupportFragmentManager());
-        pagerAdapterFragment.addFragment(new PrivateGroupsFragment());
-        pagerAdapterFragment.addFragment(new PublicGroupsFragment());
+        CustomTabsFragmentPagerAdapter pagerAdapterFragment = new CustomTabsFragmentPagerAdapter(this.getSupportFragmentManager());
+        PrivateGroupsFragment privateGroupsFragment = new PrivateGroupsFragment();
+        Bundle privateGroupsFragmentBundle  = new Bundle();
+        privateGroupsFragmentBundle.putString("groupType", "PRIVATE_GROUP");
+        privateGroupsFragment.setArguments(privateGroupsFragmentBundle);
+        pagerAdapterFragment.addFragment(privateGroupsFragment);
+
+
+        PrivateGroupsFragment publicGroupsFragment = new PrivateGroupsFragment();
+        Bundle publicGroupsFragmentBundle  = new Bundle();
+        publicGroupsFragmentBundle.putString("groupType", "PUBLIC_GROUP");
+        publicGroupsFragment.setArguments(publicGroupsFragmentBundle);
+
+        pagerAdapterFragment.addFragment(publicGroupsFragment);
         //set adapter to ViePager
         viewPager.setAdapter(pagerAdapterFragment);
     }

@@ -11,20 +11,18 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.adapters.CustomAdapter;
+import com.offsidegame.offside.adapters.PrivateGroupAdapter;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 
 public class PrivateGroupsFragment extends Fragment{
 
     private PrivateGroup[] privateGroups;
-    private static String GROUP_CLASSIFICATION_NAME = "PRIVATE_GROUP";
+    private String groupType;
+
 
 
 
@@ -37,8 +35,10 @@ public class PrivateGroupsFragment extends Fragment{
             return rootView;
 
         ListView listView = (ListView) rootView.findViewById(R.id.l_private_groups_list_view);
-        CustomAdapter customAdapter = new CustomAdapter(this.getActivity(), getPrivateGroups());
-        listView.setAdapter(customAdapter);
+        PrivateGroupAdapter privateGroupAdapter = new PrivateGroupAdapter(this.getActivity(), getPrivateGroups());
+        listView.setAdapter(privateGroupAdapter);
+
+
 
 
 
@@ -47,14 +47,13 @@ public class PrivateGroupsFragment extends Fragment{
     }
 
     private ArrayList<PrivateGroup> getPrivateGroups(){
-
+        groupType = this.getArguments().getString("groupType");
         privateGroups = OffsideApplication.getPrivateGroupsInfo().getPrivateGroups();
 
-        //ArrayList privateGroupsArrayList = new ArrayList(Arrays.asList(privateGroups));
         ArrayList filteredGroupsList = new ArrayList<>();
 
         for(PrivateGroup privateGroup: privateGroups){
-            if(privateGroup.getGroupClassification().equals(GROUP_CLASSIFICATION_NAME))
+            if(privateGroup.getGroupClassification().equals(groupType))
                 filteredGroupsList.add(privateGroup);
         }
 
@@ -66,7 +65,12 @@ public class PrivateGroupsFragment extends Fragment{
 
     @Override
     public String toString() {
-        String title = "הקבוצות שלי";
+        String title = "לא ידוע";
+        if (groupType.equals("PRIVATE_GROUP"))
+            title = "הקבוצות שלי";
+        else if (groupType.equals("PUBLIC_GROUP"))
+            title = "קבוצות ציבוריות";
+
         return title;
 
     }

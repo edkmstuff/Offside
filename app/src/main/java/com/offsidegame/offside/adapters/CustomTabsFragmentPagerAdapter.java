@@ -11,11 +11,11 @@ import java.util.ArrayList;
  * Created by user on 7/20/2017.
  */
 
-public class GroupsPagerAdapterFragment extends FragmentPagerAdapter {
+public class CustomTabsFragmentPagerAdapter extends FragmentPagerAdapter {
 
     private ArrayList<Fragment> fragments = new ArrayList<>();
 
-    public GroupsPagerAdapterFragment(FragmentManager fm) {
+    public CustomTabsFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
