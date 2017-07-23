@@ -512,14 +512,14 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         CustomTabsFragmentPagerAdapter pagerAdapterFragment = new CustomTabsFragmentPagerAdapter(this.getSupportFragmentManager());
         PrivateGroupsFragment privateGroupsFragment = new PrivateGroupsFragment();
         Bundle privateGroupsFragmentBundle  = new Bundle();
-        privateGroupsFragmentBundle.putString("groupType", "PRIVATE_GROUP");
+        privateGroupsFragmentBundle.putString(getString(R.string.key_group_type), getString(R.string.key_private_group_name));
         privateGroupsFragment.setArguments(privateGroupsFragmentBundle);
         pagerAdapterFragment.addFragment(privateGroupsFragment);
 
 
         PrivateGroupsFragment publicGroupsFragment = new PrivateGroupsFragment();
         Bundle publicGroupsFragmentBundle  = new Bundle();
-        publicGroupsFragmentBundle.putString("groupType", "PUBLIC_GROUP");
+        publicGroupsFragmentBundle.putString(getString(R.string.key_group_type), getString(R.string.key_public_group_name));
         publicGroupsFragment.setArguments(publicGroupsFragmentBundle);
 
         pagerAdapterFragment.addFragment(publicGroupsFragment);
