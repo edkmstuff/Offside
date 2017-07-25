@@ -1,0 +1,226 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:components="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:gravity="center"
+    android:layoutDirection="ltr"
+    android:orientation="vertical"
+    android:padding="2dp"
+    tools:context="com.offsidegame.offside.activities.LobbyActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="#50000000"
+        android:minHeight="140dp">
+
+        <LinearLayout
+            android:id="@+id/ag_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical">
+
+            <!-- MATCH -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:weightSum="4">
+
+                <!--home team -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ag_home_team_logo_image_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/slot_heineken" />
+
+                    <TextView
+                        android:id="@+id/ag_home_team_name_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="HOME TEAM"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/OffsideSmallText"
+
+                        />
+
+
+                </LinearLayout>
+
+                <!-- game status and start time-->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/ag_start_time_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="21:45" />
+
+                    <TextView
+                        android:id="@+id/ag_start_date_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="20/4/17" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorBlue"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/ag_join_game_button_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="כניסה למשחק"
+                            android:textColor="@color/colorWhite" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <!--away team-->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/ag_away_team_logo_image_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/slot_heineken" />
+
+                    <TextView
+                        android:id="@+id/ag_away_team_name_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="HOME TEAM"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/OffsideSmallText"
+
+                        />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <!--PLAYERS PLAYING THE GAME-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/ag_players_count_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="7 חברים רשומים"
+                    android:textColor="@color/colorWhite"/>
+
+                <HorizontalScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp">
+
+                    <LinearLayout
+                        android:id="@+id/ag_players_play_in_game_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:animateLayoutChanges="true"
+                        android:gravity="center_vertical"
+                        android:layoutDirection="ltr"
+                        android:orientation="horizontal"
+                        android:padding="5dp">
+
+                    </LinearLayout>
+
+                </HorizontalScrollView>
+
+
+            </LinearLayout>
+
+
+            <!--<TextView-->
+            <!--android:id="@+id/pg_group_name_text_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="@dimen/OffsideMediumText"-->
+            <!--android:textColor="@color/colorWhite"-->
+            <!--android:text="the sharks"-->
+            <!--/>-->
+            <!--<TextView-->
+            <!--android:id="@+id/pg_group_game_status_text_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="משחק פעיל"-->
+            <!--android:textColor="@color/colorWhite"-->
+            <!--android:background="@color/colorActive"-->
+            <!--android:padding="5dp"-->
+            <!--android:textStyle="bold"-->
+            <!--android:layout_marginTop="4dp"-->
+            <!--/>-->
+
+            <!--<HorizontalScrollView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginTop="4dp">-->
+
+            <!--<LinearLayout-->
+            <!--android:id="@+id/pg_players_play_in_group_root"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:animateLayoutChanges="true"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:layoutDirection="ltr"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:padding="5dp">-->
+
+            <!--</LinearLayout>-->
+
+            <!--</HorizontalScrollView>-->
+
+
+            <!--<TextView-->
+            <!--android:id="@+id/pg_total_playing_players_in_group_text_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="12sp"-->
+            <!--android:textColor="@color/colorWhite"-->
+            <!--android:text="12 חברים כבר משחקים"-->
+            <!--android:layout_marginTop="4dp"-->
+            <!--android:padding="5dp"-->
+            <!--/>-->
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

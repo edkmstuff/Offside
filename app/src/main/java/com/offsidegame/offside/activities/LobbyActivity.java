@@ -395,7 +395,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     if (gameId != null && gameId.length() > 0 && gameCode != null && gameCode.length() > 0)
                         OffsideApplication.signalRService.isGameActive(gameId, gameCode);
                     //OffsideApplication.signalRService.getAvailableGames();
-                    OffsideApplication.signalRService.RequestPrivateGamesInfo(playerId);
+                    OffsideApplication.signalRService.requestPrivateGamesInfo(playerId);
+                    OffsideApplication.signalRService.requestAvailableGames(playerId);
 
 
                     //OffsideApplication.signalRService.getAvailableLanguages();

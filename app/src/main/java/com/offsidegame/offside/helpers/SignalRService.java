@@ -269,6 +269,13 @@ public class SignalRService extends Service {
             }
         }, PrivateGroupsInfo.class);
 
+        hub.on("PrivateGroupsReceived", new SubscriptionHandler1<AvailableGame[]>() {
+            @Override
+            public void run(AvailableGame[] availableGames) {
+                EventBus.getDefault().post(availableGames);
+            }
+        }, AvailableGame[].class);
+
 
 
         /*
@@ -662,10 +669,15 @@ public class SignalRService extends Service {
 
     }
 
-    public void RequestPrivateGamesInfo(String playerId) {
+    public void requestPrivateGamesInfo(String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         hub.invoke("RequestPrivateGroupsInfo", playerId);
+    }
+    public void requestAvailableGames(String playerId) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke("RequestActiveGames", playerId);
     }
 
 
