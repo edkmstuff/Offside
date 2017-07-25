@@ -115,6 +115,9 @@
     <string name="title_activity_lobby_main">LobbyMainActivity</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="key_group_type">groupType</string>
+    <string name="key_private_group_name">PRIVATE_GROUP</string>
+    <string name="key_public_group_name">PUBLIC_GROUP</string>
 
 
 </resources>
