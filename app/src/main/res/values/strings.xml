@@ -121,6 +121,7 @@
     <string name="lbl_unknown">לא ידוע</string>
     <string name="lbl_my_private_groups">הקבוצות שלי</string>
     <string name="lbl_public_groups">קבוצות ציבוריות</string>
+    <string name="key_league_type">leagueType</string>
 
 
 </resources>

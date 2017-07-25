@@ -1,8 +1,6 @@
 package com.offsidegame.offside.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.widget.TextView;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.ImageHelper;
-import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupPlayer;
@@ -23,7 +20,6 @@ import org.acra.ACRA;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 
 /**
@@ -71,7 +67,7 @@ public class PrivateGroupAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         try {
-            PrivateGroupAdapter.ViewHolder viewHolder;
+            final PrivateGroupAdapter.ViewHolder viewHolder;
             if (convertView == null) {
                 convertView = LayoutInflater.from(context).inflate(R.layout.private_group_item_1, parent, false);
                 viewHolder = new PrivateGroupAdapter.ViewHolder();
@@ -151,7 +147,7 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     //Toast.makeText(context,"item clicked" ,Toast.LENGTH_SHORT).show();
-                    //ToDo: open the group detailed activity
+                    OffsideApplication.setSelectedPrivateGroup(viewHolder.privateGroup);
                 }
             });
 

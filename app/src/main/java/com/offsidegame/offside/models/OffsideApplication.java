@@ -5,25 +5,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Binder;
 import android.os.IBinder;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.firebase.ui.auth.AuthUI;
 import com.offsidegame.offside.BuildConfig;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ScoreboardEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.FontsOverride;
-import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.helpers.SignalRService;
-import com.offsidegame.offside.helpers.TypefaceUtil;
 
 import org.acra.*;
 import org.acra.annotation.*;
@@ -92,10 +81,10 @@ public class OffsideApplication extends Application {
 
     private static Scoreboard scoreboard;
 
-
-
     private static PrivateGroupsInfo privateGroupsInfo;
     private static AvailableGame[] availableGames;
+
+    private  static PrivateGroup selectedPrivateGroup;
 
 
 
@@ -207,12 +196,21 @@ public class OffsideApplication extends Application {
         return availableGames;
     }
 
-    public static void setAvailableGame(AvailableGame[] availableGame) {
-        OffsideApplication.availableGames = availableGame;
+    public static void setAvailableGames(AvailableGame[] availableGames) {
+        OffsideApplication.availableGames = availableGames;
     }
 
     public static Context getContext() {
         return context;
+    }
+
+    public static PrivateGroup getSelectedPrivateGroup() {
+        return selectedPrivateGroup;
+    }
+
+    public static void setSelectedPrivateGroup(PrivateGroup selectedPrivateGroup) {
+        OffsideApplication.selectedPrivateGroup = selectedPrivateGroup;
+        EventBus.getDefault().post(OffsideApplication.selectedPrivateGroup);
     }
 
 

@@ -46,7 +46,8 @@
                         android:id="@+id/ag_home_team_logo_image_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/slot_heineken" />
+                        android:src="@drawable/slot_heineken"
+                        />
 
                     <TextView
                         android:id="@+id/ag_home_team_name_text_view"

@@ -3,6 +3,7 @@ package com.offsidegame.offside.fragments;
 /**
  * Created by user on 7/19/2017.
  */
+
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,12 +19,10 @@ import com.offsidegame.offside.models.PrivateGroup;
 import java.util.ArrayList;
 
 
-public class PrivateGroupsFragment extends Fragment{
+public class PrivateGroupsFragment extends Fragment {
 
     private PrivateGroup[] privateGroups;
     private String groupType;
-
-
 
 
     @Override
@@ -31,7 +30,7 @@ public class PrivateGroupsFragment extends Fragment{
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_private_groups, container, false);
 
-        if(OffsideApplication.getPrivateGroupsInfo()==null)
+        if (OffsideApplication.getPrivateGroupsInfo() == null)
             return rootView;
 
         ListView listView = (ListView) rootView.findViewById(R.id.l_private_groups_list_view);
@@ -39,21 +38,17 @@ public class PrivateGroupsFragment extends Fragment{
         listView.setAdapter(privateGroupAdapter);
 
 
-
-
-
-
         return rootView;
     }
 
-    private ArrayList<PrivateGroup> getPrivateGroups(){
+    private ArrayList<PrivateGroup> getPrivateGroups() {
         groupType = this.getArguments().getString(getString(R.string.key_group_type));
         privateGroups = OffsideApplication.getPrivateGroupsInfo().getPrivateGroups();
 
         ArrayList filteredGroupsList = new ArrayList<>();
 
-        for(PrivateGroup privateGroup: privateGroups){
-            if(privateGroup.getGroupClassification().equals(groupType))
+        for (PrivateGroup privateGroup : privateGroups) {
+            if (privateGroup.getGroupClassification().equals(groupType))
                 filteredGroupsList.add(privateGroup);
         }
 
@@ -62,10 +57,13 @@ public class PrivateGroupsFragment extends Fragment{
     }
 
 
-
     @Override
     public String toString() {
+        groupType = this.getArguments().getString(getString(R.string.key_group_type));
         String title = getString(R.string.lbl_unknown);
+        if (groupType == null)
+            return title;
+
         if (groupType.equals(getString(R.string.key_private_group_name)))
             title = getString(R.string.lbl_my_private_groups);
         else if (groupType.equals(getString(R.string.key_public_group_name)))
@@ -74,7 +72,6 @@ public class PrivateGroupsFragment extends Fragment{
         return title;
 
     }
-
 
 
 }

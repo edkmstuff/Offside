@@ -13,10 +13,10 @@ import android.widget.ListView;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.AvailableGamesAdapter;
-import com.offsidegame.offside.adapters.PrivateGroupAdapter;
+
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.PrivateGroup;
+
 
 import java.util.ArrayList;
 
@@ -43,8 +43,9 @@ public class AvailableGamesFragment extends Fragment {
         return rootView;
     }
 
+
     private ArrayList<AvailableGame> getAvailableGames() {
-        leagueType = this.getArguments().getString("leagueType");
+        leagueType = leagueType != null ? leagueType :this.getArguments().getString("leagueType");
         availableGames = OffsideApplication.getAvailableGames();
 
         ArrayList filteredAvailableGamesList = new ArrayList<>();
@@ -61,8 +62,24 @@ public class AvailableGamesFragment extends Fragment {
 
     @Override
     public String toString() {
+        leagueType = this.getArguments().getString("leagueType");
         String title = "לא ידוע";
-        if (leagueType.equals("champions"))
+        if (leagueType == null)
+            return title;
+        if (leagueType.equals("PL"))
+            title = "ליגת האלופות";
+        else if (leagueType.equals("isr1"))
+            title = "ליגת העל";
+
+        return title;
+
+    }
+
+    public String getTitle() {
+        String title = "לא ידוע";
+        if (leagueType == null)
+            return title;
+        if (leagueType.equals("PL"))
             title = "ליגת האלופות";
         else if (leagueType.equals("isr1"))
             title = "ליגת העל";
