@@ -93,6 +93,7 @@ public class OffsideApplication extends Application {
 
 
     private static PrivateGroupsInfo privateGroupsInfo;
+    private static AvailableGame[] availableGames;
 
 
 
@@ -195,8 +196,17 @@ public class OffsideApplication extends Application {
         return privateGroupsInfo;
     }
 
+
     public static void setPrivateGroupsInfo(PrivateGroupsInfo privateGroupsInfo) {
         OffsideApplication.privateGroupsInfo = privateGroupsInfo;
+    }
+
+    public static AvailableGame[] getAvailableGames() {
+        return availableGames;
+    }
+
+    public static void setAvailableGame(AvailableGame[] availableGame) {
+        OffsideApplication.availableGames = availableGame;
     }
 
     public static Context getContext() {
