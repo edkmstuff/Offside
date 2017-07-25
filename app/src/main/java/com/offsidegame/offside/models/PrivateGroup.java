@@ -14,9 +14,11 @@ public class PrivateGroup {
     private String name;
     @com.google.gson.annotations.SerializedName("PGP")
     private PrivateGroupPlayer [] privateGroupPlayers;
-
     @com.google.gson.annotations.SerializedName("LP")
     private Date lastPlayed;
+    @com.google.gson.annotations.SerializedName("GT")
+    private String groupType;
+
 
     public int getPlayersCount(){
         if(privateGroupPlayers == null)
@@ -30,7 +32,7 @@ public class PrivateGroup {
             return 0;
         int activePlayersCount=0;
         for(PrivateGroupPlayer player : privateGroupPlayers){
-            if(player.getActive())
+            if(player.getActive().booleanValue())
                 activePlayersCount++;
         }
         return activePlayersCount;
@@ -79,5 +81,13 @@ public class PrivateGroup {
 
     public void setPrivateGroupPlayers(PrivateGroupPlayer[] privateGroupPlayers) {
         this.privateGroupPlayers = privateGroupPlayers;
+    }
+
+    public String getGroupType() {
+        return groupType;
+    }
+
+    public void setGroupType(String groupType) {
+        this.groupType = groupType;
     }
 }

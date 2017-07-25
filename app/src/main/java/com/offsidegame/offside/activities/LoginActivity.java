@@ -1,15 +1,10 @@
 package com.offsidegame.offside.activities;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Process;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
@@ -26,7 +21,6 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.ImageHelper;
-import com.offsidegame.offside.helpers.SignalRService;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.User;
 
@@ -49,27 +43,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     private LinearLayout loadingRoot;
     private boolean isInLoginProcess = false;
-
-//    private   SignalRService signalRService;
-//    private  boolean isBoundToSignalRService = false;
-//
-//    private final ServiceConnection signalRServiceConnection = new ServiceConnection() {
-//        @Override
-//        public void onServiceConnected(ComponentName className, IBinder service) {
-//            // We've bound to SignalRService, cast the IBinder and get SignalRService instance
-//            SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
-//            signalRService = binder.getService();
-//            isBoundToSignalRService = true;
-//            OffsideApplication.signalRService = signalRService;
-//            OffsideApplication.isBoundToSignalRService = isBoundToSignalRService;
-//            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
-//        }
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName className) {
-//            isBoundToSignalRService = false;
-//        }
-//    };
 
 
     @Override
@@ -106,9 +79,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     public void onResume() {
 
         super.onResume();
-//        Intent intent = new Intent();
-//        intent.setClass(context, SignalRService.class);
-//        bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
+
         EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
 
     }
@@ -123,12 +94,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(context);
-        // Unbind from the service
-//        if (isBoundToSignalRService) {
-//            unbindService(signalRServiceConnection);
-//            isBoundToSignalRService = false;
-//        }
-
         super.onStop();
     }
 
@@ -195,18 +160,41 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                 handleSuccessfulLogin();
 
             } else { //not signed in
-                startActivityForResult(AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setProviders(Arrays.asList(
-                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
-                        //.setTosUrl("https://superapp.example.com/terms-of-service.html")
-                        .setIsSmartLockEnabled(false)
-                        //.setIsSmartLockEnabled(!BuildConfig.DEBUG)
-                        .setTheme(R.style.GreenTheme)
-                        .setLogo(R.drawable.app_logo_25)
-                        .build(), RC_SIGN_IN);
+
+                AuthUI.IdpConfig facebookIdp = new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER)
+                        .setPermissions(Arrays.asList("user_friends")).build();
+
+                startActivityForResult(
+                        AuthUI.getInstance()
+                                .createSignInIntentBuilder()
+                                .setAvailableProviders(
+                                        Arrays.asList(facebookIdp,
+                                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build(),
+                                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()
+                                                ))
+                                //.setTosUrl("https://superapp.example.com/terms-of-service.html")
+                                //.setPrivacyPolicyUrl("https://superapp.example.com/privacy-policy.html")
+                                .setIsSmartLockEnabled(false)
+                                //.setIsSmartLockEnabled(!BuildConfig.DEBUG)
+                                .setTheme(R.style.BlueTheme)
+                                .setLogo(R.drawable.app_logo_25)
+
+                                .build(),
+                        RC_SIGN_IN);
+
+//                startActivityForResult(AuthUI.getInstance()
+//                        .createSignInIntentBuilder()
+//                        .setProviders(Arrays.asList(
+//                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+//                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+//                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
+//                        //.setTosUrl("https://superapp.example.com/terms-of-service.html")
+//                        .setIsSmartLockEnabled(false)
+//                        //.setIsSmartLockEnabled(!BuildConfig.DEBUG)
+//                        .setTheme(R.style.BlueTheme)
+//                        .setLogo(R.drawable.app_logo_25)
+//                        .build(), RC_SIGN_IN);
             }
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -221,7 +209,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
 
         String playerId = player.getUid();
-        String playerDisplayName = player.getDisplayName();
+        String playerDisplayName = (player.getDisplayName() == null || player.getDisplayName().equals("") ) ? "NO NAME" : player.getDisplayName() ;
         String playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
         String playerEmail = player.getEmail();
 
@@ -231,7 +219,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         // in case user does not have profile picture, we generate image with Initials
         if (playerProfilePictureUrl == null) {
 
-            String displayName = FirebaseAuth.getInstance().getCurrentUser().getDisplayName().toUpperCase();
+            String displayName = playerDisplayName.toUpperCase();
             String[] displayNameParts = displayName.trim().split(" ");
             String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
             Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context);
@@ -242,14 +230,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
 
         }
-//        else {
-//
-//            Bitmap profilePicture = ImageHelper.getBitmapFromURL(playerProfilePictureUrl);
-//            byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
-//            String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
-//            isUserImageSaved = OffsideApplication.signalRService.saveImageInDatabase(playerId, imageString);
-//
-//        }
+
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();

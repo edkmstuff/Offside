@@ -2,12 +2,14 @@ package com.offsidegame.offside.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -20,6 +22,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.ads.formats.NativeAd;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
@@ -65,12 +71,14 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private TabLayout leaguesSelectionTabLayout;
     private ViewPager leaguesPagesViewPager;
     private TabLayout.OnTabSelectedListener leaguesSelectionListener;
+    private ImageView settingsButtonImageView;
 
     //loading
-    private LinearLayout loadingGameRoot;
+    private LinearLayout loadingRoot;
     private TextView versionTextView;
 
     //playerAssets
+    private LinearLayout playerInfoRoot;
     private TextView balanceTextView;
     private TextView powerItemsTextView;
 
@@ -90,6 +98,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private String[] availableLanguages;
     private TextView noAvailableGamesReturnLaterTextView;
     private TextView savePrivateGroupButtonTextView;
+
     //</editor-fold>
 
 
@@ -106,6 +115,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             playerId = player.getUid();
 
 //////////////////////////////////////////////////////////////////////////////////////////////
+            loadingRoot = (LinearLayout) findViewById(R.id.l_loading_root);
+            playerInfoRoot = (LinearLayout) findViewById(R.id.l_player_info_root);
+
 
             //<editor-fold desc="REGION TABS ELEMENTS">
 
@@ -173,9 +185,21 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             //</editor-fold>
 
-
-
-
+            settingsButtonImageView = (ImageView) findViewById(R.id.l_settings_button_image_view);
+            settingsButtonImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AuthUI.getInstance()
+                            .signOut((FragmentActivity) context)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    // user is now signed out
+                                    startActivity(new Intent(context, LoginActivity.class));
+                                    finish();
+                                }
+                            });
+                }
+            });
 
             versionTextView = (TextView) findViewById(R.id.l_version_text_view);
             versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
@@ -294,6 +318,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     private void resetVisibility() {
 
+        loadingRoot.setVisibility(View.VISIBLE);
+        playerInfoRoot.setVisibility(View.GONE);
         privateGroupsRoot.setVisibility(View.VISIBLE);
         createPrivateGroupButtonTextView.setVisibility(View.VISIBLE);
         createPrivateGroupFormRoot.setVisibility(View.GONE);
@@ -455,24 +481,21 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             PlayerAssets playerAssets = privateGroupsInfo.getPlayerAssets();
             int balance = playerAssets.getBalance();
             int powerItems = playerAssets.getPowerItems();
-            String playerImageUrl = playerAssets.getImageUrl();
+            String playerAssetImageUrl = playerAssets.getImageUrl();
             balanceTextView.setText(Integer.toString(balance));
             powerItemsTextView.setText(Integer.toString(powerItems));
-            playerProfilePictureUrl = settings.getString(getString(R.string.player_profile_picture_url_key), null);
-            playerProfilePictureUrl = playerProfilePictureUrl == null ? playerImageUrl : playerProfilePictureUrl;
+            String pictureUrlFromSettings = settings.getString(getString(R.string.player_profile_picture_url_key), null);
+            playerProfilePictureUrl = pictureUrlFromSettings != null ? pictureUrlFromSettings : playerAssetImageUrl;
             ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName);
 
+            playerInfoRoot.setVisibility(View.VISIBLE);
+
+
             //update groups stuff
-//            PrivateGroup[] privateGroups = privateGroupsInfo.getPrivateGroups();
-//
-//            privateGroupsArrayList = new ArrayList(Arrays.asList(privateGroups));
-//
-//            privateGroupAdapter = new PrivateGroupAdapter(context, privateGroupsArrayList);
-//
-//            privateGroupsListView.setAdapter(privateGroupAdapter);
 
             this.addGroupsCategories();
             tabLayout.addOnTabSelectedListener(listener);
+            loadingRoot.setVisibility(View.GONE);
 
 
 
@@ -526,6 +549,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         //set adapter to ViePager
         viewPager.setAdapter(pagerAdapterFragment);
     }
+
+
+
 
 
 

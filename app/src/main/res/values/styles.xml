@@ -3,6 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="AppTheme.Base">
 
+
     </style>
 
     <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
@@ -25,15 +26,16 @@
 
     <!-- Login Style -->
 
-    <style name="GreenTheme" parent="AppTheme.Base">
+    <style name="BlueTheme" parent="AppTheme.Base">
         <item name="colorPrimary">@color/colorWhite</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/colorAccent</item>
         <item name="colorControlActivated">@color/colorAccent</item>
         <item name="colorControlHighlight">#00B0FF</item>
-        <item name="android:windowBackground">@color/windowBackground</item>
         <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:windowBackground">@drawable/lobby_background</item>
+
     </style>
 
 

@@ -76,8 +76,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    public final String ip = new String("192.168.1.140:8080");
-    //public final String ip = new String("10.0.0.17:8080");
+    //public final String ip = new String("192.168.1.140:8080");
+    public final String ip = new String("10.0.0.17:8080");
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
 
@@ -504,7 +504,7 @@ public class SignalRService extends Service {
     public void createPrivateGroup(String groupName, String playerId, String selectedLanguage) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-//Todo: implement this method - called by user create new private group
+   //Todo: implement this method - called by user create new private group
 
 //        PrivateGameCreationInfo privateGameCreationInfo = new PrivateGameCreationInfo(gameId, groupName, playerId, selectedLanguage);
 //
@@ -616,41 +616,11 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return false;
 
-        hub.invoke(Player.class, "SaveLoggedInUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri()).done(new Action<Player>() {
-            @Override
-            public void run(Player player) throws Exception {
-                EventBus.getDefault().post(player);
-            }
-
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
+        hub.invoke(Player.class, "SaveLoggedInUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri());
 
         return true;
     }
 
-//    public boolean setOffsideCoins(String gameId, String playerId, int offsideCoins, boolean isDueToRewardVideo) {
-//        if (!(hubConnection.getState() == ConnectionState.Connected))
-//            return false;
-//
-//        hub.invoke(Integer.class, "SetOffsideCoins", gameId, playerId, offsideCoins, isDueToRewardVideo).done(new Action<Integer>() {
-//            @Override
-//            public void run(Integer newOffsideCoinsValue) throws Exception {
-//                EventBus.getDefault().post(newOffsideCoinsValue);
-//            }
-//
-//        }).onError(new ErrorCallback() {
-//            @Override
-//            public void onError(Throwable error) {
-//                ACRA.getErrorReporter().handleSilentException(error);
-//            }
-//        });
-//
-//        return true;
-//    }
 
     public boolean setPowerItems(String gameId, String playerId, int powerItems, boolean isDueToRewardVideo) {
         if (!(hubConnection.getState() == ConnectionState.Connected))

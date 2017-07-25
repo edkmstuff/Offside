@@ -8,12 +8,14 @@ import android.content.ServiceConnection;
 import android.os.Binder;
 import android.os.IBinder;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
 import com.offsidegame.offside.BuildConfig;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ScoreboardEvent;
@@ -65,13 +67,13 @@ public class OffsideApplication extends Application {
 
     private static String profileImageFileName = "profileImage.jpg";
 
-    //private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
+    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
     //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
-    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
+    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
 
-    private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
+//    private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/Images/defaultImage.jpg";
-    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
+//    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
 
 //    private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";
@@ -339,6 +341,7 @@ public class OffsideApplication extends Application {
     public static String getVersion() {
         return version;
     }
+
 
 
 }

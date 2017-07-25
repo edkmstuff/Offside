@@ -39,6 +39,7 @@
                 android:textSize="@dimen/OffsideMediumText"
                 android:textColor="@color/colorWhite"
                 android:text="the sharks"
+                android:layout_marginTop="20dp"
                 />
             <TextView
                 android:id="@+id/pg_group_game_status_text_view"

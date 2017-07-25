@@ -9,8 +9,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.widget.ImageView;
 
@@ -107,7 +109,22 @@ public class ImageHelper {
                 Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
                 RoundImage roundedImage = new RoundImage(bm);
                 fbProfilePicture.setImageDrawable(roundedImage);
-                //fbProfilePicture.animate().alpha(1.1f).setDuration(200).start();
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    public static void loadImage(Context context, final ImageView fbProfilePicture, int resourceId) {
+        Picasso.with(context).load(resourceId).into(fbProfilePicture, new com.squareup.picasso.Callback() {
+            @Override
+            public void onSuccess() {
+                Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
+                RoundImage roundedImage = new RoundImage(bm);
+                fbProfilePicture.setImageDrawable(roundedImage);
             }
 
             @Override
@@ -167,6 +184,7 @@ public class ImageHelper {
         return stream.toByteArray();
     }
 
+    @Nullable
     public static Bitmap getBitmapFromURL(String src) {
         try {
             URL url = new URL(src);

@@ -8,7 +8,7 @@
 <resources>
 
     <color name="colorSecondary">#404040</color>
-    <color name="windowBackground">#404040</color>
+    <color name="windowBackground">#28408F</color>
     <color name="colorAccent">#80D8FF</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="colorBlack">#000000</color>

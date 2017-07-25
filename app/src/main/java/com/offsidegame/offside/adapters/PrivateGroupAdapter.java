@@ -1,6 +1,8 @@
 package com.offsidegame.offside.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.ImageHelper;
+import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupPlayer;
@@ -19,6 +22,9 @@ import com.offsidegame.offside.models.PrivateGroupPlayer;
 import org.acra.ACRA;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by user on 7/20/2017.
@@ -93,7 +99,18 @@ public class PrivateGroupAdapter extends BaseAdapter {
             if (viewHolder.privateGroup.isActive()) {
 
                 viewHolder.playersPlayInGroupRoot.removeAllViews();
-                for(PrivateGroupPlayer privateGroupPlayer: viewHolder.privateGroup.getPrivateGroupPlayers()){
+
+                PrivateGroupPlayer[] players = viewHolder.privateGroup.getPrivateGroupPlayers();
+
+                Arrays.sort(players, new Comparator<PrivateGroupPlayer>() {
+                    public int compare(PrivateGroupPlayer p1, PrivateGroupPlayer p2) {
+                        return  p1.getDisplayPriority() >= p2.getDisplayPriority() ? -1 :  p1.getDisplayPriority() < p2.getDisplayPriority()? 1  : 0;
+                    }
+                });
+
+
+
+                for(PrivateGroupPlayer privateGroupPlayer: players){
 
                     ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, viewHolder.playersPlayInGroupRoot,false);
                     ImageView playerImageImageView = (ImageView) playerLayout.getChildAt(0);
@@ -103,6 +120,16 @@ public class PrivateGroupAdapter extends BaseAdapter {
                     String imageUrl = privateGroupPlayer.getImageUrl() == null || privateGroupPlayer.getImageUrl().equals("")  ? OffsideApplication.getDefaultProfilePictureUrl(): privateGroupPlayer.getImageUrl();
                     Uri imageUri = Uri.parse(imageUrl);
                     ImageHelper.loadImage(context,playerImageImageView,imageUri);
+
+                    View isActiveIndicatorImageView = (View) playerLayout.getChildAt(1);
+                    //ImageHelper.loadImage(context,isActiveIndicatorImageView,R.drawable.shape_bg_circle_active);
+
+                    if(privateGroupPlayer.getActive().booleanValue())
+                        isActiveIndicatorImageView.setVisibility(View.VISIBLE);
+                    else
+                        isActiveIndicatorImageView.setVisibility(View.GONE);
+
+
 
                     viewHolder.playersPlayInGroupRoot.addView(playerLayout);
                 }

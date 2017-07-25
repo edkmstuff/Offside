@@ -1,12 +1,14 @@
 package com.offsidegame.offside.models;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
 /**
  * Created by KFIR on 11/21/2016.
  */
 
-public class PrivateGroupPlayer implements Serializable {
+public class PrivateGroupPlayer implements Serializable{
 
 
     @com.google.gson.annotations.SerializedName("PI")
@@ -44,10 +46,17 @@ public class PrivateGroupPlayer implements Serializable {
     }
 
     public Boolean getActive() {
+        //return Boolean.parseBoolean(isActive.toString());
         return isActive;
+
     }
 
     public void setActive(Boolean active) {
         isActive = active;
+    }
+
+    public int getDisplayPriority(){
+        return  Boolean.parseBoolean(isActive.toString()) ? 1 : 0;
+
     }
 }

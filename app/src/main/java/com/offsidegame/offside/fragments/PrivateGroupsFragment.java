@@ -47,7 +47,7 @@ public class PrivateGroupsFragment extends Fragment{
     }
 
     private ArrayList<PrivateGroup> getPrivateGroups(){
-        groupType = this.getArguments().getString("groupType");
+        groupType = this.getArguments().getString(getString(R.string.key_group_type));
         privateGroups = OffsideApplication.getPrivateGroupsInfo().getPrivateGroups();
 
         ArrayList filteredGroupsList = new ArrayList<>();
@@ -65,11 +65,11 @@ public class PrivateGroupsFragment extends Fragment{
 
     @Override
     public String toString() {
-        String title = "לא ידוע";
-        if (groupType.equals("PRIVATE_GROUP"))
-            title = "הקבוצות שלי";
-        else if (groupType.equals("PUBLIC_GROUP"))
-            title = "קבוצות ציבוריות";
+        String title = getString(R.string.lbl_unknown);
+        if (groupType.equals(getString(R.string.key_private_group_name)))
+            title = getString(R.string.lbl_my_private_groups);
+        else if (groupType.equals(getString(R.string.key_public_group_name)))
+            title = getString(R.string.lbl_public_groups);
 
         return title;
 
