@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_lobby"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/lobby_background"
+    android:keepScreenOn="true"
+    android:layoutDirection="ltr"
+    android:orientation="vertical"
+    tools:context="com.offsidegame.offside.activities.CreatePrivateGroupActivity">
+
+
+    <!-- Progress bar -->
+    <LinearLayout
+        android:id="@+id/cpg_loading_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:src="@drawable/app_logo_25" />
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="100dp">
+
+        </ProgressBar>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--create private group root-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+
+            android:id="@+id/cpg_create_private_group_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible"
+            android:padding="25dp"
+            >
+            <!--user image or title-->
+            <LinearLayout
+                android:id="@+id/cpg_title_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="140dp"
+                    android:layout_height="70dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_app_logo_name_only" />
+
+            </LinearLayout>
+            <!--*************************************************-->
+
+
+            <!--Private game creation form-->
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="10dp"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="8dp">
+
+
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/lbl_select_name_for_club"
+                    android:textColor="@color/grayText" />
+
+                <EditText
+                    android:id="@+id/cpg_private_game_name_edit_text"
+                    style="@style/editTextClassic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/colorWhite"
+                    android:ems="10"
+                    android:hint="הכרישים"
+                    android:inputType="textEmailAddress"
+                    android:minHeight="50dp"
+                    android:paddingRight="5dp"
+                    android:textDirection="rtl" />
+
+                <TextView
+                    android:id="@+id/cpg_save_private_group_button_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorAccent"
+                    android:gravity="center"
+                    android:minHeight="50dp"
+                    android:minWidth="100dp"
+                    android:padding="5dp"
+                    android:text="@string/lbl_create_private_group"
+                    android:textColor="@color/chatPrimary"
+                    android:textDirection="rtl"
+
+
+                    />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

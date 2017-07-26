@@ -1,0 +1,181 @@
+package com.offsidegame.offside.activities;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
+import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.models.OffsideApplication;
+
+import org.acra.ACRA;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+
+public class CreatePrivateGroupActivity extends AppCompatActivity {
+
+
+    //activity
+    private final String activityName = "LobbyActivity";
+    private final Context context = this;
+    private final Activity thisActivity = this;
+    private LinearLayout loadingRoot;
+
+    //create private group form
+    private TextView createPrivateGroupButtonTextView;
+
+
+    private LinearLayout createPrivateGroupRoot;
+    private Spinner availableLanguagesSpinner;
+    private EditText privateGroupNameEditText;
+    private String[] availableLanguages;
+    private TextView noAvailableGamesReturnLaterTextView;
+    private TextView savePrivateGroupButtonTextView;
+
+
+    private String playerDisplayName;
+    private String playerId;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_create_private_group);
+
+        FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
+        playerDisplayName = player.getDisplayName();
+        playerId = player.getUid();
+
+        savePrivateGroupButtonTextView = (TextView) findViewById(R.id.l_save_private_group_button_text_view);
+
+        loadingRoot = (LinearLayout) findViewById(R.id.cpg_loading_root);
+        createPrivateGroupRoot = (LinearLayout) findViewById(R.id.cpg_create_private_group_root);
+
+
+        privateGroupNameEditText = (EditText) findViewById(R.id.l_private_game_name_edit_text);
+
+        createPrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                privateGroupNameEditText.setText(playerDisplayName.split(" ")[0] + "'s" + " friends");
+                createPrivateGroupButtonTextView.setVisibility(View.GONE);
+                createPrivateGroupRoot.setVisibility(View.VISIBLE);
+            }
+        });
+//
+        savePrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //get language
+                String selectedLanguage = availableLanguagesSpinner.getSelectedItem().toString();
+
+                String groupName = privateGroupNameEditText.getText().toString();
+                groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;
+
+                //todo: change this call to a method that create the group only , no game entry is required
+
+                if (OffsideApplication.isBoundToSignalRService)
+                    OffsideApplication.signalRService.createPrivateGroup(groupName, playerId, selectedLanguage);
+                else
+                    throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
+
+                createPrivateGroupRoot.setVisibility(View.GONE);
+                createPrivateGroupRoot.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+        EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
+
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(context);
+
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(context);
+        super.onStop();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
+        try {
+            String privateGameCode = privateGameGeneratedEvent.getPrivateGameCode();
+            //joinGame(privateGameCode, true);
+            //privateGameCodeTextView.setText(privateGameCode);
+            //gameCodeEditText.setText(privateGameCode);
+            //privateGameCodeTextView.setVisibility(View.VISIBLE);
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+        try {
+            if (OffsideApplication.signalRService == null)
+                return;
+
+            Context eventContext = signalRServiceBoundEvent.getContext();
+            if (eventContext == context || eventContext == getApplicationContext()) {
+
+                if (OffsideApplication.isPlayerQuitGame()) {
+                    loadingRoot.setVisibility(View.GONE);
+
+                    return;
+                }
+
+
+                if (OffsideApplication.isBoundToSignalRService) {
+
+                } else
+                    throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");
+
+
+            }
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConnectionEvent(ConnectionEvent connectionEvent) {
+        try {
+            boolean isConnected = connectionEvent.getConnected();
+            if (isConnected)
+                Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+    }
+}

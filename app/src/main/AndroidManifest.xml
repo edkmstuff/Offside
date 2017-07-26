@@ -94,10 +94,7 @@
         <!-- android:hardwareAccelerated="true" -->
         <!-- android:theme="@android:style/Theme.Translucent" /> -->
 
-        <activity
-            android:name=".LobbyMainActivity"
-            android:label="@string/title_activity_lobby_main"
-            android:theme="@style/AppTheme"></activity>
+
     </application>
 
 </manifest>

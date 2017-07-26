@@ -553,17 +553,6 @@
             </LinearLayout>
 
 
-
-
-
-
-
-
-
-
-
-
-
             <!--***************PROFILE*********************************************-->
             <LinearLayout
                 android:id="@+id/l_profile_root"
@@ -663,78 +652,6 @@
 
             </LinearLayout>
 
-
-            <!--Private game creation form-->
-            <LinearLayout
-                android:id="@+id/l_create_private_group_form_root"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="10dp"
-                android:visibility="gone">
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/lbl_select_language"
-                    android:textColor="@color/grayText" />
-
-                <Spinner
-                    android:id="@+id/l_available_language_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:background="@color/colorWhite"
-                    android:minHeight="50dp" />
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/lbl_select_name_for_club"
-                    android:textColor="@color/grayText" />
-
-                <EditText
-                    android:id="@+id/l_private_game_name_edit_text"
-                    style="@style/editTextClassic"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:background="@color/colorWhite"
-                    android:ems="10"
-                    android:hint="הכרישים"
-                    android:inputType="textEmailAddress"
-                    android:minHeight="50dp"
-                    android:paddingRight="5dp"
-                    android:textDirection="rtl" />
-
-                <TextView
-                    android:id="@+id/l_save_private_group_button_text_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/colorAccent"
-                    android:gravity="center"
-                    android:minHeight="50dp"
-                    android:minWidth="100dp"
-                    android:padding="5dp"
-                    android:text="@string/lbl_create_private_game_and_join"
-                    android:textColor="@color/chatPrimary"
-                    android:textDirection="rtl"
-
-
-                    />
-
-
-
-
-            </LinearLayout>
 
         </RelativeLayout>
 

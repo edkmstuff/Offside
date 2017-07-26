@@ -14,7 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,14 +28,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.CustomTabsFragmentPagerAdapter;
-
-import com.offsidegame.offside.events.AvailableLanguagesEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
-import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.fragments.AvailableGamesFragment;
 import com.offsidegame.offside.fragments.PrivateGroupsFragment;
-
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.OffsideApplication;
@@ -52,7 +47,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.Serializable;
 
 
-
 public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     //<editor-fold desc="REGION PROPERTIES">
@@ -62,8 +56,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private final String activityName = "LobbyActivity";
     private final Context context = this;
     private final Activity thisActivity = this;
-    private TextView createPrivateGroupButtonTextView;
-    private LinearLayout privateGroupsRoot;
+
     private BottomNavigationView bottomNavigationView;
     private LinearLayout[] viewRoots = new LinearLayout[4];
     private TabLayout tabLayout;
@@ -77,6 +70,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private ImageView settingsButtonImageView;
     private LinearLayout singlePrivateGroupRoot;
 
+    private LinearLayout privateGroupsRoot;
+
     //loading
     private LinearLayout loadingRoot;
     private TextView versionTextView;
@@ -88,20 +83,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
     //profile
-    private TextView userNameTextView;
+
     private ImageView playerPictureImageView;
     private String playerId;
-    private String playerDisplayName;
     private String playerProfilePictureUrl;
     private SharedPreferences settings;
 
-    //create private group form
-    private LinearLayout createPrivateGroupFormRoot;
-    private Spinner availableLanguagesSpinner;
-    private EditText privateGroupNameEditText;
-    private String[] availableLanguages;
-    private TextView noAvailableGamesReturnLaterTextView;
-    private TextView savePrivateGroupButtonTextView;
+
 
     //</editor-fold>
 
@@ -115,12 +103,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             settings = getSharedPreferences(getString(R.string.preference_name), 0);
 
             FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
-            playerDisplayName = player.getDisplayName();
+
             playerId = player.getUid();
 
 //////////////////////////////////////////////////////////////////////////////////////////////
             loadingRoot = (LinearLayout) findViewById(R.id.l_loading_root);
             playerInfoRoot = (LinearLayout) findViewById(R.id.l_player_info_root);
+            privateGroupsRoot = (LinearLayout) findViewById(R.id.l_private_groups_root);
 
 
             //<editor-fold desc="REGION TABS ELEMENTS">
@@ -212,18 +201,14 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             playerPictureImageView = (ImageView) findViewById(R.id.l_player_picture_image_view);
             balanceTextView = (TextView) findViewById(R.id.l_balance_text_view);
             powerItemsTextView = (TextView) findViewById(R.id.l_power_items_text_view);
-            createPrivateGroupButtonTextView = (TextView) findViewById(R.id.l_create_private_group_button_text_view);
-            savePrivateGroupButtonTextView = (TextView) findViewById(R.id.l_save_private_group_button_text_view);
-            privateGroupsRoot = (LinearLayout) findViewById(R.id.l_private_groups_root);
+
 
             viewRoots[0] = (LinearLayout) findViewById(R.id.l_private_groups_root);
             viewRoots[1] = (LinearLayout) findViewById(R.id.l_profile_root);
             viewRoots[2] = (LinearLayout) findViewById(R.id.l_shop_root);
             viewRoots[3] = (LinearLayout) findViewById(R.id.l_play_root);
 
-            createPrivateGroupFormRoot = (LinearLayout) findViewById(R.id.l_create_private_group_form_root);
-            availableLanguagesSpinner = (Spinner) findViewById(R.id.l_available_language_spinner);
-            privateGroupNameEditText = (EditText) findViewById(R.id.l_private_game_name_edit_text);
+
             bottomNavigationView = (BottomNavigationView) findViewById(R.id.l_bottom_navigation_view);
 
             singlePrivateGroupRoot = (LinearLayout) findViewById(R.id.l_single_group_root);
@@ -260,58 +245,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             });
 
 
-//            userNameTextView = (TextView) findViewById(R.id.jg_user_name_text_view);
-//            userNameTextView.setText(playerDisplayName);
-//
-//            playerPictureImageView = (ImageView) findViewById(R.id.jg_player_picture_image_view);
-//
-//            playerProfilePictureUrl = settings.getString(getString(R.string.player_profile_picture_url_key), null);
-//            playerProfilePictureUrl = playerProfilePictureUrl == null ? OffsideApplication.getDefaultProfilePictureUrl() : playerProfilePictureUrl;
-//            ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName);
-//
-
-//
-
-
-
-
-            createPrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-
-                    for (LinearLayout layout : viewRoots) {
-                        layout.setVisibility(View.GONE);
-
-                    }
-
-                    privateGroupNameEditText.setText(playerDisplayName.split(" ")[0] + "'s" + " friends");
-                    createPrivateGroupButtonTextView.setVisibility(View.GONE);
-                    createPrivateGroupFormRoot.setVisibility(View.VISIBLE);
-                }
-            });
-//
-            savePrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //get language
-                    String selectedLanguage = availableLanguagesSpinner.getSelectedItem().toString();
-
-                    String groupName = privateGroupNameEditText.getText().toString();
-                    groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;
-
-                    //todo: change this call to a method that create the group only , no game entry is required
-
-                    if (OffsideApplication.isBoundToSignalRService)
-                        OffsideApplication.signalRService.createPrivateGroup(groupName, playerId, selectedLanguage);
-                    else
-                        throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
-
-                    createPrivateGroupFormRoot.setVisibility(View.GONE);
-                    privateGroupsRoot.setVisibility(View.VISIBLE);
-                }
-            });
-
 
 
 
@@ -327,8 +260,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         loadingRoot.setVisibility(View.VISIBLE);
         playerInfoRoot.setVisibility(View.GONE);
         privateGroupsRoot.setVisibility(View.VISIBLE);
-        createPrivateGroupButtonTextView.setVisibility(View.VISIBLE);
-        createPrivateGroupFormRoot.setVisibility(View.GONE);
+
         singlePrivateGroupRoot.setVisibility(View.GONE);
 
         for (LinearLayout layout : viewRoots) {
@@ -362,21 +294,128 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     }
 
 
-//    private void joinGame(String privateGameCode, boolean isPrivateGameCreator) {
-//        if (OffsideApplication.isBoundToSignalRService) {
-//
-//            OffsideApplication.setIsPlayerQuitGame(false);
-//            String androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-//
-//
-//            OffsideApplication.signalRService.joinGame(privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId);
-//            loadingGameRoot.setVisibility(View.VISIBLE);
-//            joinGameRoot.setVisibility(View.GONE);
-//            createPrivateGroupFormRoot.setVisibility(View.GONE);
-//        }
-//    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePrivateGroupsInfo(PrivateGroupsInfo privateGroupsInfo) {
+        try {
+            if (privateGroupsInfo == null || privateGroupsInfo.getPrivateGroups() == null || privateGroupsInfo.getPlayerAssets() == null)
+                return;
+
+            OffsideApplication.setPrivateGroupsInfo(privateGroupsInfo);
 
 
+            //update player stuff
+            PlayerAssets playerAssets = privateGroupsInfo.getPlayerAssets();
+            int balance = playerAssets.getBalance();
+            int powerItems = playerAssets.getPowerItems();
+            String playerAssetImageUrl = playerAssets.getImageUrl();
+            balanceTextView.setText(Integer.toString(balance));
+            powerItemsTextView.setText(Integer.toString(powerItems));
+            String pictureUrlFromSettings = settings.getString(getString(R.string.player_profile_picture_url_key), null);
+            playerProfilePictureUrl = pictureUrlFromSettings != null ? pictureUrlFromSettings : playerAssetImageUrl;
+            ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName);
+
+            playerInfoRoot.setVisibility(View.VISIBLE);
+
+
+            //update groups stuff
+
+            this.addGroupsCategories();
+            tabLayout.addOnTabSelectedListener(listener);
+            loadingRoot.setVisibility(View.GONE);
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSelectedPrivateGroup(PrivateGroup privateGroup) {
+        try {
+            if (privateGroup == null || privateGroup.getId() == null)
+                return;
+
+            groupId = privateGroup.getId();
+            OffsideApplication.signalRService.requestAvailableGames(playerId, groupId);
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveAvailableGames(AvailableGame[] availableGames) {
+        try {
+            if (availableGames == null || availableGames.length == 0)
+                return;
+
+            OffsideApplication.setAvailableGames(availableGames);
+
+            //update groups stuff
+            //todo: create distinct of league types to send to fragment creator - they will define the tabs
+
+            this.addLeaguesCategories();
+            leaguesSelectionTabLayout.addOnTabSelectedListener(leaguesSelectionListener);
+            loadingRoot.setVisibility(View.GONE);
+
+
+            privateGroupsRoot.setVisibility(View.GONE);
+            singlePrivateGroupRoot.setVisibility(View.VISIBLE);
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+    private void addGroupsCategories() {
+
+        //todo: check if we can reduce duplicate code
+
+        CustomTabsFragmentPagerAdapter pagerAdapterFragment = new CustomTabsFragmentPagerAdapter(this.getSupportFragmentManager());
+        PrivateGroupsFragment privateGroupsFragment = new PrivateGroupsFragment();
+        Bundle privateGroupsFragmentBundle = new Bundle();
+        privateGroupsFragmentBundle.putString(getString(R.string.key_group_type), getString(R.string.key_private_group_name));
+        privateGroupsFragment.setArguments(privateGroupsFragmentBundle);
+        pagerAdapterFragment.addFragment(privateGroupsFragment);
+
+
+        PrivateGroupsFragment publicGroupsFragment = new PrivateGroupsFragment();
+        Bundle publicGroupsFragmentBundle = new Bundle();
+        publicGroupsFragmentBundle.putString(getString(R.string.key_group_type), getString(R.string.key_public_group_name));
+        publicGroupsFragment.setArguments(publicGroupsFragmentBundle);
+
+        pagerAdapterFragment.addFragment(publicGroupsFragment);
+        //set adapter to ViePager
+        viewPager.setAdapter(pagerAdapterFragment);
+    }
+
+    private void addLeaguesCategories() {
+
+        CustomTabsFragmentPagerAdapter pagerAdapterFragment1 = new CustomTabsFragmentPagerAdapter(this.getSupportFragmentManager());
+        AvailableGamesFragment ChampionsLeagueAvailableGameFragment = new AvailableGamesFragment();
+        Bundle ChampionsLeagueAvailableGameFragmentBundle = new Bundle();
+        ChampionsLeagueAvailableGameFragmentBundle.putString(getString(R.string.key_league_type), "PL");
+        ChampionsLeagueAvailableGameFragment.setArguments(ChampionsLeagueAvailableGameFragmentBundle);
+        pagerAdapterFragment1.addFragment(ChampionsLeagueAvailableGameFragment);
+
+        AvailableGamesFragment IsraeliLeagueAvailableGameFragment = new AvailableGamesFragment();
+        Bundle IsraeliLeagueAvailableGameFragmentBundle = new Bundle();
+        IsraeliLeagueAvailableGameFragmentBundle.putString(getString(R.string.key_league_type), "IL");
+        IsraeliLeagueAvailableGameFragment.setArguments(IsraeliLeagueAvailableGameFragmentBundle);
+        pagerAdapterFragment1.addFragment(IsraeliLeagueAvailableGameFragment);
+
+
+        //set adapter to ViePager
+
+        leaguesPagesViewPager.setAdapter(pagerAdapterFragment1);
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
@@ -403,7 +442,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                         OffsideApplication.signalRService.isGameActive(gameId, gameCode);
                     //OffsideApplication.signalRService.getAvailableGames();
                     OffsideApplication.signalRService.requestPrivateGamesInfo(playerId);
-
 
 
                     //OffsideApplication.signalRService.getAvailableLanguages();
@@ -435,138 +473,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     }
 
 
-
-
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveAvailableLanguages(AvailableLanguagesEvent availableLanguagesEvent) {
-        try {
-            availableLanguages = availableLanguagesEvent.getAvailableLanquages();
-
-
-            setAvailableLanguageSpinnerAdapter(availableLanguages);
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
-
-
-
-
-    private void setAvailableLanguageSpinnerAdapter(String[] languages) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, languages);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        availableLanguagesSpinner.setAdapter(adapter);
-        if (languages.length > 0)
-            availableLanguagesSpinner.setSelection(0);
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
-        try {
-        //todo:update GameInfo
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceivePrivateGroupsInfo(PrivateGroupsInfo privateGroupsInfo) {
-        try {
-            if (privateGroupsInfo == null || privateGroupsInfo.getPrivateGroups() == null || privateGroupsInfo.getPlayerAssets() == null)
-                return;
-
-            OffsideApplication.setPrivateGroupsInfo(privateGroupsInfo);
-
-
-            //update player stuff
-            PlayerAssets playerAssets = privateGroupsInfo.getPlayerAssets();
-            int balance = playerAssets.getBalance();
-            int powerItems = playerAssets.getPowerItems();
-            String playerAssetImageUrl = playerAssets.getImageUrl();
-            balanceTextView.setText(Integer.toString(balance));
-            powerItemsTextView.setText(Integer.toString(powerItems));
-            String pictureUrlFromSettings = settings.getString(getString(R.string.player_profile_picture_url_key), null);
-            playerProfilePictureUrl = pictureUrlFromSettings != null ? pictureUrlFromSettings : playerAssetImageUrl;
-            ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName);
-
-            playerInfoRoot.setVisibility(View.VISIBLE);
-
-
-            //update groups stuff
-
-            this.addGroupsCategories();
-            tabLayout.addOnTabSelectedListener(listener);
-            loadingRoot.setVisibility(View.GONE);
-
-
-
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
-
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveSelectedPrivateGroup(PrivateGroup privateGroup) {
-        try {
-            if (privateGroup == null || privateGroup.getId() == null )
-                return;
-
-            groupId = privateGroup.getId();
-            OffsideApplication.signalRService.requestAvailableGames(playerId,groupId);
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
-
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveAvailableGames(AvailableGame[] availableGames) {
-        try {
-            if (availableGames == null || availableGames.length== 0)
-                return;
-
-            OffsideApplication.setAvailableGames(availableGames);
-
-            //update groups stuff
-    //todo: create distinct of league types to send to fragment creator - they will define the tabs
-
-            this.addLeaguesCategories();
-            leaguesSelectionTabLayout.addOnTabSelectedListener(leaguesSelectionListener);
-            loadingRoot.setVisibility(View.GONE);
-
-
-            privateGroupsRoot.setVisibility(View.GONE);
-            singlePrivateGroupRoot.setVisibility(View.VISIBLE);
-
-
-
-
-
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
-
-    }
-
-
     private Boolean exit = false;
 
     @Override
-
     public void onBackPressed() {
 
         resetVisibility();
@@ -586,55 +495,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         }
 
     }
-
-    private void addGroupsCategories(){
-
-        //todo: check if we can reduce duplicate code
-
-        CustomTabsFragmentPagerAdapter pagerAdapterFragment = new CustomTabsFragmentPagerAdapter(this.getSupportFragmentManager());
-        PrivateGroupsFragment privateGroupsFragment = new PrivateGroupsFragment();
-        Bundle privateGroupsFragmentBundle  = new Bundle();
-        privateGroupsFragmentBundle.putString(getString(R.string.key_group_type), getString(R.string.key_private_group_name));
-        privateGroupsFragment.setArguments(privateGroupsFragmentBundle);
-        pagerAdapterFragment.addFragment(privateGroupsFragment);
-
-
-        PrivateGroupsFragment publicGroupsFragment = new PrivateGroupsFragment();
-        Bundle publicGroupsFragmentBundle  = new Bundle();
-        publicGroupsFragmentBundle.putString(getString(R.string.key_group_type), getString(R.string.key_public_group_name));
-        publicGroupsFragment.setArguments(publicGroupsFragmentBundle);
-
-        pagerAdapterFragment.addFragment(publicGroupsFragment);
-        //set adapter to ViePager
-        viewPager.setAdapter(pagerAdapterFragment);
-    }
-
-    private void addLeaguesCategories(){
-
-        CustomTabsFragmentPagerAdapter pagerAdapterFragment1 = new CustomTabsFragmentPagerAdapter(this.getSupportFragmentManager());
-        AvailableGamesFragment ChampionsLeagueAvailableGameFragment = new AvailableGamesFragment();
-        Bundle ChampionsLeagueAvailableGameFragmentBundle  = new Bundle();
-        ChampionsLeagueAvailableGameFragmentBundle.putString(getString(R.string.key_league_type), "PL");
-        ChampionsLeagueAvailableGameFragment.setArguments(ChampionsLeagueAvailableGameFragmentBundle);
-        pagerAdapterFragment1.addFragment(ChampionsLeagueAvailableGameFragment);
-
-        AvailableGamesFragment IsraeliLeagueAvailableGameFragment = new AvailableGamesFragment();
-        Bundle IsraeliLeagueAvailableGameFragmentBundle  = new Bundle();
-        IsraeliLeagueAvailableGameFragmentBundle.putString(getString(R.string.key_league_type), "IL");
-        IsraeliLeagueAvailableGameFragment.setArguments(IsraeliLeagueAvailableGameFragmentBundle);
-        pagerAdapterFragment1.addFragment(IsraeliLeagueAvailableGameFragment);
-
-
-
-        //set adapter to ViePager
-
-        leaguesPagesViewPager.setAdapter(pagerAdapterFragment1);
-    }
-
-
-
-
-
 
 
 }

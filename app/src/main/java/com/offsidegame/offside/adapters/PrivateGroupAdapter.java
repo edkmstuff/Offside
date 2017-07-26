@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
@@ -109,7 +111,8 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 for(PrivateGroupPlayer privateGroupPlayer: players){
 
                     ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, viewHolder.playersPlayInGroupRoot,false);
-                    ImageView playerImageImageView = (ImageView) playerLayout.getChildAt(0);
+                    FrameLayout playerItemRoot = (FrameLayout) playerLayout.getChildAt(0);
+                    ImageView playerImageImageView = (ImageView) playerItemRoot.getChildAt(0);
                     playerImageImageView.getLayoutParams().height = 70;
                     playerImageImageView.getLayoutParams().width = 70;
                     playerImageImageView.requestLayout();
@@ -117,13 +120,17 @@ public class PrivateGroupAdapter extends BaseAdapter {
                     Uri imageUri = Uri.parse(imageUrl);
                     ImageHelper.loadImage(context,playerImageImageView,imageUri);
 
-                    View isActiveIndicatorImageView = (View) playerLayout.getChildAt(1);
-                    //ImageHelper.loadImage(context,isActiveIndicatorImageView,R.drawable.shape_bg_circle_active);
+                    //View isActiveIndicator = (View) playerLayout.getChildAt(1);
+                    //LinearLayout isActiveIndicator = (LinearLayout) playerLayout.getChildAt(1);
+                    ImageView isActiveIndicator = (ImageView) playerItemRoot.getChildAt(1);
+                    isActiveIndicator.getLayoutParams().height = 25;
+                    isActiveIndicator.getLayoutParams().width = 25;
+
 
                     if(privateGroupPlayer.getActive().booleanValue())
-                        isActiveIndicatorImageView.setVisibility(View.VISIBLE);
+                        isActiveIndicator.setVisibility(View.VISIBLE);
                     else
-                        isActiveIndicatorImageView.setVisibility(View.GONE);
+                        isActiveIndicator.setVisibility(View.GONE);
 
 
 
