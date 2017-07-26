@@ -2,13 +2,11 @@ package com.offsidegame.offside.activities;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,14 +34,9 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
     private LinearLayout loadingRoot;
 
     //create private group form
-    private TextView createPrivateGroupButtonTextView;
-
 
     private LinearLayout createPrivateGroupRoot;
-    private Spinner availableLanguagesSpinner;
     private EditText privateGroupNameEditText;
-    private String[] availableLanguages;
-    private TextView noAvailableGamesReturnLaterTextView;
     private TextView savePrivateGroupButtonTextView;
 
 
@@ -60,29 +53,21 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
         playerDisplayName = player.getDisplayName();
         playerId = player.getUid();
 
-        savePrivateGroupButtonTextView = (TextView) findViewById(R.id.l_save_private_group_button_text_view);
+        savePrivateGroupButtonTextView = (TextView) findViewById(R.id.cpg_save_private_group_button_text_view);
 
         loadingRoot = (LinearLayout) findViewById(R.id.cpg_loading_root);
         createPrivateGroupRoot = (LinearLayout) findViewById(R.id.cpg_create_private_group_root);
 
 
-        privateGroupNameEditText = (EditText) findViewById(R.id.l_private_game_name_edit_text);
+        privateGroupNameEditText = (EditText) findViewById(R.id.cpg_private_group_name_edit_text);
 
-        createPrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                privateGroupNameEditText.setText(playerDisplayName.split(" ")[0] + "'s" + " friends");
-                createPrivateGroupButtonTextView.setVisibility(View.GONE);
-                createPrivateGroupRoot.setVisibility(View.VISIBLE);
-            }
-        });
+        privateGroupNameEditText.setText(playerDisplayName.split(" ")[0] + "'s" + " friends");
 //
         savePrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //get language
-                String selectedLanguage = availableLanguagesSpinner.getSelectedItem().toString();
+                String selectedLanguage = "Hebrew";
 
                 String groupName = privateGroupNameEditText.getText().toString();
                 groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;

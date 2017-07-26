@@ -63,6 +63,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private ViewPager viewPager;
     private TabLayout.OnTabSelectedListener listener;
     private String groupId;
+    private TextView createPrivateGroupButtonTextView;
 
     private TabLayout leaguesSelectionTabLayout;
     private ViewPager leaguesPagesViewPager;
@@ -83,7 +84,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
     //profile
-
     private ImageView playerPictureImageView;
     private String playerId;
     private String playerProfilePictureUrl;
@@ -209,12 +209,21 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             viewRoots[3] = (LinearLayout) findViewById(R.id.l_play_root);
 
 
+            createPrivateGroupButtonTextView = (TextView) findViewById(R.id.l_create_private_group_button_text_view);
             bottomNavigationView = (BottomNavigationView) findViewById(R.id.l_bottom_navigation_view);
-
             singlePrivateGroupRoot = (LinearLayout) findViewById(R.id.l_single_group_root);
 
             resetVisibility();
             viewRoots[0].setVisibility(View.VISIBLE);
+
+            createPrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent intent = new Intent(context,CreatePrivateGroupActivity.class);
+                    startActivity(intent);
+
+                }});
 
             bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
