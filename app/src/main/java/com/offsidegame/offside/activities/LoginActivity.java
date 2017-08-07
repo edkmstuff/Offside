@@ -51,19 +51,10 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
 
-
-            //this part is for cases we are killing the app
-//            if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().getBoolean("EXIT", false)) {
-//                finish();
-//            }
-
-            ////////////////////////////////////////////////
-
-
             loadingRoot = (LinearLayout) findViewById(R.id.l_loading_root);
             loadingRoot.setVisibility(View.VISIBLE);
 
-            // to allow exit by clicking on back button , setting some flags on current intent
+            // to allow exit by clicking on back doubleup_button , setting some flags on current intent
             Intent intent = this.getIntent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -238,7 +229,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         editor.commit();
 
         User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl);
-        isUserDetailsSaved = OffsideApplication.signalRService.saveLoggedInUser(user);
+        isUserDetailsSaved = OffsideApplication.signalRService.requestSaveLoggedInUser(user);
 
         if (isUserDetailsSaved && isUserImageSaved) {
             Intent intent = new Intent(context, LobbyActivity.class);
@@ -278,7 +269,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                 } else {
                     // Sign in failed
                     if (response == null) {
-                        // User pressed back button
+                        // User pressed back doubleup_button
                         Toast.makeText(context, "SIGN IN FAILED - CANCELLED", Toast.LENGTH_LONG);
                         return;
                     }

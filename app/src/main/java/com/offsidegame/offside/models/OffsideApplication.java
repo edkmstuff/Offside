@@ -86,6 +86,8 @@ public class OffsideApplication extends Application {
 
     private  static PrivateGroup selectedPrivateGroup;
 
+    private static UserProfileInfo userProfileInfo;
+
 
 
 
@@ -211,6 +213,14 @@ public class OffsideApplication extends Application {
     public static void setSelectedPrivateGroup(PrivateGroup selectedPrivateGroup) {
         OffsideApplication.selectedPrivateGroup = selectedPrivateGroup;
         EventBus.getDefault().post(OffsideApplication.selectedPrivateGroup);
+    }
+
+    public static UserProfileInfo getUserProfileInfo() {
+        return userProfileInfo;
+    }
+
+    public static void setUserProfileInfo(UserProfileInfo userProfileInfo) {
+        OffsideApplication.userProfileInfo = userProfileInfo;
     }
 
 

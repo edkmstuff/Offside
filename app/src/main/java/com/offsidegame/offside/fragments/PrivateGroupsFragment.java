@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class PrivateGroupsFragment extends Fragment {
 
-    private PrivateGroup[] privateGroups;
+    private ArrayList<PrivateGroup> privateGroups;
     private String groupType;
 
 
@@ -48,7 +48,7 @@ public class PrivateGroupsFragment extends Fragment {
         ArrayList filteredGroupsList = new ArrayList<>();
 
         for (PrivateGroup privateGroup : privateGroups) {
-            if (privateGroup.getGroupClassification().equals(groupType))
+            if (privateGroup.getGroupType().equals(groupType))
                 filteredGroupsList.add(privateGroup);
         }
 

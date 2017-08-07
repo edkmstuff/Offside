@@ -1,332 +1,602 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/chatPrimary"
-        android:orientation="vertical"
-        tools:context="com.offsidegame.offside.activities.ViewPlayerActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_lobby"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/app_background"
+    android:keepScreenOn="true"
+    android:layoutDirection="ltr"
+    android:orientation="vertical"
+    tools:context="com.offsidegame.offside.activities.ViewPlayerActivity">
 
- <LinearLayout
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:orientation="vertical" >
+    <!-- Progress bar -->
+    <include layout="@layout/shared_loading"
+        android:visibility="gone"
 
-     <ImageView
-         android:id="@+id/jg_player_picture_image_view"
-         android:layout_width="100dp"
-         android:layout_height="100dp"
-         android:src="@drawable/app_logo"
-         android:layout_gravity="center"
-         android:scaleType="centerCrop"
-         android:layout_marginTop="20dp"/>
-
-     <TextView
-         android:id="@+id/jg_user_name_text_view"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:text="דני רובסט"
-         android:textColor="@color/grayText"
-         android:textSize="@dimen/OffsideMediumText"
-         android:layout_gravity="center"
-         />
-
-     <View
-         android:layout_width="match_parent"
-         android:layout_height="4dp"
-         android:background="@color/chatText"
-         android:layout_marginTop="10dp"
-         android:layout_marginBottom="10dp"
-         />
- </LinearLayout>
+        />
 
     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:orientation="vertical"
-         android:layout_margin="10dp">
 
-        <!--offsideCoins-->
+        android:id="@+id/vp_view_player_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
 
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:orientation="vertical" >
-             <!--offsideCoins experience-->
-             <LinearLayout
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:orientation="vertical"
-                 android:layout_gravity="center">
+        android:visibility="visible">
+        <!--player info and settings-->
+        <LinearLayout
+            android:id="@+id/vp_player_assets_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:weightSum="10">
 
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="Beginner"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-                     />
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="150"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-                     android:textSize="@dimen/OffsideXtraLargeText"
-                     />
+            <!--players status icons -->
+            <!-- player status -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-             </LinearLayout>
+                <!-- powers-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="center"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
 
+                    <TextView
+                        android:id="@+id/vp_power_items_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="-14dp"
+                        android:background="#50000000"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="2dp"
+                        android:text="2"
+                        android:textColor="@color/colorWhite" />
 
-         </LinearLayout>
+                    <ImageView
+                        android:id="@+id/c_power_item_image_view"
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_card" />
 
-         <!--line 1-->
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:orientation="horizontal"
-             android:weightSum="2"
-             android:layout_marginTop="10dp"
-             android:layout_marginBottom="10dp">
-             <!--overall position-->
-             <LinearLayout
-                 android:layout_width="0dp"
-                 android:layout_weight="1"
-                 android:layout_height="wrap_content"
-                 android:orientation="vertical"
-                 android:background="@drawable/shape_bg_rectangle_border_left">
+                </LinearLayout>
 
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="POSITION"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-                     />
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="50"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-                     android:textSize="@dimen/OffsideLargeText"
-                     />
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="150,000"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-                     android:textSize="@dimen/OffsideMediumSmallText"
-                     />
-
-             </LinearLayout>
-             <!--trophies-->
-             <LinearLayout
-                 android:layout_width="0dp"
-                 android:layout_weight="1"
-                 android:layout_height="wrap_content"
-                 android:orientation="vertical"
-                 android:background="@drawable/shape_bg_rectangle_border_left">
-
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="TROPHIES"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-                     />
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="2"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-
-                     android:textSize="@dimen/OffsideLargeText"
-                     />
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="2 months ago"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-
-                     android:textSize="@dimen/OffsideMediumSmallText"
-                     />
-
-             </LinearLayout>
-
-         </LinearLayout>
-         <!--Line 2-->
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:orientation="horizontal"
-             android:weightSum="2"
-             android:layout_marginTop="10dp"
-             android:layout_marginBottom="10dp">
-             <!--game played-->
-             <LinearLayout
-                 android:layout_width="0dp"
-                 android:layout_weight="1"
-                 android:layout_height="wrap_content"
-                 android:orientation="vertical"
-                 android:background="@drawable/shape_bg_rectangle_border_left">
-
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="GAME PLAYED"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-                     />
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="50"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-                     android:textSize="@dimen/OffsideLargeText"
-                     />
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="1 week ago"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-
-                     android:textSize="@dimen/OffsideMediumSmallText"
-                     />
-
-             </LinearLayout>
-             <!--Avergae position-->
-             <LinearLayout
-                 android:layout_width="0dp"
-                 android:layout_weight="1"
-                 android:layout_height="wrap_content"
-                 android:orientation="vertical"
-                 android:background="@drawable/shape_bg_rectangle_border_left">
-
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="AVERAGE POSITION"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-                     />
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="2nd"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-
-                     android:textSize="@dimen/OffsideLargeText"
-                     />
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="8th"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-
-                     android:textSize="@dimen/OffsideMediumSmallText"
-                     />
-
-             </LinearLayout>
+                <!-- coins -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="center"
+                    android:layoutDirection="rtl"
+                    android:orientation="horizontal">
 
 
+                    <TextView
+                        android:layout_width="wrap_content"
 
-         </LinearLayout>
-         <!--Line 3-->
-         <LinearLayout
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:orientation="horizontal"
-             android:weightSum="2"
-             android:layout_marginTop="10dp"
-             android:layout_marginBottom="10dp">
-             <!--best result-->
-             <LinearLayout
-                 android:layout_width="0dp"
-                 android:layout_weight="1"
-                 android:layout_height="wrap_content"
-                 android:orientation="vertical"
-                 android:background="@drawable/shape_bg_rectangle_border_left">
-
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="BEST RESULT"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-                     />
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="7500"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-                     android:textSize="@dimen/OffsideLargeText"
-                     />
-
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="3100"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-
-                     android:textSize="@dimen/OffsideMediumSmallText"
-                     />
-
-             </LinearLayout>
-             <!--best earn-->
-             <LinearLayout
-                 android:layout_width="0dp"
-                 android:layout_weight="1"
-                 android:layout_height="wrap_content"
-                 android:orientation="vertical"
-                 android:background="@drawable/shape_bg_rectangle_border_left">
-
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="BEST EARN"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-                     />
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="7000"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-
-                     android:textSize="@dimen/OffsideLargeText"
-                     />
-                 <TextView
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:text="2 months ago"
-                     android:textColor="@color/colorWhite"
-                     android:gravity="center"
-
-                     android:textSize="@dimen/OffsideMediumSmallText"
-                     />
-
-             </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorButton"
+                        android:gravity="center"
+                        android:minWidth="20dp"
+                        android:padding="2dp"
+                        android:text="+"
+                        android:textColor="@color/colorWhite"
 
 
+                        />
 
-         </LinearLayout>
+                    <TextView
+                        android:id="@+id/vp_balance_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="-12dp"
+                        android:background="#50000000"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="5dp"
+                        android:paddingTop="2dp"
+                        android:text="4000"
+                        android:textColor="@color/colorWhite" />
+
+                    <ImageView
+                        android:id="@+id/c_offside_coins_image_view"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/ic_coin" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <!--settings doubleup_button-->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layoutDirection="rtl">
+
+                <ImageView
+                    android:id="@+id/vp_settings_button_image_view"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:layout_gravity="left"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_settings_button" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--user image, name, level-->
+
+        <LinearLayout
+            android:id="@+id/vp_title_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+
+
+            <ImageView
+                android:id="@+id/vp_player_picture_image_view"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_soccer_ball"
+               />
+
+            <TextView
+                android:id="@+id/vp_player_name_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
+                android:layout_marginTop="5dp"
+                android:text="דני רובסט"
+                android:textColor="@color/grayText"
+                android:textSize="@dimen/OffsideMediumText"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="5dp"
+                >
+                <TextView
+                    android:id="@+id/vp_player_experience_level_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="4dp"
+                    android:text="ילד"
+                    android:textColor="@color/grayText"
+                    android:textSize="@dimen/OffsideMediumSmallText"
+                    />
+                <ImageView
+                    android:id="@+id/vp_player_experience_level_image_view"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/level_baby"
+                    android:scaleType="centerCrop"
+                    android:padding="4dp"
+
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+        <!--*************************************************-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!--***************PLAYER DATA*********************************************-->
+            <LinearLayout
+                android:id="@+id/vp_player_details_root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/vp_actions_root"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+
+                <!-- tabs: LAST+GAME / TROPHIES / RECORDS -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <!-- LATEST GAME TAB -->
+                    <LinearLayout
+                        android:id="@+id/vp_latest_game_tab_root"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/navigationMenuSelectedItem"
+                        android:gravity="center"
+                        android:padding="2dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="משחק אחרון"
+                            android:textColor="@color/colorWhite" />
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_settings_button" />
+
+                    </LinearLayout>
+
+                    <!-- TROPHIES TAB-->
+                    <LinearLayout
+                        android:id="@+id/vp_trophies_tab_root"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/navigationMenu"
+                        android:gravity="center"
+                        android:padding="2dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ארון גביעים"
+                            android:textColor="@color/colorWhite" />
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_settings_button" />
+
+                    </LinearLayout>
+
+                    <!-- RECORDS TAB-->
+                    <LinearLayout
+                        android:id="@+id/vp_records_tab_root"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/navigationMenu"
+                        android:gravity="center"
+                        android:padding="2dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="נתונים"
+                            android:textColor="@color/colorWhite" />
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_settings_button" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <!-- TAB CONTENT: LAST GAME  -->
+                <LinearLayout
+                    android:id="@+id/vp_latest_game_details_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/vp_actions_root"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_marginTop="4dp">
+                        <TextView
+                            android:id="@+id/vp_latest_game_private_group_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/OffsideMediumText"
+                            android:padding="2dp"
+                            android:text="הכבשים"/>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+                        <TextView
+                            android:id="@+id/vp_latest_game_title_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/OffsideMediumSmallText"
+                            android:text="Real Madrid vs. Arsenal"
+                            android:padding="2dp"/>
+                        <TextView
+                            android:id="@+id/vp_latest_game_start_date_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/OffsideMediumSmallText"
+                            android:text="2 months ago"
+                            android:padding="2dp"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="right"
+                        android:layout_marginTop="5dp"
+                        >
+                        <!--POSITION ROOT-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layoutDirection="rtl"
+                            android:paddingRight="25dp"
+                            android:paddingLeft="25dp"
+                            android:paddingBottom="10dp"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="איך הייתי"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=":"/>
+
+                            <TextView
+                                android:id="@+id/vp_latest_game_position_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                android:textDirection="ltr"
+                                android:textStyle="bold"
+                                android:text="2/5"/>
+
+                        </LinearLayout>
+                        <!--CORRECT ANSWERS-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layoutDirection="rtl"
+                            android:paddingRight="25dp"
+                            android:paddingLeft="25dp"
+                            android:paddingBottom="10dp"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="איך עניתי"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=":"/>
+
+                            <TextView
+                                android:id="@+id/vp_latest_game_answers_summary_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                android:textDirection="ltr"
+                                android:text="10/22"
+                                android:textStyle="bold"
+                                />
+
+                        </LinearLayout>
+                        <!--INVEST Vs. OFFSIDE COINS-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layoutDirection="rtl"
+                            android:paddingRight="25dp"
+                            android:paddingLeft="25dp"
+                            android:paddingBottom="10dp"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="איך יצאתי"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=":"/>
+
+                            <TextView
+                                android:id="@+id/vp_latest_game_balance_summary_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                android:textDirection="ltr"
+                                android:textStyle="bold"
+                                android:text="-100"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!--PODIUM-->
+                    <LinearLayout
+                        android:id="@+id/vp_latest_game_podium_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="15dp"
+                        android:gravity="center">
+                        <!--option 1-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            android:gravity="bottom|center"
+                            android:weightSum="1">
+                            <!--2nd PLACE-->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="bottom|center"
+                                android:paddingRight="5dp"
+                                android:paddingLeft="5dp"
+                                android:paddingTop="10dp"
+                                android:layout_weight="0.20"
+                                >
+                                <ImageView
+                                    android:id="@+id/vp_latest_game_winner2_image_view"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@mipmap/ic_soccer_ball"
+                                    />
+                                <TextView
+                                    android:id="@+id/vp_latest_game_winner2_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Eran"/>
+                                <TextView
+                                    android:id="@+id/vp_latest_game_winner2_coins_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="2800"/>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/podium_second_tran"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/OffsideMediumText"
+                                    android:text="2"
+                                    android:gravity="center"
+                                    android:textStyle="bold"
+
+                                    />
+                            </LinearLayout>
+
+                            <!--1st PLACE-->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="bottom|center"
+                                android:layout_weight="0.20"
+                                >
+                                <ImageView
+                                    android:id="@+id/vp_latest_game_winner1_image_view"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@mipmap/ic_soccer_ball"
+                                    />
+                                <TextView
+                                    android:id="@+id/vp_latest_game_winner1_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Eran"/>
+                                <TextView
+                                    android:id="@+id/vp_latest_game_winner1_coins_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="3800"/>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/podium_first_tran"
+                                    android:scaleType="centerCrop"
+                                    android:gravity="center"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/OffsideMediumText"
+                                    android:textStyle="bold"
+                                    android:text="1"
+
+                                    />
+                            </LinearLayout>
+
+                            <!--3rd PLACE-->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:orientation="vertical"
+                                android:gravity="bottom|center"
+                                android:paddingRight="5dp"
+                                android:paddingLeft="5dp"
+                                android:layout_marginTop="25dp"
+                                android:layout_weight="0.20">
+                                <ImageView
+                                    android:id="@+id/vp_latest_game_winner3_image_view"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@mipmap/ic_soccer_ball"
+                                    />
+                                <TextView
+                                    android:id="@+id/vp_latest_game_winner3_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Eran"/>
+                                <TextView
+                                    android:id="@+id/vp_latest_game_winner3_coins_text_view"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="200"/>
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/podium_third_tran"
+                                    android:scaleType="centerCrop"
+                                    android:gravity="center"
+                                    android:textColor="@color/colorBlack"
+                                    android:textSize="@dimen/OffsideMediumText"
+                                    android:textStyle="bold"
+                                    android:text="3"
+
+                                    />
+                            </LinearLayout>
 
 
 
 
-     </LinearLayout>
+
+                        </LinearLayout>
+
+
+
+
+
+
+
+
+                    </LinearLayout>
 
 
 
@@ -336,8 +606,410 @@
 
 
 
+                </LinearLayout>
+
+                <!-- TAB CONTENT: TROPHIES  -->
+                <LinearLayout
+                    android:id="@+id/vp_trophies_details_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/vp_actions_root"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+
+                    <!--TROPHIES LIST-->
+                    <HorizontalScrollView
+                        android:id="@+id/vp_trophies_scroll_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fillViewport="true"
+                        android:scrollbarSize="0dp"
+                        android:scrollbars="none">
+
+                    </HorizontalScrollView>
 
 
+                </LinearLayout>
+
+                <!-- TAB CONTENT: RECORDS  -->
+                <LinearLayout
+                    android:id="@+id/vp_records_details_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/vp_actions_root"
+                    android:orientation="vertical">
+
+                    <!--DISPLAY OPTION 1-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <!--games-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layoutDirection="rtl"
+                            android:paddingRight="25dp"
+                            android:paddingLeft="25dp"
+                            android:paddingBottom="10dp"
+                            android:layout_marginTop="10dp"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="משחקים שהשתתפתי"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=":"/>
+
+                            <TextView
+                                android:id="@+id/vp_player_records_number_of_games_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                android:textDirection="ltr"
+                                android:textStyle="bold"
+                                android:text="20"/>
+
+                        </LinearLayout>
+
+                        <!--trophies-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layoutDirection="rtl"
+                            android:paddingRight="25dp"
+                            android:paddingLeft="25dp"
+                            android:paddingBottom="10dp"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="גביעים שזכיתי"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=":"/>
+
+                            <TextView
+                                android:id="@+id/vp_player_records_number_of_trophies_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                android:textDirection="ltr"
+                                android:textStyle="bold"
+                                android:text="5"/>
+
+                        </LinearLayout>
+
+                        <!--avg. earning per game-->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layoutDirection="rtl"
+                            android:paddingRight="25dp"
+                            android:paddingLeft="25dp"
+                            android:paddingBottom="10dp"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ממוצע רווחים למשחק"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=":"/>
+
+                            <TextView
+                                android:id="@+id/vp_player_records_avg_earnings_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:paddingLeft="15dp"
+                                android:paddingRight="15dp"
+                                android:textDirection="ltr"
+                                android:textStyle="bold"
+                                android:text="550"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <!--DISPLAY OPTION 2-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="10dp"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:gravity="center"
+                        android:layoutDirection="rtl">
+
+                        <!--games-->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layoutDirection="rtl"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="5dp"
+                            android:paddingTop="5dp">
+                            <TextView
+                                android:id="@+id/vp_player_records_number_of_games_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/OffsideXtraLargeText"
+                                android:text="20"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="משחקים"
+                                android:textSize="@dimen/OffsideExtraSmallText"/>
+
+                        </LinearLayout>
+
+                        <!--trophies-->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layoutDirection="rtl"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="5dp"
+                            android:paddingTop="5dp">
+                            <TextView
+                                android:id="@+id/vp_player_records_number_of_games_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/OffsideXtraLargeText"
+                                android:text="20"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="גביעים"
+                                android:textSize="@dimen/OffsideExtraSmallText"
+                                android:layout_gravity="center"/>
+
+                        </LinearLayout>
+
+                        <!--avg earning-->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layoutDirection="rtl"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="5dp"
+                            android:paddingTop="5dp">
+                            <TextView
+                                android:id="@+id/vp_player_records_number_of_games_text_view"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textStyle="bold"
+                                android:textSize="@dimen/OffsideXtraLargeText"
+                                android:text="950"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="ממוצע למשחק"
+                                android:layout_gravity="center"
+                                android:textSize="@dimen/OffsideExtraSmallText"/>
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+
+                    <!--player evolution-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:gravity="center|bottom"
+                        android:layoutDirection="rtl"
+                        android:layout_marginTop="10dp"
+                        >
+                        <!--level 0-->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="5dp">
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:src="@drawable/level_baby"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="מתחיל"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="2000"/>
+
+
+                        </LinearLayout>
+                        <!--level 1-->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="5dp">
+
+                            <ImageView
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:src="@drawable/level_kid"
+                                />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="ילד פלא"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center|bottom"
+                                android:text="2000"/>
+
+
+                        </LinearLayout>
+                        <!--level 2-->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="5dp">
+
+                            <ImageView
+                                android:layout_width="55dp"
+                                android:layout_height="55dp"
+                                android:src="@drawable/level_star"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="מקצוען"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="2000"/>
+
+
+                        </LinearLayout>
+                        <!--level 3-->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="5dp">
+
+                            <ImageView
+                                android:layout_width="60dp"
+                                android:layout_height="60dp"
+                                android:src="@drawable/level_pro"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="כוכב"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="2000"/>
+
+
+                        </LinearLayout>
+                        <!--level 4-->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="5dp">
+
+                            <ImageView
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:src="@drawable/level_legend"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="אגדה"/>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="2000"/>
+
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <!--************************************************************************************-->
+            <!--navigation and actions root-->
+            <LinearLayout
+                android:id="@+id/vp_actions_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:orientation="vertical">
+
+                <!--navigation-->
+                <android.support.design.widget.BottomNavigationView
+                    android:id="@+id/l_bottom_navigation_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/navigationMenu"
+                    app:itemIconTint="@drawable/nav_item_color_state"
+                    app:itemTextColor="@drawable/nav_item_color_state"
+                    app:menu="@menu/bottom_navigation_menu">
+
+                </android.support.design.widget.BottomNavigationView>
+
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+
+
+
+    <!--view player root-->
 
 </LinearLayout>
-

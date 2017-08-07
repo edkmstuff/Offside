@@ -3,7 +3,7 @@
     <string messageText="app_name">Offside</string>
     <string messageText="lbl_points">Points</string>
     <string messageText="lbl_position">Position</string>
-    <string messageText="lbl_leader_score">Leader score</string>
+    <string messageText="lbl_leader_score">Leader offsideCoins</string>
     <string messageText="lbl_active_questions">Active questions</string>
     <string messageText="lbl_send">Send</string>
     <string messageText="lbl_data_updated">Data updated</string>

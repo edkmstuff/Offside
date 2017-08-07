@@ -18,7 +18,7 @@
 
 
     <color name="chatPrimary">#28408F</color>
-    <color name="chatIncoming">#E3F2FD</color>
+    <!--<color name="chatIncoming">#E3F2FD</color>-->
     <color name="chatIncomingFromBot">#ffffcf</color>
     <color name="chatOutgoing">#F6F3F2</color>
     <color name="chatActions">#BDBDBD</color>
@@ -29,11 +29,11 @@
 
 
 
-    <color name="answerTextColor">#FFFFFF</color>
-    <color name="answer1backgroundColor">#DE1831</color>
-    <color name="answer2backgroundColor">#1F57A5</color>
-    <color name="answer3backgroundColor">#D89E00</color>
-    <color name="answer4backgroundColor">#60991F</color>
+    <!--<color name="answerTextColor">#FFFFFF</color>-->
+    <!--<color name="answer1backgroundColor">#DE1831</color>-->
+    <!--<color name="answer2backgroundColor">#1F57A5</color>-->
+    <!--<color name="answer3backgroundColor">#D89E00</color>-->
+    <!--<color name="answer4backgroundColor">#60991F</color>-->
 
     <color name="grayText">#c7c7c7</color>
 
@@ -45,6 +45,17 @@
     <color name="colorActive">#00C520</color>
     <color name="navigationMenu">#151A50</color>
     <color name="navigationMenuSelectedItem">#383C69</color>
+    <color name="transparentBackground">#50000000</color>
+
+    <color name="buttonTextColor">#FFFFFF</color>
+
+    <color name="answerTextColor">#000000</color>
+    <color name="answer1backgroundColor">#FEE67E</color>
+    <color name="answer2backgroundColor">#FEE67E</color>
+    <color name="answer3backgroundColor">#FEE67E</color>
+    <color name="answer4backgroundColor">#FEE67E</color>
+    <color name="chatIncoming">#799CDE</color>
+    <color name="gray">#5B5B5B</color>
 
 
 

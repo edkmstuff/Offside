@@ -10,7 +10,7 @@ public class GameInfo {
     private String gameId;
 
     @com.google.gson.annotations.SerializedName("PGC")
-    private String privateGameCode;
+    private String privateGameId;
 
     @com.google.gson.annotations.SerializedName("PGT")
     private String privateGameTitle;
@@ -47,8 +47,8 @@ public class GameInfo {
         this.gameId = gameId;
     }
 
-    public String getPrivateGameCode() {
-        return privateGameCode;
+    public String getPrivateGameId() {
+        return privateGameId;
     }
 
     public String getPrivateGameTitle() {

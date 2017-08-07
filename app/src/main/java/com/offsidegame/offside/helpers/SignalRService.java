@@ -11,7 +11,6 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
-import com.google.android.gms.common.api.BooleanResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.offsidegame.offside.R;
@@ -21,7 +20,7 @@ import com.offsidegame.offside.events.AvailableGamesEvent;
 import com.offsidegame.offside.events.AvailableLanguagesEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
-import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
+import com.offsidegame.offside.models.PostAnswerRequestInfo;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.PositionEvent;
@@ -34,7 +33,7 @@ import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Player;
-import com.offsidegame.offside.models.PlayerInfo;
+import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PrivateGameCreationInfo;
 import com.offsidegame.offside.models.PrivateGroup;
@@ -49,7 +48,6 @@ import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
-import java.util.Locale;
 
 import microsoft.aspnet.signalr.client.Action;
 import microsoft.aspnet.signalr.client.ConnectionState;
@@ -77,7 +75,8 @@ public class SignalRService extends Service {
     private Date startReconnecting = null;
 
     //public final String ip = new String("192.168.1.140:8080");
-    public final String ip = new String("10.0.0.17:8080");
+    public final String ip = new String("10.0.0.17:18313");
+
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
 
@@ -140,7 +139,8 @@ public class SignalRService extends Service {
             Platform.loadPlatformComponent(new AndroidPlatformComponent());
             final String serverUrl = "http://" + ip;
             hubConnection = new HubConnection(serverUrl);
-            final String SERVER_HUB = "OffsideHub";
+            //final String SERVER_HUB = "OffsideHub";
+            final String SERVER_HUB = "SidekickNodeHub";
             hub = hubConnection.createHubProxy(SERVER_HUB);
             ClientTransport clientTransport = new ServerSentEventsTransport(hubConnection.getLogger());
 
@@ -211,7 +211,7 @@ public class SignalRService extends Service {
     //<editor-fold desc="subscribeToServer">
     public void subscribeToServer() {
 
-        hub.on("AddChatMessage", new SubscriptionHandler1<ChatMessage>() {
+        hub.on("ChatMessageReceived", new SubscriptionHandler1<ChatMessage>() {
             @Override
             public void run(ChatMessage chatMessage) {
 
@@ -276,26 +276,29 @@ public class SignalRService extends Service {
             }
         }, AvailableGame[].class);
 
-
-
-        /*
-         public void getScoreboard(String gameId) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
-        hub.invoke(Scoreboard.class, "GetScoreboard", gameId).done(new Action<Scoreboard>() {
-
+        hub.on("PrivateGroupCreated", new SubscriptionHandler1<PrivateGroup>() {
             @Override
-            public void run(Scoreboard scoreboard) throws Exception {
-                EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
+            public void run(PrivateGroup privateGroup) {
+                EventBus.getDefault().post(privateGroup);
             }
-        }).onError(new ErrorCallback() {
+        }, PrivateGroup.class);
+
+        hub.on("LoggedInUserReceived", new SubscriptionHandler1<PlayerAssets>() {
             @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
+            public void run(PlayerAssets playerAssets) {
+                EventBus.getDefault().post(playerAssets);
             }
-        });
-    }
-         */
+        }, PlayerAssets.class);
+
+        hub.on("AnswerAccepted", new SubscriptionHandler1<PostAnswerRequestInfo>() {
+            @Override
+            public void run(PostAnswerRequestInfo postAnswerRequestInfo) {
+                EventBus.getDefault().post(postAnswerRequestInfo);
+            }
+        }, PostAnswerRequestInfo.class);
+
+
+
     }
 
     private void fireNotification(String messageType, String message) {
@@ -402,25 +405,25 @@ public class SignalRService extends Service {
     //<editor-fold desc="methods for client activities">
 
 
-    public void joinGame(String privateGameCode, String playerId, String playerDisplayName, String playerProfilePictureUrl, boolean isPrivateGameCreator, String androidDeviceId) {
-        PlayerInfo playerInfo = new PlayerInfo(playerId, privateGameCode, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId, null);
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
-
-        //hub.invoke(GameInfo.class, "JoinPrivateGame", privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId).done(new Action<GameInfo>() {
-        hub.invoke(GameInfo.class, "RequestJoinPrivateGame", playerInfo).done(new Action<GameInfo>() {
-
-            @Override
-            public void run(GameInfo gameInfo) throws Exception {
-                //EventBus.getDefault().post(new JoinGameEvent(gameInfo));
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
-    }
+//    public void joinGame(String privateGameCode, String playerId, String playerDisplayName, String playerProfilePictureUrl, boolean isPrivateGameCreator, String androidDeviceId) {
+//        PlayerInfo playerInfo = new PlayerInfo(playerId, privateGameCode, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId, null);
+//        if (!(hubConnection.getState() == ConnectionState.Connected))
+//            return;
+//
+//        //hub.invoke(GameInfo.class, "JoinPrivateGame", privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId).done(new Action<GameInfo>() {
+//        hub.invoke(GameInfo.class, "RequestJoinPrivateGame", playerInfo).done(new Action<GameInfo>() {
+//
+//            @Override
+//            public void run(GameInfo gameInfo) throws Exception {
+//                //EventBus.getDefault().post(new JoinGameEvent(gameInfo));
+//            }
+//        }).onError(new ErrorCallback() {
+//            @Override
+//            public void onError(Throwable error) {
+//                ACRA.getErrorReporter().handleSilentException(error);
+//            }
+//        });
+//    }
 
     public void quitGame(String gameId, String playerId, String androidDeviceId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
@@ -468,6 +471,7 @@ public class SignalRService extends Service {
             }
         });
     }
+
     public void getAvailableGames() {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
@@ -508,45 +512,11 @@ public class SignalRService extends Service {
         });
     }
 
-    public void createPrivateGroup(String groupName, String playerId, String selectedLanguage) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
-   //Todo: implement this method - called by user create new private group
-
-//        PrivateGameCreationInfo privateGameCreationInfo = new PrivateGameCreationInfo(gameId, groupName, playerId, selectedLanguage);
-//
-//
-//        hub.invoke(String.class, "CreatePrivateGame", privateGameCreationInfo).done(new Action<String>() {
-//
-//            @Override
-//            public void run(String privateGameCode) throws Exception {
-//                //EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameCode));
-//            }
-//        }).onError(new ErrorCallback() {
-//            @Override
-//            public void onError(Throwable error) {
-//                ACRA.getErrorReporter().handleSilentException(error);
-//            }
-//        });
-    }
-
-
     public void postAnswer(final String gameId, final String playerId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
 
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Boolean.class, "PostAnswer", gameId, playerId, questionId, answerId, isSkipped, betSize).done(new Action<Boolean>() {
-            @Override
-            public void run(Boolean isAnswerAccepted) throws Exception {
-                EventBus.getDefault().post(new IsAnswerAcceptedEvent(isAnswerAccepted, gameId, playerId, questionId, answerId, isSkipped, betSize));
-            }
-
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
+        hub.invoke(Boolean.class, "PostAnswer", gameId, playerId, questionId, answerId, isSkipped, betSize);
 
     }
 
@@ -567,10 +537,10 @@ public class SignalRService extends Service {
         });
     }
 
-    public void getChatMessages(String gameId, String gameCode, String playerId, String androidDeviceId) {
+    public void getChatMessages(String gameId, String privateGameId, String playerId, String androidDeviceId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Chat.class, "GetChatMessages", gameId, gameCode, playerId, androidDeviceId).done(new Action<Chat>() {
+        hub.invoke(Chat.class, "GetChatMessages", gameId, privateGameId, playerId, androidDeviceId).done(new Action<Chat>() {
 
             @Override
             public void run(Chat chat) throws Exception {
@@ -584,10 +554,10 @@ public class SignalRService extends Service {
         });
     }
 
-    public void sendChatMessage(String gameId, String gameCode, String message, String playerId) {
+    public void sendChatMessage(String gameId, String privateGameId, String message, String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(ChatMessage.class, "SendChatMessage", gameId, gameCode, message, playerId).done(new Action<ChatMessage>() {
+        hub.invoke(ChatMessage.class, "SendChatMessage", gameId, privateGameId, playerId, message).done(new Action<ChatMessage>() {
             @Override
             public void run(ChatMessage chatMessage) throws Exception {
                 //          EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
@@ -619,15 +589,14 @@ public class SignalRService extends Service {
         });
     }
 
-    public boolean saveLoggedInUser(User user) {
+    public boolean requestSaveLoggedInUser(User user) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return false;
 
-        hub.invoke(Player.class, "SaveLoggedInUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri());
+        hub.invoke(Player.class, "RequestSaveLoggedInUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri());
 
         return true;
     }
-
 
     public boolean setPowerItems(String gameId, String playerId, int powerItems, boolean isDueToRewardVideo) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
@@ -656,7 +625,7 @@ public class SignalRService extends Service {
         hub.invoke(Boolean.class, "SaveImageInDatabase", playerId, imageString).done(new Action<Boolean>() {
             @Override
             public void run(Boolean isImageSaved) throws Exception {
-                //EventBus.getDefault().post(new IsAnswerAcceptedEvent(isUserSaved));
+                //EventBus.getDefault().post(new PostAnswerRequestInfo(isUserSaved));
             }
 
         }).onError(new ErrorCallback() {
@@ -674,10 +643,43 @@ public class SignalRService extends Service {
             return;
         hub.invoke("RequestPrivateGroupsInfo", playerId);
     }
+
     public void requestAvailableGames(String playerId, String groupId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         hub.invoke("RequestAvailableGames", playerId,groupId);
+    }
+
+    public void RequestCreatePrivateGroup(String groupName, String groupType, String playerId, String selectedLanguage) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke("RequestCreatePrivateGroup", groupName, groupType, playerId, selectedLanguage);
+    }
+
+    public void RequestJoinPrivateGame(String gameId, String groupId, String privateGameId, String playerId, String androidDeviceId) {
+
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+
+
+        hub.invoke(GameInfo.class, "RequestJoinPrivateGame", gameId, groupId,  privateGameId, playerId, androidDeviceId).done(new Action<GameInfo>() {
+
+            @Override
+            public void run(GameInfo gameInfo) throws Exception {
+                //EventBus.getDefault().post(new JoinGameEvent(gameInfo));
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                ACRA.getErrorReporter().handleSilentException(error);
+            }
+        });
+    }
+
+    public void RequestUserProfileData(String playerId) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke("RequestUserProfileData", playerId);
     }
 
 

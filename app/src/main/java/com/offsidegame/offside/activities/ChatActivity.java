@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -26,11 +25,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareButton;
-import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
@@ -44,7 +41,7 @@ import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
-import com.offsidegame.offside.events.IsAnswerAcceptedEvent;
+import com.offsidegame.offside.models.PostAnswerRequestInfo;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
@@ -143,7 +140,7 @@ public class ChatActivity extends AppCompatActivity {
             androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 
             gameId = OffsideApplication.getGameInfo().getGameId();
-            gameCode = OffsideApplication.getGameInfo().getPrivateGameCode();
+            gameCode = OffsideApplication.getGameInfo().getPrivateGameId();
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             playerId = user.getUid();
 
@@ -466,7 +463,7 @@ public class ChatActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = settings.edit();
 
                     editor.putString(getString(R.string.game_id_key), null);
-                    editor.putString(getString(R.string.game_code_key), null);
+                    editor.putString(getString(R.string.private_game_id_key), null);
                     editor.putString(getString(R.string.private_game_title_key), null);
                     editor.putString(getString(R.string.home_team_key), null);
                     editor.putString(getString(R.string.away_team_key), null);
@@ -814,12 +811,12 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAnswerAcceptedEvent(IsAnswerAcceptedEvent isAnswerAcceptedEvent) {
+    public void onAnswerAcceptedEvent(PostAnswerRequestInfo postAnswerRequestInfo) {
 
         try {
-            boolean isAnswerAccepted = isAnswerAcceptedEvent.getIsAnswerAccepted();
+            boolean isAnswerAccepted = postAnswerRequestInfo.isAnswerAccepted();
             if (!isAnswerAccepted) {
-                String msg = "Answered not accepted! details: " + "gameid: " + isAnswerAcceptedEvent.getGameId() + " playerid: " + isAnswerAcceptedEvent.getPlayerId() + " questionid: " + isAnswerAcceptedEvent.getQuestionId() + " answerid: " + isAnswerAcceptedEvent.getAnswerId() + " isSkippped: " + isAnswerAcceptedEvent.isSkipped() + " betsize: " + isAnswerAcceptedEvent.getBetSize();
+                String msg = "Answered not accepted! details: " + "gameid: " + postAnswerRequestInfo.getGameId() + " playerid: " + postAnswerRequestInfo.getPlayerId() + " questionid: " + postAnswerRequestInfo.getQuestionId() + " answerid: " + postAnswerRequestInfo.getAnswerId() + " isSkippped: " + postAnswerRequestInfo.isSkipped() + " betsize: " + postAnswerRequestInfo.getBetSize();
                 ACRA.getErrorReporter().handleSilentException(new Throwable(msg));
             }
 

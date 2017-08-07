@@ -581,7 +581,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
                 winnerScoreTextView.setText(Integer.toString(winner.getOffsideCoins()));
-                int resourceId = winner.getPrivateGamePosition() == 1 ? R.mipmap.ic_offside_trophy : winner.getPrivateGamePosition() == 2 ? R.mipmap.ic_offside_trophy_silver : R.mipmap.ic_offside_trophy_bronze;
+                int resourceId = winner.getPrivateGamePosition() == 1 ? R.mipmap.trophy_gold : winner.getPrivateGamePosition() == 2 ? R.mipmap.trophy_silver : R.mipmap.trophy_bronze;
                 if (winner.getPrivateGamePosition() == 2)
                     layout.setPadding(0, 30, 0, 0);
 

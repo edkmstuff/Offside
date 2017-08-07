@@ -2,6 +2,7 @@ package com.offsidegame.offside.activities;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,11 +18,17 @@ import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.PrivateGroup;
+import com.offsidegame.offside.models.PrivateGroupCreationInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class CreatePrivateGroupActivity extends AppCompatActivity {
@@ -55,7 +62,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
         savePrivateGroupButtonTextView = (TextView) findViewById(R.id.cpg_save_private_group_button_text_view);
 
-        loadingRoot = (LinearLayout) findViewById(R.id.cpg_loading_root);
+        loadingRoot = (LinearLayout) findViewById(R.id.shared_loading_root);
         createPrivateGroupRoot = (LinearLayout) findViewById(R.id.cpg_create_private_group_root);
 
 
@@ -72,10 +79,10 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
                 String groupName = privateGroupNameEditText.getText().toString();
                 groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;
 
-                //todo: change this call to a method that create the group only , no game entry is required
+                String groupType= getResources().getString(R.string.key_private_group_name);
 
                 if (OffsideApplication.isBoundToSignalRService)
-                    OffsideApplication.signalRService.createPrivateGroup(groupName, playerId, selectedLanguage);
+                    OffsideApplication.signalRService.RequestCreatePrivateGroup(groupName, groupType, playerId, selectedLanguage);
                 else
                     throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
 
@@ -108,19 +115,23 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
+    public void onPrivateGroupCreated(PrivateGroup privateGroup) {
         try {
-            String privateGameCode = privateGameGeneratedEvent.getPrivateGameCode();
-            //joinGame(privateGameCode, true);
-            //privateGameCodeTextView.setText(privateGameCode);
-            //gameCodeEditText.setText(privateGameCode);
-            //privateGameCodeTextView.setVisibility(View.VISIBLE);
+
+            ArrayList<PrivateGroup> privateGroupsList = new ArrayList(OffsideApplication.getPrivateGroupsInfo().getPrivateGroups());
+            privateGroupsList.add(privateGroup);
+            OffsideApplication.getPrivateGroupsInfo().setPrivateGroups(privateGroupsList);
+
+            Intent intent = new Intent(context,LobbyActivity.class);
+            startActivity(intent);
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
 
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
@@ -139,6 +150,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
 
                 if (OffsideApplication.isBoundToSignalRService) {
+                    loadingRoot.setVisibility(View.GONE);
 
                 } else
                     throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");

@@ -271,7 +271,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
                         android:textColor="@color/chatText"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <LinearLayout
                             android:id="@+id/cm_incoming_time_to_answer_root"
@@ -349,7 +349,7 @@
                             android:background="@color/colorWhite"
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
-                            android:text="which team will score next?"
+                            android:text="which team will offsideCoins next?"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/OffsideMediumText" />
 
@@ -763,7 +763,7 @@
                             android:gravity="center"
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
-                            android:text="which team will score next?"
+                            android:text="which team will offsideCoins next?"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/OffsideMediumText" />
 
@@ -857,7 +857,7 @@
                             android:gravity="center"
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
-                            android:text="which team will score next?"
+                            android:text="which team will offsideCoins next?"
                             android:textColor="@color/colorBlack"
                             android:textSize="@dimen/OffsideMediumText" />
 
@@ -916,7 +916,7 @@
                             android:gravity="center"
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
-                            android:text="which team will score next?"
+                            android:text="which team will offsideCoins next?"
                             android:textColor="@color/colorBlack" />
 
                         <TextView
@@ -1011,7 +1011,9 @@
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
-                        android:textColor="@color/chatText">
+                        android:textColor="@color/chatText"
+                        android:visibility="gone"
+                        >
                         <TextView
                             android:id="@+id/cm_incoming_social_feed_text_message_text_view"
                             android:layout_width="wrap_content"
@@ -1034,8 +1036,6 @@
                             android:layout_marginTop="5dp"/>
 
                     </LinearLayout>
-
-
 
 
                     <!--Time msg sent-->

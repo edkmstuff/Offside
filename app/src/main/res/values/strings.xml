@@ -31,7 +31,7 @@
     <string name="recent_token_key">recentToken</string>
     <string name="lbl_you_are_connected">מחובר לשרת!</string>
     <string name="lbl_you_are_disconnected">מנותק מהשרת, מנסה להתחבר...</string>
-    <string name="game_code_key">gameCode</string>
+    <string name="private_game_id_key">privateGameId</string>
     <string name="lbl_randomly_selected_answer_title">נראה שלא הספקת לענות, אל דאגה בחרנו עבורך תשובה</string>
     <string name="lbl_user_selected_answer_title">אתה חושב ש..</string>
     <string name="offside_coins_key">offsideCoins</string>

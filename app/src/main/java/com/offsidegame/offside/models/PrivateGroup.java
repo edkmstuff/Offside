@@ -1,5 +1,6 @@
 package com.offsidegame.offside.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ public class PrivateGroup {
     @com.google.gson.annotations.SerializedName("N")
     private String name;
     @com.google.gson.annotations.SerializedName("PGP")
-    private PrivateGroupPlayer [] privateGroupPlayers;
+    private ArrayList<PrivateGroupPlayer> privateGroupPlayers;
     @com.google.gson.annotations.SerializedName("LP")
     private Date lastPlayed;
     @com.google.gson.annotations.SerializedName("GT")
@@ -23,7 +24,7 @@ public class PrivateGroup {
     public int getPlayersCount(){
         if(privateGroupPlayers == null)
             return 0;
-        return privateGroupPlayers.length;
+        return privateGroupPlayers.size();
 
     }
 
@@ -59,13 +60,6 @@ public class PrivateGroup {
         this.name = name;
     }
 
-    public String getGroupClassification(){
-        return name.length()> 6 ? "PRIVATE_GROUP" : "PUBLIC_GROUP";
-    }
-
-
-
-
 
     public Date getLastPlayed() {
         return lastPlayed;
@@ -75,13 +69,7 @@ public class PrivateGroup {
         this.lastPlayed = lastPlayed;
     }
 
-    public PrivateGroupPlayer[] getPrivateGroupPlayers() {
-        return this.privateGroupPlayers;
-    }
 
-    public void setPrivateGroupPlayers(PrivateGroupPlayer[] privateGroupPlayers) {
-        this.privateGroupPlayers = privateGroupPlayers;
-    }
 
     public String getGroupType() {
         return groupType;
@@ -89,5 +77,13 @@ public class PrivateGroup {
 
     public void setGroupType(String groupType) {
         this.groupType = groupType;
+    }
+
+    public ArrayList<PrivateGroupPlayer> getPrivateGroupPlayers() {
+        return privateGroupPlayers;
+    }
+
+    public void setPrivateGroupPlayers(ArrayList<PrivateGroupPlayer> privateGroupPlayers) {
+        this.privateGroupPlayers = privateGroupPlayers;
     }
 }

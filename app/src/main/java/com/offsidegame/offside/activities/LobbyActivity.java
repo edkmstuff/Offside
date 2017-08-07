@@ -14,10 +14,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -106,8 +104,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             playerId = player.getUid();
 
-//////////////////////////////////////////////////////////////////////////////////////////////
-            loadingRoot = (LinearLayout) findViewById(R.id.l_loading_root);
+            loadingRoot = (LinearLayout) findViewById(R.id.shared_loading_root);
             playerInfoRoot = (LinearLayout) findViewById(R.id.l_player_info_root);
             privateGroupsRoot = (LinearLayout) findViewById(R.id.l_private_groups_root);
 
@@ -443,7 +440,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                 SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
                 String gameId = settings.getString(getString(R.string.game_id_key), "");
-                String gameCode = settings.getString(getString(R.string.game_code_key), "");
+                String gameCode = settings.getString(getString(R.string.private_game_id_key), "");
 
 
                 if (OffsideApplication.isBoundToSignalRService) {

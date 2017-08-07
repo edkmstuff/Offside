@@ -9,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
@@ -21,7 +20,7 @@ import com.offsidegame.offside.models.PrivateGroupPlayer;
 import org.acra.ACRA;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 
 /**
@@ -71,7 +70,7 @@ public class PrivateGroupAdapter extends BaseAdapter {
         try {
             final PrivateGroupAdapter.ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = LayoutInflater.from(context).inflate(R.layout.private_group_item_1, parent, false);
+                convertView = LayoutInflater.from(context).inflate(R.layout.private_group_item, parent, false);
                 viewHolder = new PrivateGroupAdapter.ViewHolder();
 
                 //viewHolder.incomingProfilePictureImageView = (ImageView) convertView.findViewById(R.id.cm_incoming_profile_picture_image_view);
@@ -98,9 +97,10 @@ public class PrivateGroupAdapter extends BaseAdapter {
 
                 viewHolder.playersPlayInGroupRoot.removeAllViews();
 
-                PrivateGroupPlayer[] players = viewHolder.privateGroup.getPrivateGroupPlayers();
+                //PrivateGroupPlayer[] players = viewHolder.privateGroup.getPrivateGroupPlayers();
+                ArrayList<PrivateGroupPlayer> players = viewHolder.privateGroup.getPrivateGroupPlayers();
 
-                Arrays.sort(players, new Comparator<PrivateGroupPlayer>() {
+                Collections.sort(players, new Comparator<PrivateGroupPlayer>() {
                     public int compare(PrivateGroupPlayer p1, PrivateGroupPlayer p2) {
                         return  p1.getDisplayPriority() >= p2.getDisplayPriority() ? -1 :  p1.getDisplayPriority() < p2.getDisplayPriority()? 1  : 0;
                     }

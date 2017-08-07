@@ -196,7 +196,7 @@ public class SlotActivity extends AppCompatActivity {
                 if(OffsideApplication.isBoundToSignalRService && command != null)
                 {
                     String gameId = OffsideApplication.getGameInfo().getGameId();
-                    String gameCode = OffsideApplication.getGameInfo().getPrivateGameCode();
+                    String gameCode = OffsideApplication.getGameInfo().getPrivateGameId();
                     FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
                     String playerId = player.getUid();
                     OffsideApplication.signalRService.sendChatMessage(gameId, gameCode, command, playerId);

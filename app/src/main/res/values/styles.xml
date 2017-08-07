@@ -1,11 +1,6 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="AppTheme.Base">
-
-
-    </style>
-
     <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
 
     </style>
@@ -18,7 +13,8 @@
 
     <style name="editTextClassic" parent="@android:style/Widget.EditText">
         <item name="android:textColor">@android:color/primary_text_light</item>
-        <item name="android:background">@android:drawable/edit_text</item>
+        <!--<item name="android:background">@android:drawable/edit_text</item>-->
+        <item name="android:background">@color/transparentBackground</item>
         <item name="android:textColorHint">@android:color/darker_gray</item>
 
     </style>
@@ -39,22 +35,6 @@
     </style>
 
 
-    <!--<style messageText="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
-    <!-- Customize your theme here. -->
-    <!--<item messageText="colorPrimary">@color/colorPrimary</item>
-        <item messageText="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item messageText="colorAccent">@color/colorAccent</item>-->
-    <!--</style>-->
-
-    <!-- <style messageText="AppTheme.NoActionBar">
-        <item messageText="windowActionBar">false</item>
-        <item messageText="windowNoTitle">true</item>
-    </style>
-
-    <style messageText="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style messageText="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
--->
     <!--Offside Styles-->
 
     <style name="OffsideAnswer" parent="@android:style/Theme.Light.NoTitleBar">
@@ -95,6 +75,12 @@
         <item name="android:textSize">10sp</item>
         <item name="android:textColor">@color/colorWhiteSemiTransparent</item>
         <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="Button">
+        <item name="android:background">@color/colorButton</item>
+        <item name="android:textColor">@color/buttonTextColor</item>
+
     </style>
 
 

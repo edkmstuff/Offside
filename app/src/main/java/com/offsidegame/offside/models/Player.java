@@ -1,5 +1,7 @@
 package com.offsidegame.offside.models;
 
+import com.offsidegame.offside.R;
+
 import java.util.Map;
 
 /**
@@ -40,6 +42,17 @@ public class Player {
     private int rewardVideoWatchCount;
     @com.google.gson.annotations.SerializedName("PI")
     private int powerItems;
+    @com.google.gson.annotations.SerializedName("LOE")
+    private String levelOfExperience;
+
+    private static String levelOfExperience1 = "Begginer";
+    private static String levelOfExperience2 = "Wonderboy";
+    private static String levelOfExperience3 = "Pro";
+    private static String levelOfExperience4 = "Star";
+    private static String levelOfExperience5 = "Legend";
+
+
+
 
 
     public String getImageUrl() {
@@ -173,6 +186,32 @@ public class Player {
 
     public void setThirdPrize(int thirdPrize) {
         this.thirdPrize = thirdPrize;
+    }
+
+    public String getLevelOfExperience() {
+        return levelOfExperience;
+    }
+
+    public void setLevelOfExperience(String levelOfExperience) {
+        this.levelOfExperience = levelOfExperience;
+    }
+
+    public int getLevelOfExperienceImageResourceIdByLevelOfExperience(){
+        int resourceId=0;
+        if(levelOfExperience.equals(levelOfExperience1))
+            resourceId = R.drawable.level_baby;
+        if(levelOfExperience.equals(levelOfExperience2))
+            resourceId = R.drawable.level_kid;
+        if(levelOfExperience.equals(levelOfExperience3))
+            resourceId = R.drawable.level_pro;
+        if(levelOfExperience.equals(levelOfExperience4))
+            resourceId = R.drawable.level_star;
+        if(levelOfExperience.equals(levelOfExperience5))
+            resourceId = R.drawable.level_legend;
+
+
+        return resourceId;
+
     }
 }
 
