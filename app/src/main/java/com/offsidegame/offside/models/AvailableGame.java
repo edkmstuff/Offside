@@ -1,5 +1,6 @@
 package com.offsidegame.offside.models;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -65,12 +66,26 @@ public class AvailableGame {
         return startTime;
     }
 
+    public String getStartTimeString() {
+        if (startTime == null)
+            return "";
+
+        return new SimpleDateFormat("HH:mm").format(startTime);
+    }
+
+    public String getStartDateString() {
+        if (startTime == null)
+            return "";
+
+        return new SimpleDateFormat("dd/MM/yy").format(startTime);
+    }
+
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
     public String getHomeTeam() {
-        return homeTeam;
+        return homeTeam.toUpperCase();
     }
 
     public void setHomeTeam(String homeTeam) {
@@ -78,7 +93,7 @@ public class AvailableGame {
     }
 
     public String getAwayTeam() {
-        return awayTeam;
+        return awayTeam.toUpperCase();
     }
 
     public void setAwayTeam(String awayTeam) {

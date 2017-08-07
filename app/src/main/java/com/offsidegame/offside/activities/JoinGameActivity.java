@@ -104,7 +104,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 @Override
                 public void onClick(View view) {
                     String gameCodeString = gameCodeEditText.getText().toString();
-                    joinPrivateGame(gameCodeString, false);
+                    joinPrivateGame(gameCodeString);
                 }
             });
 
@@ -191,7 +191,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     }
 
 
-    private void joinPrivateGame(String privateGameId, boolean isPrivateGameCreator) {
+    private void joinPrivateGame(String privateGameId) {
         if (OffsideApplication.isBoundToSignalRService) {
 
             OffsideApplication.setIsPlayerQuitGame(false);
@@ -310,7 +310,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 //Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
                 SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
                 String privateGameId = settings.getString(getString(R.string.private_game_id_key), "");
-                joinPrivateGame(privateGameId, false);
+                joinPrivateGame(privateGameId);
 
             } else {
                 loadingGameRoot.setVisibility(View.GONE);
@@ -385,7 +385,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
         try {
             String privateGameCode = privateGameGeneratedEvent.getPrivateGameCode();
-            joinPrivateGame(privateGameCode, true);
+            joinPrivateGame(privateGameCode);
             //privateGameCodeTextView.setText(privateGameCode);
             //gameCodeEditText.setText(privateGameCode);
             //privateGameCodeTextView.setVisibility(View.VISIBLE);

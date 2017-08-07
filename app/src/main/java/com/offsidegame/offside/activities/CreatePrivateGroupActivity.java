@@ -118,9 +118,8 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
     public void onPrivateGroupCreated(PrivateGroup privateGroup) {
         try {
 
-            ArrayList<PrivateGroup> privateGroupsList = new ArrayList(OffsideApplication.getPrivateGroupsInfo().getPrivateGroups());
-            privateGroupsList.add(privateGroup);
-            OffsideApplication.getPrivateGroupsInfo().setPrivateGroups(privateGroupsList);
+
+            OffsideApplication.getPrivateGroupsInfo().getPrivateGroups().add(privateGroup);
 
             Intent intent = new Intent(context,LobbyActivity.class);
             startActivity(intent);

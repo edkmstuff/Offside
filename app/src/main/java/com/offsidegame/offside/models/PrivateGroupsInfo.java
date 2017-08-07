@@ -1,6 +1,8 @@
 package com.offsidegame.offside.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by user on 7/16/2017.
@@ -25,6 +27,17 @@ public class PrivateGroupsInfo {
     }
 
     public ArrayList<PrivateGroup> getPrivateGroups() {
+        if (privateGroups == null)
+            privateGroups = new ArrayList<>();
+
+
+        Collections.sort(privateGroups, new Comparator<PrivateGroup>() {
+            @Override
+            public int compare(PrivateGroup privateGroup, PrivateGroup other) {
+                return privateGroup.orderDate().compareTo(other.orderDate());
+            }
+        });
+
         return privateGroups;
     }
 

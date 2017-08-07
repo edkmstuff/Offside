@@ -280,6 +280,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         super.onResume();
         EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
+        addGroupsCategories();
 
 
     }
@@ -383,6 +384,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private void addGroupsCategories() {
 
         //todo: check if we can reduce duplicate code
+
+        if (OffsideApplication.getPrivateGroupsInfo() == null
+                || OffsideApplication.getPrivateGroupsInfo().getPrivateGroups() == null
+                || OffsideApplication.getPrivateGroupsInfo().getPrivateGroups().size() == 0)
+            return;
 
         CustomTabsFragmentPagerAdapter pagerAdapterFragment = new CustomTabsFragmentPagerAdapter(this.getSupportFragmentManager());
         PrivateGroupsFragment privateGroupsFragment = new PrivateGroupsFragment();

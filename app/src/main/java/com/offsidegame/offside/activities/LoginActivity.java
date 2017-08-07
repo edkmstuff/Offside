@@ -163,7 +163,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                                 new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build(),
                                                 new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
                                                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()
-                                                ))
+                                        ))
                                 //.setTosUrl("https://superapp.example.com/terms-of-service.html")
                                 //.setPrivacyPolicyUrl("https://superapp.example.com/privacy-policy.html")
                                 .setIsSmartLockEnabled(false)
@@ -200,7 +200,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
 
         String playerId = player.getUid();
-        String playerDisplayName = (player.getDisplayName() == null || player.getDisplayName().equals("") ) ? "NO NAME" : player.getDisplayName() ;
+        String playerDisplayName = (player.getDisplayName() == null || player.getDisplayName().equals("")) ? "NO NAME" : player.getDisplayName();
         String playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
         String playerEmail = player.getEmail();
 

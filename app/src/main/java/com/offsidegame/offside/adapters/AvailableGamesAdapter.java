@@ -2,6 +2,7 @@ package com.offsidegame.offside.adapters;
 
 import android.content.Context;
 import android.net.Uri;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupPlayer;
 
 import org.acra.ACRA;
@@ -63,7 +67,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
         TextView startDateTextView;
         TextView playersCountTextView;
         LinearLayout playersPlayInGameRoot;
-
+        TextView joinGameButtonTextView;
 
     }
 
@@ -83,6 +87,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 viewHolder.startDateTextView = (TextView) convertView.findViewById(R.id.ag_start_date_text_view);
                 viewHolder.playersPlayInGameRoot = (LinearLayout) convertView.findViewById(R.id.ag_players_play_in_game_root);
                 viewHolder.playersCountTextView = (TextView) convertView.findViewById(R.id.ag_players_count_text_view);
+                viewHolder.joinGameButtonTextView = (TextView) convertView.findViewById(R.id.ag_join_game_button_text_view);
 
                 convertView.setTag(viewHolder);
 
@@ -101,8 +106,8 @@ public class AvailableGamesAdapter extends BaseAdapter {
             ImageHelper.loadImage(context, viewHolder.homeTeamLogoImageView, homeTeamLogoUri);
             Uri awayTeamLogoUri = Uri.parse(viewHolder.availableGame.getAwayTeamLogoUrl());
             ImageHelper.loadImage(context, viewHolder.awayTeamLogoImageView, awayTeamLogoUri);
-            viewHolder.startTimeTextView.setText(viewHolder.availableGame.getStartTime().toString());
-            viewHolder.startDateTextView.setText(viewHolder.availableGame.getStartTime().toString());
+            viewHolder.startTimeTextView.setText(viewHolder.availableGame.getStartTimeString());
+            viewHolder.startDateTextView.setText(viewHolder.availableGame.getStartDateString());
             if (viewHolder.availableGame.getPrivateGroupPlayers() == null)
                 viewHolder.availableGame.setPrivateGroupPlayers(new PrivateGroupPlayer[0]);
             viewHolder.playersCountTextView.setText(Integer.toString(viewHolder.availableGame.getPrivateGroupPlayers().length) + " " + context.getString(R.string.lbl_now_playing));
@@ -124,6 +129,18 @@ public class AvailableGamesAdapter extends BaseAdapter {
             }
 
 
+            viewHolder.joinGameButtonTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+
+
+
+
+
+
             return convertView;
 
         } catch (Exception ex) {
@@ -133,6 +150,21 @@ public class AvailableGamesAdapter extends BaseAdapter {
 
         return null;
 
+    }
+
+    private void joinPrivateGame(String privateGameId) {
+        if (OffsideApplication.isBoundToSignalRService) {
+
+            OffsideApplication.setIsPlayerQuitGame(false);
+            String androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+            PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
+            String gameId = OffsideApplication.getGameInfo().getGameId();
+            String groupId= selectedPrivateGroup.getId();
+            FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
+            String playerId = player.getUid();
+            OffsideApplication.signalRService.RequestJoinPrivateGame(gameId, groupId, privateGameId,playerId, androidDeviceId);
+
+        }
     }
 
 

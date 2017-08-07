@@ -15,6 +15,7 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.PrivateGroupAdapter;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
+import com.offsidegame.offside.models.PrivateGroupsInfo;
 
 import java.util.ArrayList;
 
@@ -43,7 +44,13 @@ public class PrivateGroupsFragment extends Fragment {
 
     private ArrayList<PrivateGroup> getPrivateGroups() {
         groupType = this.getArguments().getString(getString(R.string.key_group_type));
-        privateGroups = OffsideApplication.getPrivateGroupsInfo().getPrivateGroups();
+        PrivateGroupsInfo privateGroupsInfo = OffsideApplication.getPrivateGroupsInfo();
+        if (privateGroupsInfo != null)
+            privateGroups = privateGroupsInfo.getPrivateGroups();
+        if (privateGroups == null)
+            privateGroups = new ArrayList<>();
+
+
 
         ArrayList filteredGroupsList = new ArrayList<>();
 
@@ -59,19 +66,23 @@ public class PrivateGroupsFragment extends Fragment {
 
     @Override
     public String toString() {
-        groupType = this.getArguments().getString(getString(R.string.key_group_type));
-        String title = getString(R.string.lbl_unknown);
-        if (groupType == null)
-            return title;
+//        groupType = this.getArguments().getString(getString(R.string.key_group_type));
+//        String title = getString(R.string.lbl_unknown);
+//        if (groupType == null)
+//            return title;
+//
+//        if (groupType.equals(getString(R.string.key_private_group_name)))
+//            title = getString(R.string.lbl_my_private_groups);
+//        else if (groupType.equals(getString(R.string.key_public_group_name)))
+//            title = getString(R.string.lbl_public_groups);
+//
+//        return title;
 
-        if (groupType.equals(getString(R.string.key_private_group_name)))
-            title = getString(R.string.lbl_my_private_groups);
-        else if (groupType.equals(getString(R.string.key_public_group_name)))
-            title = getString(R.string.lbl_public_groups);
-
-        return title;
+        return "group";
 
     }
+
+
 
 
 }

@@ -11,14 +11,26 @@ public class PrivateGroup {
 
     @com.google.gson.annotations.SerializedName("I")
     private String id;
+
     @com.google.gson.annotations.SerializedName("N")
     private String name;
+
     @com.google.gson.annotations.SerializedName("PGP")
     private ArrayList<PrivateGroupPlayer> privateGroupPlayers;
-    @com.google.gson.annotations.SerializedName("LP")
-    private Date lastPlayed;
+
     @com.google.gson.annotations.SerializedName("GT")
     private String groupType;
+
+    @com.google.gson.annotations.SerializedName("LU")
+    private Date lastUpdated;
+
+    @com.google.gson.annotations.SerializedName("LUB")
+    private String lastUpdatedBy;
+
+
+    @com.google.gson.annotations.SerializedName("LP")
+    private Date lastPlayed;
+
 
 
     public int getPlayersCount(){
@@ -86,4 +98,33 @@ public class PrivateGroup {
     public void setPrivateGroupPlayers(ArrayList<PrivateGroupPlayer> privateGroupPlayers) {
         this.privateGroupPlayers = privateGroupPlayers;
     }
+
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    public String getLastUpdatedBy() {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy(String lastUpdatedBy) {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    public Date orderDate() {
+        if (lastPlayed == null && lastUpdated == null)
+            return new Date(0);
+        else if (lastPlayed == null)
+            return lastUpdated;
+        else if (lastUpdated == null)
+            return lastPlayed;
+        else
+            return lastPlayed.after(lastUpdated) ? lastPlayed : lastUpdated;
+    }
+
+
 }
