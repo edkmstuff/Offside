@@ -34,7 +34,7 @@ public class PrivateGroupsInfo {
         Collections.sort(privateGroups, new Comparator<PrivateGroup>() {
             @Override
             public int compare(PrivateGroup privateGroup, PrivateGroup other) {
-                return privateGroup.orderDate().compareTo(other.orderDate());
+                return other.orderDate().compareTo(privateGroup.orderDate());
             }
         });
 

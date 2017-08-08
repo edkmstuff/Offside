@@ -32,7 +32,7 @@ public class PlayerInGameRecord {
     @com.google.gson.annotations.SerializedName("TAQ")
     private Integer totalAnsweredQuestions;
 
-    @com.google.gson.annotations.SerializedName("TQ")
+    @com.google.gson.annotations.SerializedName("DU")
     private Date dateUpdated;
 
 

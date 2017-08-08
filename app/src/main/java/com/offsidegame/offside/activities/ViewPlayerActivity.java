@@ -230,7 +230,6 @@ public class ViewPlayerActivity extends AppCompatActivity {
 
             //set latest game tab details
 
-
             PlayerInGameRecord mostRecentGamePlayed = userProfileInfo.getMostRecentPlayedGame();
             latestGamePrivateGroupTextView.setText(mostRecentGamePlayed.getPrivateGroup().getName());
             latestGameTitleTextView.setText(mostRecentGamePlayed.getGameTitle());
@@ -246,7 +245,6 @@ public class ViewPlayerActivity extends AppCompatActivity {
 
             //podium stuff
             List<Player> winners = userProfileInfo.getMostRecentPlayedGameWinners();
-
 
             //option 1 - podium
             int j=0;

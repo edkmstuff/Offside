@@ -88,7 +88,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private SharedPreferences settings;
 
 
-
     //</editor-fold>
 
 
@@ -217,10 +216,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 @Override
                 public void onClick(View view) {
 
-                    Intent intent = new Intent(context,CreatePrivateGroupActivity.class);
+                    Intent intent = new Intent(context, CreatePrivateGroupActivity.class);
                     startActivity(intent);
 
-                }});
+                }
+            });
 
             bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -234,7 +234,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                             break;
                         case R.id.nav_action_profile:
-                            viewRoots[1].setVisibility(View.VISIBLE);
+                            Intent intent = new Intent(context, ViewPlayerActivity.class);
+                            startActivity(intent);
                             break;
                         case R.id.nav_action_shop:
                             viewRoots[2].setVisibility(View.VISIBLE);
@@ -249,9 +250,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     return true;
                 }
             });
-
-
-
 
 
         } catch (Exception ex) {
@@ -279,9 +277,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     public void onResume() {
 
         super.onResume();
+        loadingRoot.setVisibility(View.VISIBLE);
         EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
-        addGroupsCategories();
-
+        //this.addGroupsCategories();
+        //tabLayout.addOnTabSelectedListener(listener);
+        //loadingRoot.setVisibility(View.GONE);
 
     }
 
@@ -384,28 +384,34 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private void addGroupsCategories() {
 
         //todo: check if we can reduce duplicate code
-
-        if (OffsideApplication.getPrivateGroupsInfo() == null
-                || OffsideApplication.getPrivateGroupsInfo().getPrivateGroups() == null
-                || OffsideApplication.getPrivateGroupsInfo().getPrivateGroups().size() == 0)
-            return;
-
-        CustomTabsFragmentPagerAdapter pagerAdapterFragment = new CustomTabsFragmentPagerAdapter(this.getSupportFragmentManager());
-        PrivateGroupsFragment privateGroupsFragment = new PrivateGroupsFragment();
-        Bundle privateGroupsFragmentBundle = new Bundle();
-        privateGroupsFragmentBundle.putString(getString(R.string.key_group_type), getString(R.string.key_private_group_name));
-        privateGroupsFragment.setArguments(privateGroupsFragmentBundle);
-        pagerAdapterFragment.addFragment(privateGroupsFragment);
+        try {
 
 
-        PrivateGroupsFragment publicGroupsFragment = new PrivateGroupsFragment();
-        Bundle publicGroupsFragmentBundle = new Bundle();
-        publicGroupsFragmentBundle.putString(getString(R.string.key_group_type), getString(R.string.key_public_group_name));
-        publicGroupsFragment.setArguments(publicGroupsFragmentBundle);
+            if (OffsideApplication.getPrivateGroupsInfo() == null
+                    || OffsideApplication.getPrivateGroupsInfo().getPrivateGroups() == null
+                    || OffsideApplication.getPrivateGroupsInfo().getPrivateGroups().size() == 0)
+                return;
 
-        pagerAdapterFragment.addFragment(publicGroupsFragment);
-        //set adapter to ViePager
-        viewPager.setAdapter(pagerAdapterFragment);
+            CustomTabsFragmentPagerAdapter pagerAdapterFragment = new CustomTabsFragmentPagerAdapter(this.getSupportFragmentManager());
+            PrivateGroupsFragment privateGroupsFragment = new PrivateGroupsFragment();
+            Bundle privateGroupsFragmentBundle = new Bundle();
+            privateGroupsFragmentBundle.putString(getString(R.string.key_group_type), getString(R.string.key_private_group_name));
+            privateGroupsFragment.setArguments(privateGroupsFragmentBundle);
+            pagerAdapterFragment.addFragment(privateGroupsFragment);
+
+
+            PrivateGroupsFragment publicGroupsFragment = new PrivateGroupsFragment();
+            Bundle publicGroupsFragmentBundle = new Bundle();
+            publicGroupsFragmentBundle.putString(getString(R.string.key_group_type), getString(R.string.key_public_group_name));
+            publicGroupsFragment.setArguments(publicGroupsFragmentBundle);
+
+            pagerAdapterFragment.addFragment(publicGroupsFragment);
+            //set adapter to ViePager
+            viewPager.setAdapter(pagerAdapterFragment);
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
     }
 
     private void addLeaguesCategories() {

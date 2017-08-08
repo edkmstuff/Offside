@@ -74,8 +74,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    public final String ip = new String("192.168.1.140:18313");
-    //public final String ip = new String("10.0.0.17:18313");
+    //public final String ip = new String("192.168.1.140:18313");
+    public final String ip = new String("10.0.0.17:18313");
 
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
@@ -679,7 +679,7 @@ public class SignalRService extends Service {
     public void RequestUserProfileData(String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke("RequestUserProfileData", playerId);
+        hub.invoke("RequestUserProfile", playerId);
     }
 
 
