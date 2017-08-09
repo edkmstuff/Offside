@@ -859,6 +859,7 @@
                             android:padding="5dp">
 
                             <ImageView
+                                android:id="@+id/vp_records_details_level_baby_image_view"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:src="@drawable/level_baby"/>
@@ -883,6 +884,7 @@
                             android:padding="5dp">
 
                             <ImageView
+                                android:id="@+id/vp_records_details_level_kid_image_view"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:src="@drawable/level_kid"
@@ -907,6 +909,7 @@
                             android:padding="5dp">
 
                             <ImageView
+                                android:id="@+id/vp_records_details_level_pro_image_view"
                                 android:layout_width="55dp"
                                 android:layout_height="55dp"
                                 android:src="@drawable/level_star"/>
@@ -931,6 +934,7 @@
                             android:padding="5dp">
 
                             <ImageView
+                                android:id="@+id/vp_records_details_level_star_image_view"
                                 android:layout_width="60dp"
                                 android:layout_height="60dp"
                                 android:src="@drawable/level_pro"/>
@@ -955,6 +959,7 @@
                             android:padding="5dp">
 
                             <ImageView
+                                android:id="@+id/vp_records_details_level_legend_image_view"
                                 android:layout_width="70dp"
                                 android:layout_height="70dp"
                                 android:src="@drawable/level_legend"/>
