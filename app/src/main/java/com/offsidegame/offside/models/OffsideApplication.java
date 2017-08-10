@@ -21,6 +21,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -87,6 +88,8 @@ public class OffsideApplication extends Application {
     private  static PrivateGroup selectedPrivateGroup;
 
     private static UserProfileInfo userProfileInfo;
+
+
 
 
 

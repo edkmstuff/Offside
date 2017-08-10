@@ -9,28 +9,65 @@ import java.util.Date;
  */
 
 public class Reward {
-    private String rewardType;
-    private String privateGroupName;
-    private Position position;
+
+
+    @com.google.gson.annotations.SerializedName("PGN")
+    private String groupName;
+
+    @com.google.gson.annotations.SerializedName("P")
+    private int position;
+
+    @com.google.gson.annotations.SerializedName("TP")
+    private int totalPlayers;
+
+    @com.google.gson.annotations.SerializedName("RTN")
+    private String rewardTypeName;
+
+    @com.google.gson.annotations.SerializedName("RN")
+    private Integer rewardNumber;
+
+    @com.google.gson.annotations.SerializedName("GT")
     private String gameTitle;
-    private Date gameStartDate;
 
-    private static String rewardTypeGoldTrophy = "GOLD_TROPHY";
-    private static String rewardTypeSilverTrophy = "SILVER_TROPHY";
-    private static String rewardTypeBronzeTrophy = "BRONZE_TROPHY";
-    //private static String rewardTypeTrophy = "TROPHY";
-    private static String rewardTypeCoins = "COINS";
 
-    public void setRewardType(String rewardType) {
-        this.rewardType = rewardType;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public Position getPosition() {
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public int getPosition() {
         return position;
     }
 
-    public void setPosition(Position position) {
+    public void setPosition(int position) {
         this.position = position;
+    }
+
+    public int getTotalPlayers() {
+        return totalPlayers;
+    }
+
+    public void setTotalPlayers(int totalPlayers) {
+        this.totalPlayers = totalPlayers;
+    }
+
+    public String getRewardTypeName() {
+        return rewardTypeName;
+    }
+
+    public void setRewardTypeName(String rewardTypeName) {
+        this.rewardTypeName = rewardTypeName;
+    }
+
+    public Integer getRewardNumber() {
+        return rewardNumber;
+    }
+
+    public void setRewardNumber(Integer rewardNumber) {
+        this.rewardNumber = rewardNumber;
     }
 
     public String getGameTitle() {
@@ -49,23 +86,26 @@ public class Reward {
         this.gameStartDate = gameStartDate;
     }
 
-    public String getPrivateGroupName() {
-        return privateGroupName;
-    }
+    @com.google.gson.annotations.SerializedName("GST")
+    private Date gameStartDate;
 
-    public void setPrivateGroupName(String privateGroupName) {
-        this.privateGroupName = privateGroupName;
-    }
+
+    private static String rewardTypeGoldTrophy = "GOLD_TROPHY";
+    private static String rewardTypeSilverTrophy = "SILVER_TROPHY";
+    private static String rewardTypeBronzeTrophy = "BRONZE_TROPHY";
+    //private static String rewardTypeTrophy = "TROPHY";
+    private static String rewardTypeCoins = "COINS";
+
 
     public int getRewardImageResourceIdByRewardType(){
         int resourceId=0;
-        if(rewardType.equals(rewardTypeGoldTrophy))
+        if(rewardTypeName.equals(rewardTypeGoldTrophy))
             resourceId = R.drawable.trophy_gold_big;
-        if(rewardType.equals(rewardTypeSilverTrophy))
+        if(rewardTypeName.equals(rewardTypeSilverTrophy))
             resourceId = R.drawable.trophy_silver_big;
-        if(rewardType.equals(rewardTypeBronzeTrophy))
+        if(rewardTypeName.equals(rewardTypeBronzeTrophy))
             resourceId = R.drawable.trophy_bronze_big;
-        if(rewardType.equals(rewardTypeCoins))
+        if(rewardTypeName.equals(rewardTypeCoins))
             resourceId = R.drawable.gold_coin;
 
         return resourceId;

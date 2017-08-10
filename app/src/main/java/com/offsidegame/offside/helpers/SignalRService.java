@@ -43,6 +43,7 @@ import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.Scoreboard;
 import com.offsidegame.offside.events.ScoreboardEvent;
 import com.offsidegame.offside.models.User;
+import com.offsidegame.offside.models.UserProfileInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -296,6 +297,13 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(postAnswerRequestInfo);
             }
         }, PostAnswerRequestInfo.class);
+
+        hub.on("UserProfileInfoReceived", new SubscriptionHandler1<UserProfileInfo>() {
+            @Override
+            public void run(UserProfileInfo userProfileInfo) {
+                EventBus.getDefault().post(userProfileInfo);
+            }
+        }, UserProfileInfo.class);
 
 
 

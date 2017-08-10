@@ -1,6 +1,8 @@
 package com.offsidegame.offside.models;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by user on 8/1/2017.
@@ -8,19 +10,77 @@ import java.util.ArrayList;
 
 public class UserProfileInfo {
 
-    private Player player;
+
+    @com.google.gson.annotations.SerializedName("IU")
+    private String imageUrl;
+
+    @com.google.gson.annotations.SerializedName("PN")
+    private String playerName;
+
+    @com.google.gson.annotations.SerializedName("ELN")
+    private String experienceLevelName;
+
+    @com.google.gson.annotations.SerializedName("TGP")
+    private int totalGamesPlayed;
+
+    @com.google.gson.annotations.SerializedName("TT")
+    private int totalTrophies;
+
+    @com.google.gson.annotations.SerializedName("APPG")
+    private double averageProfitPerGame;
+
+    @com.google.gson.annotations.SerializedName("R")
     private ArrayList<Reward> rewards;
-    private PlayerInGameRecord mostRecentPlayedGame;
-    private Position position;
-    private ArrayList<Player> mostRecentPlayedGameWinners;
 
+    @com.google.gson.annotations.SerializedName("PG")
+    private ArrayList<PlayerGame> playerGames;
 
-    public Player getPlayer() {
-        return player;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
+    }
+
+    public String getExperienceLevelName() {
+        return experienceLevelName;
+    }
+
+    public void setExperienceLevelName(String experienceLevelName) {
+        this.experienceLevelName = experienceLevelName;
+    }
+
+    public int getTotalGamesPlayed() {
+        return totalGamesPlayed;
+    }
+
+    public void setTotalGamesPlayed(int totalGamesPlayed) {
+        this.totalGamesPlayed = totalGamesPlayed;
+    }
+
+    public int getTotalTrophies() {
+        return totalTrophies;
+    }
+
+    public void setTotalTrophies(int totalTrophies) {
+        this.totalTrophies = totalTrophies;
+    }
+
+    public double getAverageProfitPerGame() {
+        return averageProfitPerGame;
+    }
+
+    public void setAverageProfitPerGame(double averageProfitPerGame) {
+        this.averageProfitPerGame = averageProfitPerGame;
     }
 
     public ArrayList<Reward> getRewards() {
@@ -31,29 +91,29 @@ public class UserProfileInfo {
         this.rewards = rewards;
     }
 
-
-    public PlayerInGameRecord getMostRecentPlayedGame() {
-        return mostRecentPlayedGame;
+    public ArrayList<PlayerGame> getPlayerGames() {
+        return playerGames;
     }
 
-    public void setMostRecentPlayedGame(PlayerInGameRecord mostRecentPlayedGame) {
-        this.mostRecentPlayedGame = mostRecentPlayedGame;
+    public void setPlayerGames(ArrayList<PlayerGame> playerGames) {
+        this.playerGames = playerGames;
     }
 
-    public Position getPosition() {
-        return position;
-    }
+    public PlayerGame getMostRecentGamePlayed(){
 
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
-    public ArrayList<Player> getMostRecentPlayedGameWinners() {
-        return mostRecentPlayedGameWinners;
-    }
-
-    public void setMostRecentPlayedGameWinners(ArrayList<Player> mostRecentPlayedGameWinners) {
-        this.mostRecentPlayedGameWinners = mostRecentPlayedGameWinners;
+        Collections.sort(this.playerGames,new Comparator<PlayerGame>() {
+            @Override
+            public int compare(PlayerGame playerGame1, PlayerGame playerGame2) {
+                return playerGame1.getGameStartTime().after(playerGame2.getGameStartTime())? 1: -1 ;
+            }
+        });
+        return this.playerGames.get(this.playerGames.size()-1);
     }
 }
+
+
+
+
+
+
 
