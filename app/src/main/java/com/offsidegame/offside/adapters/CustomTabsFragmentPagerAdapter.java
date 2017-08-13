@@ -5,6 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 
+import com.offsidegame.offside.R;
+
 import java.util.ArrayList;
 
 /**
@@ -37,7 +39,23 @@ public class CustomTabsFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
+
         String title = fragments.get(position).toString();
+
+//        String groupType = fragments.get(position).getArguments().getString("groupType");
+//        String title = "לא ידוע";
+//        if (groupType == null)
+//            return title;
+//
+//        if (groupType.equals("PRIVATE_GROUP"))
+//            title = "הקבוצות שלי";
+//        else if (groupType.equals("PUBLIC_GROUP"))
+//            title = "קבוצות ציבוריות";
+
         return title;
+
+
     }
+
+
 }

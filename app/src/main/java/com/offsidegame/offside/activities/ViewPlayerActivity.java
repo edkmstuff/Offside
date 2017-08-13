@@ -31,10 +31,12 @@ import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.ocpsoft.prettytime.PrettyTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class ViewPlayerActivity extends AppCompatActivity {
@@ -300,7 +302,12 @@ public class ViewPlayerActivity extends AppCompatActivity {
             PlayerGame mostRecentGamePlayed = userProfileInfo.getMostRecentGamePlayed();
             latestGamePrivateGroupTextView.setText(mostRecentGamePlayed.getGroupName());
             latestGameTitleTextView.setText(mostRecentGamePlayed.getGameTitle());
-            latestGameStartDateTextView.setText(mostRecentGamePlayed.getGameStartTime().toString());
+
+            PrettyTime p = new PrettyTime();
+
+            //latestGameStartDateTextView.setText(mostRecentGamePlayed.getGameStartTime().toString());
+            latestGameStartDateTextView.setText(p.format(mostRecentGamePlayed.getGameStartTime()));
+
 
             String latestGamePositionOutOfText = Integer.toString(mostRecentGamePlayed.getPosition()) + " Out of " + Integer.toString(mostRecentGamePlayed.getTotalPlayers());
             latestGamePositionTextView.setText(latestGamePositionOutOfText);
@@ -398,7 +405,12 @@ public class ViewPlayerActivity extends AppCompatActivity {
                     gameTitleTextView.setText(reward.getGameTitle());
 
                     TextView gameDateTextView = (TextView) trophiesLayout.getChildAt(4);
-                    gameDateTextView.setText(reward.getGameStartDate().toString());
+                    //gameDateTextView.setText(reward.getGameStartDate().toString());
+                    Date gameStartDate = reward.getGameStartDate();
+                    PrettyTime pt = new PrettyTime();
+                    gameDateTextView.setText(pt.format(gameStartDate));
+
+
 
                     trophiesClosetRoot.addView(trophiesLayout);
                 }

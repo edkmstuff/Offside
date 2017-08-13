@@ -646,7 +646,7 @@ public class SignalRService extends Service {
 
     }
 
-    public void requestPrivateGamesInfo(String playerId) {
+    public void requestPrivateGroupsInfo(String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         hub.invoke("RequestPrivateGroupsInfo", playerId);

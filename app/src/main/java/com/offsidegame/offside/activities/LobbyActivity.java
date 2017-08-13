@@ -297,6 +297,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         EventBus.getDefault().unregister(context);
         tabLayout.removeOnTabSelectedListener(listener);
         leaguesSelectionTabLayout.removeOnTabSelectedListener(leaguesSelectionListener);
+        viewPager.setAdapter(null);
+
         super.onStop();
     }
 
@@ -327,9 +329,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             //update groups stuff
 
             this.addGroupsCategories();
-            tabLayout.addOnTabSelectedListener(listener);
-            loadingRoot.setVisibility(View.GONE);
-
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -406,8 +405,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             publicGroupsFragment.setArguments(publicGroupsFragmentBundle);
 
             pagerAdapterFragment.addFragment(publicGroupsFragment);
-            //set adapter to ViePager
-            viewPager.setAdapter(pagerAdapterFragment);
+            //set adapter to ViewPager
+            if(viewPager.getAdapter() == null)
+                viewPager.setAdapter(pagerAdapterFragment);
+
+            tabLayout.addOnTabSelectedListener(listener);
+            loadingRoot.setVisibility(View.GONE);
+
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 
@@ -428,11 +432,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         IsraeliLeagueAvailableGameFragmentBundle.putString(getString(R.string.key_league_type), "IL");
         IsraeliLeagueAvailableGameFragment.setArguments(IsraeliLeagueAvailableGameFragmentBundle);
         pagerAdapterFragment1.addFragment(IsraeliLeagueAvailableGameFragment);
+        loadingRoot.setVisibility(View.GONE);
 
 
-        //set adapter to ViePager
+        //set adapter to ViewPager
 
         leaguesPagesViewPager.setAdapter(pagerAdapterFragment1);
+        leaguesSelectionTabLayout.addOnTabSelectedListener(leaguesSelectionListener);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -459,10 +465,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     if (gameId != null && gameId.length() > 0 && gameCode != null && gameCode.length() > 0)
                         OffsideApplication.signalRService.isGameActive(gameId, gameCode);
                     //OffsideApplication.signalRService.getAvailableGames();
-                    OffsideApplication.signalRService.requestPrivateGamesInfo(playerId);
-
-
-                    //OffsideApplication.signalRService.getAvailableLanguages();
+                    OffsideApplication.signalRService.requestPrivateGroupsInfo(playerId);
 
                 } else
                     throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");

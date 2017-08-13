@@ -5,9 +5,7 @@
     android:layoutDirection="ltr"
     android:orientation="vertical"
     android:gravity="center"
-    tools:context="com.offsidegame.offside.activities.ViewPlayerActivity"
-
-    >
+    tools:context="com.offsidegame.offside.activities.ViewPlayerActivity">
 
     <TextView
         android:layout_width="wrap_content"
