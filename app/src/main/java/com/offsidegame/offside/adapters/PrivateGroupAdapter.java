@@ -102,7 +102,13 @@ public class PrivateGroupAdapter extends BaseAdapter {
 
                 Collections.sort(players, new Comparator<PrivateGroupPlayer>() {
                     public int compare(PrivateGroupPlayer p1, PrivateGroupPlayer p2) {
-                        return  p1.getDisplayPriority() >= p2.getDisplayPriority() ? -1 :  p1.getDisplayPriority() < p2.getDisplayPriority()? 1  : 0;
+                        if(  p1.getDisplayPriority() < p2.getDisplayPriority())
+                            return -1;
+                        if(  p1.getDisplayPriority() > p2.getDisplayPriority())
+                            return 1;
+
+                        return 0;
+
                     }
                 });
 

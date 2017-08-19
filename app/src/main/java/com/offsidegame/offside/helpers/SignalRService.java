@@ -20,6 +20,7 @@ import com.offsidegame.offside.events.AvailableGamesEvent;
 import com.offsidegame.offside.events.AvailableLanguagesEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.models.LeagueRecord;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.ChatEvent;
@@ -75,8 +76,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:18313");
-    public final String ip = new String("10.0.0.17:18313");
+    public final String ip = new String("192.168.1.140:18315");
+    //public final String ip = new String("10.0.0.17:18313");
 
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
@@ -304,6 +305,14 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(userProfileInfo);
             }
         }, UserProfileInfo.class);
+
+        hub.on("LeagueRecordsReceived", new SubscriptionHandler1<LeagueRecord[]>() {
+            @Override
+            public void run(LeagueRecord[] leagueRecords) {
+                EventBus.getDefault().post(leagueRecords);
+            }
+        }, LeagueRecord[].class);
+
 
 
 
@@ -688,6 +697,12 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         hub.invoke("RequestUserProfile", playerId);
+    }
+
+    public void requestLeagueRecords(String playerId, String groupId) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke("RequestLeagueRecords", playerId, groupId);
     }
 
 

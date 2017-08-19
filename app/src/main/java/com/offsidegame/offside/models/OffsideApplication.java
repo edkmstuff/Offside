@@ -22,6 +22,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -57,13 +58,13 @@ public class OffsideApplication extends Application {
 
     private static String profileImageFileName = "profileImage.jpg";
 
-    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
-    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
-    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
+//    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
+//    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
+//    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
 
-//    private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
-////    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/Images/defaultImage.jpg";
-//    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
+    private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
+//    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/Images/defaultImage.jpg";
+    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
 
 //    private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";
@@ -88,6 +89,8 @@ public class OffsideApplication extends Application {
     private  static PrivateGroup selectedPrivateGroup;
 
     private static UserProfileInfo userProfileInfo;
+
+    private static HashMap<String,LeagueRecord[]> leaguesRecords;
 
 
 
@@ -225,6 +228,15 @@ public class OffsideApplication extends Application {
     public static void setUserProfileInfo(UserProfileInfo userProfileInfo) {
         OffsideApplication.userProfileInfo = userProfileInfo;
     }
+
+    public static HashMap<String, LeagueRecord[]> getLeaguesRecords() {
+        if (leaguesRecords == null)
+            leaguesRecords = new HashMap<>();
+
+        return leaguesRecords;
+    }
+
+
 
 
     public void onCreate() {

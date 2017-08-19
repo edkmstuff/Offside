@@ -88,9 +88,9 @@ public class ViewPlayerActivity extends AppCompatActivity {
     private ImageView playerPictureImageView;
     private ImageView playerExperienceLevelImageView;
 
-    private ImageView[] experienceLevelImageViews= new ImageView[5];
-    private TextView[] experienceLevelNameTextViews= new TextView[5];
-    private TextView[] experienceLevelMinValueTextViews= new TextView[5];
+    private ImageView[] experienceLevelImageViews = new ImageView[5];
+    private TextView[] experienceLevelNameTextViews = new TextView[5];
+    private TextView[] experienceLevelMinValueTextViews = new TextView[5];
 
 
     //</editor-fold>
@@ -211,9 +211,6 @@ public class ViewPlayerActivity extends AppCompatActivity {
                 playerRecordsTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
 
 
-
-
-
                 playerRecordsDetailsRoot.setVisibility(View.VISIBLE);
             }
         });
@@ -231,8 +228,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
         latestGameTabRoot.setBackgroundResource(R.color.navigationMenu);
         latestGameDetailsRoot.setVisibility(View.GONE);
         podiumRoot.setVisibility(View.GONE);
-        for(int i=0;i<winnersPodiumRoots.length;i++)
-        {
+        for (int i = 0; i < winnersPodiumRoots.length; i++) {
             winnersPodiumRoots[i].setVisibility(View.GONE);
         }
 
@@ -292,7 +288,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
             playerNameTextView.setText(userProfileInfo.getPlayerName());
             playerExperienceLevelTextView.setText(userProfileInfo.getExperienceLevelName());
             playerCurrentExpLevel = ExperienceLevel.findByName(userProfileInfo.getExperienceLevelName());
-            if(playerCurrentExpLevel==null)
+            if (playerCurrentExpLevel == null)
                 playerCurrentExpLevel = ExperienceLevel.expLevel1;
             playerExperienceLevelImageView.setImageResource(playerCurrentExpLevel.getImageViewResourceId());
             ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName);
@@ -373,16 +369,18 @@ public class ViewPlayerActivity extends AppCompatActivity {
 
             Collections.sort(playerRewards, new Comparator<Reward>() {
                 public int compare(Reward r1, Reward r2) {
-                    int result = 0;
+                    if (r1.getGameStartDate().before(r2.getGameStartDate()))
+                        return -1;
                     if (r1.getGameStartDate().after(r2.getGameStartDate()))
-                        result = 1;
-                    return result;
+                        return 1;
+
+                    return 0;
                 }
             });
 
             for (Reward reward : playerRewards) {
 
-                if (!(reward.getRewardTypeName() == null || reward.getRewardTypeName().equals("NONE"))){
+                if (!(reward.getRewardTypeName() == null || reward.getRewardTypeName().equals("NONE"))) {
 
                     ViewGroup trophiesLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.trophy_item, trophiesClosetRoot, false);
 
@@ -411,7 +409,6 @@ public class ViewPlayerActivity extends AppCompatActivity {
                     gameDateTextView.setText(pt.format(gameStartDate));
 
 
-
                     trophiesClosetRoot.addView(trophiesLayout);
                 }
 
@@ -429,20 +426,19 @@ public class ViewPlayerActivity extends AppCompatActivity {
             playerRecordsNumberOfTrophiesTextView.setText(Integer.toString(numberOfTrophies));
             playerRecordsAverageProfitPerGameTextView.setText(Double.toString(averageProfitPerGame));
 
-            for(int i=0;i<experienceLevelImageViews.length;i++){
-                ExperienceLevel currentExpLevel =ExperienceLevel.expLevels.get(i);
+            for (int i = 0; i < experienceLevelImageViews.length; i++) {
+                ExperienceLevel currentExpLevel = ExperienceLevel.expLevels.get(i);
 
                 experienceLevelNameTextViews[i].setText(currentExpLevel.getName());
                 experienceLevelMinValueTextViews[i].setText(Integer.toString(currentExpLevel.getMinValue()));
 
-                if(playerCurrentExpLevel.getName().equals(currentExpLevel.getName()))
+                if (playerCurrentExpLevel.getName().equals(currentExpLevel.getName()))
                     //ImageHelper.loadImage(context, experienceLevelImageViews[i], currentExpLevel.getImageViewResourceIdCurrent());
                     experienceLevelImageViews[i].setImageResource(currentExpLevel.getImageViewResourceIdCurrent());
                 else
                     //ImageHelper.loadImage(context, experienceLevelImageViews[i], currentExpLevel.getImageViewResourceId());
                     experienceLevelImageViews[i].setImageResource(currentExpLevel.getImageViewResourceId());
             }
-
 
 
             //</editor-fold>
