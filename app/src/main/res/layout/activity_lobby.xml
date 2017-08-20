@@ -12,10 +12,6 @@
     android:orientation="vertical"
     tools:context="com.offsidegame.offside.activities.LobbyActivity">
 
-    <!-- Progress bar -->
-    <include layout="@layout/shared_loading"
-        android:visibility="gone"/>
-
 
     <!--lobby root-->
     <LinearLayout
@@ -24,7 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-
         android:visibility="visible">
         <!--player info and settings-->
         <LinearLayout
@@ -190,6 +185,10 @@
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <!-- Progress bar -->
+            <include layout="@layout/shared_loading"
+                android:visibility="gone"/>
 
 
                 <!--***************PRIVATE GROUPS*********************************************-->

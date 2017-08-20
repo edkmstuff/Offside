@@ -47,7 +47,7 @@ import java.io.Serializable;
 
 public class LobbyActivity extends AppCompatActivity implements Serializable {
 
-    //<editor-fold desc="REGION PROPERTIES">
+    //<editor-fold desc="*****************MEMBERS****************">
 
 
     //activity
@@ -226,7 +226,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-                    resetVisibility();
                     switch (item.getItemId()) {
                         case R.id.nav_action_groups:
                             viewRoots[0].setVisibility(View.VISIBLE);
@@ -238,12 +237,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                             startActivity(intent);
                             break;
                         case R.id.nav_action_shop:
-                            viewRoots[2].setVisibility(View.VISIBLE);
                             break;
                         case R.id.nav_action_play:
-                            viewRoots[3].setVisibility(View.VISIBLE);
+                            Intent chatIntent = new Intent(context, ChatActivity.class);
+                            startActivity(chatIntent);
                             break;
-
 
                     }
 
@@ -411,6 +409,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             tabLayout.addOnTabSelectedListener(listener);
             loadingRoot.setVisibility(View.GONE);
+            viewRoots[0].setVisibility(View.VISIBLE);  //same as: privateGroupsRoot.setVisibility(View.Visible);
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);

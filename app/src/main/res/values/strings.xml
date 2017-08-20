@@ -122,6 +122,11 @@
     <string name="lbl_my_private_groups">הקבוצות שלי</string>
     <string name="lbl_public_groups">קבוצות ציבוריות</string>
     <string name="key_league_type">leagueType</string>
+    <string name="lbl_no_trophies">אין תארים</string>
+    <string name="lbl_out_of">מתוך</string>
+    <string name="lbl_recent_game_position_title">המיקום שלי</string>
+    <string name="lbl_recent_game_correct_answers">תשובות נכונות</string>
+    <string name="lbl_recent_game_balance_title">הניקוד שלי</string>
 
 
 </resources>

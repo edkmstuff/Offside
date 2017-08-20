@@ -22,7 +22,7 @@
     </item>
     <item
         android:id="@+id/nav_action_shop"
-        android:enabled="true"
+        android:enabled="false"
         android:icon="@drawable/ic_action_shop"
         android:title="@string/lbl_shop"
         app:showAsAction="always">

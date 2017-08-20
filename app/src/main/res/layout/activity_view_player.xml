@@ -12,11 +12,7 @@
     android:orientation="vertical"
     tools:context="com.offsidegame.offside.activities.ViewPlayerActivity">
 
-    <!-- Progress bar -->
-    <include layout="@layout/shared_loading"
-        android:visibility="gone"
 
-        />
 
     <LinearLayout
 
@@ -125,7 +121,7 @@
 
             </LinearLayout>
 
-            <!--settings doubleup_button-->
+            <!--settings button-->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -147,7 +143,7 @@
         <!--user image, name, level-->
 
         <LinearLayout
-            android:id="@+id/vp_title_root"
+            android:id="@+id/vp_player_main_details_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -192,15 +188,15 @@
                     android:textColor="@color/grayText"
                     android:textSize="@dimen/OffsideMediumSmallText"
                     />
-                <ImageView
-                    android:id="@+id/vp_player_experience_level_image_view"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/level_baby"
-                    android:scaleType="centerCrop"
-                    android:padding="4dp"
+                <!--<ImageView-->
+                    <!--android:id="@+id/vp_player_experience_level_image_view"-->
+                    <!--android:layout_width="30dp"-->
+                    <!--android:layout_height="30dp"-->
+                    <!--android:src="@drawable/level_baby"-->
+                    <!--android:scaleType="centerCrop"-->
+                    <!--android:padding="4dp"-->
 
-                    />
+                    <!--/>-->
 
             </LinearLayout>
 
@@ -209,8 +205,14 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
+            <!-- Progress bar -->
+            <include layout="@layout/shared_loading"
+                android:visibility="visible"
+
+                />
             <!--***************PLAYER DATA*********************************************-->
             <LinearLayout
                 android:id="@+id/vp_player_details_root"
@@ -218,7 +220,7 @@
                 android:layout_height="match_parent"
                 android:layout_above="@+id/vp_actions_root"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
 
                 <!-- tabs: LAST+GAME / TROPHIES / RECORDS -->
@@ -294,7 +296,7 @@
                     android:layout_height="match_parent"
                     android:layout_above="@+id/vp_actions_root"
                     android:orientation="vertical"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     >
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -353,7 +355,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="איך הייתי"/>
+                                android:text="@string/lbl_recent_game_position_title"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -365,9 +367,8 @@
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="15dp"
                                 android:paddingRight="15dp"
-                                android:textDirection="ltr"
                                 android:textStyle="bold"
-                                android:text="2/5"/>
+                                android:text="2 מתוך 5"/>
 
                         </LinearLayout>
                         <!--CORRECT ANSWERS-->
@@ -383,7 +384,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="איך עניתי"/>
+                                android:text="@string/lbl_recent_game_correct_answers"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -395,9 +396,9 @@
                                 android:layout_height="wrap_content"
                                 android:paddingLeft="15dp"
                                 android:paddingRight="15dp"
-                                android:textDirection="ltr"
-                                android:text="10/22"
+                                android:text="10 מתוך 22"
                                 android:textStyle="bold"
+
                                 />
 
                         </LinearLayout>
@@ -414,7 +415,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="איך יצאתי"/>
+                                android:text="@string/lbl_recent_game_balance_title"/>
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -428,7 +429,9 @@
                                 android:paddingRight="15dp"
                                 android:textDirection="ltr"
                                 android:textStyle="bold"
-                                android:text="-100"/>
+                                android:text="-100"
+
+                                />
 
                         </LinearLayout>
 
@@ -586,13 +589,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_above="@+id/vp_actions_root"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:visibility="gone"
+                    android:gravity="center"
                     >
+                    <TextView
+                        android:id="@+id/vp_trophies_closet_no_titles_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:visibility="visible"
+                        android:text="@string/lbl_no_trophies"
+                        android:gravity="center"
+
+                        />
 
                     <!--TROPHIES LIST-->
                     <HorizontalScrollView
-                        android:id="@+id/vp_trophies_scroll_view"
+                        android:id="@+id/vp_trophies_closet_scroll_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scrollbars="none"
@@ -622,7 +635,7 @@
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/vp_actions_root"
                     android:orientation="vertical"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <!--DISPLAY OPTION 1-->
                     <LinearLayout
@@ -753,7 +766,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:textStyle="bold"
+
                                 android:textSize="@dimen/OffsideXtraLargeText"
                                 android:text="20"/>
                             <TextView
@@ -780,7 +793,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:textStyle="bold"
+
                                 android:textSize="@dimen/OffsideXtraLargeText"
                                 android:text="20"/>
                             <TextView
@@ -808,7 +821,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:textStyle="bold"
                                 android:textSize="@dimen/OffsideXtraLargeText"
                                 android:text="950"/>
                             <TextView
@@ -834,6 +846,7 @@
                         android:gravity="center|bottom"
                         android:layoutDirection="rtl"
                         android:layout_marginTop="10dp"
+
                         >
                         <!--level 1-->
                         <LinearLayout
@@ -846,6 +859,7 @@
                                 android:id="@+id/vp_records_details_level_1_image_view"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
+                                android:layout_gravity="center"
                                 android:src="@drawable/level_baby"/>
                             <TextView
                                 android:id="@+id/vp_records_details_level_1_name_text_view"
@@ -871,8 +885,9 @@
 
                             <ImageView
                                 android:id="@+id/vp_records_details_level_2_image_view"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center"
                                 android:src="@drawable/level_kid"
                                 />
                             <TextView
@@ -899,8 +914,9 @@
 
                             <ImageView
                                 android:id="@+id/vp_records_details_level_3_image_view"
-                                android:layout_width="55dp"
-                                android:layout_height="55dp"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center"
                                 android:src="@drawable/level_star"/>
                             <TextView
                                 android:id="@+id/vp_records_details_level_3_name_text_view"
@@ -926,8 +942,9 @@
 
                             <ImageView
                                 android:id="@+id/vp_records_details_level_4_image_view"
-                                android:layout_width="60dp"
-                                android:layout_height="60dp"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center"
                                 android:src="@drawable/level_pro"/>
                             <TextView
                                 android:id="@+id/vp_records_details_level_4_name_text_view"
@@ -953,8 +970,9 @@
 
                             <ImageView
                                 android:id="@+id/vp_records_details_level_5_image_view"
-                                android:layout_width="70dp"
-                                android:layout_height="70dp"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center"
                                 android:src="@drawable/level_legend"/>
                             <TextView
                                 android:id="@+id/vp_records_details_level_5_name_text_view"
@@ -972,6 +990,23 @@
 
                         </LinearLayout>
 
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+
+                        >
+                        <com.facebook.share.widget.ShareButton
+                            android:id="@+id/vp_facebook_share_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@color/com_facebook_blue"
+                            />
 
                     </LinearLayout>
 
