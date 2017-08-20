@@ -104,7 +104,12 @@ public class UserProfileInfo {
         Collections.sort(this.playerGames,new Comparator<PlayerGame>() {
             @Override
             public int compare(PlayerGame playerGame1, PlayerGame playerGame2) {
-                return playerGame1.getGameStartTime().after(playerGame2.getGameStartTime())? 1: -1 ;
+                if (playerGame1.getGameStartTime().before(playerGame2.getGameStartTime()))
+                    return -1;
+                if (playerGame1.getGameStartTime().after(playerGame2.getGameStartTime()))
+                    return 1;
+
+                return 0;
             }
         });
         return this.playerGames.get(this.playerGames.size()-1);

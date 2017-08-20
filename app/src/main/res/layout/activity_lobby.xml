@@ -249,7 +249,7 @@
                 android:layout_height="match_parent"
                 android:layout_above="@+id/l_actions_root"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <!-- GROUP NAVIGATION-->
                 <LinearLayout
@@ -370,7 +370,7 @@
 
                 </LinearLayout>
 
-                <!-- GAMES / LEAGUES-->
+                <!-- GAMES / LEAGUE-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -432,11 +432,14 @@
 
                 </LinearLayout>
 
-                <!-- LEAGUE SELECTION -->
+
+                <!-- GAMES-->
                 <LinearLayout
+                    android:id="@+id/l_single_group_games_root"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
+                    android:visibility="gone"
                     android:layout_above="@+id/l_actions_root">
 
                     <android.support.design.widget.TabLayout
@@ -458,53 +461,59 @@
                         android:layout_centerHorizontal="true">
                     </android.support.v4.view.ViewPager>
 
-                    <!--<android.support.design.widget.TabLayout-->
-                        <!--style="@style/TabLayoutStyle"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="20dp">-->
 
-                        <!--<android.support.design.widget.TabItem-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="ליגת האלופות"-->
-                            <!--/>-->
-
-                        <!--<android.support.design.widget.TabItem-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="ליגת העל"-->
-                            <!--/>-->
-                        <!--<android.support.design.widget.TabItem-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="ליגה ספרדית"-->
-                            <!--/>-->
-
-                    <!--</android.support.design.widget.TabLayout>-->
 
 
                 </LinearLayout>
 
-                <!--GAME LIST-->
-                <!--<ScrollView-->
-                <!--android:id="@+id/l_single_group_scroll_view"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:fillViewport="true"-->
-                <!--android:scrollbarSize="0dp"-->
-                <!--android:scrollbars="none">-->
+                <!-- LEAGUE-->
+                <LinearLayout
+                    android:id="@+id/l_single_group_league_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    android:layout_above="@+id/l_actions_root">
 
-                <!--<ListView-->
-                <!--android:id="@+id/l_single_group_list_view"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:divider="@null"-->
-                <!--android:dividerHeight="0dp"-->
-                <!--android:listSelector="@android:color/transparent"-->
-                <!--android:transcriptMode="alwaysScroll">-->
+                    <!-- your position -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_horizontal"
+                        android:background="@color/colorPrimary"
+                        android:layoutDirection="rtl">
 
-                <!--</ListView>-->
-                <!--</ScrollView>-->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="מיקומך:"/>
+
+                        <TextView
+                            android:id="@+id/l_single_group_position_out_of_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="3/8"/>
+
+
+
+                    </LinearLayout>
+                    <ListView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/l_single_group_league_list_view"
+                        android:divider="@null"
+                        android:dividerHeight="0dp"
+                        android:listSelector="@android:color/transparent"
+                        android:transcriptMode="alwaysScroll"
+                        >
+
+                    </ListView>
+
+
+                </LinearLayout>
+
+
 
 
             </LinearLayout>
