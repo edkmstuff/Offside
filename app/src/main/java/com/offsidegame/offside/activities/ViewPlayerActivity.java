@@ -78,6 +78,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
     private LinearLayout trophiesDetailsRoot;
     private LinearLayout trophiesClosetRoot;
     private LinearLayout latestGameDetailsRoot;
+    private LinearLayout latestGameDetailsElementsRoot;
     private LinearLayout playerRecordsDetailsRoot;
     private LinearLayout podiumRoot;
     private LinearLayout[] winnersPodiumRoots = new LinearLayout[3];
@@ -88,6 +89,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
     private TextView playerNameTextView;
     private TextView playerExperienceLevelTextView;
 
+    private TextView latestGameNotExistTextView;
     private TextView latestGamePrivateGroupTextView;
     private TextView latestGameTitleTextView;
     private TextView latestGameStartDateTextView;
@@ -142,6 +144,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
         trophiesDetailsRoot = (LinearLayout) findViewById(R.id.vp_trophies_details_root);
         trophiesClosetRoot = (LinearLayout) findViewById(R.id.vp_trophies_closet_root);
         latestGameDetailsRoot = (LinearLayout) findViewById(R.id.vp_latest_game_details_root);
+        latestGameDetailsElementsRoot = (LinearLayout) findViewById(R.id.vp_latest_game_details_elements_root);
         playerRecordsDetailsRoot = (LinearLayout) findViewById(R.id.vp_player_records_details_root);
         podiumRoot = (LinearLayout) findViewById(R.id.vp_latest_game_podium_root);
 
@@ -149,6 +152,8 @@ public class ViewPlayerActivity extends AppCompatActivity {
         balanceTextView = (TextView) findViewById(R.id.vp_balance_text_view);
         playerNameTextView = (TextView) findViewById(R.id.vp_player_name_text_view);
         playerExperienceLevelTextView = (TextView) findViewById(R.id.vp_player_experience_level_text_view);
+
+        latestGameNotExistTextView = (TextView) findViewById(R.id.vp_latest_game_not_exist_text_view);
         latestGamePrivateGroupTextView = (TextView) findViewById(R.id.vp_latest_game_private_group_text_view);
         latestGameTitleTextView = (TextView) findViewById(R.id.vp_latest_game_title_text_view);
         latestGameStartDateTextView = (TextView) findViewById(R.id.vp_latest_game_start_date_text_view);
@@ -264,7 +269,6 @@ public class ViewPlayerActivity extends AppCompatActivity {
                 playerRecordsDetailsRoot.setVisibility(View.VISIBLE);
                 playerRecordsTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
 
-
                 playerRecordsDetailsRoot.setVisibility(View.VISIBLE);
             }
         });
@@ -285,6 +289,8 @@ public class ViewPlayerActivity extends AppCompatActivity {
 
         latestGameTabRoot.setBackgroundResource(R.color.navigationMenu);
         latestGameDetailsRoot.setVisibility(View.GONE);
+        latestGameDetailsElementsRoot.setVisibility(View.GONE);
+        latestGameNotExistTextView.setVisibility(View.GONE);
         podiumRoot.setVisibility(View.GONE);
         for (int i = 0; i < winnersPodiumRoots.length; i++) {
             winnersPodiumRoots[i].setVisibility(View.GONE);
@@ -355,42 +361,43 @@ public class ViewPlayerActivity extends AppCompatActivity {
             //<editor-fold desc="---------RECENT GAME-----------">
 
             PlayerGame mostRecentGamePlayed = userProfileInfo.getMostRecentGamePlayed();
-            latestGamePrivateGroupTextView.setText(mostRecentGamePlayed.getGroupName());
-            latestGameTitleTextView.setText(mostRecentGamePlayed.getGameTitle());
+            if (mostRecentGamePlayed != null) {
+                latestGamePrivateGroupTextView.setText(mostRecentGamePlayed.getGroupName());
+                latestGameTitleTextView.setText(mostRecentGamePlayed.getGameTitle());
 
-            PrettyTime p = new PrettyTime();
+                PrettyTime p = new PrettyTime();
 
-            //latestGameStartDateTextView.setText(mostRecentGamePlayed.getGameStartTime().toString());
-            latestGameStartDateTextView.setText(p.format(mostRecentGamePlayed.getGameStartTime()));
+                //latestGameStartDateTextView.setText(mostRecentGamePlayed.getGameStartTime().toString());
+                latestGameStartDateTextView.setText(p.format(mostRecentGamePlayed.getGameStartTime()));
 
 
-            String latestGamePositionOutOfText = Integer.toString(mostRecentGamePlayed.getPosition()) + " "+getString(R.string.lbl_out_of)+" " + Integer.toString(mostRecentGamePlayed.getTotalPlayers());
-            latestGamePositionTextView.setText(latestGamePositionOutOfText);
+                String latestGamePositionOutOfText = Integer.toString(mostRecentGamePlayed.getPosition()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(mostRecentGamePlayed.getTotalPlayers());
+                latestGamePositionTextView.setText(latestGamePositionOutOfText);
 
-            String latestGameAnswersSummaryOutOfText = Integer.toString(mostRecentGamePlayed.getCorrectAnswersCount()) + " "+getString(R.string.lbl_out_of)+" " + Integer.toString(mostRecentGamePlayed.getTotalQuestionsAsked());
-            latestGameAnswersSummaryTextView.setText(latestGameAnswersSummaryOutOfText);
+                String latestGameAnswersSummaryOutOfText = Integer.toString(mostRecentGamePlayed.getCorrectAnswersCount()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(mostRecentGamePlayed.getTotalQuestionsAsked());
+                latestGameAnswersSummaryTextView.setText(latestGameAnswersSummaryOutOfText);
 
-            latestGameBalanceSummaryTextView.setText(Integer.toString(mostRecentGamePlayed.getOffsideCoins()));
+                latestGameBalanceSummaryTextView.setText(Integer.toString(mostRecentGamePlayed.getOffsideCoins()));
 
-            //podium stuff
-            List<Winner> winners = userProfileInfo.getMostRecentGamePlayed().getWinners();
+                //podium stuff
+                List<Winner> winners = userProfileInfo.getMostRecentGamePlayed().getWinners();
 
-            //option 1 - podium
-            int j = 0;
+                //option 1 - podium
+                int j = 0;
 
-            for (Winner winner : winners) {
-                Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
-                ImageHelper.loadImage(thisActivity, winnersImageViews[j], winnerProfilePictureUri);
-                winnersNamesTextViews[j].setText(winner.getPlayerName());
-                winnersCoinsTextViews[j].setText(Integer.toString(winner.getOffsideCoins()));
-                winnersPodiumRoots[j].setVisibility(View.VISIBLE);
-                j++;
-            }
-            podiumRoot.setVisibility(View.VISIBLE);
+                for (Winner winner : winners) {
+                    Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
+                    ImageHelper.loadImage(thisActivity, winnersImageViews[j], winnerProfilePictureUri);
+                    winnersNamesTextViews[j].setText(winner.getPlayerName());
+                    winnersCoinsTextViews[j].setText(Integer.toString(winner.getOffsideCoins()));
+                    winnersPodiumRoots[j].setVisibility(View.VISIBLE);
+                    j++;
+                }
+                podiumRoot.setVisibility(View.VISIBLE);
 
-            //end of option 1
+                //end of option 1
 
-            //option 2------like the winner chat message
+                //option 2------like the winner chat message
 //            podiumRoot.removeAllViews();
 //
 //            for (Winner winner : winners) {
@@ -416,9 +423,19 @@ public class ViewPlayerActivity extends AppCompatActivity {
 //                winnerNameTextView.setText(winner.getPlayerName());
 //                podiumRoot.addView(podiumViewGroup);
 //            }
-            //end of option 2
+                //end of option 2
 
-            //</editor-fold>
+                //</editor-fold>
+                latestGameDetailsElementsRoot.setVisibility(View.VISIBLE);
+                latestGameNotExistTextView.setVisibility(View.GONE);
+
+            }
+            else {
+                latestGameDetailsElementsRoot.setVisibility(View.GONE);
+                latestGameNotExistTextView.setVisibility(View.VISIBLE);
+            }
+
+
 
             //<editor-fold desc="---------TROPHIES CLOSET-----------">
 

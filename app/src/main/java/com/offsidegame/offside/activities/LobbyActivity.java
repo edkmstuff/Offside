@@ -481,7 +481,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             if (OffsideApplication.getPrivateGroupsInfo() == null
                     || OffsideApplication.getPrivateGroupsInfo().getPrivateGroups() == null
                     || OffsideApplication.getPrivateGroupsInfo().getPrivateGroups().size() == 0)
+            {
+                loadingRoot.setVisibility(View.GONE);
                 return;
+            }
+
 
             CustomTabsFragmentPagerAdapter pagerAdapterFragment = new CustomTabsFragmentPagerAdapter(this.getSupportFragmentManager());
             PrivateGroupsFragment privateGroupsFragment = new PrivateGroupsFragment();

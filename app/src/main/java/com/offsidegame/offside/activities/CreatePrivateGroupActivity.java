@@ -20,6 +20,7 @@ import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupCreationInfo;
+import com.offsidegame.offside.models.UserProfileInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -56,9 +57,16 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_private_group);
 
-        FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
-        playerDisplayName = player.getDisplayName();
-        playerId = player.getUid();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        playerId = firebaseUser.getUid();
+
+        if(OffsideApplication.getUserProfileInfo() == null)
+
+            playerDisplayName = firebaseUser.getDisplayName();
+
+        else
+            playerDisplayName = OffsideApplication.getUserProfileInfo().getPlayerName();
+
 
         savePrivateGroupButtonTextView = (TextView) findViewById(R.id.cpg_save_private_group_button_text_view);
 

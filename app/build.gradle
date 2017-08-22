@@ -25,10 +25,10 @@ android {
 //        }
 //    }
 
-
+    //watch this: https://www.youtube.com/watch?v=AdfKNgyT438
     buildTypes {
         release {
-            minifyEnabled false
+                minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 

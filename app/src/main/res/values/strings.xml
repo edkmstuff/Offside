@@ -13,10 +13,6 @@
 
     <string name="lbl_welcome">אהלן</string>
 
-    <!--kfir -->
-    <!--<string messageText="facebook_app_id">1302214459813433</string>
-    <string messageText="fb_login_protocol_scheme">fb1302214459813433</string>
-    -->
     <!--Eran -->
     <string name="facebook_application_id" translatable="false">523024471208542</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb523024471208542</string>
@@ -127,6 +123,7 @@
     <string name="lbl_recent_game_position_title">המיקום שלי</string>
     <string name="lbl_recent_game_correct_answers">תשובות נכונות</string>
     <string name="lbl_recent_game_balance_title">הניקוד שלי</string>
+    <string name="lbl_recent_game_not_found">לא נמצא משחק קודם</string>
 
 
 </resources>
