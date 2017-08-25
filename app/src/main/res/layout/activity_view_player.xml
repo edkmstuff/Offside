@@ -141,7 +141,6 @@
         </LinearLayout>
 
         <!--user image, name, level-->
-
         <LinearLayout
             android:id="@+id/vp_player_main_details_root"
             android:layout_width="match_parent"
@@ -1063,6 +1062,6 @@
 
 
 
-    <!--view player root-->
+
 
 </LinearLayout>

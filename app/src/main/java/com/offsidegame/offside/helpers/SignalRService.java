@@ -320,6 +320,15 @@ public class SignalRService extends Service {
             }
         }, LeagueRecord[].class);
 
+        hub.on("PlayerAssetsReceived", new SubscriptionHandler1<PlayerAssets>() {
+            @Override
+            public void run(PlayerAssets playerAssets) {
+                EventBus.getDefault().post(playerAssets);
+            }
+        }, PlayerAssets.class);
+
+
+
 
 
 
@@ -711,6 +720,13 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         hub.invoke("RequestLeagueRecords", playerId, groupId);
+    }
+
+    public void requestPlayerAssets(String playerId) {
+
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke("RequestPlayerAssets", playerId);
     }
 
 

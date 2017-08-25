@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -48,7 +49,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private String playerEmail;
 
 
-    private LinearLayout loadingRoot;
+    private FrameLayout loadingRoot;
     private boolean isInLoginProcess = false;
 
 
@@ -58,7 +59,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
 
-            loadingRoot = (LinearLayout) findViewById(R.id.l_loading_root);
+            loadingRoot = (FrameLayout) findViewById(R.id.shared_loading_root);
             loadingRoot.setVisibility(View.VISIBLE);
 
             // to allow exit by clicking on back doubleup_button , setting some flags on current intent
@@ -227,7 +228,28 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         }
 
         completeUserAccepted();
+    }
 
+    public void completeUserAccepted(){
+
+        if(playerProfilePictureUrl== null)
+            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
+
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl);
+        editor.commit();
+
+        User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl);
+        OffsideApplication.signalRService.requestSaveLoggedInUser(user);
+
+
+        Intent intent = new Intent(context, LobbyActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+        isInLoginProcess = false;
 
     }
 
@@ -302,27 +324,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    public void completeUserAccepted(){
 
-        String playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
-
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl);
-        editor.commit();
-
-        User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl);
-        OffsideApplication.signalRService.requestSaveLoggedInUser(user);
-
-
-        Intent intent = new Intent(context, LobbyActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(intent);
-        isInLoginProcess = false;
-
-    }
 
 }
 

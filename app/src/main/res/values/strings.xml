@@ -49,7 +49,7 @@
     <string name="lbl_select_game">בחר משחק</string>
     <string name="lbl_select_name_for_club">בחר שם לקבוצה</string>
     <string name="lbl_create_private_game">פתח קבוצה חדשה וקבל קוד</string>
-    <string name="lbl_create_private_group">צור קבוצה</string>
+    <string name="lbl_create_private_group">פתח קבוצה</string>
     <string name="lbl_no_available_games">לא נמצאו משחקים זמינים</string>
     <string name="lbl_you_dont_have_code">אין לך קוד קבוצה?</string>
     <string name="lbl_no_available_game_message_return_later">כרגע איו משחקים זמינים, אנא חזור במועד מאוחר יותר</string>

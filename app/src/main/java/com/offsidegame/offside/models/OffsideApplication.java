@@ -30,9 +30,9 @@ import java.util.Map;
  */
 @ReportsCrashes(
         //formUri = "http://192.168.1.140:8080/api/Offside/AcraCrashReport",
-        //formUri = "http://10.0.0.17:8080/api/Offside/AcraCrashReport",
+        formUri = "http://10.0.0.17:8080/api/Offside/AcraCrashReport",
         //formUri = "http://offside.somee.com/api/Offside/AcraCrashReport",
-        formUri = "http://offside.azurewebsites.net/api/Offside/AcraCrashReport",
+        //formUri = "http://offside.azurewebsites.net/api/Offside/AcraCrashReport",
 
         httpMethod = HttpSender.Method.POST,
         mode = ReportingInteractionMode.TOAST,
@@ -89,6 +89,8 @@ public class OffsideApplication extends Application {
     private  static PrivateGroup selectedPrivateGroup;
 
     private static UserProfileInfo userProfileInfo;
+
+    private static PlayerAssets playerAssets;
 
     private static HashMap<String,LeagueRecord[]> leaguesRecords;
 
@@ -233,7 +235,13 @@ public class OffsideApplication extends Application {
         return leaguesRecords;
     }
 
+    public static PlayerAssets getPlayerAssets() {
+        return playerAssets;
+    }
 
+    public static void setPlayerAssets(PlayerAssets playerAssets) {
+        OffsideApplication.playerAssets = playerAssets;
+    }
 
 
     public void onCreate() {
@@ -371,6 +379,10 @@ public class OffsideApplication extends Application {
     public static String getVersion() {
         return version;
     }
+
+//    public static void getEnvironmentUrls(String environment) {
+//
+//    }
 
 
 

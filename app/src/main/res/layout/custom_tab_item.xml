@@ -1,0 +1,16 @@
+<LinearLayout android:id="@+id/layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/textViewTabItemName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="Name" />
+
+
+</LinearLayout>
