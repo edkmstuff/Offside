@@ -75,6 +75,9 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
     testCompile 'junit:junit:4.12'
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.android.application'

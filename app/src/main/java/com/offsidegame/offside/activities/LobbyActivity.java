@@ -83,6 +83,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private LinearLayout singleGroupLeagueRoot;
     private TextView singleGroupPositionOutOfTextView;
     private ListView singleGroupLeagueListView;
+    //we hide this, that's why i put it here
+    private LinearLayout leagueTitleRoot;
 
 
     //loading
@@ -230,6 +232,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             singleGroupLeagueRoot = (LinearLayout) findViewById(R.id.l_single_group_league_root);
             singleGroupPositionOutOfTextView = (TextView) findViewById(R.id.l_single_group_position_out_of_text_view);
             singleGroupLeagueListView = (ListView) findViewById(R.id.l_single_group_league_list_view);
+            leagueTitleRoot = (LinearLayout) findViewById(R.id.l_title_root);
 
             singleGroupGamesTabRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -323,6 +326,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         singlePrivateGroupRoot.setVisibility(View.VISIBLE);
         singleGroupGamesRoot.setVisibility(View.VISIBLE);
+        leagueTitleRoot.setVisibility(View.GONE);
+
 
 
     }
@@ -340,6 +345,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenu);
 
         singleGroupLeagueRoot.setVisibility(View.VISIBLE);
+        leagueTitleRoot.setVisibility(View.GONE);
 
         LeagueAdapter leagueAdapter = new LeagueAdapter(context, new ArrayList<>(Arrays.asList(leagueRecords)));
         singleGroupLeagueListView.setAdapter(leagueAdapter);
@@ -357,6 +363,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         createPrivateGroupButtonTextView.setVisibility(View.VISIBLE);
 
         singlePrivateGroupRoot.setVisibility(View.GONE);
+        leagueTitleRoot.setVisibility(View.VISIBLE);
 
         for (LinearLayout layout : viewRoots) {
             layout.setVisibility(View.GONE);
