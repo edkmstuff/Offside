@@ -52,6 +52,7 @@ public class GroupsFragment extends Fragment {
 
         versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
 
+
         return view;
     }
 
