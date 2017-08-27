@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
 
     private FrameLayout loadingRoot;
+    private TextView versionTextView;
     private boolean isInLoginProcess = false;
 
 
@@ -60,6 +61,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             setContentView(R.layout.activity_login);
 
             loadingRoot = (FrameLayout) findViewById(R.id.shared_loading_root);
+            versionTextView = (TextView) findViewById(R.id.shared_version_text_view);
+            versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
             loadingRoot.setVisibility(View.VISIBLE);
 
             // to allow exit by clicking on back doubleup_button , setting some flags on current intent

@@ -29,12 +29,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="130dp"
         android:gravity="center"
-        android:orientation="vertical"
-
-        >
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/l_version_text_view"
+            android:id="@+id/shared_version_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
