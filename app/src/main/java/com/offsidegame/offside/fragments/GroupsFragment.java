@@ -3,7 +3,6 @@ package com.offsidegame.offside.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -13,21 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.CreatePrivateGroupActivity;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
-import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.PlayerAssets;
-import com.offsidegame.offside.models.PrivateGroupsInfo;
 
 import org.acra.ACRA;
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by user on 8/22/2017.
@@ -59,7 +51,7 @@ public class GroupsFragment extends Fragment {
     private void getIDs(View view) {
 
         loadingRoot = (FrameLayout) view.findViewById(R.id.shared_loading_root);
-        versionTextView = (TextView) view.findViewById(R.id.l_version_text_view);
+        versionTextView = (TextView) view.findViewById(R.id.shared_version_text_view);
 
         viewPager = (ViewPager) view.findViewById(R.id.fg_tabs_container_view_pager);
         tabLayout = (TabLayout) view.findViewById(R.id.fg_groups_tab_layout);

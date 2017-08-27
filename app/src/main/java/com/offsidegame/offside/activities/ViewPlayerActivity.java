@@ -4,19 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ButtonBarLayout;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,36 +19,20 @@ import android.widget.Toast;
 
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareButton;
-import com.facebook.share.widget.ShareDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
-import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.ExperienceLevel;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.PlayerAssets;
-import com.offsidegame.offside.models.Reward;
 import com.offsidegame.offside.models.UserProfileInfo;
-import com.offsidegame.offside.models.PlayerGame;
-import com.offsidegame.offside.models.Winner;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.ocpsoft.prettytime.PrettyTime;
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
 
 public class ViewPlayerActivity extends AppCompatActivity {
 
@@ -130,7 +108,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
 
         //<editor-fold desc="**************FIND***************">
 
-        versionTextView = (TextView) findViewById(R.id.l_version_text_view);
+        versionTextView = (TextView) findViewById(R.id.shared_version_text_view);
         versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.l_bottom_navigation_view);
