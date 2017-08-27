@@ -129,6 +129,8 @@ public class PlayerFragment extends Fragment {
             playerId = firebaseUser.getUid();
             String userDisplayName = firebaseUser.getDisplayName();
             userDisplayName = userDisplayName == null ? "No Name" : userDisplayName;
+
+            ImageHelper.loadImage(context,playerPictureImageView,Uri.parse(playerAssets.getImageUrl()));
             playerNameTextView.setText(userDisplayName);
 
             resetVisibility();
