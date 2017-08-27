@@ -38,37 +38,41 @@
             android:textSize="@dimen/OffsideMediumText"
             />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="5dp"
-            >
-            <TextView
-                android:id="@+id/vp_player_experience_level_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:text="ילד"
-                android:textColor="@color/grayText"
-                android:textSize="@dimen/OffsideMediumSmallText"
-                />
-            <!--<ImageView-->
-            <!--android:id="@+id/vp_player_experience_level_image_view"-->
-            <!--android:layout_width="30dp"-->
-            <!--android:layout_height="30dp"-->
-            <!--android:src="@drawable/level_baby"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--android:padding="4dp"-->
+        <!--<LinearLayout-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_marginBottom="5dp"-->
+            <!--&gt;-->
+            <!--<TextView-->
+                <!--android:id="@+id/vp_player_experience_level_text_view"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:padding="4dp"-->
+                <!--android:text="ילד"-->
+                <!--android:textColor="@color/grayText"-->
+                <!--android:textSize="@dimen/OffsideMediumSmallText"-->
+                <!--/>-->
+            <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
+            <!--&lt;!&ndash;android:id="@+id/vp_player_experience_level_image_view"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="30dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="30dp"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:src="@drawable/level_baby"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:scaleType="centerCrop"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:padding="4dp"&ndash;&gt;-->
 
-            <!--/>-->
+            <!--&lt;!&ndash;/>&ndash;&gt;-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
     </LinearLayout>
+    <!-- Progress bar -->
+    <include layout="@layout/shared_loading"
+        android:visibility="visible"/>
+
     <!--***************PLAYER DATA*********************************************-->
-        <LinearLayout
+     <LinearLayout
             android:id="@+id/vp_player_details_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

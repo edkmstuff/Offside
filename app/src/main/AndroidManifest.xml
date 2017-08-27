@@ -44,24 +44,25 @@
         <activity
             android:name=".activities.LoginActivity"
             android:label="Sidekick"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/LaunchScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.JoinGameActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.ChatActivity"
             android:label="Match field"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/LaunchScreenTheme"/>
         <activity
             android:name=".activities.LobbyActivity"
             android:label="Match field"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/BlueTheme"/>
 
         <activity
             android:name=".activities.CreatePrivateGroupActivity"

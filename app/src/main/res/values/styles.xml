@@ -34,6 +34,19 @@
 
     </style>
 
+    <style name="LaunchScreenTheme" parent="AppTheme.Base">
+        <item name="windowNoTitle">true</item>
+        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/colorAccent</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
+        <item name="colorControlHighlight">#00B0FF</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:windowBackground">@drawable/launch_screen</item>
+
+    </style>
+
 
     <!--Offside Styles-->
 

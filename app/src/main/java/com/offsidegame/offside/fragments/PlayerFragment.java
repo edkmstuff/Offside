@@ -31,6 +31,7 @@ import com.offsidegame.offside.adapters.ViewPagerAdapter;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.ExperienceLevel;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PlayerGame;
 import com.offsidegame.offside.models.Reward;
@@ -56,11 +57,12 @@ import java.util.List;
 public class PlayerFragment extends Fragment {
 
     //<editor-fold desc="****************MEMBERS**************">
+    private PlayerAssets playerAssets;
     private String playerId;
     private ExperienceLevel playerCurrentExpLevel;
 
     private FrameLayout loadingRoot;
-    private TextView versionTextView;
+
     private LinearLayout playerMainDetailsRoot;
     private LinearLayout playerDetailsRoot;
     private LinearLayout latestGameTabRoot;
@@ -109,29 +111,40 @@ public class PlayerFragment extends Fragment {
     //</editor-fold>
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_player, container, false);
+        try {
+            View view = inflater.inflate(R.layout.fragment_player, container, false);
 
-        FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
-        playerId = player.getUid();
-        Context context = getContext();
+            Context context = getContext();
 
-        getIDs(view, context);
-        setEvents();
-        versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
-        resetVisibility();
+            getIDs(view, context);
+            setEvents();
 
-        return view;
+            playerAssets = OffsideApplication.getPlayerAssets();
+
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            playerId = firebaseUser.getUid();
+            String userDisplayName = firebaseUser.getDisplayName();
+            userDisplayName = userDisplayName == null ? "No Name" : userDisplayName;
+            playerNameTextView.setText(userDisplayName);
+
+            resetVisibility();
+
+            return view;
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+            return null;
+        }
+
+
     }
 
     private void getIDs(View view, Context context) {
 
         loadingRoot = (FrameLayout) view.findViewById(R.id.shared_loading_root);
-        versionTextView = (TextView) view.findViewById(R.id.l_version_text_view);
         playerMainDetailsRoot = (LinearLayout) view.findViewById(R.id.vp_player_main_details_root);
         latestGameTabRoot = (LinearLayout) view.findViewById(R.id.vp_latest_game_tab_root);
         trophiesTabRoot = (LinearLayout) view.findViewById(R.id.vp_trophies_tab_root);
@@ -147,7 +160,7 @@ public class PlayerFragment extends Fragment {
         powerItemsTextView = (TextView) view.findViewById(R.id.vp_power_items_text_view);
         balanceTextView = (TextView) view.findViewById(R.id.vp_balance_text_view);
         playerNameTextView = (TextView) view.findViewById(R.id.vp_player_name_text_view);
-        playerExperienceLevelTextView = (TextView) view.findViewById(R.id.vp_player_experience_level_text_view);
+        //playerExperienceLevelTextView = (TextView) view.findViewById(R.id.vp_player_experience_level_text_view);
 
         latestGameNotExistTextView = (TextView) view.findViewById(R.id.vp_latest_game_not_exist_text_view);
         latestGamePrivateGroupTextView = (TextView) view.findViewById(R.id.vp_latest_game_private_group_text_view);
@@ -485,8 +498,7 @@ public class PlayerFragment extends Fragment {
                 latestGameDetailsElementsRoot.setVisibility(View.VISIBLE);
                 latestGameNotExistTextView.setVisibility(View.GONE);
 
-            }
-            else {
+            } else {
                 latestGameDetailsElementsRoot.setVisibility(View.GONE);
                 latestGameNotExistTextView.setVisibility(View.VISIBLE);
             }
@@ -521,7 +533,7 @@ public class PlayerFragment extends Fragment {
                     groupNameTextView.setText(reward.getGroupName());
 
                     TextView positionOutOfTextView = (TextView) trophiesLayout.getChildAt(1);
-                    String positionOutOfText = Integer.toString(reward.getPosition()) +" "+ getString(R.string.lbl_out_of)+" " + Integer.toString(reward.getTotalPlayers());
+                    String positionOutOfText = Integer.toString(reward.getPosition()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(reward.getTotalPlayers());
                     positionOutOfTextView.setText(positionOutOfText);
 
                     ImageView trophyImageImageView = (ImageView) trophiesLayout.getChildAt(2);
@@ -570,8 +582,10 @@ public class PlayerFragment extends Fragment {
             playerRecordsNumberOfTrophiesTextView.setText(Integer.toString(numberOfTrophies));
             playerRecordsAverageProfitPerGameTextView.setText(Integer.toString(averageProfitPerGame));
 
+            playerCurrentExpLevel = ExperienceLevel.findByName(userProfileInfo.getExperienceLevelName());
+
             for (int i = 0; i < experienceLevelImageViews.length; i++) {
-                ExperienceLevel currentExpLevel = ExperienceLevel.expLevels.get(i);
+                ExperienceLevel currentExpLevel = ExperienceLevel.findByIndex(i);
 
                 experienceLevelNameTextViews[i].setText(currentExpLevel.getName());
                 experienceLevelMinValueTextViews[i].setText(Integer.toString(currentExpLevel.getMinValue()));
@@ -643,10 +657,6 @@ public class PlayerFragment extends Fragment {
         }
 
     }
-
-
-
-
 
 
 }

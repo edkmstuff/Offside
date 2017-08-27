@@ -102,7 +102,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             boolean isConnected = connectionEvent.getConnected();
             if (isConnected) {
                 Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
-                handleSuccessfulLogin();
+                //handleSuccessfulLogin();
             } else
                 Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
@@ -178,7 +178,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                 //.setIsSmartLockEnabled(!BuildConfig.DEBUG)
                                 .setTheme(R.style.BlueTheme)
                                 .setLogo(R.drawable.app_logo_25)
-
                                 .build(),
                         RC_SIGN_IN);
 
@@ -245,11 +244,13 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
 
         Intent intent = new Intent(context, LobbyActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
         startActivity(intent);
         isInLoginProcess = false;
+
 
     }
 
