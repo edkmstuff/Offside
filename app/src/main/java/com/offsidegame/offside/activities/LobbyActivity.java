@@ -460,73 +460,73 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveAvailableGames(AvailableGame[] availableGames) {
-        try {
-            if (availableGames == null || availableGames.length == 0)
-                return;
-
-            OffsideApplication.setAvailableGames(availableGames);
-
-            //update groups stuff
-            //todo: create distinct of league types to send to fragment creator - they will define the tabs
-
-            this.addLeaguesCategories();
-            leaguesSelectionTabLayout.addOnTabSelectedListener(leaguesSelectionListener);
-            loadingRoot.setVisibility(View.GONE);
-
-
-            //privateGroupsRoot.setVisibility(View.GONE);
-            singlePrivateGroupRoot.setVisibility(View.VISIBLE);
-            //createPrivateGroupButtonTextView.setVisibility(View.GONE);
-
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
-
-    }
-
-    private void addLeaguesCategories() {
-
-        CustomTabsFragmentPagerAdapter pagerAdapterFragment1 = new CustomTabsFragmentPagerAdapter(this.getSupportFragmentManager());
-        AvailableGamesFragment ChampionsLeagueAvailableGameFragment = new AvailableGamesFragment();
-        Bundle ChampionsLeagueAvailableGameFragmentBundle = new Bundle();
-        ChampionsLeagueAvailableGameFragmentBundle.putString(getString(R.string.key_league_type), "PL");
-        ChampionsLeagueAvailableGameFragment.setArguments(ChampionsLeagueAvailableGameFragmentBundle);
-        pagerAdapterFragment1.addFragment(ChampionsLeagueAvailableGameFragment);
-
-        AvailableGamesFragment IsraeliLeagueAvailableGameFragment = new AvailableGamesFragment();
-        Bundle IsraeliLeagueAvailableGameFragmentBundle = new Bundle();
-        IsraeliLeagueAvailableGameFragmentBundle.putString(getString(R.string.key_league_type), "IL");
-        IsraeliLeagueAvailableGameFragment.setArguments(IsraeliLeagueAvailableGameFragmentBundle);
-        pagerAdapterFragment1.addFragment(IsraeliLeagueAvailableGameFragment);
-        loadingRoot.setVisibility(View.GONE);
-
-
-        //set adapter to ViewPager
-
-        leaguesPagesViewPager.setAdapter(pagerAdapterFragment1);
-        leaguesSelectionTabLayout.addOnTabSelectedListener(leaguesSelectionListener);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveLeagueRecords(LeagueRecord[] leagueRecords) {
-        try {
-            if (leagueRecords == null || leagueRecords.length == 0)
-                return;
-
-            OffsideApplication.getLeaguesRecords().put(groupId, leagueRecords);
-
-            showLeague();
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
-
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onReceiveAvailableGames(AvailableGame[] availableGames) {
+//        try {
+//            if (availableGames == null || availableGames.length == 0)
+//                return;
+//
+//            OffsideApplication.setAvailableGames(availableGames);
+//
+//            //update groups stuff
+//            //todo: create distinct of league types to send to fragment creator - they will define the tabs
+//
+//            this.addLeaguesCategories();
+//            leaguesSelectionTabLayout.addOnTabSelectedListener(leaguesSelectionListener);
+//            loadingRoot.setVisibility(View.GONE);
+//
+//
+//            //privateGroupsRoot.setVisibility(View.GONE);
+//            singlePrivateGroupRoot.setVisibility(View.VISIBLE);
+//            //createPrivateGroupButtonTextView.setVisibility(View.GONE);
+//
+//
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//
+//        }
+//
+//    }
+//
+//    private void addLeaguesCategories() {
+//
+//        CustomTabsFragmentPagerAdapter pagerAdapterFragment1 = new CustomTabsFragmentPagerAdapter(this.getSupportFragmentManager());
+//        AvailableGamesFragment ChampionsLeagueAvailableGameFragment = new AvailableGamesFragment();
+//        Bundle ChampionsLeagueAvailableGameFragmentBundle = new Bundle();
+//        ChampionsLeagueAvailableGameFragmentBundle.putString(getString(R.string.key_league_type), "PL");
+//        ChampionsLeagueAvailableGameFragment.setArguments(ChampionsLeagueAvailableGameFragmentBundle);
+//        pagerAdapterFragment1.addFragment(ChampionsLeagueAvailableGameFragment);
+//
+//        AvailableGamesFragment IsraeliLeagueAvailableGameFragment = new AvailableGamesFragment();
+//        Bundle IsraeliLeagueAvailableGameFragmentBundle = new Bundle();
+//        IsraeliLeagueAvailableGameFragmentBundle.putString(getString(R.string.key_league_type), "IL");
+//        IsraeliLeagueAvailableGameFragment.setArguments(IsraeliLeagueAvailableGameFragmentBundle);
+//        pagerAdapterFragment1.addFragment(IsraeliLeagueAvailableGameFragment);
+//        loadingRoot.setVisibility(View.GONE);
+//
+//
+//        //set adapter to ViewPager
+//
+//        leaguesPagesViewPager.setAdapter(pagerAdapterFragment1);
+//        leaguesSelectionTabLayout.addOnTabSelectedListener(leaguesSelectionListener);
+//    }
+//
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onReceiveLeagueRecords(LeagueRecord[] leagueRecords) {
+//        try {
+//            if (leagueRecords == null || leagueRecords.length == 0)
+//                return;
+//
+//            OffsideApplication.getLeaguesRecords().put(groupId, leagueRecords);
+//
+//            showLeague();
+//
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//
+//        }
+//
+//    }
 
 
     private Boolean exit = false;

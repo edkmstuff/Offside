@@ -1,7 +1,11 @@
 package com.offsidegame.offside.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.fragments.GroupsFragment;
+import com.offsidegame.offside.fragments.SingleGroupFragment;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
@@ -161,6 +167,8 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     //Toast.makeText(context,"item clicked" ,Toast.LENGTH_SHORT).show();
                     OffsideApplication.setSelectedPrivateGroup(viewHolder.privateGroup);
+                    SingleGroupFragment singleGroupFragment = new SingleGroupFragment();
+                    replaceFragment(singleGroupFragment);
                 }
             });
 
@@ -178,6 +186,14 @@ public class PrivateGroupAdapter extends BaseAdapter {
         return null;
 
     }
+
+    private void replaceFragment(Fragment fragment) {
+
+        FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.l_fragment_container_root, fragment, fragment.getTag()).commit();
+
+    }
+
 
 
 }
