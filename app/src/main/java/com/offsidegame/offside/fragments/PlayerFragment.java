@@ -1,54 +1,47 @@
-package com.offsidegame.offside.activities;
+package com.offsidegame.offside.fragments;
 
-import android.app.Activity;
+
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.ButtonBarLayout;
+import android.support.annotation.Nullable;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareButton;
-import com.facebook.share.widget.ShareDialog;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.events.ConnectionEvent;
-import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.adapters.ViewPagerAdapter;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.ExperienceLevel;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.PlayerAssets;
+import com.offsidegame.offside.models.PlayerGame;
 import com.offsidegame.offside.models.Reward;
 import com.offsidegame.offside.models.UserProfileInfo;
-import com.offsidegame.offside.models.PlayerGame;
 import com.offsidegame.offside.models.Winner;
 
 import org.acra.ACRA;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.ocpsoft.prettytime.PrettyTime;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,22 +49,21 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class ViewPlayerActivity extends AppCompatActivity {
+/**
+ * Created by user on 8/22/2017.
+ */
+
+
+public class PlayerFragment extends Fragment {
 
     //<editor-fold desc="****************MEMBERS**************">
-
-    private final String activityName = "ViewPlayerActivity";
-    private final Context context = this;
-    private final Activity thisActivity = this;
-    private BottomNavigationView bottomNavigationView;
-
+    private PlayerAssets playerAssets;
     private String playerId;
     private ExperienceLevel playerCurrentExpLevel;
 
-    private LinearLayout root;
-    private LinearLayout loadingRoot;
+    private FrameLayout loadingRoot;
+
     private LinearLayout playerMainDetailsRoot;
-    private LinearLayout playerAssetsRoot;
     private LinearLayout playerDetailsRoot;
     private LinearLayout latestGameTabRoot;
     private LinearLayout trophiesTabRoot;
@@ -84,7 +76,6 @@ public class ViewPlayerActivity extends AppCompatActivity {
     private LinearLayout podiumRoot;
     private LinearLayout[] winnersPodiumRoots = new LinearLayout[3];
 
-    private TextView versionTextView;
     private TextView powerItemsTextView;
     private TextView balanceTextView;
     private TextView playerNameTextView;
@@ -106,7 +97,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
 
 
     private ImageView[] winnersImageViews = new ImageView[3];
-    private ImageView settingsButtonImageView;
+
     private ImageView playerPictureImageView;
     //private ImageView playerExperienceLevelImageView;
 
@@ -117,123 +108,119 @@ public class ViewPlayerActivity extends AppCompatActivity {
     private HorizontalScrollView trophiesClosetScrollView;
     public ShareButton facebookShareButton;
 
-
     //</editor-fold>
 
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_player);
-        FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
-        playerId = player.getUid();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        try {
+            View view = inflater.inflate(R.layout.fragment_player, container, false);
 
-        //<editor-fold desc="**************FIND***************">
+            Context context = getContext();
 
-        versionTextView = (TextView) findViewById(R.id.l_version_text_view);
-        versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
+            getIDs(view, context);
+            setEvents();
 
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.l_bottom_navigation_view);
-        root = (LinearLayout) findViewById(R.id.vp_view_player_root);
+            playerAssets = OffsideApplication.getPlayerAssets();
 
-        playerMainDetailsRoot = (LinearLayout) findViewById(R.id.vp_player_main_details_root);
-        playerAssetsRoot = (LinearLayout) findViewById(R.id.vp_player_assets_root);
-        latestGameTabRoot = (LinearLayout) findViewById(R.id.vp_latest_game_tab_root);
-        trophiesTabRoot = (LinearLayout) findViewById(R.id.vp_trophies_tab_root);
-        playerRecordsTabRoot = (LinearLayout) findViewById(R.id.vp_records_tab_root);
-        playerDetailsRoot = (LinearLayout) findViewById(R.id.vp_player_details_root);
-        trophiesDetailsRoot = (LinearLayout) findViewById(R.id.vp_trophies_details_root);
-        trophiesClosetRoot = (LinearLayout) findViewById(R.id.vp_trophies_closet_root);
-        latestGameDetailsRoot = (LinearLayout) findViewById(R.id.vp_latest_game_details_root);
-        latestGameDetailsElementsRoot = (LinearLayout) findViewById(R.id.vp_latest_game_details_elements_root);
-        playerRecordsDetailsRoot = (LinearLayout) findViewById(R.id.vp_player_records_details_root);
-        podiumRoot = (LinearLayout) findViewById(R.id.vp_latest_game_podium_root);
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            playerId = firebaseUser.getUid();
+            String userDisplayName = firebaseUser.getDisplayName();
+            userDisplayName = userDisplayName == null ? "No Name" : userDisplayName;
 
-        powerItemsTextView = (TextView) findViewById(R.id.vp_power_items_text_view);
-        balanceTextView = (TextView) findViewById(R.id.vp_balance_text_view);
-        playerNameTextView = (TextView) findViewById(R.id.vp_player_name_text_view);
-        playerExperienceLevelTextView = (TextView) findViewById(R.id.vp_player_experience_level_text_view);
+            ImageHelper.loadImage(context,playerPictureImageView,Uri.parse(playerAssets.getImageUrl()));
+            playerNameTextView.setText(userDisplayName);
 
-        latestGameNotExistTextView = (TextView) findViewById(R.id.vp_latest_game_not_exist_text_view);
-        latestGamePrivateGroupTextView = (TextView) findViewById(R.id.vp_latest_game_private_group_text_view);
-        latestGameTitleTextView = (TextView) findViewById(R.id.vp_latest_game_title_text_view);
-        latestGameStartDateTextView = (TextView) findViewById(R.id.vp_latest_game_start_date_text_view);
-        latestGamePositionTextView = (TextView) findViewById(R.id.vp_latest_game_position_text_view);
-        latestGameAnswersSummaryTextView = (TextView) findViewById(R.id.vp_latest_game_answers_summary_text_view);
-        latestGameBalanceSummaryTextView = (TextView) findViewById(R.id.vp_latest_game_balance_summary_text_view);
-        trophiesClosetNoTitlesTextView = (TextView) findViewById(R.id.vp_trophies_closet_no_titles_text_view);
-        playerRecordsNumberOfGamesTextView = (TextView) findViewById(R.id.vp_player_records_number_of_games_text_view);
-        playerRecordsNumberOfTrophiesTextView = (TextView) findViewById(R.id.vp_player_records_number_of_trophies_text_view);
-        playerRecordsAverageProfitPerGameTextView = (TextView) findViewById(R.id.vp_player_records_average_profit_per_game_text_view);
+            resetVisibility();
 
-        settingsButtonImageView = (ImageView) findViewById(R.id.vp_settings_button_image_view);
-        playerPictureImageView = (ImageView) findViewById(R.id.vp_player_picture_image_view);
-        //playerExperienceLevelImageView = (ImageView) findViewById(R.id.vp_player_experience_level_image_view);
+            return view;
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+            return null;
+        }
 
-        facebookShareButton = (ShareButton) findViewById(R.id.vp_facebook_share_button);
-        trophiesClosetScrollView = (HorizontalScrollView) findViewById(R.id.vp_trophies_closet_scroll_view);
+
+    }
+
+    private void getIDs(View view, Context context) {
+
+        loadingRoot = (FrameLayout) view.findViewById(R.id.shared_loading_root);
+        playerMainDetailsRoot = (LinearLayout) view.findViewById(R.id.vp_player_main_details_root);
+        latestGameTabRoot = (LinearLayout) view.findViewById(R.id.vp_latest_game_tab_root);
+        trophiesTabRoot = (LinearLayout) view.findViewById(R.id.vp_trophies_tab_root);
+        playerRecordsTabRoot = (LinearLayout) view.findViewById(R.id.vp_records_tab_root);
+        playerDetailsRoot = (LinearLayout) view.findViewById(R.id.vp_player_details_root);
+        trophiesDetailsRoot = (LinearLayout) view.findViewById(R.id.vp_trophies_details_root);
+        trophiesClosetRoot = (LinearLayout) view.findViewById(R.id.vp_trophies_closet_root);
+        latestGameDetailsRoot = (LinearLayout) view.findViewById(R.id.vp_latest_game_details_root);
+        latestGameDetailsElementsRoot = (LinearLayout) view.findViewById(R.id.vp_latest_game_details_elements_root);
+        playerRecordsDetailsRoot = (LinearLayout) view.findViewById(R.id.vp_player_records_details_root);
+        podiumRoot = (LinearLayout) view.findViewById(R.id.vp_latest_game_podium_root);
+
+        powerItemsTextView = (TextView) view.findViewById(R.id.vp_power_items_text_view);
+        balanceTextView = (TextView) view.findViewById(R.id.vp_balance_text_view);
+        playerNameTextView = (TextView) view.findViewById(R.id.vp_player_name_text_view);
+        //playerExperienceLevelTextView = (TextView) view.findViewById(R.id.vp_player_experience_level_text_view);
+
+        latestGameNotExistTextView = (TextView) view.findViewById(R.id.vp_latest_game_not_exist_text_view);
+        latestGamePrivateGroupTextView = (TextView) view.findViewById(R.id.vp_latest_game_private_group_text_view);
+        latestGameTitleTextView = (TextView) view.findViewById(R.id.vp_latest_game_title_text_view);
+        latestGameStartDateTextView = (TextView) view.findViewById(R.id.vp_latest_game_start_date_text_view);
+        latestGamePositionTextView = (TextView) view.findViewById(R.id.vp_latest_game_position_text_view);
+        latestGameAnswersSummaryTextView = (TextView) view.findViewById(R.id.vp_latest_game_answers_summary_text_view);
+        latestGameBalanceSummaryTextView = (TextView) view.findViewById(R.id.vp_latest_game_balance_summary_text_view);
+        trophiesClosetNoTitlesTextView = (TextView) view.findViewById(R.id.vp_trophies_closet_no_titles_text_view);
+        playerRecordsNumberOfGamesTextView = (TextView) view.findViewById(R.id.vp_player_records_number_of_games_text_view);
+        playerRecordsNumberOfTrophiesTextView = (TextView) view.findViewById(R.id.vp_player_records_number_of_trophies_text_view);
+        playerRecordsAverageProfitPerGameTextView = (TextView) view.findViewById(R.id.vp_player_records_average_profit_per_game_text_view);
+
+
+        playerPictureImageView = (ImageView) view.findViewById(R.id.vp_player_picture_image_view);
+        //playerExperienceLevelImageView = (ImageView) view.findViewById(R.id.vp_player_experience_level_image_view);
+
+        facebookShareButton = (ShareButton) view.findViewById(R.id.vp_facebook_share_button);
+        trophiesClosetScrollView = (HorizontalScrollView) view.findViewById(R.id.vp_trophies_closet_scroll_view);
 
         for (int i = 0; i < 3; i++) {
 
             String podiumItemLinearLayoutId = "vp_latest_game_podium_" + (i + 1) + "_root";
-            int winnerPodiumItemResourceId = context.getResources().getIdentifier(podiumItemLinearLayoutId, "id", context.getPackageName());
-            winnersPodiumRoots[i] = (LinearLayout) findViewById(winnerPodiumItemResourceId);
+            int winnerPodiumItemResourceId = getResources().getIdentifier(podiumItemLinearLayoutId, "id", context.getPackageName());
+            winnersPodiumRoots[i] = (LinearLayout) view.findViewById(winnerPodiumItemResourceId);
 
             String imageViewId = "vp_latest_game_winner" + (i + 1) + "_image_view";
-            int winnerImageViewResourceId = context.getResources().getIdentifier(imageViewId, "id", context.getPackageName());
-            winnersImageViews[i] = (ImageView) findViewById(winnerImageViewResourceId);
+            int winnerImageViewResourceId = getResources().getIdentifier(imageViewId, "id", context.getPackageName());
+            winnersImageViews[i] = (ImageView) view.findViewById(winnerImageViewResourceId);
 
             String nameTextViewId = "vp_latest_game_winner" + (i + 1) + "_text_view";
-            int winnerNameTextViewResourceId = context.getResources().getIdentifier(nameTextViewId, "id", context.getPackageName());
-            winnersNamesTextViews[i] = (TextView) findViewById(winnerNameTextViewResourceId);
+            int winnerNameTextViewResourceId = getResources().getIdentifier(nameTextViewId, "id", context.getPackageName());
+            winnersNamesTextViews[i] = (TextView) view.findViewById(winnerNameTextViewResourceId);
 
             String coinsTextViewId = "vp_latest_game_winner" + (i + 1) + "_coins_text_view";
-            int winnerCoinsTextViewResourceId = context.getResources().getIdentifier(coinsTextViewId, "id", context.getPackageName());
-            winnersCoinsTextViews[i] = (TextView) findViewById(winnerCoinsTextViewResourceId);
+            int winnerCoinsTextViewResourceId = getResources().getIdentifier(coinsTextViewId, "id", context.getPackageName());
+            winnersCoinsTextViews[i] = (TextView) view.findViewById(winnerCoinsTextViewResourceId);
 
         }
 
         for (int i = 0; i < experienceLevelImageViews.length; i++) {
             String imageViewId = "vp_records_details_level_" + (i + 1) + "_image_view";
             int expLevelImageViewResourceId = context.getResources().getIdentifier(imageViewId, "id", context.getPackageName());
-            experienceLevelImageViews[i] = (ImageView) findViewById(expLevelImageViewResourceId);
+            experienceLevelImageViews[i] = (ImageView) view.findViewById(expLevelImageViewResourceId);
 
             String nameTextViewId = "vp_records_details_level_" + (i + 1) + "_name_text_view";
             int expLevelNameTextViewResourceId = context.getResources().getIdentifier(nameTextViewId, "id", context.getPackageName());
-            experienceLevelNameTextViews[i] = (TextView) findViewById(expLevelNameTextViewResourceId);
+            experienceLevelNameTextViews[i] = (TextView) view.findViewById(expLevelNameTextViewResourceId);
 
             String minValueTextViewId = "vp_records_details_level_" + (i + 1) + "_min_value_text_view";
             int expLevelMinValueTextViewResourceId = context.getResources().getIdentifier(minValueTextViewId, "id", context.getPackageName());
-            experienceLevelMinValueTextViews[i] = (TextView) findViewById(expLevelMinValueTextViewResourceId);
+            experienceLevelMinValueTextViews[i] = (TextView) view.findViewById(expLevelMinValueTextViewResourceId);
         }
 
-        //</editor-fold>
+    }
 
-        //<editor-fold desc="************SET CLICKS*************">
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                switch (item.getItemId()) {
-                    case R.id.nav_action_groups:
-                        Intent intent = new Intent(context, LobbyActivity.class);
-                        startActivity(intent);
-                        break;
-                    case R.id.nav_action_shop:
-                        break;
-                    case R.id.nav_action_play:
-                        Intent chatIntent = new Intent(context, ChatActivity.class);
-                        startActivity(chatIntent);
-                        break;
-
-                }
-
-                return true;
-            }
-        });
-
-        bottomNavigationView.setSelectedItemId(R.id.nav_action_profile);
+    private void setEvents() {
 
         latestGameTabRoot.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,19 +261,11 @@ public class ViewPlayerActivity extends AppCompatActivity {
             }
         });
 
-        //</editor-fold>
-
-        resetVisibility();
-
     }
 
     public void resetVisibility() {
-        loadingRoot.setVisibility(View.VISIBLE);
-        //root.setVisibility(View.GONE);
-        playerAssetsRoot.setVisibility(View.GONE);
-        playerMainDetailsRoot.setVisibility(View.GONE);
-        playerDetailsRoot.setVisibility(View.GONE);
 
+        playerDetailsRoot.setVisibility(View.GONE);
 
         latestGameTabRoot.setBackgroundResource(R.color.navigationMenu);
         latestGameDetailsRoot.setVisibility(View.GONE);
@@ -296,7 +275,6 @@ public class ViewPlayerActivity extends AppCompatActivity {
         for (int i = 0; i < winnersPodiumRoots.length; i++) {
             winnersPodiumRoots[i].setVisibility(View.GONE);
         }
-
 
         playerRecordsTabRoot.setBackgroundResource(R.color.navigationMenu);
         playerRecordsDetailsRoot.setVisibility(View.GONE);
@@ -308,24 +286,6 @@ public class ViewPlayerActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(context);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(context);
-        super.onStop();
-    }
-
 //    @Subscribe(threadMode = ThreadMode.MAIN)
 //    public void onReceiveUserProfileInfo(UserProfileInfo userProfileInfo) {
 //        try {
@@ -333,31 +293,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
 //                return;
 //
 //            OffsideApplication.setUserProfileInfo(userProfileInfo);
-//            PlayerAssets playerAssets;
-//            int balance;
-//            int powerItems;
-//            String playerProfilePictureUrl;
 //
-//            //set player assets
-//            if (OffsideApplication.getPrivateGroupsInfo() == null)
-//                return;
-//
-//            playerAssets = OffsideApplication.getPrivateGroupsInfo().getPlayerAssets();
-//            balance = playerAssets.getBalance();
-//            powerItems = playerAssets.getPowerItems();
-//            playerProfilePictureUrl = playerAssets.getImageUrl();
-//
-//
-//            balanceTextView.setText(Integer.toString(balance));
-//            powerItemsTextView.setText(Integer.toString(powerItems));
-//
-//            playerNameTextView.setText(userProfileInfo.getPlayerName());
-//            playerExperienceLevelTextView.setText(userProfileInfo.getExperienceLevelName());
-//            playerCurrentExpLevel = ExperienceLevel.findByName(userProfileInfo.getExperienceLevelName());
-//            if (playerCurrentExpLevel == null)
-//                playerCurrentExpLevel = ExperienceLevel.expLevel1;
-//            //playerExperienceLevelImageView.setImageResource(playerCurrentExpLevel.getImageViewResourceId());
-//            ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName);
 //
 //            //<editor-fold desc="---------RECENT GAME-----------">
 //
@@ -386,7 +322,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
 //
 //                for (Winner winner : winners) {
 //                    Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
-//                    ImageHelper.loadImage(thisActivity, winnersImageViews[j], winnerProfilePictureUri);
+//                    ImageHelper.loadImage(getContext(), winnersImageViews[j], winnerProfilePictureUri);
 //                    winnersNamesTextViews[j].setText(winner.getPlayerName());
 //                    winnersCoinsTextViews[j].setText(Integer.toString(winner.getOffsideCoins()));
 //                    winnersPodiumRoots[j].setVisibility(View.VISIBLE);
@@ -404,7 +340,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
 //                latestGameNotExistTextView.setVisibility(View.VISIBLE);
 //            }
 //
-//        //</editor-fold>
+//            //</editor-fold>
 //
 //            //<editor-fold desc="---------TROPHIES CLOSET-----------">
 //
@@ -428,7 +364,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
 //                if (!(reward.getRewardTypeName() == null || reward.getRewardTypeName().equals("NONE"))) {
 //
 //                    hasReward = true;
-//                    ViewGroup trophiesLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.trophy_item, trophiesClosetRoot, false);
+//                    ViewGroup trophiesLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.trophy_item, trophiesClosetRoot, false);
 //
 //                    TextView groupNameTextView = (TextView) trophiesLayout.getChildAt(0);
 //                    groupNameTextView.setText(reward.getGroupName());
@@ -443,7 +379,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
 //                    trophyImageImageView.requestLayout();
 //
 //                    int trophyResourceId = reward.getRewardImageResourceIdByRewardType();
-//                    ImageHelper.loadImage(context, trophyImageImageView, trophyResourceId);
+//                    ImageHelper.loadImage(getContext(), trophyImageImageView, trophyResourceId);
 //
 //                    TextView gameTitleTextView = (TextView) trophiesLayout.getChildAt(3);
 //                    gameTitleTextView.setText(reward.getGameTitle());
@@ -497,7 +433,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
 //                    experienceLevelImageViews[i].setImageResource(currentExpLevel.getImageViewResourceId());
 //            }
 //
-//            final Bitmap bitmapImage = BitmapFactory.decodeResource(context.getResources(), playerCurrentExpLevel.getImageViewResourceId());
+//            final Bitmap bitmapImage = BitmapFactory.decodeResource(getContext().getResources(), playerCurrentExpLevel.getImageViewResourceId());
 //            String messageText = "I am a " + playerCurrentExpLevel.getName() + " on the Sidekick game";
 //            shareOnFacebook(facebookShareButton, bitmapImage, messageText);
 //
@@ -506,7 +442,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
 //
 //            loadingRoot.setVisibility(View.GONE);
 //            //root.setVisibility(View.VISIBLE);
-//            playerAssetsRoot.setVisibility(View.VISIBLE);
+//
 //            playerMainDetailsRoot.setVisibility(View.VISIBLE);
 //            playerDetailsRoot.setVisibility(View.VISIBLE);
 //
@@ -516,6 +452,173 @@ public class ViewPlayerActivity extends AppCompatActivity {
 //        }
 //
 //    }
+
+
+    public void updateUserProfileFragment(UserProfileInfo userProfileInfo) {
+        try {
+            if (userProfileInfo == null)
+                return;
+
+            //OffsideApplication.setUserProfileInfo(userProfileInfo);
+
+            //<editor-fold desc="---------RECENT GAME-----------">
+
+            PlayerGame mostRecentGamePlayed = userProfileInfo.getMostRecentGamePlayed();
+            if (mostRecentGamePlayed != null) {
+                latestGamePrivateGroupTextView.setText(mostRecentGamePlayed.getGroupName());
+                latestGameTitleTextView.setText(mostRecentGamePlayed.getGameTitle());
+
+                PrettyTime p = new PrettyTime();
+
+
+                latestGameStartDateTextView.setText(p.format(mostRecentGamePlayed.getGameStartTime()));
+
+
+                String latestGamePositionOutOfText = Integer.toString(mostRecentGamePlayed.getPosition()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(mostRecentGamePlayed.getTotalPlayers());
+                latestGamePositionTextView.setText(latestGamePositionOutOfText);
+
+                String latestGameAnswersSummaryOutOfText = Integer.toString(mostRecentGamePlayed.getCorrectAnswersCount()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(mostRecentGamePlayed.getTotalQuestionsAsked());
+                latestGameAnswersSummaryTextView.setText(latestGameAnswersSummaryOutOfText);
+
+                latestGameBalanceSummaryTextView.setText(Integer.toString(mostRecentGamePlayed.getOffsideCoins()));
+
+                List<Winner> winners = userProfileInfo.getMostRecentGamePlayed().getWinners();
+
+                int j = 0;
+
+                for (Winner winner : winners) {
+                    Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
+                    ImageHelper.loadImage(getContext(), winnersImageViews[j], winnerProfilePictureUri);
+                    winnersNamesTextViews[j].setText(winner.getPlayerName());
+                    winnersCoinsTextViews[j].setText(Integer.toString(winner.getOffsideCoins()));
+                    winnersPodiumRoots[j].setVisibility(View.VISIBLE);
+                    j++;
+                }
+                podiumRoot.setVisibility(View.VISIBLE);
+
+
+                latestGameDetailsElementsRoot.setVisibility(View.VISIBLE);
+                latestGameNotExistTextView.setVisibility(View.GONE);
+
+            } else {
+                latestGameDetailsElementsRoot.setVisibility(View.GONE);
+                latestGameNotExistTextView.setVisibility(View.VISIBLE);
+            }
+
+            //</editor-fold>
+
+            //<editor-fold desc="---------TROPHIES CLOSET-----------">
+
+            trophiesClosetRoot.removeAllViews();
+
+            ArrayList<Reward> playerRewards = userProfileInfo.getRewards();
+
+            Collections.sort(playerRewards, new Comparator<Reward>() {
+                public int compare(Reward r1, Reward r2) {
+                    int result = 0;
+                    if (r1.getGameStartDate().after(r2.getGameStartDate()))
+                        result = 1;
+                    return result;
+                }
+            });
+
+            Boolean hasReward = false;
+
+            for (Reward reward : playerRewards) {
+
+                if (!(reward.getRewardTypeName() == null || reward.getRewardTypeName().equals("NONE"))) {
+
+                    hasReward = true;
+                    ViewGroup trophiesLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.trophy_item, trophiesClosetRoot, false);
+
+                    TextView groupNameTextView = (TextView) trophiesLayout.getChildAt(0);
+                    groupNameTextView.setText(reward.getGroupName());
+
+                    TextView positionOutOfTextView = (TextView) trophiesLayout.getChildAt(1);
+                    String positionOutOfText = Integer.toString(reward.getPosition()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(reward.getTotalPlayers());
+                    positionOutOfTextView.setText(positionOutOfText);
+
+                    ImageView trophyImageImageView = (ImageView) trophiesLayout.getChildAt(2);
+//                trophyImageImageView.getLayoutParams().height = 70;
+//                trophyImageImageView.getLayoutParams().width = 70;
+                    trophyImageImageView.requestLayout();
+
+                    int trophyResourceId = reward.getRewardImageResourceIdByRewardType();
+                    ImageHelper.loadImage(getContext(), trophyImageImageView, trophyResourceId);
+
+                    TextView gameTitleTextView = (TextView) trophiesLayout.getChildAt(3);
+                    gameTitleTextView.setText(reward.getGameTitle());
+
+                    TextView gameDateTextView = (TextView) trophiesLayout.getChildAt(4);
+                    //gameDateTextView.setText(reward.getGameStartDate().toString());
+                    Date gameStartDate = reward.getGameStartDate();
+                    PrettyTime pt = new PrettyTime();
+                    gameDateTextView.setText(pt.format(gameStartDate));
+
+                    trophiesClosetRoot.addView(trophiesLayout);
+                }
+
+            }
+            if (!hasReward) {
+                trophiesClosetNoTitlesTextView.setVisibility(View.VISIBLE);
+                trophiesClosetScrollView.setVisibility(View.GONE);
+
+            } else {
+                trophiesClosetNoTitlesTextView.setVisibility(View.GONE);
+                trophiesClosetScrollView.setVisibility(View.VISIBLE);
+
+            }
+
+
+            trophiesDetailsRoot.setVisibility(View.VISIBLE);
+
+
+            //</editor-fold>
+
+            //<editor-fold desc="---------PLAYER RECORDS-----------">
+
+            int numberOfGames = userProfileInfo.getTotalGamesPlayed();
+            int numberOfTrophies = userProfileInfo.getTotalTrophies();
+            int averageProfitPerGame = (int) userProfileInfo.getAverageProfitPerGame();
+            playerRecordsNumberOfGamesTextView.setText(Integer.toString(numberOfGames));
+            playerRecordsNumberOfTrophiesTextView.setText(Integer.toString(numberOfTrophies));
+            playerRecordsAverageProfitPerGameTextView.setText(Integer.toString(averageProfitPerGame));
+
+            playerCurrentExpLevel = ExperienceLevel.findByName(userProfileInfo.getExperienceLevelName());
+
+            for (int i = 0; i < experienceLevelImageViews.length; i++) {
+                ExperienceLevel currentExpLevel = ExperienceLevel.findByIndex(i);
+
+                experienceLevelNameTextViews[i].setText(currentExpLevel.getName());
+                experienceLevelMinValueTextViews[i].setText(Integer.toString(currentExpLevel.getMinValue()));
+
+                if (playerCurrentExpLevel.getName().equals(currentExpLevel.getName()))
+                    //ImageHelper.loadImage(context, experienceLevelImageViews[i], currentExpLevel.getImageViewResourceIdCurrent());
+                    experienceLevelImageViews[i].setImageResource(currentExpLevel.getImageViewResourceIdCurrent());
+                else
+                    //ImageHelper.loadImage(context, experienceLevelImageViews[i], currentExpLevel.getImageViewResourceId());
+                    experienceLevelImageViews[i].setImageResource(currentExpLevel.getImageViewResourceId());
+            }
+
+            final Bitmap bitmapImage = BitmapFactory.decodeResource(getContext().getResources(), playerCurrentExpLevel.getImageViewResourceId());
+            String messageText = "I am a " + playerCurrentExpLevel.getName() + " on the Sidekick game";
+            shareOnFacebook(facebookShareButton, bitmapImage, messageText);
+
+
+            //</editor-fold>
+
+            loadingRoot.setVisibility(View.GONE);
+            //root.setVisibility(View.VISIBLE);
+
+            playerMainDetailsRoot.setVisibility(View.VISIBLE);
+            playerDetailsRoot.setVisibility(View.VISIBLE);
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
 
     public void shareOnFacebook(ShareButton facebookShareButton, Bitmap bitmapImage, String quote) {
 
@@ -555,56 +658,6 @@ public class ViewPlayerActivity extends AppCompatActivity {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
 
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
-        try {
-            if (OffsideApplication.signalRService == null)
-                return;
-
-            Context eventContext = signalRServiceBoundEvent.getContext();
-            if (eventContext == context || eventContext == getApplicationContext()) {
-
-                if (OffsideApplication.isPlayerQuitGame()) {
-                    loadingRoot.setVisibility(View.GONE);
-                    return;
-                }
-
-
-                if (OffsideApplication.isBoundToSignalRService) {
-
-                    if (playerId == null)
-                        return;
-                    UserProfileInfo userProfileInfo = OffsideApplication.getUserProfileInfo();
-                    if (userProfileInfo == null)
-                        OffsideApplication.signalRService.RequestUserProfileData(playerId);
-                    else
-
-                        EventBus.getDefault().post(userProfileInfo);
-
-                } else
-                    throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");
-
-
-            }
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onConnectionEvent(ConnectionEvent connectionEvent) {
-        try {
-            boolean isConnected = connectionEvent.getConnected();
-            if (isConnected)
-                Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
     }
 
 

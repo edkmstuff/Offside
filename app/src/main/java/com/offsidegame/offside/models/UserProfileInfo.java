@@ -101,6 +101,8 @@ public class UserProfileInfo {
 
     public PlayerGame getMostRecentGamePlayed(){
 
+        if(this.playerGames.size()==0)
+            return null;
         Collections.sort(this.playerGames,new Comparator<PlayerGame>() {
             @Override
             public int compare(PlayerGame playerGame1, PlayerGame playerGame2) {

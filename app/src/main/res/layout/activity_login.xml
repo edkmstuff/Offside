@@ -13,7 +13,7 @@
 
     <!-- Progress bar -->
     <include layout="@layout/shared_loading"
-        android:id="@+id/l_loading_root"
+        android:id="@+id/shared_loading_root"
         android:visibility="visible"
 
         />

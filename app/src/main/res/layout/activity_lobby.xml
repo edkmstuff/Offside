@@ -31,9 +31,6 @@
             android:padding="5dp"
             >
 
-            <!-- group name + players status icons -->
-
-
             <!-- player status -->
             <LinearLayout
                 android:layout_weight="8"
@@ -163,21 +160,7 @@
 
         </LinearLayout>
 
-        <!--user image or title-->
-        <LinearLayout
-            android:id="@+id/l_title_root"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
 
-            <ImageView
-                android:layout_width="140dp"
-                android:layout_height="70dp"
-                android:scaleType="centerCrop"
-                android:src="@mipmap/ic_app_logo_name_only" />
-
-        </LinearLayout>
         <!--*************************************************-->
 
 
@@ -186,61 +169,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Progress bar -->
-            <include layout="@layout/shared_loading"
-                android:visibility="gone"/>
+            <!--&lt;!&ndash; Progress bar &ndash;&gt;-->
+            <!--<include layout="@layout/shared_loading"-->
+                <!--android:visibility="gone"/>-->
 
-
-                <!--***************PRIVATE GROUPS*********************************************-->
+            <!--***************FRAGMENT CONTAINER ROOT***********************************-->
             <LinearLayout
-                    android:id="@+id/l_private_groups_root"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:layout_above="@+id/l_actions_root"
-                    android:visibility="visible"
-                    >
-                    <android.support.design.widget.TabLayout
-                        android:id="@+id/l_groups_tab_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        app:tabMode="fixed"
-                        app:tabGravity="fill"
-                        />
+                android:id="@+id/l_fragment_container_root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_above="@+id/l_actions_root"
+                android:visibility="visible"
+                >
+                <!--elements will be created here on run time -->
+                <!--**PRIVATE GROUPS**-->
+                <!--TBD**PROFILE**-->
+                <!--TBD**SHOP**-->
+                <!--TBD**PLAY**-->
+
+                <!--********-->
 
 
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/l_tabs_container_view_pager"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/l_groups_tab_layout"
-                        android:layout_centerHorizontal="true">
-                    </android.support.v4.view.ViewPager>
-                    <!--list of groups-->
-                    <!--<ScrollView-->
-                        <!--android:id="@+id/l_private_groups_scroll_view"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"-->
-                        <!--android:scrollbars="none"-->
-                        <!--android:scrollbarSize="0dp"-->
-                        <!--android:fillViewport="true">-->
-                        <!--<ListView-->
-                            <!--android:id="@+id/l_private_groups_list_view"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:divider="@null"-->
-                            <!--android:dividerHeight="0dp"-->
-                            <!--android:listSelector="@android:color/transparent"-->
-                            <!--android:transcriptMode="alwaysScroll"-->
-                            <!--&gt;-->
-
-                        <!--</ListView>-->
-                    <!--</ScrollView>-->
-
-
-                </LinearLayout>
+            </LinearLayout>
 
             <!--***************SINGLE GROUP VIEW*********************************************-->
             <LinearLayout
@@ -249,7 +200,7 @@
                 android:layout_height="match_parent"
                 android:layout_above="@+id/l_actions_root"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <!-- GROUP NAVIGATION-->
                 <LinearLayout
@@ -529,59 +480,7 @@
             </LinearLayout>
 
 
-            <!--***************PROFILE*********************************************-->
-            <LinearLayout
-                android:id="@+id/l_profile_root"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="profile page goes here"
-                    />
-
-
-            </LinearLayout>
-
-            <!--***************SHOP*********************************************-->
-            <LinearLayout
-                android:id="@+id/l_shop_root"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="shop elements goes here"/>
-
-
-            </LinearLayout>
-
-            <!--***************PLAY*********************************************-->
-            <LinearLayout
-                android:id="@+id/l_play_root"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="To Do: chat Activity elements goes here "
-                   />
-
-
-            </LinearLayout>
-
-            <!--************************************************************************************-->
             <!--navigation and actions root-->
             <LinearLayout
                 android:id="@+id/l_actions_root"
@@ -590,30 +489,7 @@
                 android:layout_alignParentBottom="true"
                 android:orientation="vertical">
 
-                <!--create  group-->
-                <LinearLayout
-                    android:id="@+id/l_create_private_group_root"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
 
-                    <TextView
-                        android:id="@+id/l_create_private_group_button_text_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorButton"
-                        android:gravity="center"
-                        android:minHeight="50dp"
-                        android:minWidth="100dp"
-                        android:padding="5dp"
-                        android:text="צור קבוצה"
-                        android:textColor="@color/colorWhite"
-                        android:textDirection="rtl"
-
-                        />
-
-                </LinearLayout>
                 <!--navigation-->
                 <android.support.design.widget.BottomNavigationView
                     android:id="@+id/l_bottom_navigation_view"

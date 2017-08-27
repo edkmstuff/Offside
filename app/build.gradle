@@ -25,10 +25,10 @@ android {
 //        }
 //    }
 
-
+    //watch this: https://www.youtube.com/watch?v=AdfKNgyT438
     buildTypes {
         release {
-            minifyEnabled false
+                minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
@@ -60,7 +60,7 @@ dependencies {
 
     //    compile 'com.ironsource.sdk:mediationsdk:6.5.3@jar'
 
-    compile 'com.facebook.android:facebook-android-sdk:4.24.0'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.google.firebase:firebase-auth:11.0.1'

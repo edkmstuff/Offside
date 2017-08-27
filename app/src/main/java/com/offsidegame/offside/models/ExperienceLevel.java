@@ -68,6 +68,11 @@ public class ExperienceLevel {
         return null;
 
     }
+    public static ExperienceLevel findByIndex(int index){
+
+        return expLevels.get(index);
+
+    }
 
 
 

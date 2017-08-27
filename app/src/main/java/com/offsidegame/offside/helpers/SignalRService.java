@@ -76,8 +76,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    public final String ip = new String("192.168.1.140:18313");
-    //public final String ip = new String("10.0.0.17:18313");
+    //public final String ip = new String("192.168.1.140:18315");
+    public final String ip = new String("10.0.0.17:18313");
 
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
@@ -292,6 +292,13 @@ public class SignalRService extends Service {
             }
         }, PlayerAssets.class);
 
+        hub.on("SavedPlayerImageReceived", new SubscriptionHandler1<PlayerAssets>() {
+            @Override
+            public void run(PlayerAssets playerAssets) {
+                EventBus.getDefault().post(playerAssets);
+            }
+        }, PlayerAssets.class);
+
         hub.on("AnswerAccepted", new SubscriptionHandler1<PostAnswerRequestInfo>() {
             @Override
             public void run(PostAnswerRequestInfo postAnswerRequestInfo) {
@@ -312,6 +319,15 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(leagueRecords);
             }
         }, LeagueRecord[].class);
+
+        hub.on("PlayerAssetsReceived", new SubscriptionHandler1<PlayerAssets>() {
+            @Override
+            public void run(PlayerAssets playerAssets) {
+                EventBus.getDefault().post(playerAssets);
+            }
+        }, PlayerAssets.class);
+
+
 
 
 
@@ -635,23 +651,24 @@ public class SignalRService extends Service {
         return true;
     }
 
-    public boolean saveImageInDatabase(String playerId, String imageString) {
+    public void requestSaveImageInDatabase(String playerId, String imageString) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
-            return false;
+            return ;
 
-        hub.invoke(Boolean.class, "SaveImageInDatabase", playerId, imageString).done(new Action<Boolean>() {
-            @Override
-            public void run(Boolean isImageSaved) throws Exception {
-                //EventBus.getDefault().post(new PostAnswerRequestInfo(isUserSaved));
-            }
+        hub.invoke("RequestSaveImageInDatabase", playerId, imageString);
 
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
-        return true;
+//        hub.invoke(Boolean.class, "SaveImageInDatabase", playerId, imageString).done(new Action<Boolean>() {
+//            @Override
+//            public void run(Boolean isImageSaved) throws Exception {
+//                //EventBus.getDefault().post(new PostAnswerRequestInfo(isUserSaved));
+//            }
+//
+//        }).onError(new ErrorCallback() {
+//            @Override
+//            public void onError(Throwable error) {
+//                ACRA.getErrorReporter().handleSilentException(error);
+//            }
+//        });
 
     }
 
@@ -703,6 +720,13 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         hub.invoke("RequestLeagueRecords", playerId, groupId);
+    }
+
+    public void requestPlayerAssets(String playerId) {
+
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke("RequestPlayerAssets", playerId);
     }
 
 

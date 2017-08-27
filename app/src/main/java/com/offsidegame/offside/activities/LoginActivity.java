@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.User;
 
 import org.acra.ACRA;
@@ -39,9 +41,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     private final Context context = this;
     private static final int RC_SIGN_IN = 123;
+    private FirebaseUser firebaseUser;
+
+    private String playerId;
+    private String playerDisplayName;
+    private String playerProfilePictureUrl;
+    private String playerEmail;
 
 
-    private LinearLayout loadingRoot;
+    private FrameLayout loadingRoot;
     private boolean isInLoginProcess = false;
 
 
@@ -51,7 +59,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
 
-            loadingRoot = (LinearLayout) findViewById(R.id.l_loading_root);
+            loadingRoot = (FrameLayout) findViewById(R.id.shared_loading_root);
             loadingRoot.setVisibility(View.VISIBLE);
 
             // to allow exit by clicking on back doubleup_button , setting some flags on current intent
@@ -94,7 +102,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             boolean isConnected = connectionEvent.getConnected();
             if (isConnected) {
                 Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
-                handleSuccessfulLogin();
+                //handleSuccessfulLogin();
             } else
                 Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
@@ -170,7 +178,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                 //.setIsSmartLockEnabled(!BuildConfig.DEBUG)
                                 .setTheme(R.style.BlueTheme)
                                 .setLogo(R.drawable.app_logo_25)
-
                                 .build(),
                         RC_SIGN_IN);
 
@@ -194,18 +201,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     private void handleSuccessfulLogin() {
 
-        FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
-        if (player == null || OffsideApplication.signalRService == null)
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser == null || OffsideApplication.signalRService == null)
             return;
 
 
-        String playerId = player.getUid();
-        String playerDisplayName = (player.getDisplayName() == null || player.getDisplayName().equals("")) ? "NO NAME" : player.getDisplayName();
-        String playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
-        String playerEmail = player.getEmail();
-
-        boolean isUserImageSaved = true;
-        boolean isUserDetailsSaved = true;
+        playerId = firebaseUser.getUid();
+        playerDisplayName = (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) ? "NO NAME" : firebaseUser.getDisplayName();
+        playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
+        playerEmail = firebaseUser.getEmail();
 
         // in case user does not have profile picture, we generate image with Initials
         if (playerProfilePictureUrl == null) {
@@ -217,11 +221,18 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
             String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
 
-            isUserImageSaved = OffsideApplication.signalRService.saveImageInDatabase(playerId, imageString);
-            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
+            OffsideApplication.signalRService.requestSaveImageInDatabase(playerId, imageString);
+
 
         }
 
+        completeUserAccepted();
+    }
+
+    public void completeUserAccepted(){
+
+        if(playerProfilePictureUrl== null)
+            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -229,16 +240,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         editor.commit();
 
         User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl);
-        isUserDetailsSaved = OffsideApplication.signalRService.requestSaveLoggedInUser(user);
+        OffsideApplication.signalRService.requestSaveLoggedInUser(user);
 
-        if (isUserDetailsSaved && isUserImageSaved) {
-            Intent intent = new Intent(context, LobbyActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-        }
 
+        Intent intent = new Intent(context, LobbyActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        finish();
+        startActivity(intent);
         isInLoginProcess = false;
 
 
@@ -295,12 +305,27 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSavedPlayerImage(PlayerAssets playerAssets) {
+        try {
+
+            completeUserAccepted();
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+    }
+
 
     @Override
     public void onBackPressed() {
         finish(); // finish activity
 
     }
+
+
 
 }
 

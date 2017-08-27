@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupCreationInfo;
+import com.offsidegame.offside.models.UserProfileInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -38,7 +40,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
     private final String activityName = "LobbyActivity";
     private final Context context = this;
     private final Activity thisActivity = this;
-    private LinearLayout loadingRoot;
+    private FrameLayout loadingRoot;
 
     //create private group form
 
@@ -56,13 +58,20 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_private_group);
 
-        FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
-        playerDisplayName = player.getDisplayName();
-        playerId = player.getUid();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        playerId = firebaseUser.getUid();
+
+        if(OffsideApplication.getUserProfileInfo() == null)
+
+            playerDisplayName = firebaseUser.getDisplayName();
+
+        else
+            playerDisplayName = OffsideApplication.getUserProfileInfo().getPlayerName();
+
 
         savePrivateGroupButtonTextView = (TextView) findViewById(R.id.cpg_save_private_group_button_text_view);
 
-        loadingRoot = (LinearLayout) findViewById(R.id.shared_loading_root);
+        loadingRoot = (FrameLayout) findViewById(R.id.shared_loading_root);
         createPrivateGroupRoot = (LinearLayout) findViewById(R.id.cpg_create_private_group_root);
 
 

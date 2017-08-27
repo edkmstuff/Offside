@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item>
+        <bitmap
+            android:src="@drawable/lobby_background"
+            android:tileMode="disabled"
+            android:gravity="center"/>
+        <!--<color android:color="@color/colorWhite"/>-->
+    </item>
+    <item>
+        <bitmap
+            android:src="@drawable/app_logo_25"
+            android:tileMode="disabled"
+            android:gravity="center"/>
+    </item>
+
+
+</layer-list>
