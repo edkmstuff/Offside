@@ -419,8 +419,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
 
             groupsFragment.addPagesToGroupsFragment();
 
-            //loadingRoot.setVisibility(View.GONE);
-
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 
