@@ -12,14 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.CreatePrivateGroupActivity;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.PrivateGroupsInfo;
 
 import org.acra.ACRA;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by user on 8/22/2017.
@@ -27,6 +31,7 @@ import org.acra.ACRA;
 
 
 public class GroupsFragment extends Fragment {
+    private LinearLayout groupsRoot;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
@@ -42,6 +47,8 @@ public class GroupsFragment extends Fragment {
         getIDs(view);
         setEvents();
 
+        resetVisibility();
+
         versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
 
 
@@ -50,6 +57,7 @@ public class GroupsFragment extends Fragment {
 
     private void getIDs(View view) {
 
+        groupsRoot = (LinearLayout) view.findViewById(R.id.fg_groups_root);
         loadingRoot = (FrameLayout) view.findViewById(R.id.shared_loading_root);
         versionTextView = (TextView) view.findViewById(R.id.shared_version_text_view);
 
@@ -95,6 +103,14 @@ public class GroupsFragment extends Fragment {
 
     }
 
+    public void resetVisibility() {
+
+        loadingRoot.setVisibility(View.VISIBLE);
+        groupsRoot.setVisibility(View.GONE);
+
+    }
+
+
     public void addPage(String groupType) {
         Bundle bundle = new Bundle();
         bundle.putString(getString(R.string.key_group_type), groupType);
@@ -129,26 +145,26 @@ public class GroupsFragment extends Fragment {
         return viewPagerAdapter != null && viewPagerAdapter.getCount() > 0;
     }
 
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onReceivePrivateGroupsInfo(PrivateGroupsInfo privateGroupsInfo) {
-//        try {
-//            if (privateGroupsInfo == null || privateGroupsInfo.getPrivateGroups() == null)
-//                return;
-//
-//            OffsideApplication.setPrivateGroupsInfo(privateGroupsInfo);
-//
-//            addPagesToGroupsFragment();
-//
-//            loadingRoot.setVisibility(View.GONE);
-//
-//
-//
-//        } catch (Exception ex) {
-//            ACRA.getErrorReporter().handleSilentException(ex);
-//
-//        }
-//
-//    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePrivateGroupsInfo(PrivateGroupsInfo privateGroupsInfo) {
+        try {
+            if (privateGroupsInfo == null || privateGroupsInfo.getPrivateGroups() == null)
+                return;
+
+            OffsideApplication.setPrivateGroupsInfo(privateGroupsInfo);
+
+            addPagesToGroupsFragment();
+
+            loadingRoot.setVisibility(View.GONE);
+            groupsRoot.setVisibility(View.VISIBLE);
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
 
     public void addPagesToGroupsFragment() {
 

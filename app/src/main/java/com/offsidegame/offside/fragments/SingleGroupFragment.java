@@ -29,12 +29,14 @@ import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.UserProfileInfo;
 
 import org.acra.ACRA;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by user on 8/22/2017.
@@ -44,7 +46,7 @@ import java.util.HashMap;
 public class SingleGroupFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private TabLayout.OnTabSelectedListener leaguesSelectionListener;
+
 
     private ViewPagerAdapter viewPagerAdapter;
     private FrameLayout loadingRoot;
@@ -57,6 +59,20 @@ public class SingleGroupFragment extends Fragment {
     private LinearLayout singleGroupLeagueRoot;
     private TextView singleGroupPositionOutOfTextView;
     private ListView singleGroupLeagueListView;
+
+
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        try {
+//            super.onCreate(savedInstanceState);
+//            EventBus.getDefault().register(this);
+//
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//        }
+//
+//
+//    }
 
     @Nullable
     @Override
@@ -189,11 +205,22 @@ public class SingleGroupFragment extends Fragment {
         OffsideApplication.signalRService.requestLeagueRecords(playerId, groupId);
     }
 
-    public void addLeaguePagesToSingleGroupFragment() {
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveAvailableGames(AvailableGame[] availableGames) {
         try {
-            addPage("PL");
-            addPage("CL");
+            if (availableGames == null || availableGames.length == 0)
+                return;
+
+            OffsideApplication.setAvailableGames(availableGames);
+
+            //todo: create distinct of league types to send to fragment creator - they will define the tabs
+
+            List<String> leagues = getAvailableLeagues(availableGames);
+            for(String leagueType: leagues){
+                addLeaguePagesToSingleGroupFragment(leagueType);
+
+            }
+
             loadingRoot.setVisibility(View.GONE);
 
 
@@ -201,8 +228,36 @@ public class SingleGroupFragment extends Fragment {
             ACRA.getErrorReporter().handleSilentException(ex);
 
         }
+
     }
 
+    private List<String> getAvailableLeagues(AvailableGame[] availableGames){
+        List<String> availableLeagues = new ArrayList<>();
+        for(int i=0;i<availableGames.length; i++){
+            String currentLeague = availableGames[i].getLeagueName();
+            if(!availableLeagues.contains(currentLeague)){
+                availableLeagues.add(currentLeague);
+            }
+
+        }
+
+        return availableLeagues;
+
+
+    }
+
+
+    public void addLeaguePagesToSingleGroupFragment(String leagueType) {
+
+        try {
+            addPage(leagueType);
+//            loadingRoot.setVisibility(View.GONE);
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+    }
 
     private void addPage(String leagueType) {
         Bundle bundle = new Bundle();
@@ -220,9 +275,11 @@ public class SingleGroupFragment extends Fragment {
     private String getPageTitle(String groupType) {
         String title = "Unknown";
         if (groupType.equals("PL"))
-            title = "ליגה אנגלית";
+            title = getString(R.string.lbl_primier_league);
+        else if (groupType.equals("PD"))
+            title = getString(R.string.lbl_la_liga);
         else if (groupType.equals("CL"))
-            title = "ליגת האלופות";
+            title = getString(R.string.lbl_champions_league);
         return title;
 
     }
@@ -234,56 +291,25 @@ public class SingleGroupFragment extends Fragment {
         }
     }
 
-    public boolean isTabsCreated() {
-        return viewPagerAdapter != null && viewPagerAdapter.getCount() > 0;
+
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveLeagueRecords(LeagueRecord[] leagueRecords) {
+        try {
+            if (leagueRecords == null || leagueRecords.length == 0)
+                return;
+
+            String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
+            OffsideApplication.getLeaguesRecords().put(groupId, leagueRecords);
+
+            showLeague();
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
-
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onReceiveAvailableGames(AvailableGame[] availableGames) {
-//        try {
-//            if (availableGames == null || availableGames.length == 0)
-//                return;
-//
-//            OffsideApplication.setAvailableGames(availableGames);
-//
-//            //update groups stuff
-//            //todo: create distinct of league types to send to fragment creator - they will define the tabs
-//
-//            //String[] leagues = getAvailableLeagues();
-//
-//
-//            addPage("PL");
-//            loadingRoot.setVisibility(View.GONE);
-//
-//
-//            //privateGroupsRoot.setVisibility(View.GONE);
-//            singlePrivateGroupRoot.setVisibility(View.VISIBLE);
-//            //createPrivateGroupButtonTextView.setVisibility(View.GONE);
-//
-//
-//        } catch (Exception ex) {
-//            ACRA.getErrorReporter().handleSilentException(ex);
-//
-//        }
-//
-//    }
-
-
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onReceiveLeagueRecords(LeagueRecord[] leagueRecords) {
-//        try {
-//            if (leagueRecords == null || leagueRecords.length == 0)
-//                return;
-//
-//            OffsideApplication.getLeaguesRecords().put(groupId, leagueRecords);
-//
-//            showLeague();
-//
-//        } catch (Exception ex) {
-//            ACRA.getErrorReporter().handleSilentException(ex);
-//
-//        }
-//
-//    }
 
 }

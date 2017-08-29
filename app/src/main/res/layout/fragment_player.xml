@@ -45,15 +45,15 @@
             <!--android:gravity="center"-->
             <!--android:layout_marginBottom="5dp"-->
             <!--&gt;-->
-            <!--<TextView-->
-                <!--android:id="@+id/vp_player_experience_level_text_view"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:padding="4dp"-->
-                <!--android:text="ילד"-->
-                <!--android:textColor="@color/grayText"-->
-                <!--android:textSize="@dimen/OffsideMediumSmallText"-->
-                <!--/>-->
+            <TextView
+                android:id="@+id/vp_player_experience_level_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                android:text="כמה טוב אני?"
+                android:textColor="@color/grayText"
+                android:textSize="@dimen/OffsideMediumSmallText"
+                />
             <!--&lt;!&ndash;<ImageView&ndash;&gt;-->
             <!--&lt;!&ndash;android:id="@+id/vp_player_experience_level_image_view"&ndash;&gt;-->
             <!--&lt;!&ndash;android:layout_width="30dp"&ndash;&gt;-->

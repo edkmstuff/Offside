@@ -35,6 +35,8 @@ public class UserProfileInfo {
     @com.google.gson.annotations.SerializedName("PG")
     private ArrayList<PlayerGame> playerGames;
 
+
+
     public String getImageUrl() {
         return imageUrl;
     }

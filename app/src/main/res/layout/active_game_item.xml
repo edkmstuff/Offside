@@ -47,6 +47,7 @@
                         android:layout_height="50dp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/slot_heineken"
+                        android:padding="4dp"
                         />
 
                     <TextView
@@ -57,6 +58,7 @@
                         android:text="HOME TEAM"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/OffsideSmallText"
+                        android:padding="2dp"
 
                         />
 
@@ -127,7 +129,8 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/slot_heineken" />
+                        android:src="@drawable/slot_heineken"
+                        android:padding="4dp" />
 
                     <TextView
                         android:layout_marginTop="2dp"
@@ -137,6 +140,7 @@
                         android:text="HOME TEAM"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/OffsideSmallText"
+                        android:padding="2dp"
 
                         />
 

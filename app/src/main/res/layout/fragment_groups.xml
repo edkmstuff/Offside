@@ -11,53 +11,51 @@
         <include layout="@layout/shared_loading"
             android:visibility="visible"/>
 
-
-
-    <!--app title-->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal" >
-
-        <ImageView
-            android:layout_width="140dp"
-            android:layout_height="70dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_app_logo_name_only" />
-
-    </LinearLayout>
-
-    <!--create  group button-->
-    <LinearLayout
-        android:id="@+id/fg_create_private_group_root"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        >
-
-        <TextView
-            android:id="@+id/fg_create_private_group_button_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorButton"
-            android:gravity="center"
-            android:minHeight="50dp"
-            android:minWidth="100dp"
-            android:padding="5dp"
-            android:text="@string/lbl_create_private_group"
-            android:textColor="@color/colorWhite"
-            android:textDirection="rtl"
-
-            />
-
-    </LinearLayout>
-    <LinearLayout
+        android:id="@+id/fg_groups_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <!--app title-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="140dp"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop"
+                android:src="@mipmap/ic_app_logo_name_only" />
+
+        </LinearLayout>
+        <!--create  group button-->
+        <LinearLayout
+            android:id="@+id/fg_create_private_group_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            >
+
+            <TextView
+                android:id="@+id/fg_create_private_group_button_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorButton"
+                android:gravity="center"
+                android:minHeight="50dp"
+                android:minWidth="100dp"
+                android:padding="5dp"
+                android:text="@string/lbl_create_private_group"
+                android:textColor="@color/colorWhite"
+                android:textDirection="rtl"
+
+                />
+
+        </LinearLayout>
         <android.support.design.widget.TabLayout
             android:id="@+id/fg_groups_tab_layout"
             android:layout_width="match_parent"

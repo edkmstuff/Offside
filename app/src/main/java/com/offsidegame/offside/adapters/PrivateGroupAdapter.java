@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.facebook.share.model.AppInviteContent;
+import com.facebook.share.widget.AppInviteDialog;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.fragments.GroupsFragment;
 import com.offsidegame.offside.fragments.SingleGroupFragment;
@@ -28,6 +30,8 @@ import org.acra.ACRA;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 /**
  * Created by user on 7/20/2017.
@@ -67,6 +71,7 @@ public class PrivateGroupAdapter extends BaseAdapter {
 
         TextView totalPlayingPlayersInGroupTextView;
         LinearLayout playersPlayInGroupRoot;
+        TextView inviteFriendsTextView;
 
 
     }
@@ -85,6 +90,7 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 viewHolder.playersPlayInGroupRoot = (LinearLayout) convertView.findViewById(R.id.pg_players_play_in_group_root);
                 viewHolder.totalPlayingPlayersInGroupTextView = (TextView) convertView.findViewById(R.id.pg_total_playing_players_in_group_text_view);
                 viewHolder.playersPlayInGroupRoot = (LinearLayout) convertView.findViewById(R.id.pg_players_play_in_group_root);
+                viewHolder.inviteFriendsTextView = (TextView) convertView.findViewById(R.id.pg_invite_friends_text_view);
 
                 convertView.setTag(viewHolder);
 
@@ -162,13 +168,32 @@ public class PrivateGroupAdapter extends BaseAdapter {
 
             }
 
-            convertView.setOnClickListener(new View.OnClickListener(){
+            viewHolder.groupGameStatusTextView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
                     //Toast.makeText(context,"item clicked" ,Toast.LENGTH_SHORT).show();
                     OffsideApplication.setSelectedPrivateGroup(viewHolder.privateGroup);
-//                    SingleGroupFragment singleGroupFragment = new SingleGroupFragment();
-//                    replaceFragment(singleGroupFragment);
+
+                }
+            });
+
+            viewHolder.inviteFriendsTextView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View view) {
+                    String appLinkUrl, previewImageUrl;
+
+                    appLinkUrl = "https://www.mydomain.com/myapplink";
+                    previewImageUrl = "http://www.sidekickgame.com/img/logo.png";
+
+                    if (AppInviteDialog.canShow()) {
+                        AppInviteContent content = new AppInviteContent.Builder()
+                                .setApplinkUrl(appLinkUrl)
+                                .setPreviewImageUrl(previewImageUrl)
+                                .build();
+                        AppInviteDialog.show((Activity)context, content);
+                    }
+
+
                 }
             });
 
@@ -186,14 +211,6 @@ public class PrivateGroupAdapter extends BaseAdapter {
         return null;
 
     }
-
-    private void replaceFragment(Fragment fragment) {
-
-        FragmentManager manager = ((AppCompatActivity)context).getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.l_fragment_container_root, fragment, fragment.getTag()).commit();
-
-    }
-
 
 
 }

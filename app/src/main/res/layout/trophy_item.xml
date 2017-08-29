@@ -5,6 +5,8 @@
     android:layoutDirection="ltr"
     android:orientation="vertical"
     android:gravity="center"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
     tools:context="com.offsidegame.offside.activities.ViewPlayerActivity">
 
     <TextView
@@ -38,7 +40,12 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/OffsideMediumSmallText"
         android:text="Real Madrid vs. Arsenal"
-        android:padding="2dp"/>
+        android:paddingRight="4dp"
+        android:paddingLeft="4dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+
+        />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

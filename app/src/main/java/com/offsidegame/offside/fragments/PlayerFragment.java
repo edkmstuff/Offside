@@ -62,6 +62,7 @@ public class PlayerFragment extends Fragment {
     private ExperienceLevel playerCurrentExpLevel;
 
     private FrameLayout loadingRoot;
+    private TextView versionTextView;
 
     private LinearLayout playerMainDetailsRoot;
     private LinearLayout playerDetailsRoot;
@@ -115,13 +116,15 @@ public class PlayerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        try {
+
             View view = inflater.inflate(R.layout.fragment_player, container, false);
 
             Context context = getContext();
 
             getIDs(view, context);
             setEvents();
+
+            versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
 
             playerAssets = OffsideApplication.getPlayerAssets();
 
@@ -136,10 +139,7 @@ public class PlayerFragment extends Fragment {
             resetVisibility();
 
             return view;
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-            return null;
-        }
+
 
 
     }
@@ -147,6 +147,7 @@ public class PlayerFragment extends Fragment {
     private void getIDs(View view, Context context) {
 
         loadingRoot = (FrameLayout) view.findViewById(R.id.shared_loading_root);
+        versionTextView = (TextView) view.findViewById(R.id.shared_version_text_view);
         playerMainDetailsRoot = (LinearLayout) view.findViewById(R.id.vp_player_main_details_root);
         latestGameTabRoot = (LinearLayout) view.findViewById(R.id.vp_latest_game_tab_root);
         trophiesTabRoot = (LinearLayout) view.findViewById(R.id.vp_trophies_tab_root);
@@ -162,7 +163,7 @@ public class PlayerFragment extends Fragment {
         powerItemsTextView = (TextView) view.findViewById(R.id.vp_power_items_text_view);
         balanceTextView = (TextView) view.findViewById(R.id.vp_balance_text_view);
         playerNameTextView = (TextView) view.findViewById(R.id.vp_player_name_text_view);
-        //playerExperienceLevelTextView = (TextView) view.findViewById(R.id.vp_player_experience_level_text_view);
+        playerExperienceLevelTextView = (TextView) view.findViewById(R.id.vp_player_experience_level_text_view);
 
         latestGameNotExistTextView = (TextView) view.findViewById(R.id.vp_latest_game_not_exist_text_view);
         latestGamePrivateGroupTextView = (TextView) view.findViewById(R.id.vp_latest_game_private_group_text_view);
@@ -286,180 +287,31 @@ public class PlayerFragment extends Fragment {
 
     }
 
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onReceiveUserProfileInfo(UserProfileInfo userProfileInfo) {
-//        try {
-//            if (userProfileInfo == null)
-//                return;
-//
-//            OffsideApplication.setUserProfileInfo(userProfileInfo);
-//
-//
-//            //<editor-fold desc="---------RECENT GAME-----------">
-//
-//            PlayerGame mostRecentGamePlayed = userProfileInfo.getMostRecentGamePlayed();
-//            if (mostRecentGamePlayed != null) {
-//                latestGamePrivateGroupTextView.setText(mostRecentGamePlayed.getGroupName());
-//                latestGameTitleTextView.setText(mostRecentGamePlayed.getGameTitle());
-//
-//                PrettyTime p = new PrettyTime();
-//
-//
-//                latestGameStartDateTextView.setText(p.format(mostRecentGamePlayed.getGameStartTime()));
-//
-//
-//                String latestGamePositionOutOfText = Integer.toString(mostRecentGamePlayed.getPosition()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(mostRecentGamePlayed.getTotalPlayers());
-//                latestGamePositionTextView.setText(latestGamePositionOutOfText);
-//
-//                String latestGameAnswersSummaryOutOfText = Integer.toString(mostRecentGamePlayed.getCorrectAnswersCount()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(mostRecentGamePlayed.getTotalQuestionsAsked());
-//                latestGameAnswersSummaryTextView.setText(latestGameAnswersSummaryOutOfText);
-//
-//                latestGameBalanceSummaryTextView.setText(Integer.toString(mostRecentGamePlayed.getOffsideCoins()));
-//
-//                List<Winner> winners = userProfileInfo.getMostRecentGamePlayed().getWinners();
-//
-//                int j = 0;
-//
-//                for (Winner winner : winners) {
-//                    Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
-//                    ImageHelper.loadImage(getContext(), winnersImageViews[j], winnerProfilePictureUri);
-//                    winnersNamesTextViews[j].setText(winner.getPlayerName());
-//                    winnersCoinsTextViews[j].setText(Integer.toString(winner.getOffsideCoins()));
-//                    winnersPodiumRoots[j].setVisibility(View.VISIBLE);
-//                    j++;
-//                }
-//                podiumRoot.setVisibility(View.VISIBLE);
-//
-//
-//                latestGameDetailsElementsRoot.setVisibility(View.VISIBLE);
-//                latestGameNotExistTextView.setVisibility(View.GONE);
-//
-//            }
-//            else {
-//                latestGameDetailsElementsRoot.setVisibility(View.GONE);
-//                latestGameNotExistTextView.setVisibility(View.VISIBLE);
-//            }
-//
-//            //</editor-fold>
-//
-//            //<editor-fold desc="---------TROPHIES CLOSET-----------">
-//
-//            trophiesClosetRoot.removeAllViews();
-//
-//            ArrayList<Reward> playerRewards = userProfileInfo.getRewards();
-//
-//            Collections.sort(playerRewards, new Comparator<Reward>() {
-//                public int compare(Reward r1, Reward r2) {
-//                    int result = 0;
-//                    if (r1.getGameStartDate().after(r2.getGameStartDate()))
-//                        result = 1;
-//                    return result;
-//                }
-//            });
-//
-//            Boolean hasReward = false;
-//
-//            for (Reward reward : playerRewards) {
-//
-//                if (!(reward.getRewardTypeName() == null || reward.getRewardTypeName().equals("NONE"))) {
-//
-//                    hasReward = true;
-//                    ViewGroup trophiesLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.trophy_item, trophiesClosetRoot, false);
-//
-//                    TextView groupNameTextView = (TextView) trophiesLayout.getChildAt(0);
-//                    groupNameTextView.setText(reward.getGroupName());
-//
-//                    TextView positionOutOfTextView = (TextView) trophiesLayout.getChildAt(1);
-//                    String positionOutOfText = Integer.toString(reward.getPosition()) +" "+ getString(R.string.lbl_out_of)+" " + Integer.toString(reward.getTotalPlayers());
-//                    positionOutOfTextView.setText(positionOutOfText);
-//
-//                    ImageView trophyImageImageView = (ImageView) trophiesLayout.getChildAt(2);
-////                trophyImageImageView.getLayoutParams().height = 70;
-////                trophyImageImageView.getLayoutParams().width = 70;
-//                    trophyImageImageView.requestLayout();
-//
-//                    int trophyResourceId = reward.getRewardImageResourceIdByRewardType();
-//                    ImageHelper.loadImage(getContext(), trophyImageImageView, trophyResourceId);
-//
-//                    TextView gameTitleTextView = (TextView) trophiesLayout.getChildAt(3);
-//                    gameTitleTextView.setText(reward.getGameTitle());
-//
-//                    TextView gameDateTextView = (TextView) trophiesLayout.getChildAt(4);
-//                    //gameDateTextView.setText(reward.getGameStartDate().toString());
-//                    Date gameStartDate = reward.getGameStartDate();
-//                    PrettyTime pt = new PrettyTime();
-//                    gameDateTextView.setText(pt.format(gameStartDate));
-//
-//                    trophiesClosetRoot.addView(trophiesLayout);
-//                }
-//
-//            }
-//            if (!hasReward) {
-//                trophiesClosetNoTitlesTextView.setVisibility(View.VISIBLE);
-//                trophiesClosetScrollView.setVisibility(View.GONE);
-//
-//            } else {
-//                trophiesClosetNoTitlesTextView.setVisibility(View.GONE);
-//                trophiesClosetScrollView.setVisibility(View.VISIBLE);
-//
-//            }
-//
-//
-//            trophiesDetailsRoot.setVisibility(View.VISIBLE);
-//
-//
-//            //</editor-fold>
-//
-//            //<editor-fold desc="---------PLAYER RECORDS-----------">
-//
-//            int numberOfGames = userProfileInfo.getTotalGamesPlayed();
-//            int numberOfTrophies = userProfileInfo.getTotalTrophies();
-//            int averageProfitPerGame = (int) userProfileInfo.getAverageProfitPerGame();
-//            playerRecordsNumberOfGamesTextView.setText(Integer.toString(numberOfGames));
-//            playerRecordsNumberOfTrophiesTextView.setText(Integer.toString(numberOfTrophies));
-//            playerRecordsAverageProfitPerGameTextView.setText(Integer.toString(averageProfitPerGame));
-//
-//            for (int i = 0; i < experienceLevelImageViews.length; i++) {
-//                ExperienceLevel currentExpLevel = ExperienceLevel.expLevels.get(i);
-//
-//                experienceLevelNameTextViews[i].setText(currentExpLevel.getName());
-//                experienceLevelMinValueTextViews[i].setText(Integer.toString(currentExpLevel.getMinValue()));
-//
-//                if (playerCurrentExpLevel.getName().equals(currentExpLevel.getName()))
-//                    //ImageHelper.loadImage(context, experienceLevelImageViews[i], currentExpLevel.getImageViewResourceIdCurrent());
-//                    experienceLevelImageViews[i].setImageResource(currentExpLevel.getImageViewResourceIdCurrent());
-//                else
-//                    //ImageHelper.loadImage(context, experienceLevelImageViews[i], currentExpLevel.getImageViewResourceId());
-//                    experienceLevelImageViews[i].setImageResource(currentExpLevel.getImageViewResourceId());
-//            }
-//
-//            final Bitmap bitmapImage = BitmapFactory.decodeResource(getContext().getResources(), playerCurrentExpLevel.getImageViewResourceId());
-//            String messageText = "I am a " + playerCurrentExpLevel.getName() + " on the Sidekick game";
-//            shareOnFacebook(facebookShareButton, bitmapImage, messageText);
-//
-//
-//            //</editor-fold>
-//
-//            loadingRoot.setVisibility(View.GONE);
-//            //root.setVisibility(View.VISIBLE);
-//
-//            playerMainDetailsRoot.setVisibility(View.VISIBLE);
-//            playerDetailsRoot.setVisibility(View.VISIBLE);
-//
-//        } catch (Exception ex) {
-//            ACRA.getErrorReporter().handleSilentException(ex);
-//
-//        }
-//
-//    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveUserProfileInfo(UserProfileInfo userProfileInfo) {
+        try {
+            if (userProfileInfo == null)
+                return;
+
+            OffsideApplication.setUserProfileInfo(userProfileInfo);
+            updateUserProfileFragment(userProfileInfo);
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
 
 
     public void updateUserProfileFragment(UserProfileInfo userProfileInfo) {
         try {
             if (userProfileInfo == null)
                 return;
-
-            //OffsideApplication.setUserProfileInfo(userProfileInfo);
+            playerCurrentExpLevel = ExperienceLevel.findByName(userProfileInfo.getExperienceLevelName());
+            playerExperienceLevelTextView.setText(playerCurrentExpLevel.getName());
 
             //<editor-fold desc="---------RECENT GAME-----------">
 
@@ -537,7 +389,7 @@ public class PlayerFragment extends Fragment {
                     groupNameTextView.setText(reward.getGroupName());
 
                     TextView positionOutOfTextView = (TextView) trophiesLayout.getChildAt(1);
-                    //String positionOutOfText = Integer.toString(reward.getPosition()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(reward.getTotalPlayers());
+
                     String positionOutOfText = String.format("%d %s %d",reward.getPosition(), getString(R.string.lbl_out_of),reward.getTotalPlayers());
                     positionOutOfTextView.setText(positionOutOfText);
 
@@ -586,8 +438,6 @@ public class PlayerFragment extends Fragment {
             playerRecordsNumberOfGamesTextView.setText(Integer.toString(numberOfGames));
             playerRecordsNumberOfTrophiesTextView.setText(Integer.toString(numberOfTrophies));
             playerRecordsAverageProfitPerGameTextView.setText(Integer.toString(averageProfitPerGame));
-
-            playerCurrentExpLevel = ExperienceLevel.findByName(userProfileInfo.getExperienceLevelName());
 
             for (int i = 0; i < experienceLevelImageViews.length; i++) {
                 ExperienceLevel currentExpLevel = ExperienceLevel.findByIndex(i);

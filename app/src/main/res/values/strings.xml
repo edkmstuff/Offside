@@ -25,8 +25,8 @@
     <string name="player_profile_picture_url_key">userProfilePictureUrl</string>
     <string name="lbl_no_such_game">משחק לא קיים או שהינך מחובר ממכשיר אחר</string>
     <string name="recent_token_key">recentToken</string>
-    <string name="lbl_you_are_connected">מחובר לשרת!</string>
-    <string name="lbl_you_are_disconnected">מנותק מהשרת, מנסה להתחבר...</string>
+    <string name="lbl_you_are_connected">מחובר</string>
+    <string name="lbl_you_are_disconnected">מנותק , מנסה להתחבר...</string>
     <string name="private_game_id_key">privateGameId</string>
     <string name="lbl_randomly_selected_answer_title">נראה שלא הספקת לענות, אל דאגה בחרנו עבורך תשובה</string>
     <string name="lbl_user_selected_answer_title">אתה חושב ש..</string>
@@ -124,6 +124,9 @@
     <string name="lbl_recent_game_correct_answers">תשובות נכונות</string>
     <string name="lbl_recent_game_balance_title">הניקוד שלי</string>
     <string name="lbl_recent_game_not_found">לא נמצא משחק קודם</string>
+    <string name="lbl_primier_league">ליגה אנגלית</string>
+    <string name="lbl_la_liga">ליגה ספרדית</string>
+    <string name="lbl_champions_league">ליגת האלופות</string>
 
 
 </resources>
