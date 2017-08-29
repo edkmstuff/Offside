@@ -60,33 +60,33 @@ public class AvailableGamesFragment extends Fragment {
     }
 
 
-    @Override
-    public String toString() {
-        leagueType = this.getArguments().getString("leagueType");
-        String title = "לא ידוע";
-        if (leagueType == null)
-            return title;
-        if (leagueType.equals("PL"))
-            title = "ליגת האלופות";
-        else if (leagueType.equals("isr1"))
-            title = "ליגת העל";
+//    @Override
+//    public String toString() {
+//        leagueType = this.getArguments().getString("leagueType");
+//        String title = "לא ידוע";
+//        if (leagueType == null)
+//            return title;
+//        if (leagueType.equals("PL"))
+//            title = "ליגת האלופות";
+//        else if (leagueType.equals("isr1"))
+//            title = "ליגת העל";
+//
+//        return title;
+//
+//    }
 
-        return title;
-
-    }
-
-    public String getTitle() {
-        String title = "לא ידוע";
-        if (leagueType == null)
-            return title;
-        if (leagueType.equals("PL"))
-            title = "ליגת האלופות";
-        else if (leagueType.equals("isr1"))
-            title = "ליגת העל";
-
-        return title;
-
-    }
+//    public String getTitle() {
+//        String title = "לא ידוע";
+//        if (leagueType == null)
+//            return title;
+//        if (leagueType.equals("PL"))
+//            title = "ליגת האלופות";
+//        else if (leagueType.equals("isr1"))
+//            title = "ליגת העל";
+//
+//        return title;
+//
+//    }
 
 
 }

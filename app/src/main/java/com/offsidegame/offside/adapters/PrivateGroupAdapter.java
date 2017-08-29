@@ -167,8 +167,8 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     //Toast.makeText(context,"item clicked" ,Toast.LENGTH_SHORT).show();
                     OffsideApplication.setSelectedPrivateGroup(viewHolder.privateGroup);
-                    SingleGroupFragment singleGroupFragment = new SingleGroupFragment();
-                    replaceFragment(singleGroupFragment);
+//                    SingleGroupFragment singleGroupFragment = new SingleGroupFragment();
+//                    replaceFragment(singleGroupFragment);
                 }
             });
 

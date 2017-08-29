@@ -159,8 +159,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:background="@color/navigationMenuSelectedItem"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:padding="10dp"
                 android:layout_weight="1">
 
 
@@ -171,11 +170,11 @@
                     android:text="משחקים"
                     />
 
-                <ImageView
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_settings_button"/>
+                <!--<ImageView-->
+                    <!--android:layout_width="14dp"-->
+                    <!--android:layout_height="14dp"-->
+                    <!--android:scaleType="centerCrop"-->
+                    <!--android:src="@mipmap/ic_settings_button"/>-->
 
 
 
@@ -188,8 +187,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:background="@color/navigationMenu"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
+                android:padding="10dp"
                 android:layout_weight="1">
 
                 <TextView
@@ -199,11 +197,11 @@
                     android:text="ליגה"
                     />
 
-                <ImageView
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_settings_button"/>
+                <!--<ImageView-->
+                    <!--android:layout_width="14dp"-->
+                    <!--android:layout_height="14dp"-->
+                    <!--android:scaleType="centerCrop"-->
+                    <!--android:src="@mipmap/ic_settings_button"/>-->
 
             </LinearLayout>
 

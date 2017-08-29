@@ -61,26 +61,4 @@ public class PrivateGroupsFragment extends Fragment {
 
     }
 
-
-//    @Override
-//    public String toString() {
-//        groupType = this.getArguments().getString(getString(R.string.key_group_type));
-//        String title = getString(R.string.lbl_unknown);
-//        if (groupType == null)
-//            return title;
-//
-//        if (groupType.equals(getString(R.string.key_private_group_name)))
-//            title = getString(R.string.lbl_my_private_groups);
-//        else if (groupType.equals(getString(R.string.key_public_group_name)))
-//            title = getString(R.string.lbl_public_groups);
-//
-//        return title;
-//
-//
-//    }
-
-
-
-
-
 }

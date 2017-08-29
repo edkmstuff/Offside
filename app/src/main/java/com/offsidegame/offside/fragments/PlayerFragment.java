@@ -474,10 +474,12 @@ public class PlayerFragment extends Fragment {
                 latestGameStartDateTextView.setText(p.format(mostRecentGamePlayed.getGameStartTime()));
 
 
-                String latestGamePositionOutOfText = Integer.toString(mostRecentGamePlayed.getPosition()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(mostRecentGamePlayed.getTotalPlayers());
+                //String latestGamePositionOutOfText = Integer.toString(mostRecentGamePlayed.getPosition()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(mostRecentGamePlayed.getTotalPlayers());
+                String latestGamePositionOutOfText = String.format("%d %s %d", mostRecentGamePlayed.getPosition(),getString(R.string.lbl_out_of),mostRecentGamePlayed.getTotalPlayers());
                 latestGamePositionTextView.setText(latestGamePositionOutOfText);
 
-                String latestGameAnswersSummaryOutOfText = Integer.toString(mostRecentGamePlayed.getCorrectAnswersCount()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(mostRecentGamePlayed.getTotalQuestionsAsked());
+                //String latestGameAnswersSummaryOutOfText = Integer.toString(mostRecentGamePlayed.getCorrectAnswersCount()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(mostRecentGamePlayed.getTotalQuestionsAsked());
+                String latestGameAnswersSummaryOutOfText = String.format("%d %s %d",mostRecentGamePlayed.getCorrectAnswersCount(), getString(R.string.lbl_out_of),mostRecentGamePlayed.getTotalQuestionsAsked());
                 latestGameAnswersSummaryTextView.setText(latestGameAnswersSummaryOutOfText);
 
                 latestGameBalanceSummaryTextView.setText(Integer.toString(mostRecentGamePlayed.getOffsideCoins()));
@@ -535,7 +537,8 @@ public class PlayerFragment extends Fragment {
                     groupNameTextView.setText(reward.getGroupName());
 
                     TextView positionOutOfTextView = (TextView) trophiesLayout.getChildAt(1);
-                    String positionOutOfText = Integer.toString(reward.getPosition()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(reward.getTotalPlayers());
+                    //String positionOutOfText = Integer.toString(reward.getPosition()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(reward.getTotalPlayers());
+                    String positionOutOfText = String.format("%d %s %d",reward.getPosition(), getString(R.string.lbl_out_of),reward.getTotalPlayers());
                     positionOutOfTextView.setText(positionOutOfText);
 
                     ImageView trophyImageImageView = (ImageView) trophiesLayout.getChildAt(2);
@@ -628,7 +631,7 @@ public class PlayerFragment extends Fragment {
             sb.append(quote);
             sb.append("\r\n");
             sb.append("\r\n");
-            sb.append("think you can bit me? come join!!!");
+            sb.append("think you can do better than me? come join!!!");
 
 //    Share link content
             ShareLinkContent content = new ShareLinkContent.Builder()

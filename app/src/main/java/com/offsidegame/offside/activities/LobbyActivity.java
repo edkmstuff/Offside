@@ -44,6 +44,7 @@ import com.offsidegame.offside.fragments.AvailableGamesFragment;
 import com.offsidegame.offside.fragments.GroupsFragment;
 import com.offsidegame.offside.fragments.PlayerFragment;
 import com.offsidegame.offside.fragments.PrivateGroupsFragment;
+import com.offsidegame.offside.fragments.SingleGroupFragment;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.ExperienceLevel;
@@ -120,7 +121,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
     //using fragments
     private LinearLayout fragmentContainerRoot;
     private GroupsFragment groupsFragment;
-    PlayerFragment playerFragment;
+    private PlayerFragment playerFragment;
+    private SingleGroupFragment singleGroupFragment;
 
 
     //</editor-fold>
@@ -293,56 +295,56 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
 
     }
 
-    private void singleGroupTabSwitched(View view) {
-        if (singleGroupGamesTabRoot == view) {
+//    private void singleGroupTabSwitched(View view) {
+//        if (singleGroupGamesTabRoot == view) {
+//
+//            showAvailableGames();
+//
+//        } else if (singleGroupLeagueTabRoot == view) {
+//            showLeague();
+//        }
+//    }
 
-            showAvailableGames();
-
-        } else if (singleGroupLeagueTabRoot == view) {
-            showLeague();
-        }
-    }
-
-    private void showAvailableGames() {
-        //update groups stuff
-        //todo: create distinct of league types to send to fragment creator - they will define the tabs
-
-        this.addLeaguesCategories();
-        leaguesSelectionTabLayout.addOnTabSelectedListener(leaguesSelectionListener);
-        loadingRoot.setVisibility(View.GONE);
-
-
-        //privateGroupsRoot.setVisibility(View.GONE);
-        //createPrivateGroupButtonTextView.setVisibility(View.GONE);
-        singleGroupLeagueRoot.setVisibility(View.GONE);
-
-        singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
-        singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenu);
-
-
-        singlePrivateGroupRoot.setVisibility(View.VISIBLE);
-        singleGroupGamesRoot.setVisibility(View.VISIBLE);
-
-
-    }
-
-    private void showLeague() {
-
-        HashMap<String, LeagueRecord[]> leaguesRecords = OffsideApplication.getLeaguesRecords();
-        if (!leaguesRecords.containsKey(groupId)) {
-            getLeagueRecords(groupId);
-            return;
-        }
-        LeagueRecord[] leagueRecords = leaguesRecords.get(groupId);
-        singleGroupGamesRoot.setVisibility(View.GONE);
-        singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
-        singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenu);
-
-        singleGroupLeagueRoot.setVisibility(View.VISIBLE);
-
-        LeagueAdapter leagueAdapter = new LeagueAdapter(context, new ArrayList<>(Arrays.asList(leagueRecords)));
-        singleGroupLeagueListView.setAdapter(leagueAdapter);
-    }
+//    private void showAvailableGames() {
+//        //update groups stuff
+//        //todo: create distinct of league types to send to fragment creator - they will define the tabs
+//
+//        //this.addLeaguesCategories();
+//        leaguesSelectionTabLayout.addOnTabSelectedListener(leaguesSelectionListener);
+//        loadingRoot.setVisibility(View.GONE);
+//
+//
+//        //privateGroupsRoot.setVisibility(View.GONE);
+//        //createPrivateGroupButtonTextView.setVisibility(View.GONE);
+//        singleGroupLeagueRoot.setVisibility(View.GONE);
+//
+//        singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+//        singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenu);
+//
+//
+//        singlePrivateGroupRoot.setVisibility(View.VISIBLE);
+//        singleGroupGamesRoot.setVisibility(View.VISIBLE);
+//
+//
+//    }
+//
+//    private void showLeague() {
+//
+//        HashMap<String, LeagueRecord[]> leaguesRecords = OffsideApplication.getLeaguesRecords();
+//        if (!leaguesRecords.containsKey(groupId)) {
+//            getLeagueRecords(groupId);
+//            return;
+//        }
+//        LeagueRecord[] leagueRecords = leaguesRecords.get(groupId);
+//        singleGroupGamesRoot.setVisibility(View.GONE);
+//        singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+//        singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenu);
+//
+//        singleGroupLeagueRoot.setVisibility(View.VISIBLE);
+//
+//        LeagueAdapter leagueAdapter = new LeagueAdapter(context, new ArrayList<>(Arrays.asList(leagueRecords)));
+//        singleGroupLeagueListView.setAdapter(leagueAdapter);
+//    }
 
     private void getLeagueRecords(String groupId) {
         OffsideApplication.signalRService.requestLeagueRecords(playerId, groupId);
@@ -451,7 +453,14 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
                 return;
 
             groupId = privateGroup.getId();
+
+            singleGroupFragment = new SingleGroupFragment();
+            replaceFragment(singleGroupFragment);
+
+
+            //todo: make this one call that return both data in the same object
             OffsideApplication.signalRService.requestAvailableGames(playerId, groupId);
+            OffsideApplication.signalRService.requestLeagueRecords(playerId, groupId);
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -459,6 +468,45 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
         }
 
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveAvailableGames(AvailableGame[] availableGames) {
+        try {
+            if (availableGames == null || availableGames.length == 0)
+                return;
+
+            OffsideApplication.setAvailableGames(availableGames);
+
+            //todo: create distinct of league types to send to fragment creator - they will define the tabs
+            singleGroupFragment.addLeaguePagesToSingleGroupFragment();
+
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveLeagueRecords(LeagueRecord[] leagueRecords) {
+        try {
+            if (leagueRecords == null || leagueRecords.length == 0)
+                return;
+
+            OffsideApplication.getLeaguesRecords().put(groupId, leagueRecords);
+            singleGroupFragment.showAvailableGames();
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+
+
 
 //    @Subscribe(threadMode = ThreadMode.MAIN)
 //    public void onReceiveAvailableGames(AvailableGame[] availableGames) {
