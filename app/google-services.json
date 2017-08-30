@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "199470228251-s8mil8ul1grc02dsjordn50ho1qrojgm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.offsidegame.offside",
+            "certificate_hash": "395e9a41581d5b1b65df5ea4c81152e90b5f0813"
+          }
+        },
+        {
           "client_id": "199470228251-72cpd11gbfirkvvbik8ktqds4rdr035a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

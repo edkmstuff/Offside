@@ -2,6 +2,7 @@ package com.offsidegame.offside.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,19 +18,25 @@ import android.widget.TextView;
 
 import com.facebook.share.model.AppInviteContent;
 import com.facebook.share.widget.AppInviteDialog;
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.LoginEvent;
 import com.offsidegame.offside.fragments.GroupsFragment;
 import com.offsidegame.offside.fragments.SingleGroupFragment;
 import com.offsidegame.offside.helpers.ImageHelper;
+import com.offsidegame.offside.models.LoginInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupPlayer;
 
 import org.acra.ACRA;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -46,6 +53,7 @@ public class PrivateGroupAdapter extends BaseAdapter {
     public PrivateGroupAdapter(Context context, ArrayList<PrivateGroup> privateGroups) {
         this.context = context;
         this.privateGroups = privateGroups;
+
     }
 
     @Override
@@ -180,20 +188,8 @@ public class PrivateGroupAdapter extends BaseAdapter {
             viewHolder.inviteFriendsTextView.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View view) {
-                    String appLinkUrl, previewImageUrl;
 
-                    appLinkUrl = "https://www.mydomain.com/myapplink";
-                    previewImageUrl = "http://www.sidekickgame.com/img/logo.png";
-
-                    if (AppInviteDialog.canShow()) {
-                        AppInviteContent content = new AppInviteContent.Builder()
-                                .setApplinkUrl(appLinkUrl)
-                                .setPreviewImageUrl(previewImageUrl)
-                                .build();
-                        AppInviteDialog.show((Activity)context, content);
-                    }
-
-
+                    EventBus.getDefault().post("Invite");
                 }
             });
 

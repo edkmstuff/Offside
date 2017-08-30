@@ -48,8 +48,15 @@
             android:theme="@style/LaunchScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="example.com"
+                    android:scheme="https"/>
+
             </intent-filter>
         </activity>
 
@@ -62,7 +69,8 @@
             android:name=".activities.LobbyActivity"
             android:label="Match field"
             android:screenOrientation="portrait"
-            android:theme="@style/BlueTheme"/>
+            android:theme="@style/BlueTheme">
+        </activity>
 
         <activity
             android:name=".activities.CreatePrivateGroupActivity"

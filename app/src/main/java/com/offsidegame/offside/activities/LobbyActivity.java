@@ -17,6 +17,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,11 +32,17 @@ import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareButton;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.CustomTabsFragmentPagerAdapter;
 import com.offsidegame.offside.adapters.LeagueAdapter;
@@ -130,7 +137,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
             getIds();
             setEvents();
             resetVisibility();
-
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -309,7 +315,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
 
             //todo: make this one call that return both data in the same object
             OffsideApplication.signalRService.requestAvailableGames(playerId, groupId);
-            OffsideApplication.signalRService.requestLeagueRecords(playerId, groupId);
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -339,6 +345,40 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
 
         }
 
+    }
+
+    private int REQUEST_INVITE =1;
+    private String TAG ="OFFSIDE_INVITE";
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onInviteButtonClicked(String invite){
+
+        Intent intent = new AppInviteInvitation.IntentBuilder("Invite friends")
+                .setMessage("come join my group")
+                .setDeepLink(Uri.parse("https://drive.google.com/open?id=0BzxPyU28rpTaNV9EZlVyc1p4WGM"))
+                .setCustomImage(Uri.parse(OffsideApplication.getAppLogoPictureUrl()))
+                .setCallToActionText("call to action")
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    Log.d(TAG, "onActivityResult: sent invitation " + id);
+
+                }
+            } else {
+                Log.d(TAG, "FAILED INVITE");
+            }
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -393,6 +433,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
+
+
+
 
 
 }

@@ -18,18 +18,14 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.adapters.CustomTabsFragmentPagerAdapter;
 import com.offsidegame.offside.adapters.LeagueAdapter;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.LeagueRecord;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PrivateGroup;
-import com.offsidegame.offside.models.UserProfileInfo;
 
 import org.acra.ACRA;
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -60,19 +56,6 @@ public class SingleGroupFragment extends Fragment {
     private TextView singleGroupPositionOutOfTextView;
     private ListView singleGroupLeagueListView;
 
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        try {
-//            super.onCreate(savedInstanceState);
-//            EventBus.getDefault().register(this);
-//
-//        } catch (Exception ex) {
-//            ACRA.getErrorReporter().handleSilentException(ex);
-//        }
-//
-//
-//    }
 
     @Nullable
     @Override
@@ -166,10 +149,6 @@ public class SingleGroupFragment extends Fragment {
         singleGroupGamesRoot.setVisibility(View.VISIBLE);
         singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
 
-
-
-
-
         loadingRoot.setVisibility(View.GONE);
         singleGroupLeagueRoot.setVisibility(View.GONE);
 
@@ -215,13 +194,14 @@ public class SingleGroupFragment extends Fragment {
 
             //todo: create distinct of league types to send to fragment creator - they will define the tabs
 
-            List<String> leagues = getAvailableLeagues(availableGames);
+            List<String> leagues = getDistinctLeagues(availableGames);
             for(String leagueType: leagues){
                 addLeaguePagesToSingleGroupFragment(leagueType);
 
             }
 
             loadingRoot.setVisibility(View.GONE);
+            showAvailableGames();
 
 
         } catch (Exception ex) {
@@ -231,7 +211,8 @@ public class SingleGroupFragment extends Fragment {
 
     }
 
-    private List<String> getAvailableLeagues(AvailableGame[] availableGames){
+    private List<String> getDistinctLeagues(AvailableGame[] availableGames){
+
         List<String> availableLeagues = new ArrayList<>();
         for(int i=0;i<availableGames.length; i++){
             String currentLeague = availableGames[i].getLeagueName();
@@ -268,7 +249,7 @@ public class SingleGroupFragment extends Fragment {
         viewPagerAdapter.notifyDataSetChanged();
         if (viewPagerAdapter.getCount() > 0) tabLayout.setupWithViewPager(viewPager);
 
-        viewPager.setCurrentItem(viewPagerAdapter.getCount() - 1);
+        viewPager.setCurrentItem(0);
         setupTabLayout();
     }
 
@@ -290,8 +271,6 @@ public class SingleGroupFragment extends Fragment {
             tabLayout.getTabAt(i).setCustomView(viewPagerAdapter.getTabView(i));
         }
     }
-
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
