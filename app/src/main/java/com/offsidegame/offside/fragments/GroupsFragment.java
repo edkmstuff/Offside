@@ -120,7 +120,7 @@ public class GroupsFragment extends Fragment {
         viewPagerAdapter.notifyDataSetChanged();
         if (viewPagerAdapter.getCount() > 0) tabLayout.setupWithViewPager(viewPager);
 
-        viewPager.setCurrentItem(viewPagerAdapter.getCount() - 1);
+
         setupTabLayout();
     }
 
@@ -154,6 +154,7 @@ public class GroupsFragment extends Fragment {
             OffsideApplication.setPrivateGroupsInfo(privateGroupsInfo);
 
             addPagesToGroupsFragment();
+            viewPager.setCurrentItem(0);
 
             loadingRoot.setVisibility(View.GONE);
             groupsRoot.setVisibility(View.VISIBLE);

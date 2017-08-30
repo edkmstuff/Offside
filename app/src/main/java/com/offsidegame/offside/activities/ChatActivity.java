@@ -5,10 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +13,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,16 +21,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareButton;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.ChatMessageAdapter;
@@ -64,8 +53,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -135,432 +122,162 @@ public class ChatActivity extends AppCompatActivity {
 
         try {
 
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_chat);
-            androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+ //           super.onCreate(savedInstanceState);
+ //           setContentView(R.layout.activity_chat);
+//            androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+//
+//            gameId = OffsideApplication.getGameInfo().getGameId();
+//            gameCode = OffsideApplication.getGameInfo().getPrivateGameId();
+//            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+//            playerId = user.getUid();
+//
+//            privateGameTitle = OffsideApplication.getGameInfo().getPrivateGameTitle();
+//            homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
+//            awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
+//            Player player = OffsideApplication.getGameInfo().getPlayer();
+//            offsideCoins = player != null? player.getOffsideCoins() : OffsideApplication.getGameInfo().getOffsideCoins();
+//            trophies = OffsideApplication.getGameInfo().getTrophies();
+//            powerItems = player.getPowerItems();
+//
+//
+//
+//            //<editor-fold desc="FindById">
+//
+//            root = (LinearLayout) findViewById(R.id.c_root);
+//            chatListView = (ListView) findViewById(R.id.c_chat_list_view);
+//
+//            chatSendTextView = (TextView) findViewById(R.id.c_chatSendTextView);
+//            chatMessageEditText = (EditText) findViewById(R.id.c_chat_message_edit_text);
+//            //scoreTextView = (TextView) findViewById(R.id.c_score_text_view1);
+//            //scoreTextView1 = (TextView) findViewById(R.id.c_score_text_view1);
+//            privateGameNameTextView = (TextView) findViewById(R.id.c_private_game_name_text_view);
+//            gameTitleTextView = (TextView) findViewById(R.id.c_game_title_text_view);
+//            positionTextView = (TextView) findViewById(R.id.c_position_text_view);
+//            scoreboardRoot = (LinearLayout) findViewById(R.id.c_scoreboard_root);
+//
+//            contentRoot = (RelativeLayout) findViewById(R.id.c_content_root);
+//            actionsMenuRoot = (LinearLayout) findViewById(R.id.c_actions_menu_root);
+//            actionsMenuRoot.setScaleX(0f);
+//            actionsMenuRoot.setScaleY(0f);
+//            actionsMenuRoot.setAlpha(0.99f);
+//            chatActionsButton = (ImageView) findViewById(R.id.c_chatActionsButton);
+//            actionsMenuRoot.setVisibility(View.GONE);
+//            actionsFlowLayout = (FlowLayout) findViewById(R.id.c_actions_flow_layout);
+//            loadingVideoTextView = (TextView) findViewById(R.id.c_loading_video_text_view);
+//
+//            privateGameNameTextView.setText(privateGameTitle);
+//            gameTitleTextView.setText(homeTeam + " vs. " + awayTeam);
+//
+//            playerPictureImageView = (ImageView) findViewById(R.id.c_player_picture_image_view);
+//            //playerPictureImageView1 = (ImageView) findViewById(R.id.c_player_picture_image_view1);
+//            offsideCoinsTextView = (TextView) findViewById(R.id.c_offside_coins_text_view);
+//            offsideCoinsImageView = (ImageView) findViewById(R.id.c_offside_coins_image_view);
+//            //trophiesTextView = (TextView) findViewById(R.id.c_trophies_text_view);
+//            //trophiesImageView = (ImageView) findViewById(R.id.c_trophies_image_view);
+//            powerItemsTextView = (TextView) findViewById(R.id.c_power_items_text_view);
+//            powerItemImageView = (ImageView) findViewById(R.id.c_power_item_image_view);
+//
+//            facebookShareButton =(ShareButton) findViewById(R.id.c_facebook_share_button);
+//
+//            createFacebookShareButton();
+//
+//
+//            offsideCoinsTextView.setText(Integer.toString(offsideCoins));
+//            //trophiesTextView.setText(Integer.toString(trophies));
+//            powerItemsTextView.setText(Integer.toString(powerItems));
+//
+//            settings = getSharedPreferences(getString(R.string.preference_name), 0);
+//            ImageHelper.loadImage(thisActivity, player != null? player.getImageUrl(): settings.getString(getString(R.string.player_profile_picture_url_key),null) , playerPictureImageView, "ChatActivity");
+//            //ImageHelper.loadImage(thisActivity, player != null? player.getImageUrl(): settings.getString(getString(R.string.player_profile_picture_url_key),null) , playerPictureImageView1, "ChatActivity");
+//
+//            actionExitGameRoot = (LinearLayout) findViewById(R.id.c_action_exit_game_root);
+//
+//
+//
+//            chatMessageEditText.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (isActionMenuVisible)
+//                    {
+//                        actionsMenuRoot.animate().scaleX(0f).scaleY(0f);
+//                        actionsMenuRoot.setVisibility(View.INVISIBLE);
+//
+//                    }
+//
+//                }
+//            });
+//
+//
+//            chatSendTextView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//
+////                    if (!isConnected)
+////                        return;
+//
+//                    String message = chatMessageEditText.getText().toString();
+//                    if (message != null && message.length() > 0) {
+//                        OffsideApplication.signalRService.requestSendChatMessage(gameId, gameCode, message, playerId);
+//                        //clear text
+//                        chatMessageEditText.setText("");
+//                        //hide keypad
+//                        hideKeypad();
+//                    }
+//
+//
+//                }
+//            });
+//
+//            chatActionsButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//
+//                    hideKeypad();
+//                    if (isActionMenuVisible)
+//                    {
+//                        actionsMenuRoot.animate().scaleX(0f).scaleY(0f);
+//                        actionsMenuRoot.setVisibility(View.INVISIBLE);
+//
+//                    }
+//                    else
+//                    {
+//                        actionsMenuRoot.setVisibility(View.VISIBLE);
+//                        actionsMenuRoot.animate().scaleX(1f).scaleY(1f);
+//                    }
+//
+//                    isActionMenuVisible = !isActionMenuVisible;
+//                }
+//            });
+//
+//            chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                    hideKeypad();
+//                }
+//            });
+//
+//            root.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //hide keypad
+//                    hideKeypad();
+//                }
+//
+//
+//            });
+//
+//            //<editor-fold desc="ACTIONS SHORT VERSION">
+//
+//            final LinearLayout actionLeadersRoot = (LinearLayout) findViewById(R.id.c_action_leaders_root);
+//            final LinearLayout actionCurrentQuestionRoot = (LinearLayout) findViewById(R.id.c_action_current_question_root);
+//            final LinearLayout actionOffsideCoinsRoot = (LinearLayout) findViewById(R.id.c_action_offside_coins_root);
+//            final LinearLayout actionReloadRoot = (LinearLayout) findViewById(R.id.c_action_reload_root);
+//            final LinearLayout actionCodeRoot = (LinearLayout) findViewById(R.id.c_action_code_root);
+//            final LinearLayout actionShareRoot = (LinearLayout) findViewById(R.id.c_action_share_root);
+//            final LinearLayout actionWatchVideoRoot = (LinearLayout) findViewById(R.id.c_action_watch_video_root);
+//
 
-            gameId = OffsideApplication.getGameInfo().getGameId();
-            gameCode = OffsideApplication.getGameInfo().getPrivateGameId();
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            playerId = user.getUid();
-
-            privateGameTitle = OffsideApplication.getGameInfo().getPrivateGameTitle();
-            homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
-            awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
-            Player player = OffsideApplication.getGameInfo().getPlayer();
-            offsideCoins = player != null? player.getOffsideCoins() : OffsideApplication.getGameInfo().getOffsideCoins();
-            trophies = OffsideApplication.getGameInfo().getTrophies();
-            powerItems = player.getPowerItems();
-
-
-
-            //<editor-fold desc="FindById">
-
-            root = (LinearLayout) findViewById(R.id.c_root);
-            chatListView = (ListView) findViewById(R.id.c_chat_list_view);
-
-            chatSendTextView = (TextView) findViewById(R.id.c_chatSendTextView);
-            chatMessageEditText = (EditText) findViewById(R.id.c_chat_message_edit_text);
-            //scoreTextView = (TextView) findViewById(R.id.c_score_text_view1);
-            //scoreTextView1 = (TextView) findViewById(R.id.c_score_text_view1);
-            privateGameNameTextView = (TextView) findViewById(R.id.c_private_game_name_text_view);
-            gameTitleTextView = (TextView) findViewById(R.id.c_game_title_text_view);
-            positionTextView = (TextView) findViewById(R.id.c_position_text_view);
-            scoreboardRoot = (LinearLayout) findViewById(R.id.c_scoreboard_root);
-
-            contentRoot = (RelativeLayout) findViewById(R.id.c_content_root);
-            actionsMenuRoot = (LinearLayout) findViewById(R.id.c_actions_menu_root);
-            actionsMenuRoot.setScaleX(0f);
-            actionsMenuRoot.setScaleY(0f);
-            actionsMenuRoot.setAlpha(0.99f);
-            chatActionsButton = (ImageView) findViewById(R.id.c_chatActionsButton);
-            actionsMenuRoot.setVisibility(View.GONE);
-            actionsFlowLayout = (FlowLayout) findViewById(R.id.c_actions_flow_layout);
-            loadingVideoTextView = (TextView) findViewById(R.id.c_loading_video_text_view);
-
-            privateGameNameTextView.setText(privateGameTitle);
-            gameTitleTextView.setText(homeTeam + " vs. " + awayTeam);
-
-            playerPictureImageView = (ImageView) findViewById(R.id.c_player_picture_image_view);
-            //playerPictureImageView1 = (ImageView) findViewById(R.id.c_player_picture_image_view1);
-            offsideCoinsTextView = (TextView) findViewById(R.id.c_offside_coins_text_view);
-            offsideCoinsImageView = (ImageView) findViewById(R.id.c_offside_coins_image_view);
-            //trophiesTextView = (TextView) findViewById(R.id.c_trophies_text_view);
-            //trophiesImageView = (ImageView) findViewById(R.id.c_trophies_image_view);
-            powerItemsTextView = (TextView) findViewById(R.id.c_power_items_text_view);
-            powerItemImageView = (ImageView) findViewById(R.id.c_power_item_image_view);
-
-            facebookShareButton =(ShareButton) findViewById(R.id.c_facebook_share_button);
-
-            shareOnFacebook();
-
-
-            offsideCoinsTextView.setText(Integer.toString(offsideCoins));
-            //trophiesTextView.setText(Integer.toString(trophies));
-            powerItemsTextView.setText(Integer.toString(powerItems));
-
-            settings = getSharedPreferences(getString(R.string.preference_name), 0);
-            ImageHelper.loadImage(thisActivity, player != null? player.getImageUrl(): settings.getString(getString(R.string.player_profile_picture_url_key),null) , playerPictureImageView, "ChatActivity");
-            //ImageHelper.loadImage(thisActivity, player != null? player.getImageUrl(): settings.getString(getString(R.string.player_profile_picture_url_key),null) , playerPictureImageView1, "ChatActivity");
-
-            actionExitGameRoot = (LinearLayout) findViewById(R.id.c_action_exit_game_root);
-
-
-
-            chatMessageEditText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isActionMenuVisible)
-                    {
-                        actionsMenuRoot.animate().scaleX(0f).scaleY(0f);
-                        actionsMenuRoot.setVisibility(View.INVISIBLE);
-
-                    }
-
-                }
-            });
-
-
-            chatSendTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-//                    if (!isConnected)
-//                        return;
-
-                    String message = chatMessageEditText.getText().toString();
-                    if (message != null && message.length() > 0) {
-                        OffsideApplication.signalRService.sendChatMessage(gameId, gameCode, message, playerId);
-                        //clear text
-                        chatMessageEditText.setText("");
-                        //hide keypad
-                        hideKeypad();
-                    }
-
-
-                }
-            });
-
-            chatActionsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    hideKeypad();
-                    if (isActionMenuVisible)
-                    {
-                        actionsMenuRoot.animate().scaleX(0f).scaleY(0f);
-                        actionsMenuRoot.setVisibility(View.INVISIBLE);
-
-                    }
-                    else
-                    {
-                        actionsMenuRoot.setVisibility(View.VISIBLE);
-                        actionsMenuRoot.animate().scaleX(1f).scaleY(1f);
-                    }
-
-                    isActionMenuVisible = !isActionMenuVisible;
-                }
-            });
-
-            chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                    hideKeypad();
-                }
-            });
-
-            root.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //hide keypad
-                    hideKeypad();
-                }
-
-
-            });
-
-            //<editor-fold desc="ACTIONS SHORT VERSION">
-
-            final LinearLayout actionLeadersRoot = (LinearLayout) findViewById(R.id.c_action_leaders_root);
-            final LinearLayout actionCurrentQuestionRoot = (LinearLayout) findViewById(R.id.c_action_current_question_root);
-            final LinearLayout actionOffsideCoinsRoot = (LinearLayout) findViewById(R.id.c_action_offside_coins_root);
-            final LinearLayout actionReloadRoot = (LinearLayout) findViewById(R.id.c_action_reload_root);
-            final LinearLayout actionCodeRoot = (LinearLayout) findViewById(R.id.c_action_code_root);
-            final LinearLayout actionShareRoot = (LinearLayout) findViewById(R.id.c_action_share_root);
-            final LinearLayout actionWatchVideoRoot = (LinearLayout) findViewById(R.id.c_action_watch_video_root);
-
-
-            final Map<String, LinearLayout> actionButtons = new HashMap<String, LinearLayout>() {
-                {
-                    put("!leaders", actionLeadersRoot);
-                    put("!question", actionCurrentQuestionRoot);
-                    put("!coins", actionOffsideCoinsRoot);
-                    put("!reload", actionReloadRoot);
-                    put("!code", actionCodeRoot);
-                    put("!share", actionShareRoot);
-
-                }
-            };
-
-            for (String action : actionButtons.keySet()) {
-
-                final String command = action;
-                final LinearLayout actionElement = actionButtons.get(action);
-
-                actionElement.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        try {
-                            if (!isActionMenuVisible)
-                                return;
-
-                            if (command.equals("!share")) {
-
-                                PackageManager pm = context.getPackageManager();
-                                boolean isWhatsappInstalled = isPackageInstalled("com.whatsapp", pm);
-                                String shareMessage = "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + gameCode + "*";
-                                Intent sendIntent = new Intent();
-                                sendIntent.setAction(Intent.ACTION_SEND);
-                                sendIntent.setType("text/plain");
-                                if (isWhatsappInstalled) {
-                                    sendIntent.setPackage("com.whatsapp");
-                                    sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-                                } else {
-                                    sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage.replaceAll("[*]", ""));
-                                }
-
-                                startActivity(sendIntent);
-
-                            } else if (command.equals("!reload")) {
-                                Intent intent = new Intent(context,SlotActivity.class);
-                                startActivity(intent);
-
-
-                            } else {
-                                OffsideApplication.signalRService.sendChatMessage(gameId, gameCode, command, playerId);
-                            }
-
-                            chatActionsButton.performClick();
-
-                        } catch (Exception ex) {
-                            ACRA.getErrorReporter().handleSilentException(ex);
-                            chatActionsButton.performClick();
-                        }
-
-
-                    }
-                });
-
-            }
-
-            //<editor-fold desc="VIDEO AD">
-
-            //prepare watch video objects
-
-            // Use an activity context to get the rewarded video instance.
-            rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(context);
-            rewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
-
-                //<editor-fold desc="RewardedVideoAdListener Methods">
-                @Override
-                public void onRewarded(RewardItem reward) {
-
-                    int rewardAmount = reward.getAmount();
-                    //Toast.makeText(context, "onRewarded! currency: " + reward.getType() + "  amount: " +  reward.getAmount(), Toast.LENGTH_SHORT).show();
-                    resetElementsVisibility();
-                    EventBus.getDefault().post(new RewardEvent(rewardAmount));
-                }
-
-                @Override
-                public void onRewardedVideoAdLeftApplication() {
-                    resetElementsVisibility();
-                }
-
-                @Override
-                public void onRewardedVideoAdClosed() {
-                    resetElementsVisibility();
-
-                }
-
-                @Override
-                public void onRewardedVideoAdFailedToLoad(int errorCode) {
-                    resetElementsVisibility();
-                    Toast.makeText(context, R.string.lbl_failed_to_load_video, Toast.LENGTH_SHORT).show();
-
-
-                }
-
-                @Override
-                public void onRewardedVideoAdLoaded() {
-                    try {
-                        if (rewardedVideoAd.isLoaded()){
-                            rewardedVideoAd.show();
-                        }
-                        resetElementsVisibility();
-
-                    } catch (Exception ex) {
-
-                        ACRA.getErrorReporter().handleException(ex);
-
-                    }
-
-                }
-
-                @Override
-                public void onRewardedVideoAdOpened() {
-                    resetElementsVisibility();
-                }
-
-                @Override
-                public void onRewardedVideoStarted() {
-                    resetElementsVisibility();
-                }
-
-                public void resetElementsVisibility(){
-                    actionsFlowLayout.setVisibility(View.VISIBLE);
-                    rewardVideoLoadingRoot.setVisibility(View.GONE);
-                }
-                //</editor-fold>
-
-            });
-
-            actionWatchVideoRoot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Player player = OffsideApplication.getGameInfo().getPlayer();
-                    if(player==null)
-                        return;
-                    if(player.getRewardVideoWatchCount() < OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame() ){
-                        loadingVideoTextView.setText("Loading "+Integer.toString(player.getRewardVideoWatchCount()+1)+ " of "+ Integer.toString(OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame())+" allowed videos");
-                        actionsFlowLayout.setVisibility(View.GONE);
-                        rewardVideoLoadingRoot.setVisibility(View.VISIBLE);
-
-                        loadRewardedVideoAd();
-                    }
-                    else
-                    {
-                        Toast.makeText(context, R.string.lbl_exceed_allowed_reward_video_watch_message, Toast.LENGTH_SHORT).show();
-                    }
-
-
-
-
-                }
-            });
-            //</editor-fold>
-
-            //<editor-fold desc="exit game">
-            actionExitGameRoot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    String androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                    OffsideApplication.signalRService.quitGame(gameId, playerId, androidDeviceId);
-                    chatActionsButton.performClick();
-                    SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-                    SharedPreferences.Editor editor = settings.edit();
-
-                    editor.putString(getString(R.string.game_id_key), null);
-                    editor.putString(getString(R.string.private_game_id_key), null);
-                    editor.putString(getString(R.string.private_game_title_key), null);
-                    editor.putString(getString(R.string.home_team_key), null);
-                    editor.putString(getString(R.string.away_team_key), null);
-
-
-
-                    editor.commit();
-                    Intent intent = new Intent(context,JoinGameActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
-                    startActivity(intent);
-                }
-            });
-
-
-            //</editor-fold>
-
-
-        //</editor-fold>
-
-    //</editor-fold>
-
-            rewardVideoLoadingRoot = (LinearLayout) findViewById(R.id.c_reward_video_loading_root);
-
-            //loadRewardedVideoAd();
-
-            actionsFlowLayout.setVisibility(View.VISIBLE);
-            rewardVideoLoadingRoot.setVisibility(View.GONE);
-
-
-
-            //<editor-fold desc="IRON SOURCE STUFF">
-
-            /*   ---------------Iron Source stuff
-            IronSource.setUserId(playerId);  //must be before init;
-            //Ad Units should be in the type of IronSource.Ad_Unit.AdUnitName//
-            String ironSourceAppKey = "6248b53d";
-            //IronSource.init(thisActivity, ironSourceAppKey);
-            IronSource.init(thisActivity,ironSourceAppKey, IronSource.AD_UNIT.OFFERWALL, IronSource.AD_UNIT.INTERSTITIAL, IronSource.AD_UNIT.REWARDED_VIDEO);
-
-            IntegrationHelper.validateIntegration(thisActivity);
-            */
-
-            /*
-            IronSource.setRewardedVideoListener(new RewardedVideoListener() {
-
-                @Override
-                public void onRewardedVideoAdOpened() {
-                    actionsFlowLayout.setVisibility(View.VISIBLE);
-                    rewardVideoLoadingRoot.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onRewardedVideoAdClosed() {
-                    actionsFlowLayout.setVisibility(View.VISIBLE);
-                    rewardVideoLoadingRoot.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onRewardedVideoAvailabilityChanged(boolean available) {
-                    //Change the in-app 'Traffic Driver' state according to availability.
-                }
-
-                @Override
-                public void onRewardedVideoAdStarted() {
-                    actionsFlowLayout.setVisibility(View.VISIBLE);
-                    rewardVideoLoadingRoot.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onRewardedVideoAdEnded() {
-                    actionsFlowLayout.setVisibility(View.VISIBLE);
-                    rewardVideoLoadingRoot.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onRewardedVideoAdRewarded(Placement placement) {
-
-                    int rewardAmount = placement.getRewardAmount();
-                    //Toast.makeText(context, "onRewarded! currency: " + reward.getType() + "  amount: " +  reward.getAmount(), Toast.LENGTH_SHORT).show();
-                    actionsFlowLayout.setVisibility(View.VISIBLE);
-                    EventBus.getDefault().post(new RewardEvent(rewardAmount));
-
-                }
-
-                @Override
-                public void onRewardedVideoAdShowFailed(IronSourceError error) {
-                    actionsFlowLayout.setVisibility(View.VISIBLE);
-                    rewardVideoLoadingRoot.setVisibility(View.GONE);
-                    Toast.makeText(context, "Failed to load video", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        */
-            //</editor-fold>
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -673,7 +390,7 @@ public class ChatActivity extends AppCompatActivity {
             chatSendTextView.setAlpha(1f);
             chatActionsButton.setAlpha(1f);
             if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
-                OffsideApplication.signalRService.getChatMessages(gameId, gameCode, playerId, androidDeviceId);
+                OffsideApplication.signalRService.requestGetChatMessages(gameId, gameCode, playerId, androidDeviceId);
             }
 
 
@@ -695,7 +412,7 @@ public class ChatActivity extends AppCompatActivity {
         if (eventContext == context || eventContext == getApplicationContext()) {
 
             if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
-                OffsideApplication.signalRService.getChatMessages(gameId, gameCode, playerId, androidDeviceId);
+                OffsideApplication.signalRService.requestGetChatMessages(gameId, gameCode, playerId, androidDeviceId);
 
             } else {
                 Intent intent = new Intent(context, JoinGameActivity.class);
@@ -985,25 +702,25 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    public void shareOnFacebook(){
-//        ShareLinkContent content = new ShareLinkContent.Builder()
-//                .setContentUrl(Uri.parse("http://www.sidekickgame.com/"))
-//                .setQuote("this is a set Quote")
+//    public void createFacebookShareButton(){
+////        ShareLinkContent content = new ShareLinkContent.Builder()
+////                .setContentUrl(Uri.parse("http://www.sidekickgame.com/"))
+////                .setQuote("this is a set Quote")
+////                .build();
+//
+//        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.app_logo_25);
+//        SharePhoto photo = new SharePhoto.Builder()
+//                .setBitmap(image)
+//
 //                .build();
-
-        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.app_logo_25);
-        SharePhoto photo = new SharePhoto.Builder()
-                .setBitmap(image)
-
-                .build();
-        SharePhotoContent content = new SharePhotoContent.Builder()
-                .addPhoto(photo)
-                .build();
-
-        //ShareDialog.show(thisActivity, content);
-        facebookShareButton.setShareContent(content);
-
-    }
+//        SharePhotoContent content = new SharePhotoContent.Builder()
+//                .addPhoto(photo)
+//                .build();
+//
+//        //ShareDialog.show(thisActivity, content);
+//        facebookShareButton.setShareContent(content);
+//
+//    }
 
 
 

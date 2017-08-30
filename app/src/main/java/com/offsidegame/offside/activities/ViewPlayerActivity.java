@@ -477,7 +477,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
 //
 //            final Bitmap bitmapImage = BitmapFactory.decodeResource(context.getResources(), playerCurrentExpLevel.getImageViewResourceId());
 //            String messageText = "I am a " + playerCurrentExpLevel.getName() + " on the Sidekick game";
-//            shareOnFacebook(facebookShareButton, bitmapImage, messageText);
+//            createFacebookShareButton(facebookShareButton, bitmapImage, messageText);
 //
 //
 //            //</editor-fold>

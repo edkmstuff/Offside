@@ -199,6 +199,7 @@ public class SingleGroupFragment extends Fragment {
                 addLeaguePagesToSingleGroupFragment(leagueType);
 
             }
+            viewPager.setCurrentItem(0);
 
             loadingRoot.setVisibility(View.GONE);
             showAvailableGames();
@@ -249,7 +250,7 @@ public class SingleGroupFragment extends Fragment {
         viewPagerAdapter.notifyDataSetChanged();
         if (viewPagerAdapter.getCount() > 0) tabLayout.setupWithViewPager(viewPager);
 
-        viewPager.setCurrentItem(0);
+
         setupTabLayout();
     }
 

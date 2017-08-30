@@ -73,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
 
-            defineDeepLinking();
+            //defineDeepLinking();
 
             loadingRoot = (FrameLayout) findViewById(R.id.shared_loading_root);
             versionTextView = (TextView) findViewById(R.id.shared_version_text_view);

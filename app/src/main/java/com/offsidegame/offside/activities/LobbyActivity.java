@@ -1,9 +1,8 @@
 package com.offsidegame.offside.activities;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
@@ -18,68 +17,37 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.share.model.ShareHashtag;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.ShareButton;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
-import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.adapters.CustomTabsFragmentPagerAdapter;
-import com.offsidegame.offside.adapters.LeagueAdapter;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
-import com.offsidegame.offside.fragments.AvailableGamesFragment;
+import com.offsidegame.offside.fragments.ChatFragment;
 import com.offsidegame.offside.fragments.GroupsFragment;
 import com.offsidegame.offside.fragments.PlayerFragment;
-import com.offsidegame.offside.fragments.PrivateGroupsFragment;
 import com.offsidegame.offside.fragments.SingleGroupFragment;
 import com.offsidegame.offside.helpers.ImageHelper;
-import com.offsidegame.offside.models.AvailableGame;
-import com.offsidegame.offside.models.ExperienceLevel;
-import com.offsidegame.offside.models.LeagueRecord;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
-import com.offsidegame.offside.models.PlayerGame;
 import com.offsidegame.offside.models.PrivateGroup;
-import com.offsidegame.offside.models.PrivateGroupsInfo;
-import com.offsidegame.offside.models.Reward;
-import com.offsidegame.offside.models.UserProfileInfo;
-import com.offsidegame.offside.models.Winner;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.ocpsoft.prettytime.PrettyTime;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 
 
 public class LobbyActivity extends AppCompatActivity implements Serializable  {
@@ -117,6 +85,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
     private GroupsFragment groupsFragment;
     private PlayerFragment playerFragment;
     private SingleGroupFragment singleGroupFragment;
+    private ChatFragment chatFragment;
 
 
     //</editor-fold>
@@ -214,8 +183,14 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
                             return true;
 
                         case R.id.nav_action_play:
-                            Intent chatIntent = new Intent(context, ChatActivity.class);
-                            startActivity(chatIntent);
+                            chatFragment = new ChatFragment();
+                            EventBus.getDefault().register(chatFragment);
+                            replaceFragment(chatFragment);
+                            String gameId = OffsideApplication.getGameInfo().getGameId();
+                            //todo: change to private game id
+                            String privateGameId = OffsideApplication.getGameInfo().getPrivateGameId();
+                            String androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+                            OffsideApplication.signalRService.requestGetChatMessages(gameId, privateGameId, playerId, androidDeviceId);
                             return true;
                     }
 

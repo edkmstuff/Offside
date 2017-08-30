@@ -76,8 +76,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:18313");
-    public final String ip = new String("10.0.0.17:18313");
+    public final String ip = new String("192.168.1.140:18313");
+    //public final String ip = new String("10.0.0.17:18313");
 
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
@@ -230,19 +230,9 @@ public class SignalRService extends Service {
 
         }, ChatMessage.class);
 
-        hub.on("UpdatePosition", new SubscriptionHandler1<Position>() {
-            @Override
-            public void run(Position position) {
-                EventBus.getDefault().post(new PositionEvent(position));
-            }
-        }, Position.class);
 
-        hub.on("UpdatePlayerData", new SubscriptionHandler1<Player>() {
-            @Override
-            public void run(Player player) {
-                EventBus.getDefault().post(player);
-            }
-        }, Player.class);
+
+
 
         hub.on("UpdateScoreboard", new SubscriptionHandler1<Scoreboard>() {
             @Override
@@ -326,6 +316,43 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(playerAssets);
             }
         }, PlayerAssets.class);
+
+        hub.on("ChatMessagesReceived", new SubscriptionHandler1<Chat>() {
+            @Override
+            public void run(Chat chat) {
+                EventBus.getDefault().post(new ChatEvent(chat));
+            }
+        }, Chat.class);
+
+        hub.on("ChatMessageReceived", new SubscriptionHandler1<ChatMessage>() {
+            @Override
+            public void run(ChatMessage chatMessage) {
+                EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
+            }
+        }, ChatMessage.class);
+
+        hub.on("ScoreboardReceived", new SubscriptionHandler1<Scoreboard>() {
+            @Override
+            public void run(Scoreboard scoreboard) {
+                EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
+            }
+        }, Scoreboard.class);
+
+        hub.on("PlayerDataReceived", new SubscriptionHandler1<Player>() {
+            @Override
+            public void run(Player player) {
+                EventBus.getDefault().post(player);
+            }
+        }, Player.class);
+
+        hub.on("PositionReceived", new SubscriptionHandler1<Position>() {
+            @Override
+            public void run(Position position) {
+                EventBus.getDefault().post(new PositionEvent(position));
+            }
+        }, Position.class);
+
+
 
 
 
@@ -553,55 +580,23 @@ public class SignalRService extends Service {
 
     }
 
-    public void getScoreboard(String gameId) {
+    public void requestGetScoreboard(String gameId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Scoreboard.class, "GetScoreboard", gameId).done(new Action<Scoreboard>() {
-
-            @Override
-            public void run(Scoreboard scoreboard) throws Exception {
-                EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
+        hub.invoke(Scoreboard.class, "RequestGetScoreboard", gameId);
     }
 
-    public void getChatMessages(String gameId, String privateGameId, String playerId, String androidDeviceId) {
+    public void requestGetChatMessages(String gameId, String privateGameId, String playerId, String androidDeviceId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Chat.class, "GetChatMessages", gameId, privateGameId, playerId, androidDeviceId).done(new Action<Chat>() {
 
-            @Override
-            public void run(Chat chat) throws Exception {
-                EventBus.getDefault().post(new ChatEvent(chat));
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
+        hub.invoke(Chat.class, "requestGetChatMessages", gameId, privateGameId, playerId, androidDeviceId);
     }
 
-    public void sendChatMessage(String gameId, String privateGameId, String message, String playerId) {
+    public void requestSendChatMessage(String gameId, String privateGameId, String message, String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(ChatMessage.class, "SendChatMessage", gameId, privateGameId, playerId, message).done(new Action<ChatMessage>() {
-            @Override
-            public void run(ChatMessage chatMessage) throws Exception {
-                //          EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
-            }
-
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
+        hub.invoke(ChatMessage.class, "RequestSendChatMessage", gameId, privateGameId, playerId, message);
 
     }
 

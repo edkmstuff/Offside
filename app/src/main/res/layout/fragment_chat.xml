@@ -1,0 +1,687 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_view_scoreboard"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/chatPrimary"
+    android:keepScreenOn="true"
+    android:layoutDirection="ltr"
+    android:orientation="vertical"
+    >
+
+
+    <LinearLayout
+        android:id="@+id/fc_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!--Loading indicator-->
+        <LinearLayout
+            android:id="@+id/fc_loading_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"></ProgressBar>
+
+        </LinearLayout>
+
+        <!--chat title root -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:orientation="vertical"
+            android:padding="4dp"
+            android:visibility="visible">
+
+            <!-- group name + players status icons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                >
+
+                <!-- group name -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/fc_private_game_name_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Yoske's gang"
+                        android:textColor="@color/privateGameTitle" />
+
+                </LinearLayout>
+
+                <!-- player status -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right">
+
+                    <!--Position-->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="2dp"
+
+                        android:gravity="center"
+                        android:layoutDirection="rtl"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/fc_position_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="-12dp"
+                            android:background="@drawable/shape_bg_rectangle_rounded_corners"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="5dp"
+                            android:paddingTop="2dp"
+                            android:textColor="@color/privateGameTitle"
+                            android:text="2/10"
+                            />
+
+                        <ImageView
+                            android:id="@+id/fc_player_picture_image_view"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/app_logo" />
+
+                    </LinearLayout>
+
+                    <!-- coins -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="2dp"
+                        android:gravity="center"
+                        android:layoutDirection="rtl"
+                        android:orientation="horizontal">
+
+
+                        <TextView
+                            android:id="@+id/fc_offside_coins_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="-12dp"
+                            android:background="@drawable/shape_bg_rectangle_rounded_corners"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="12dp"
+                            android:paddingRight="5dp"
+                            android:paddingTop="2dp"
+                            android:text="4000"
+                            android:textColor="@color/colorWhite" />
+
+                        <ImageView
+                            android:id="@+id/fc_offside_coins_image_view"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_offside_coin_with_logo" />
+
+                    </LinearLayout>
+
+                    <!-- powers-->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:layout_marginLeft="2dp"
+                        android:gravity="center"
+                        android:layoutDirection="rtl"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/fc_power_items_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="-14dp"
+                            android:background="@drawable/shape_bg_rectangle_rounded_corners"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="15dp"
+                            android:paddingRight="5dp"
+                            android:paddingTop="2dp"
+                            android:text="2"
+                            android:textColor="@color/colorWhite" />
+
+                        <ImageView
+                            android:id="@+id/fc_power_item_image_view"
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_soccer_ball" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+            <!-- game title Home Vs Away -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/fc_game_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="barcelona Vs. Real"
+                    android:textColor="@color/colorWhite"
+                    android:visibility="visible"/>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:visibility="gone">
+    <TextView
+        android:layout_margin="1dp"
+        android:id="@+id/fc_game_home_team_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="barcelona"
+        android:textColor="@color/colorWhite" />
+    <TextView
+        android:layout_margin="1dp"
+        android:padding="1dp"
+        android:id="@+id/fc_game_home_team_goals_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_bg_rectangle_light_gray"
+        android:text="2"
+        android:textColor="@color/colorWhite" />
+    <TextView
+        android:layout_margin="1dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=":"
+        android:textColor="@color/colorWhite" />
+    <TextView
+        android:layout_margin="1dp"
+        android:padding="1dp"
+        android:id="@+id/fc_game_away_team_goals_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:background="@drawable/shape_bg_rectangle_light_gray"
+        android:textColor="@color/colorWhite" />
+    <TextView
+        android:layout_margin="1dp"
+        android:id="@+id/fc_game_away_team_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Real"
+        android:textColor="@color/colorWhite" />
+
+
+</LinearLayout>
+
+
+
+
+
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+
+        <!-- scoreboard -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/fc_scoreboard_root"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:animateLayoutChanges="true"
+                        android:gravity="center_vertical"
+                        android:layoutDirection="ltr"
+                        android:orientation="horizontal"
+                        android:padding="5dp"></LinearLayout>
+
+                </HorizontalScrollView>
+
+            </LinearLayout>
+
+            <!-- separator line-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/chatText" />
+
+        </LinearLayout>
+
+
+        <!--chat content root-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:id="@+id/fc_content_root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <!--chat input window-->
+                <LinearLayout
+                    android:id="@+id/fc_chat_input_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/colorAccent"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:weightSum="7">
+
+                    <!--<TextView-->
+                    <!--android:id="@+id/fc_chatActionsButton"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@color/colorAccent"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="+"-->
+                    <!--android:textColor="@color/background_material_light"-->
+                    <!--android:textSize="@dimen/OffsideLargeText" />-->
+
+                    <ImageView
+                        android:id="@+id/fc_chatActionsButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/colorAccent"
+                        android:gravity="center"
+                        android:src="@mipmap/ic_menu"
+
+
+                        />
+
+                    <EditText
+                        android:id="@+id/fc_chat_message_edit_text"
+                        style="@style/editTextClassic"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginBottom="-2dp"
+                        android:layout_toLeftOf="@+id/chatSendButton"
+                        android:layout_weight="5"
+                        android:hint="@string/lbl_type_message"
+                        android:inputType="textMultiLine" />
+
+                    <TextView
+                        android:id="@+id/fc_chatSendTextView"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@color/colorAccent"
+                        android:gravity="center"
+                        android:text="@string/lbl_send"
+                        android:textColor="@color/background_material_light"
+                        android:textStyle="bold"
+
+                        />
+
+                </LinearLayout>
+
+                <!--chat history-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/c_chat_input_root"
+                    android:orientation="vertical">
+
+                    <ListView
+
+                        android:id="@+id/fc_chat_list_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@null"
+                        android:dividerHeight="0dp"
+                        android:listSelector="@android:color/transparent"
+                        android:stackFromBottom="true"
+                        android:transcriptMode="alwaysScroll"
+                        android:visibility="visible">
+
+                    </ListView>
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+            <!--Action Menu-->
+
+            <LinearLayout
+                android:id="@+id/fc_actions_menu_root"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="60dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="25dp"
+                android:background="@color/chatText"
+                android:orientation="vertical"
+
+                android:padding="10dp"
+                android:scaleX="0"
+                android:scaleY="0"
+                android:visibility="visible">
+
+
+                <org.apmem.tools.layouts.FlowLayout
+
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:id="@+id/fc_actions_flow_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/chatText"
+                    android:visibility="gone">
+
+                    <!--leaders-->
+                    <LinearLayout
+                        android:id="@+id/fc_action_leaders_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:minHeight="80dp"
+
+                        android:minWidth="80dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <ImageView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_action_leaders" />
+
+                        <TextView
+                            style="@style/OffsideActionButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_commands_leaders" />
+
+                    </LinearLayout>
+                    <!--player balance-->
+                    <LinearLayout
+                        android:id="@+id/fc_action_offside_coins_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_offside_coin_with_logo" />
+
+                        <TextView
+                            style="@style/OffsideActionButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_command_offside_coins" />
+
+                    </LinearLayout>
+                    <!--send me code-->
+                    <LinearLayout
+                        android:id="@+id/fc_action_code_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_action_code" />
+
+                        <TextView
+                            style="@style/OffsideActionButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_command_game_code" />
+
+                    </LinearLayout>
+                    <!--share code-->
+                    <LinearLayout
+                        android:id="@+id/fc_action_share_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_action_whatsapp" />
+
+                        <TextView
+                            style="@style/OffsideActionButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_command_share_code" />
+
+                    </LinearLayout>
+                    <!--current question-->
+                    <LinearLayout
+                        android:id="@+id/fc_action_current_question_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_action_current_question" />
+
+                        <TextView
+                            style="@style/OffsideActionButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_command_current_question" />
+
+                    </LinearLayout>
+                    <!--reload coins - lottery-->
+                    <LinearLayout
+                        android:id="@+id/fc_action_reload_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        >
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_action_reload" />
+
+                        <TextView
+                            style="@style/OffsideActionButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_command_reload" />
+
+                    </LinearLayout>
+                    <!--watch video-->
+                    <LinearLayout
+                        android:id="@+id/fc_action_watch_video_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <ImageView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_action_video_ad" />
+
+                        <TextView
+                            style="@style/OffsideActionButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_get_offside_coins" />
+
+                    </LinearLayout>
+                    <!--exit game-->
+                    <LinearLayout
+                        android:id="@+id/fc_action_exit_game_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:src="@mipmap/ic_action_exit" />
+
+                        <TextView
+                            style="@style/OffsideActionButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom"
+                            android:gravity="center"
+                            android:text="@string/lbl_leave_game" />
+
+                    </LinearLayout>
+                    <!--Share On Facebook-->
+                    <LinearLayout
+                        android:id="@+id/fc_action_share_on_facebook_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:minHeight="80dp"
+                        android:minWidth="80dp"
+                        android:orientation="vertical">
+
+                        <com.facebook.share.widget.ShareButton
+                            android:id="@+id/fc_facebook_share_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                    </LinearLayout>
+
+
+
+                </org.apmem.tools.layouts.FlowLayout>
+                <!--Loading video progressbar-->
+                <LinearLayout
+                    android:id="@+id/fc_reward_video_loading_root"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <ProgressBar
+                        style="?android:attr/progressBarStyleLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center">
+
+                    </ProgressBar>
+
+                    <TextView
+                        android:id="@+id/fc_loading_video_text_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
+                        android:gravity="center"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp"
+                        android:text="@string/lbl_loading_video"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/OffsideMediumText" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+    </LinearLayout>
+</LinearLayout>
