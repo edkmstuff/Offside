@@ -7,18 +7,18 @@ import com.offsidegame.offside.models.GameInfo;
  */
 
 public class PrivateGameGeneratedEvent {
-    private String privateGameCode;
+    private String privateGameId;
 
-    public PrivateGameGeneratedEvent(String privateGameCode) {
-        this.privateGameCode = privateGameCode;
+    public String getPrivateGameId() {
+        return privateGameId;
     }
 
-
-    public String getPrivateGameCode() {
-        return privateGameCode;
+    public void setPrivateGameId(String privateGameId) {
+        this.privateGameId = privateGameId;
     }
 
-    public void setPrivateGameCode(String privateGameCode) {
-        this.privateGameCode = privateGameCode;
+    public PrivateGameGeneratedEvent(String privateGameId) {
+
+        this.privateGameId = privateGameId;
     }
 }

@@ -87,6 +87,9 @@ public class OffsideApplication extends Application {
     private static AvailableGame[] availableGames;
 
     private  static PrivateGroup selectedPrivateGroup;
+    private static  AvailableGame selectedAvailableGame;
+
+    private static String currentPrivateGameId;
 
     private static UserProfileInfo userProfileInfo;
 
@@ -241,6 +244,22 @@ public class OffsideApplication extends Application {
 
     public static void setPlayerAssets(PlayerAssets playerAssets) {
         OffsideApplication.playerAssets = playerAssets;
+    }
+
+    public static AvailableGame getSelectedAvailableGame() {
+        return selectedAvailableGame;
+    }
+
+    public static void setSelectedAvailableGame(AvailableGame selectedAvailableGame) {
+        OffsideApplication.selectedAvailableGame = selectedAvailableGame;
+    }
+
+    public static String getCurrentPrivateGameId() {
+        return currentPrivateGameId;
+    }
+
+    public static void setCurrentPrivateGameId(String currentPrivateGameId) {
+        OffsideApplication.currentPrivateGameId = currentPrivateGameId;
     }
 
 

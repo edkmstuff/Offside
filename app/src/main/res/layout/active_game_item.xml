@@ -92,7 +92,9 @@
                         android:layout_marginTop="4dp"
                         android:text="20/4/17" />
 
+                    <!--JOIN GAME-->
                     <LinearLayout
+                        android:id="@+id/ag_join_private_game_root"
                         android:layout_marginTop="8dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -103,10 +105,31 @@
                         android:paddingRight="20dp">
 
                         <TextView
-                            android:id="@+id/ag_join_game_button_text_view"
+                            android:id="@+id/ag_join_private_game_button_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="כניסה למשחק"
+                            android:textSize="16dp"
+                            android:textColor="@color/colorWhite" />
+
+                    </LinearLayout>
+                    <!--CREATE GAME-->
+                    <LinearLayout
+                        android:id="@+id/ag_create_private_game_root"
+                        android:layout_marginTop="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/colorBlue"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp">
+
+                        <TextView
+                            android:id="@+id/ag_create_private_game_button_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="פתח משחק"
                             android:textSize="16dp"
                             android:textColor="@color/colorWhite" />
 
@@ -186,56 +209,7 @@
             </LinearLayout>
 
 
-            <!--<TextView-->
-            <!--android:id="@+id/pg_group_name_text_view"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textSize="@dimen/OffsideMediumText"-->
-            <!--android:textColor="@color/colorWhite"-->
-            <!--android:text="the sharks"-->
-            <!--/>-->
-            <!--<TextView-->
-            <!--android:id="@+id/pg_group_game_status_text_view"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="משחק פעיל"-->
-            <!--android:textColor="@color/colorWhite"-->
-            <!--android:background="@color/colorActive"-->
-            <!--android:padding="5dp"-->
-            <!--android:textStyle="bold"-->
-            <!--android:layout_marginTop="4dp"-->
-            <!--/>-->
 
-            <!--<HorizontalScrollView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="4dp">-->
-
-            <!--<LinearLayout-->
-            <!--android:id="@+id/pg_players_play_in_group_root"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:animateLayoutChanges="true"-->
-            <!--android:gravity="center_vertical"-->
-            <!--android:layoutDirection="ltr"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:padding="5dp">-->
-
-            <!--</LinearLayout>-->
-
-            <!--</HorizontalScrollView>-->
-
-
-            <!--<TextView-->
-            <!--android:id="@+id/pg_total_playing_players_in_group_text_view"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:textSize="12sp"-->
-            <!--android:textColor="@color/colorWhite"-->
-            <!--android:text="12 חברים כבר משחקים"-->
-            <!--android:layout_marginTop="4dp"-->
-            <!--android:padding="5dp"-->
-            <!--/>-->
 
 
         </LinearLayout>

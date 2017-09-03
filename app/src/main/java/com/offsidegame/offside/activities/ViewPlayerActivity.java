@@ -556,7 +556,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
                         return;
                     UserProfileInfo userProfileInfo = OffsideApplication.getUserProfileInfo();
                     if (userProfileInfo == null)
-                        OffsideApplication.signalRService.RequestUserProfileData(playerId);
+                        OffsideApplication.signalRService.requestUserProfileData(playerId);
                     else
 
                         EventBus.getDefault().post(userProfileInfo);

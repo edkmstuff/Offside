@@ -15,6 +15,12 @@ public class PlayerAssets {
     @com.google.gson.annotations.SerializedName("IU")
     private String ImageUrl;
 
+    @com.google.gson.annotations.SerializedName("PLI")
+    private String playerId;
+
+    @com.google.gson.annotations.SerializedName("PN")
+    private String playerName;
+
 
     public int getBalance() {
         return balance;
@@ -38,5 +44,21 @@ public class PlayerAssets {
 
     public void setImageUrl(String imageUrl) {
         ImageUrl = imageUrl;
+    }
+
+    public String getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(String playerId) {
+        this.playerId = playerId;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    public void setPlayerName(String playerName) {
+        this.playerName = playerName;
     }
 }

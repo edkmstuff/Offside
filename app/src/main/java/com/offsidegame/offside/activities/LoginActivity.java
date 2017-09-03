@@ -306,17 +306,13 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl);
         OffsideApplication.signalRService.requestSaveLoggedInUser(user);
 
-
         Intent intent = new Intent(context, LobbyActivity.class);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        finish();
         startActivity(intent);
         isInLoginProcess = false;
-
-
-    }
+   }
 
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -380,6 +376,12 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             ACRA.getErrorReporter().handleSilentException(ex);
 
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePlayerAssets(PlayerAssets playerAssets) {
+
+
     }
 
 

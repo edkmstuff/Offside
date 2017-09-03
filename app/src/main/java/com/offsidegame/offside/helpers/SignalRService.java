@@ -76,8 +76,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    public final String ip = new String("192.168.1.140:18313");
-    //public final String ip = new String("10.0.0.17:18313");
+    //public final String ip = new String("192.168.1.140:18313");
+    public final String ip = new String("10.0.0.17:18313");
 
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
@@ -241,16 +241,17 @@ public class SignalRService extends Service {
             }
         }, Scoreboard.class);
 
-        hub.on("JoinedPrivateGame", new SubscriptionHandler1<GameInfo>() {
+        hub.on("SendAddPlayerToPrivateGame", new SubscriptionHandler1<GameInfo>() {
             @Override
             public void run(GameInfo gameInfo) {
                 EventBus.getDefault().post(new JoinGameEvent(gameInfo));
             }
         }, GameInfo.class);
-        hub.on("PrivateGameCreated", new SubscriptionHandler1<String>() {
+
+        hub.on("SendPrivateGameCreated", new SubscriptionHandler1<String>() {
             @Override
-            public void run(String privateGameCode) {
-                EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameCode) );
+            public void run(String privateGameId) {
+                EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameId) );
             }
         }, String.class);
 
@@ -471,7 +472,7 @@ public class SignalRService extends Service {
 //            return;
 //
 //        //hub.invoke(GameInfo.class, "JoinPrivateGame", privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId).done(new Action<GameInfo>() {
-//        hub.invoke(GameInfo.class, "RequestJoinPrivateGame", playerInfo).done(new Action<GameInfo>() {
+//        hub.invoke(GameInfo.class, "requestJoinPrivateGame", playerInfo).done(new Action<GameInfo>() {
 //
 //            @Override
 //            public void run(GameInfo gameInfo) throws Exception {
@@ -549,27 +550,13 @@ public class SignalRService extends Service {
         });
     }
 
-    public void generatePrivateGame(String gameId, String groupName, String playerId, String selectedLanguage) {
+    public void requestCreatePrivateGame(String gameId, String groupId, String playerId, String selectedLanguage) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
         //String languageLocale = Locale.getDefault().getDisplayLanguage();
 
-        PrivateGameCreationInfo privateGameCreationInfo = new PrivateGameCreationInfo(gameId, groupName, playerId, selectedLanguage);
-
-
-        hub.invoke(String.class, "CreatePrivateGame", privateGameCreationInfo).done(new Action<String>() {
-
-            @Override
-            public void run(String privateGameCode) throws Exception {
-                //EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameCode));
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
+        hub.invoke(String.class, "RequestCreatePrivateGame", gameId, groupId, playerId, selectedLanguage);
     }
 
     public void postAnswer(final String gameId, final String playerId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
@@ -679,19 +666,19 @@ public class SignalRService extends Service {
         hub.invoke("RequestAvailableGames", playerId,groupId);
     }
 
-    public void RequestCreatePrivateGroup(String groupName, String groupType, String playerId, String selectedLanguage) {
+    public void requestCreatePrivateGroup(String groupName, String groupType, String playerId, String selectedLanguage) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke("RequestCreatePrivateGroup", groupName, groupType, playerId, selectedLanguage);
+        hub.invoke("requestCreatePrivateGroup", groupName, groupType, playerId, selectedLanguage);
     }
 
-    public void RequestJoinPrivateGame(String gameId, String groupId, String privateGameId, String playerId, String androidDeviceId) {
+    public void requestJoinPrivateGame(String gameId, String groupId, String privateGameId, String playerId, String androidDeviceId) {
 
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
 
-        hub.invoke(GameInfo.class, "RequestJoinPrivateGame", gameId, groupId,  privateGameId, playerId, androidDeviceId).done(new Action<GameInfo>() {
+        hub.invoke(GameInfo.class, "requestJoinPrivateGame", gameId, groupId,  privateGameId, playerId, androidDeviceId).done(new Action<GameInfo>() {
 
             @Override
             public void run(GameInfo gameInfo) throws Exception {
@@ -705,7 +692,7 @@ public class SignalRService extends Service {
         });
     }
 
-    public void RequestUserProfileData(String playerId) {
+    public void requestUserProfileData(String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         hub.invoke("RequestUserProfile", playerId);

@@ -32,12 +32,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.fragments.ChatFragment;
 import com.offsidegame.offside.fragments.GroupsFragment;
 import com.offsidegame.offside.fragments.PlayerFragment;
 import com.offsidegame.offside.fragments.SingleGroupFragment;
 import com.offsidegame.offside.helpers.ImageHelper;
+import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PrivateGroup;
@@ -176,7 +178,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
                             playerFragment = new PlayerFragment();
                             EventBus.getDefault().register(playerFragment);
                             replaceFragment(playerFragment);
-                            OffsideApplication.signalRService.RequestUserProfileData(playerId);
+                            OffsideApplication.signalRService.requestUserProfileData(playerId);
                             return true;
 
                         case R.id.nav_action_shop:
@@ -186,11 +188,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
                             chatFragment = new ChatFragment();
                             EventBus.getDefault().register(chatFragment);
                             replaceFragment(chatFragment);
-                            String gameId = OffsideApplication.getGameInfo().getGameId();
+                            String gameId = OffsideApplication.getSelectedAvailableGame().getGameId();
                             //todo: change to private game id
-                            String privateGameId = OffsideApplication.getGameInfo().getPrivateGameId();
+                            String currentPrivateGameId = OffsideApplication.getCurrentPrivateGameId();
                             String androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                            OffsideApplication.signalRService.requestGetChatMessages(gameId, privateGameId, playerId, androidDeviceId);
+                            OffsideApplication.signalRService.requestGetChatMessages(gameId, currentPrivateGameId, playerId, androidDeviceId);
                             return true;
                     }
 
@@ -299,29 +301,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
 
     }
 
-    private Boolean exit = false;
-
-    @Override
-    public void onBackPressed() {
-
-        resetVisibility();
-        if (exit) {
-            finish(); // finish activity
-        } else {
-            Toast.makeText(this, R.string.lbl_press_back_again_to_exit,
-                    Toast.LENGTH_LONG).show();
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3 * 1000);
-
-        }
-
-    }
-
     private int REQUEST_INVITE =1;
     private String TAG ="OFFSIDE_INVITE";
 
@@ -355,6 +334,19 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
             }
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onJoinGame(String successJoinGame) {
+        try {
+            bottomNavigationView.setSelectedItemId(R.id.nav_action_play);
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+    }
+
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
@@ -408,6 +400,33 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
+
+
+
+
+    private Boolean exit = false;
+
+    @Override
+    public void onBackPressed() {
+
+        resetVisibility();
+        if (exit) {
+            finish(); // finish activity
+        } else {
+            Toast.makeText(this, R.string.lbl_press_back_again_to_exit,
+                    Toast.LENGTH_LONG).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+
+        }
+
+    }
+
 
 
 

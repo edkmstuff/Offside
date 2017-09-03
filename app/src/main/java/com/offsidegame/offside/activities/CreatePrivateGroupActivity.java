@@ -16,21 +16,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
-import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
-import com.offsidegame.offside.models.PrivateGroupCreationInfo;
-import com.offsidegame.offside.models.UserProfileInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 
 public class CreatePrivateGroupActivity extends AppCompatActivity {
@@ -91,7 +84,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
                 String groupType= getResources().getString(R.string.key_private_group_name);
 
                 if (OffsideApplication.isBoundToSignalRService)
-                    OffsideApplication.signalRService.RequestCreatePrivateGroup(groupName, groupType, playerId, selectedLanguage);
+                    OffsideApplication.signalRService.requestCreatePrivateGroup(groupName, groupType, playerId, selectedLanguage);
                 else
                     throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
 

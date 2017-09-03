@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.OffsideApplication;
@@ -21,9 +23,11 @@ import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupPlayer;
 
 import org.acra.ACRA;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by user on 7/20/2017.
@@ -38,6 +42,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
     public AvailableGamesAdapter(Context context, ArrayList<AvailableGame> availableGames) {
         this.context = context;
         this.availableGames = availableGames;
+
     }
 
     @Override
@@ -67,14 +72,18 @@ public class AvailableGamesAdapter extends BaseAdapter {
         TextView startDateTextView;
         TextView playersCountTextView;
         LinearLayout playersPlayInGameRoot;
-        TextView joinGameButtonTextView;
+        LinearLayout joinPrivateGameRoot;
+        TextView joinPrivateGameButtonTextView;
+        LinearLayout createPrivateGameRoot;
+        TextView createPrivateGameButtonTextView;
+
 
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         try {
-            AvailableGamesAdapter.ViewHolder viewHolder;
+            final AvailableGamesAdapter.ViewHolder viewHolder;
             if (convertView == null) {
                 convertView = LayoutInflater.from(context).inflate(R.layout.active_game_item, parent, false);
                 viewHolder = new AvailableGamesAdapter.ViewHolder();
@@ -87,7 +96,10 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 viewHolder.startDateTextView = (TextView) convertView.findViewById(R.id.ag_start_date_text_view);
                 viewHolder.playersPlayInGameRoot = (LinearLayout) convertView.findViewById(R.id.ag_players_play_in_game_root);
                 viewHolder.playersCountTextView = (TextView) convertView.findViewById(R.id.ag_players_count_text_view);
-                viewHolder.joinGameButtonTextView = (TextView) convertView.findViewById(R.id.ag_join_game_button_text_view);
+                viewHolder.joinPrivateGameRoot = (LinearLayout) convertView.findViewById(R.id.ag_join_private_game_root);
+                viewHolder.joinPrivateGameButtonTextView = (TextView) convertView.findViewById(R.id.ag_join_private_game_button_text_view);
+                viewHolder.createPrivateGameRoot = (LinearLayout) convertView.findViewById(R.id.ag_create_private_game_root);
+                viewHolder.createPrivateGameButtonTextView = (TextView) convertView.findViewById(R.id.ag_create_private_game_button_text_view);
 
                 convertView.setTag(viewHolder);
 
@@ -99,6 +111,8 @@ public class AvailableGamesAdapter extends BaseAdapter {
             viewHolder.availableGame = getItem(position);
             if (viewHolder.availableGame == null)
                 return convertView;
+
+
 
             viewHolder.homeTeamNameTextView.setText(viewHolder.availableGame.getHomeTeam());
             viewHolder.awayTeamNameTextView.setText(viewHolder.availableGame.getAwayTeam());
@@ -129,15 +143,39 @@ public class AvailableGamesAdapter extends BaseAdapter {
             }
 
 
-            viewHolder.joinGameButtonTextView.setOnClickListener(new View.OnClickListener() {
+            viewHolder.joinPrivateGameButtonTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
+                    if(viewHolder.availableGame.getPrivateGameCode() != null)
+                        OffsideApplication.setCurrentPrivateGameId(viewHolder.availableGame.getPrivateGameCode());
+                    EventBus.getDefault().post(new JoinGameEvent(null));
+                }
+            });
+
+            viewHolder.createPrivateGameButtonTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
+                    String gameId = viewHolder.availableGame.getGameId();
+                    String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
+                    String playerId = OffsideApplication.getPlayerAssets().getPlayerId() ;
+                    String selectedLanguage = "עברית";
+                    OffsideApplication.signalRService.requestCreatePrivateGame(gameId, groupId, playerId, selectedLanguage);
 
                 }
             });
 
+            resetVisibility(viewHolder);
+            if(viewHolder.availableGame.getPrivateGroupPlayers().length==0){
+                viewHolder.joinPrivateGameRoot.setVisibility(View.GONE);
+                viewHolder.createPrivateGameRoot.setVisibility(View.VISIBLE);
+            }
+            else {
+                viewHolder.joinPrivateGameRoot.setVisibility(View.VISIBLE);
+                viewHolder.createPrivateGameRoot.setVisibility(View.GONE);
 
-
+            }
 
 
 
@@ -152,20 +190,12 @@ public class AvailableGamesAdapter extends BaseAdapter {
 
     }
 
-    private void joinPrivateGame(String privateGameId) {
-        if (OffsideApplication.isBoundToSignalRService) {
+    private void resetVisibility(ViewHolder viewHolder){
+        viewHolder.joinPrivateGameRoot.setVisibility(View.GONE);
+        viewHolder.createPrivateGameRoot.setVisibility(View.GONE);
 
-            OffsideApplication.setIsPlayerQuitGame(false);
-            String androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-            PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
-            String gameId = OffsideApplication.getGameInfo().getGameId();
-            String groupId= selectedPrivateGroup.getId();
-            FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
-            String playerId = player.getUid();
-            OffsideApplication.signalRService.RequestJoinPrivateGame(gameId, groupId, privateGameId,playerId, androidDeviceId);
-
-        }
     }
+
 
 
 }

@@ -137,27 +137,27 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
                 }
             });
 
-            generatePrivateGameCodeButtonTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //get language
-                    String selectedLanguage = availableLanguagesSpinner.getSelectedItem().toString();
-
-                    //get game id
-                    int selectedGamePosition = availableGamesSpinner.getSelectedItemPosition();
-                    String gameId = getGameId(selectedGamePosition);
-                    //get group messageText
-
-                    String groupName = privateGameNameEditText.getText().toString();
-                    groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;
-
-
-                    if (OffsideApplication.isBoundToSignalRService)
-                        OffsideApplication.signalRService.generatePrivateGame(gameId, groupName, playerId, selectedLanguage);
-                    else
-                        throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
-                }
-            });
+//            generatePrivateGameCodeButtonTextView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //get language
+//                    String selectedLanguage = availableLanguagesSpinner.getSelectedItem().toString();
+//
+//                    //get game id
+//                    int selectedGamePosition = availableGamesSpinner.getSelectedItemPosition();
+//                    String gameId = getGameId(selectedGamePosition);
+//                    //get group messageText
+//
+//                    String groupName = privateGameNameEditText.getText().toString();
+//                    groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;
+//
+//
+//                    if (OffsideApplication.isBoundToSignalRService)
+//                        OffsideApplication.signalRService.requestCreatePrivateGame(gameId, groupId, playerId, selectedLanguage);
+//                    else
+//                        throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
+//                }
+//            });
 
 
         } catch (Exception ex) {
@@ -200,7 +200,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
             String groupId= selectedPrivateGroup.getId();
 
 
-            OffsideApplication.signalRService.RequestJoinPrivateGame(gameId, groupId, privateGameId,playerId, androidDeviceId);
+            OffsideApplication.signalRService.requestJoinPrivateGame(gameId, groupId, privateGameId,playerId, androidDeviceId);
             loadingGameRoot.setVisibility(View.VISIBLE);
             joinGameRoot.setVisibility(View.GONE);
             createPrivateGameRoot.setVisibility(View.GONE);
@@ -211,153 +211,153 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
         return gameIds[selectedGamePosition];
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
-        try {
-            if (OffsideApplication.signalRService == null)
-                return;
-
-            Context eventContext = signalRServiceBoundEvent.getContext();
-            if (eventContext == context || eventContext == getApplicationContext()) {
-
-                if (OffsideApplication.isPlayerQuitGame()) {
-                    loadingGameRoot.setVisibility(View.GONE);
-                    joinGameRoot.setVisibility(View.VISIBLE);
-                    return;
-                }
-
-                SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-                String gameId = settings.getString(getString(R.string.game_id_key), "");
-                String gameCode = settings.getString(getString(R.string.private_game_id_key), "");
-                if (OffsideApplication.isBoundToSignalRService) {
-                    OffsideApplication.signalRService.isGameActive(gameId, gameCode);
-                    OffsideApplication.signalRService.getAvailableLanguages();
-                    OffsideApplication.signalRService.getAvailableGames();
-                } else
-                    throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");
-
-                String[] emptyAvailableGames = new String[]{getString(R.string.lbl_no_available_games)};
-                setAvailableGamesSpinnerAdapter(emptyAvailableGames);
-
-            }
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onConnectionEvent(ConnectionEvent connectionEvent) {
-        try {
-            boolean isConnected = connectionEvent.getConnected();
-            if (isConnected)
-                Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onJoinGame(JoinGameEvent joinGameEvent) {
-        try {
-
-
-            GameInfo gameInfo = joinGameEvent.getGameInfo();
-            if (gameInfo == null) {
-                Toast.makeText(context, R.string.lbl_no_such_game, Toast.LENGTH_LONG).show();
-                loadingGameRoot.setVisibility(View.GONE);
-                joinGameRoot.setVisibility(View.VISIBLE);
-                return;
-            }
-            String gameId = gameInfo.getGameId();
-            String privateGameId = gameInfo.getPrivateGameId();
-            String privateGameTitle = gameInfo.getPrivateGameTitle();
-            String homeTeam = gameInfo.getHomeTeam();
-            String awayTeam = gameInfo.getAwayTeam();
-
-            OffsideApplication.setGameInfo(gameInfo);
-
-            SharedPreferences.Editor editor = settings.edit();
-
-            editor.putString(getString(R.string.game_id_key), gameId);
-            editor.putString(getString(R.string.private_game_id_key), privateGameId);
-            editor.putString(getString(R.string.private_game_title_key), privateGameTitle);
-            editor.putString(getString(R.string.home_team_key), homeTeam);
-            editor.putString(getString(R.string.away_team_key), awayTeam);
-
-
-            editor.commit();
-
-            Intent intent = new Intent(context, ChatActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveIsGameActive(ActiveGameEvent activeGameEvent) {
-        try {
-            Boolean isGameActive = activeGameEvent.getIsGameActive();
-
-            if (isGameActive) {
-                //Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
-                SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-                String privateGameId = settings.getString(getString(R.string.private_game_id_key), "");
-                joinPrivateGame(privateGameId);
-
-            } else {
-                loadingGameRoot.setVisibility(View.GONE);
-                joinGameRoot.setVisibility(View.VISIBLE);
-            }
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveAvailableLanguages(AvailableLanguagesEvent availableLanguagesEvent) {
-        try {
-            availableLanguages = availableLanguagesEvent.getAvailableLanquages();
-
-
-            setAvailableLanguageSpinnerAdapter(availableLanguages);
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveAvailableGames(AvailableGamesEvent availableGamesEvent) {
-        try {
-            availableGames = availableGamesEvent.getAvailableGames();
-            if (availableGames.length == 0) {
-                noAvailableGamesReturnLaterTextView.setVisibility(View.VISIBLE);
-                throw new Exception(activityName + " - onReceiveAvailableGames - Error: available games is empty ");
-            }
-
-            createPrivateGameButtonTextView.setVisibility(View.VISIBLE);
-            noAvailableGamesReturnLaterTextView.setVisibility(View.GONE);
-
-            gameTitles = new String[availableGames.length];
-            gameIds = new String[availableGames.length];
-            for (int i = 0; i < availableGames.length; i++) {
-                gameIds[i] = availableGames[i].getGameId();
-                gameTitles[i] = availableGames[i].getGameTitle();
-            }
-
-            setAvailableGamesSpinnerAdapter(gameTitles);
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+//        try {
+//            if (OffsideApplication.signalRService == null)
+//                return;
+//
+//            Context eventContext = signalRServiceBoundEvent.getContext();
+//            if (eventContext == context || eventContext == getApplicationContext()) {
+//
+//                if (OffsideApplication.isPlayerQuitGame()) {
+//                    loadingGameRoot.setVisibility(View.GONE);
+//                    joinGameRoot.setVisibility(View.VISIBLE);
+//                    return;
+//                }
+//
+//                SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+//                String gameId = settings.getString(getString(R.string.game_id_key), "");
+//                String gameCode = settings.getString(getString(R.string.private_game_id_key), "");
+//                if (OffsideApplication.isBoundToSignalRService) {
+//                    OffsideApplication.signalRService.isGameActive(gameId, gameCode);
+//                    OffsideApplication.signalRService.getAvailableLanguages();
+//                    OffsideApplication.signalRService.getAvailableGames();
+//                } else
+//                    throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");
+//
+//                String[] emptyAvailableGames = new String[]{getString(R.string.lbl_no_available_games)};
+//                setAvailableGamesSpinnerAdapter(emptyAvailableGames);
+//
+//            }
+//
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//        }
+//    }
+//
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onConnectionEvent(ConnectionEvent connectionEvent) {
+//        try {
+//            boolean isConnected = connectionEvent.getConnected();
+//            if (isConnected)
+//                Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
+//            else
+//                Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//        }
+//    }
+//
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onJoinGame(JoinGameEvent joinGameEvent) {
+//        try {
+//
+//
+//            GameInfo gameInfo = joinGameEvent.getGameInfo();
+//            if (gameInfo == null) {
+//                Toast.makeText(context, R.string.lbl_no_such_game, Toast.LENGTH_LONG).show();
+//                loadingGameRoot.setVisibility(View.GONE);
+//                joinGameRoot.setVisibility(View.VISIBLE);
+//                return;
+//            }
+//            String gameId = gameInfo.getGameId();
+//            String privateGameId = gameInfo.getPrivateGameId();
+//            String privateGameTitle = gameInfo.getPrivateGameTitle();
+//            String homeTeam = gameInfo.getHomeTeam();
+//            String awayTeam = gameInfo.getAwayTeam();
+//
+//            OffsideApplication.setGameInfo(gameInfo);
+//
+//            SharedPreferences.Editor editor = settings.edit();
+//
+//            editor.putString(getString(R.string.game_id_key), gameId);
+//            editor.putString(getString(R.string.private_game_id_key), privateGameId);
+//            editor.putString(getString(R.string.private_game_title_key), privateGameTitle);
+//            editor.putString(getString(R.string.home_team_key), homeTeam);
+//            editor.putString(getString(R.string.away_team_key), awayTeam);
+//
+//
+//            editor.commit();
+//
+//            Intent intent = new Intent(context, ChatActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//            startActivity(intent);
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//        }
+//    }
+//
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onReceiveIsGameActive(ActiveGameEvent activeGameEvent) {
+//        try {
+//            Boolean isGameActive = activeGameEvent.getIsGameActive();
+//
+//            if (isGameActive) {
+//                //Intent intent = new Intent(context, ViewPlayerScoreActivity.class);
+//                SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+//                String privateGameId = settings.getString(getString(R.string.private_game_id_key), "");
+//                joinPrivateGame(privateGameId);
+//
+//            } else {
+//                loadingGameRoot.setVisibility(View.GONE);
+//                joinGameRoot.setVisibility(View.VISIBLE);
+//            }
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//        }
+//    }
+//
+//
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onReceiveAvailableLanguages(AvailableLanguagesEvent availableLanguagesEvent) {
+//        try {
+//            availableLanguages = availableLanguagesEvent.getAvailableLanquages();
+//
+//
+//            setAvailableLanguageSpinnerAdapter(availableLanguages);
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//        }
+//    }
+//
+//
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onReceiveAvailableGames(AvailableGamesEvent availableGamesEvent) {
+//        try {
+//            availableGames = availableGamesEvent.getAvailableGames();
+//            if (availableGames.length == 0) {
+//                noAvailableGamesReturnLaterTextView.setVisibility(View.VISIBLE);
+//                throw new Exception(activityName + " - onReceiveAvailableGames - Error: available games is empty ");
+//            }
+//
+//            createPrivateGameButtonTextView.setVisibility(View.VISIBLE);
+//            noAvailableGamesReturnLaterTextView.setVisibility(View.GONE);
+//
+//            gameTitles = new String[availableGames.length];
+//            gameIds = new String[availableGames.length];
+//            for (int i = 0; i < availableGames.length; i++) {
+//                gameIds[i] = availableGames[i].getGameId();
+//                gameTitles[i] = availableGames[i].getGameTitle();
+//            }
+//
+//            setAvailableGamesSpinnerAdapter(gameTitles);
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//        }
+//    }
 
     private void setAvailableLanguageSpinnerAdapter(String[] languages) {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, languages);
@@ -380,20 +380,20 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
-        try {
-            String privateGameCode = privateGameGeneratedEvent.getPrivateGameCode();
-            joinPrivateGame(privateGameCode);
-            //privateGameCodeTextView.setText(privateGameCode);
-            //gameCodeEditText.setText(privateGameCode);
-            //privateGameCodeTextView.setVisibility(View.VISIBLE);
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
+//        try {
+//            String privateGameCode = privateGameGeneratedEvent.getPrivateGameCode();
+//            joinPrivateGame(privateGameCode);
+//            //privateGameCodeTextView.setText(privateGameCode);
+//            //gameCodeEditText.setText(privateGameCode);
+//            //privateGameCodeTextView.setVisibility(View.VISIBLE);
+//
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//        }
+//
+//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayer(Player player) {

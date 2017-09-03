@@ -60,11 +60,11 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".activities.ChatActivity"
-            android:label="Match field"
-            android:screenOrientation="portrait"
-            android:theme="@style/LaunchScreenTheme"/>
+        <!--<activity-->
+            <!--android:name=".activities.ChatActivity"-->
+            <!--android:label="Match field"-->
+            <!--android:screenOrientation="portrait"-->
+            <!--android:theme="@style/LaunchScreenTheme"/>-->
         <activity
             android:name=".activities.LobbyActivity"
             android:label="Match field"

@@ -171,7 +171,7 @@ public class PrivateGroupAdapter extends BaseAdapter {
             } else {
                 viewHolder.totalPlayingPlayersInGroupTextView.setText(R.string.lbl_no_playing_players);
                 //viewHolder.groupGameStatusTextView.setVisibility(View.GONE);
-                viewHolder.groupGameStatusTextView.setText(R.string.lbl_start_a_game);
+                viewHolder.groupGameStatusTextView.setText(R.string.lbl_play_here);
                 viewHolder.groupGameStatusTextView.setBackgroundResource(R.color.navigationMenuSelectedItem);
 
             }
