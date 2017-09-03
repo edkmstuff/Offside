@@ -4,12 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -19,16 +16,8 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ResultCodes;
-import com.google.android.gms.appinvite.AppInvite;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
-import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
@@ -70,81 +59,52 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
+
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
 
-            //defineDeepLinking();
-
-            loadingRoot = (FrameLayout) findViewById(R.id.shared_loading_root);
-            versionTextView = (TextView) findViewById(R.id.shared_version_text_view);
-            versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
+            getIds();
             loadingRoot.setVisibility(View.VISIBLE);
-
-            // to allow exit by clicking on back doubleup_button , setting some flags on current intent
-            Intent intent = this.getIntent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
-
+            setupBackPress();
+            //defineDeepLinking();
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
-    String TAG = "DYNAMIC_LINK";
+    private void getIds(){
+        loadingRoot = (FrameLayout) findViewById(R.id.shared_loading_root);
+        versionTextView = (TextView) findViewById(R.id.shared_version_text_view);
+        versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
+    }
 
-    private void defineDeepLinking() {
+    // to allow exit by clicking on back button twice
+    private void setupBackPress(){
+        Intent intent = this.getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+    }
 
-        try{
-            // Check for App Invite invitations and launch deep-link activity if possible.
-            // Requires that an Activity is registered in AndroidManifest.xml to handle
-            // deep-link URLs.
-            FirebaseDynamicLinks fbdl = FirebaseDynamicLinks.getInstance();
-            Task task = fbdl.getDynamicLink(getIntent());
-            task.addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
-                @Override
-                public void onSuccess(PendingDynamicLinkData data) {
-                    if (data == null) {
-                        Log.d(TAG, "getInvitation: no data");
-                        return;
-                    }
-
-                    // Get the deep link
-                    Uri deepLink = data.getLink();
-
-                    // Extract invite
-                    FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(data);
-                    if (invite != null) {
-                        String invitationId = invite.getInvitationId();
-                    }
-
-                    // Handle the deep link
-                    // ...
-                }
-            })
-                    .addOnFailureListener(this, new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "getDynamicLink:onFailure", e);
-                        }
-                    });
-
-        }
-        catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
+    @Override
+    public void onBackPressed() {
+        finish(); // close the application
 
     }
+
+
+
+
+
+   // String TAG = "DYNAMIC_LINK";
+
+//   6
 
     @Override
     public void onResume() {
 
         super.onResume();
-
         EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
-
     }
 
     @Override
@@ -166,7 +126,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             boolean isConnected = connectionEvent.getConnected();
             if (isConnected) {
                 Toast.makeText(context, R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
-                //handleSuccessfulLogin();
             } else
                 Toast.makeText(context, R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
@@ -177,21 +136,16 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
         try {
-
             if (OffsideApplication.signalRService == null)
                 return;
 
             Context eventContext = signalRServiceBoundEvent.getContext();
             if (eventContext == context || eventContext == getApplicationContext()) {
-
+                loadingRoot.setVisibility(View.GONE);
                 if (isSignalRConnected() && !isInLoginProcess) {
-
-                    loadingRoot.setVisibility(View.GONE);
                     login();
                 }
-
             }
-
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -245,18 +199,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                 .build(),
                         RC_SIGN_IN);
 
-//                startActivityForResult(AuthUI.getInstance()
-//                        .createSignInIntentBuilder()
-//                        .setProviders(Arrays.asList(
-//                                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-//                                new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
-//                                new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()))
-//                        //.setTosUrl("https://superapp.example.com/terms-of-service.html")
-//                        .setIsSmartLockEnabled(false)
-//                        //.setIsSmartLockEnabled(!BuildConfig.DEBUG)
-//                        .setTheme(R.style.BlueTheme)
-//                        .setLogo(R.drawable.app_logo_25)
-//                        .build(), RC_SIGN_IN);
+
             }
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -289,11 +232,12 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
 
         }
-
-        completeUserAccepted();
+        else {
+            saveLoggedInUser();
+        }
     }
 
-    public void completeUserAccepted(){
+    public void saveLoggedInUser(){
 
         if(playerProfilePictureUrl== null)
             playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
@@ -302,18 +246,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl);
         editor.commit();
-
         User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl);
         OffsideApplication.signalRService.requestSaveLoggedInUser(user);
-
-        Intent intent = new Intent(context, LobbyActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        startActivity(intent);
-        isInLoginProcess = false;
    }
-
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -366,11 +301,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveSavedPlayerImage(PlayerAssets playerAssets) {
+    public void onReceiveSavedPlayerImage(Boolean playerImageSaved) {
         try {
-
-            completeUserAccepted();
-
+            saveLoggedInUser();
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -380,16 +313,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayerAssets(PlayerAssets playerAssets) {
+        isInLoginProcess = false;
 
-
+        OffsideApplication.setPlayerAssets(playerAssets);
+        Intent intent = new Intent(context, LobbyActivity.class);
+        startActivity(intent);
     }
 
 
-    @Override
-    public void onBackPressed() {
-        finish(); // finish activity
 
-    }
 
 
 

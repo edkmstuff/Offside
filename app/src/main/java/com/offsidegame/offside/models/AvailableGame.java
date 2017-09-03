@@ -42,8 +42,11 @@ public class AvailableGame {
     @com.google.gson.annotations.SerializedName("PGP")
     private PrivateGroupPlayer [] privateGroupPlayers;
 
-    @com.google.gson.annotations.SerializedName("PGC")
-    private String privateGameCode;
+    @com.google.gson.annotations.SerializedName("PGI")
+    private String privateGameId;
+
+    @com.google.gson.annotations.SerializedName("GI")
+    private String groupId;
 
 
     public String getGameId() {
@@ -116,13 +119,13 @@ public class AvailableGame {
         this.privateGroupPlayers = privateGroupPlayers;
     }
 
-    public String getPrivateGameCode() {
-        return privateGameCode;
-    }
-
-    public void setPrivateGameCode(String privateGameCode) {
-        this.privateGameCode = privateGameCode;
-    }
+//    public String getPrivateGameCode() {
+//        return privateGameCode;
+//    }
+//
+//    public void setPrivateGameCode(String privateGameCode) {
+//        this.privateGameCode = privateGameCode;
+//    }
 
     public String getHomeTeamLogoUrl() {
         return homeTeamLogoUrl;
@@ -146,5 +149,21 @@ public class AvailableGame {
 
     public void setLeagueName(String leagueName) {
         this.leagueName = leagueName;
+    }
+
+    public String getPrivateGameId() {
+        return privateGameId;
+    }
+
+    public void setPrivateGameId(String privateGameId) {
+        this.privateGameId = privateGameId;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 }

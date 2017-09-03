@@ -28,6 +28,7 @@ import com.offsidegame.offside.adapters.LeagueAdapter;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
 import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
@@ -325,58 +326,47 @@ public class SingleGroupFragment extends Fragment {
 
 
     private void joinPrivateGame() {
-        if (OffsideApplication.isBoundToSignalRService) {
+        EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_play));
 
-            OffsideApplication.setIsPlayerQuitGame(false);
-            String gameId = OffsideApplication.getSelectedAvailableGame().getGameId();
-            String groupId= OffsideApplication.getSelectedPrivateGroup().getId();
-            String privateGameId = OffsideApplication.getCurrentPrivateGameId();
-
-            String playerId = OffsideApplication.getPlayerAssets().getPlayerId() ;
-            String androidDeviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-
-            OffsideApplication.signalRService.requestJoinPrivateGame(gameId, groupId, privateGameId,playerId, androidDeviceId);
-
-        }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveAddPlayerToPrivateGame(JoinGameEvent joinGameEvent) {
-        try {
-
-
-            GameInfo gameInfo = joinGameEvent.getGameInfo();
-            if (gameInfo == null) {
-                loadingRoot.setVisibility(View.GONE);
-                return;
-            }
-            String gameId = gameInfo.getGameId();
-            String privateGameId = gameInfo.getPrivateGameId();
-            String privateGameTitle = gameInfo.getPrivateGameTitle();
-            String homeTeam = gameInfo.getHomeTeam();
-            String awayTeam = gameInfo.getAwayTeam();
-
-            OffsideApplication.setGameInfo(gameInfo);
-
-            SharedPreferences settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
-            SharedPreferences.Editor editor = settings.edit();
-
-            editor.putString(getString(R.string.game_id_key), gameId);
-            editor.putString(getString(R.string.private_game_id_key), privateGameId);
-            editor.putString(getString(R.string.private_game_title_key), privateGameTitle);
-            editor.putString(getString(R.string.home_team_key), homeTeam);
-            editor.putString(getString(R.string.away_team_key), awayTeam);
-
-
-            editor.commit();
-
-            EventBus.getDefault().post("PLAYER_SUCCESSFULLY_JOINED_GAME_NOW_GO_TO_CHAT");
-
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onReceiveAddPlayerToPrivateGame(JoinGameEvent joinGameEvent) {
+//        try {
+//
+//
+//            GameInfo gameInfo = joinGameEvent.getGameInfo();
+//            if (gameInfo == null) {
+//                loadingRoot.setVisibility(View.GONE);
+//                return;
+//            }
+//            String gameId = gameInfo.getGameId();
+//            String privateGameId = gameInfo.getPrivateGameId();
+//            String privateGameTitle = gameInfo.getPrivateGameTitle();
+//            String homeTeam = gameInfo.getHomeTeam();
+//            String awayTeam = gameInfo.getAwayTeam();
+//
+//            OffsideApplication.setGameInfo(gameInfo);
+//
+//            SharedPreferences settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
+//            SharedPreferences.Editor editor = settings.edit();
+//
+//            editor.putString(getString(R.string.game_id_key), gameId);
+//            editor.putString(getString(R.string.private_game_id_key), privateGameId);
+//            editor.putString(getString(R.string.private_game_title_key), privateGameTitle);
+//            editor.putString(getString(R.string.home_team_key), homeTeam);
+//            editor.putString(getString(R.string.away_team_key), awayTeam);
+//
+//
+//            editor.commit();
+//
+//            EventBus.getDefault().post("PLAYER_SUCCESSFULLY_JOINED_GAME_NOW_GO_TO_CHAT");
+//
+//
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//        }
+//    }
 
 
 

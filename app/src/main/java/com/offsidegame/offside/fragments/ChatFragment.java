@@ -48,14 +48,17 @@ import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
 import com.offsidegame.offside.events.ScoreboardEvent;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AnswerIdentifier;
+import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
+import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.Position;
@@ -149,6 +152,25 @@ public class ChatFragment extends Fragment {
 
 
     //</editor-fold>
+
+    public static ChatFragment newInstance(Activity activity, String playerId) {
+        ChatFragment chatFragment = new ChatFragment();
+        EventBus.getDefault().register(chatFragment);
+        //chat data
+        AvailableGame selectedAvailableGame = OffsideApplication.getSelectedAvailableGame();
+        if (selectedAvailableGame != null) {
+            String gameId = selectedAvailableGame.getGameId();
+            String currentPrivateGameId = selectedAvailableGame.getPrivateGameId();
+            String groupId = selectedAvailableGame.getGroupId();
+            String androidDeviceId = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+            OffsideApplication.signalRService.requestJoinPrivateGame(gameId,groupId,currentPrivateGameId,playerId,androidDeviceId);
+            //OffsideApplication.signalRService.requestGetChatMessages(gameId, currentPrivateGameId, playerId, androidDeviceId);
+        }
+
+
+        return chatFragment;
+    }
 
 
     @Nullable
@@ -676,6 +698,46 @@ public class ChatFragment extends Fragment {
 //
 //        }
 //    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlayerJoinedPrivateGame(JoinGameEvent joinGameEvent) {
+        try {
+
+
+            GameInfo gameInfo = joinGameEvent.getGameInfo();
+            if (gameInfo == null) {
+                loadingRoot.setVisibility(View.GONE);
+                return;
+            }
+            String gameId = gameInfo.getGameId();
+            String privateGameId = gameInfo.getPrivateGameId();
+            String privateGameTitle = gameInfo.getPrivateGameTitle();
+            String homeTeam = gameInfo.getHomeTeam();
+            String awayTeam = gameInfo.getAwayTeam();
+
+            OffsideApplication.setGameInfo(gameInfo);
+
+            SharedPreferences settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
+            SharedPreferences.Editor editor = settings.edit();
+
+            editor.putString(getString(R.string.game_id_key), gameId);
+            editor.putString(getString(R.string.private_game_id_key), privateGameId);
+            editor.putString(getString(R.string.private_game_title_key), privateGameTitle);
+            editor.putString(getString(R.string.home_team_key), homeTeam);
+            editor.putString(getString(R.string.away_team_key), awayTeam);
+
+
+            editor.commit();
+
+            OffsideApplication.signalRService.requestGetChatMessages(gameId, privateGameId, playerId, androidDeviceId);
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+    }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveChat(ChatEvent chatEvent) {

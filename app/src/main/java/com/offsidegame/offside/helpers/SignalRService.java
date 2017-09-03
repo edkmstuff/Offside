@@ -76,8 +76,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:18313");
-    public final String ip = new String("10.0.0.17:18313");
+    public final String ip = new String("192.168.1.140:18313");
+    //public final String ip = new String("10.0.0.17:18313");
 
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
@@ -241,7 +241,7 @@ public class SignalRService extends Service {
             }
         }, Scoreboard.class);
 
-        hub.on("SendAddPlayerToPrivateGame", new SubscriptionHandler1<GameInfo>() {
+        hub.on("PlayerJoinedPrivateGame", new SubscriptionHandler1<GameInfo>() {
             @Override
             public void run(GameInfo gameInfo) {
                 EventBus.getDefault().post(new JoinGameEvent(gameInfo));
@@ -283,12 +283,13 @@ public class SignalRService extends Service {
             }
         }, PlayerAssets.class);
 
-        hub.on("SavedPlayerImageReceived", new SubscriptionHandler1<PlayerAssets>() {
+        hub.on("PlayerImageSaved", new SubscriptionHandler1<Boolean>() {
             @Override
-            public void run(PlayerAssets playerAssets) {
-                EventBus.getDefault().post(playerAssets);
+            public void run(Boolean playerImageSaved) {
+
+                EventBus.getDefault().post(playerImageSaved);
             }
-        }, PlayerAssets.class);
+        }, Boolean.class);
 
         hub.on("AnswerAccepted", new SubscriptionHandler1<PostAnswerRequestInfo>() {
             @Override
@@ -352,6 +353,13 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(new PositionEvent(position));
             }
         }, Position.class);
+
+        hub.on("IsGameActiveReceived", new SubscriptionHandler1<AvailableGame>() {
+            @Override
+            public void run(AvailableGame availableGame) {
+                EventBus.getDefault().post(availableGame);
+            }
+        }, AvailableGame.class);
 
 
 
@@ -498,21 +506,10 @@ public class SignalRService extends Service {
         });
     }
 
-    public void isGameActive(String gameId, String gameCode) {
+    public void requestIsGameActive(String gameId, String privateGameId, String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Boolean.class, "IsGameActive", gameId, gameCode).done(new Action<Boolean>() {
-
-            @Override
-            public void run(Boolean isGameActive) throws Exception {
-                EventBus.getDefault().post(new ActiveGameEvent(isGameActive));
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
+        hub.invoke(Boolean.class, "RequestIsGameActive", gameId, privateGameId, playerId);
     }
 
 

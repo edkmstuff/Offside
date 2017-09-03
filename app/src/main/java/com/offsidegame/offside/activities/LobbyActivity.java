@@ -31,14 +31,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.ActiveGameEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.fragments.ChatFragment;
 import com.offsidegame.offside.fragments.GroupsFragment;
 import com.offsidegame.offside.fragments.PlayerFragment;
 import com.offsidegame.offside.fragments.SingleGroupFragment;
 import com.offsidegame.offside.helpers.ImageHelper;
+import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
@@ -52,7 +55,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.Serializable;
 
 
-public class LobbyActivity extends AppCompatActivity implements Serializable  {
+public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     //<editor-fold desc="*****************MEMBERS****************">
 
@@ -185,21 +188,23 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
                             return true;
 
                         case R.id.nav_action_play:
-                            chatFragment = new ChatFragment();
-                            EventBus.getDefault().register(chatFragment);
+                            chatFragment = ChatFragment.newInstance(thisActivity, playerId);
+                            //EventBus.getDefault().register(chatFragment);
                             replaceFragment(chatFragment);
-                            String gameId = OffsideApplication.getSelectedAvailableGame().getGameId();
-                            //todo: change to private game id
-                            String currentPrivateGameId = OffsideApplication.getCurrentPrivateGameId();
-                            String androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-                            OffsideApplication.signalRService.requestGetChatMessages(gameId, currentPrivateGameId, playerId, androidDeviceId);
+//                            AvailableGame selectedAvailableGame = OffsideApplication.getSelectedAvailableGame();
+//                            if (selectedAvailableGame != null) {
+//                                String gameId = selectedAvailableGame.getGameId();
+//                                //todo: change to private game id
+//                                String currentPrivateGameId = selectedAvailableGame.getPrivateGameId();
+//                                String androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+//                                OffsideApplication.signalRService.requestGetChatMessages(gameId, currentPrivateGameId, playerId, androidDeviceId);
+//                            }
                             return true;
                     }
 
                     return true;
 
-                }
-                catch (Exception ex) {
+                } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
                     return false;
                 }
@@ -248,10 +253,56 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+        try {
+            if (OffsideApplication.signalRService == null)
+                return;
+
+            Context eventContext = signalRServiceBoundEvent.getContext();
+            if (eventContext == context || eventContext == getApplicationContext()) {
+
+//                if (OffsideApplication.isPlayerQuitGame()) {
+//                    loadingGameRoot.setVisibility(View.GONE);
+//                    joinGameRoot.setVisibility(View.VISIBLE);
+//                    return;
+//                }
+
+                SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+                String gameId = settings.getString(getString(R.string.game_id_key), "");
+                String privateGameId = settings.getString(getString(R.string.private_game_id_key), "");
+
+                OffsideApplication.setCurrentGameId(gameId);
+                OffsideApplication.setCurrentPrivateGameId(privateGameId);
+
+                if (OffsideApplication.isBoundToSignalRService) {
+                    PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
+                    if (playerAssets == null)
+                        OffsideApplication.signalRService.requestPlayerAssets(playerId);
+                    else
+                        onReceivePlayerAssets(playerAssets);
+
+                    if (gameId != null && gameId.length() > 0 && privateGameId != null && privateGameId.length() > 0)
+                        OffsideApplication.signalRService.requestIsGameActive(gameId, privateGameId, playerId);
+
+                } else
+                    throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");
+
+//                String[] emptyAvailableGames = new String[]{getString(R.string.lbl_no_available_games)};
+///;                setAvailableGamesSpinnerAdapter(emptyAvailableGames);
+
+            }
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayerAssets(PlayerAssets playerAssets) {
 
         try {
-            if (playerAssets == null )
+            if (playerAssets == null)
                 return;
 
             OffsideApplication.setPlayerAssets(playerAssets);
@@ -301,11 +352,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
 
     }
 
-    private int REQUEST_INVITE =1;
-    private String TAG ="OFFSIDE_INVITE";
+    private int REQUEST_INVITE = 1;
+    private String TAG = "OFFSIDE_INVITE";
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onInviteButtonClicked(String invite){
+    public void onInviteButtonClicked(String invite) {
 
         Intent intent = new AppInviteInvitation.IntentBuilder("Invite friends")
                 .setMessage("come join my group")
@@ -336,57 +387,31 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onJoinGame(String successJoinGame) {
+    public void onReceiveNavigation(NavigationEvent navigationEvent) {
         try {
-            bottomNavigationView.setSelectedItemId(R.id.nav_action_play);
+            bottomNavigationView.setSelectedItemId(navigationEvent.getNavigationItemId());
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
-
-
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+    public void onReceiveIsGameActive(AvailableGame availableGame) {
         try {
-            if (OffsideApplication.signalRService == null)
-                return;
-
-            Context eventContext = signalRServiceBoundEvent.getContext();
-            if (eventContext == context || eventContext == getApplicationContext()) {
-
-//                if (OffsideApplication.isPlayerQuitGame()) {
-//                    loadingGameRoot.setVisibility(View.GONE);
-//                    joinGameRoot.setVisibility(View.VISIBLE);
-//                    return;
-//                }
-
-                SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-                String gameId = settings.getString(getString(R.string.game_id_key), "");
-                String privateGameId = settings.getString(getString(R.string.private_game_id_key), "");
 
 
-                if (OffsideApplication.isBoundToSignalRService) {
-                    if (gameId != null && gameId.length() > 0 && privateGameId != null && privateGameId.length() > 0)
-                        OffsideApplication.signalRService.isGameActive(gameId, privateGameId);
-
-                    OffsideApplication.signalRService.requestPlayerAssets(playerId);
-
-
-                } else
-                    throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");
-
-//                String[] emptyAvailableGames = new String[]{getString(R.string.lbl_no_available_games)};
-///;                setAvailableGamesSpinnerAdapter(emptyAvailableGames);
-
+            if (availableGame != null) {
+                OffsideApplication.setSelectedAvailableGame(availableGame);
+                bottomNavigationView.setSelectedItemId(R.id.nav_action_play);
             }
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onConnectionEvent(ConnectionEvent connectionEvent) {
@@ -400,8 +425,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
-
-
 
 
     private Boolean exit = false;
@@ -426,10 +449,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable  {
         }
 
     }
-
-
-
-
 
 
 }
