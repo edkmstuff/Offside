@@ -45,7 +45,7 @@ public class AvailableGame {
     @com.google.gson.annotations.SerializedName("PGI")
     private String privateGameId;
 
-    @com.google.gson.annotations.SerializedName("GI")
+    @com.google.gson.annotations.SerializedName("GRI")
     private String groupId;
 
 
