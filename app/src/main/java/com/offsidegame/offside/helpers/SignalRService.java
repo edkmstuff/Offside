@@ -213,111 +213,7 @@ public class SignalRService extends Service {
     //<editor-fold desc="subscribeToServer">
     public void subscribeToServer() {
 
-        hub.on("ChatMessageReceived", new SubscriptionHandler1<ChatMessage>() {
-            @Override
-            public void run(ChatMessage chatMessage) {
-
-//                if (chatMessage.getMessageType().equals(OffsideApplication.getMessageTypeAskedQuestion()))
-//                    notifyOnNewQuestion();
-//                if (chatMessage.getMessageType().equals(OffsideApplication.getMessageTypeClosedQuestion()))
-
-                fireNotification(chatMessage.getMessageType(), chatMessage.getMessageText());
-
-
-                EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
-            }
-
-
-        }, ChatMessage.class);
-
-
-
-
-
-        hub.on("UpdateScoreboard", new SubscriptionHandler1<Scoreboard>() {
-            @Override
-            public void run(Scoreboard scoreboard) {
-                EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
-            }
-        }, Scoreboard.class);
-
-        hub.on("PlayerJoinedPrivateGame", new SubscriptionHandler1<GameInfo>() {
-            @Override
-            public void run(GameInfo gameInfo) {
-                EventBus.getDefault().post(new JoinGameEvent(gameInfo));
-            }
-        }, GameInfo.class);
-
-        hub.on("SendPrivateGameCreated", new SubscriptionHandler1<String>() {
-            @Override
-            public void run(String privateGameId) {
-                EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameId) );
-            }
-        }, String.class);
-
-        hub.on("PrivateGroupsReceived", new SubscriptionHandler1<PrivateGroupsInfo>() {
-            @Override
-            public void run(PrivateGroupsInfo privateGroupsInfo) {
-                EventBus.getDefault().post(privateGroupsInfo);
-            }
-        }, PrivateGroupsInfo.class);
-
-        hub.on("AvailableGamesReceived", new SubscriptionHandler1<AvailableGame[]>() {
-            @Override
-            public void run(AvailableGame[] availableGames) {
-                EventBus.getDefault().post(availableGames);
-            }
-        }, AvailableGame[].class);
-
-        hub.on("PrivateGroupCreated", new SubscriptionHandler1<PrivateGroup>() {
-            @Override
-            public void run(PrivateGroup privateGroup) {
-                EventBus.getDefault().post(privateGroup);
-            }
-        }, PrivateGroup.class);
-
-        hub.on("LoggedInUserReceived", new SubscriptionHandler1<PlayerAssets>() {
-            @Override
-            public void run(PlayerAssets playerAssets) {
-                EventBus.getDefault().post(playerAssets);
-            }
-        }, PlayerAssets.class);
-
-        hub.on("PlayerImageSaved", new SubscriptionHandler1<Boolean>() {
-            @Override
-            public void run(Boolean playerImageSaved) {
-
-                EventBus.getDefault().post(playerImageSaved);
-            }
-        }, Boolean.class);
-
-        hub.on("AnswerAccepted", new SubscriptionHandler1<PostAnswerRequestInfo>() {
-            @Override
-            public void run(PostAnswerRequestInfo postAnswerRequestInfo) {
-                EventBus.getDefault().post(postAnswerRequestInfo);
-            }
-        }, PostAnswerRequestInfo.class);
-
-        hub.on("UserProfileInfoReceived", new SubscriptionHandler1<UserProfileInfo>() {
-            @Override
-            public void run(UserProfileInfo userProfileInfo) {
-                EventBus.getDefault().post(userProfileInfo);
-            }
-        }, UserProfileInfo.class);
-
-        hub.on("LeagueRecordsReceived", new SubscriptionHandler1<LeagueRecord[]>() {
-            @Override
-            public void run(LeagueRecord[] leagueRecords) {
-                EventBus.getDefault().post(leagueRecords);
-            }
-        }, LeagueRecord[].class);
-
-        hub.on("PlayerAssetsReceived", new SubscriptionHandler1<PlayerAssets>() {
-            @Override
-            public void run(PlayerAssets playerAssets) {
-                EventBus.getDefault().post(playerAssets);
-            }
-        }, PlayerAssets.class);
+        //chat
 
         hub.on("ChatMessagesReceived", new SubscriptionHandler1<Chat>() {
             @Override
@@ -329,6 +225,7 @@ public class SignalRService extends Service {
         hub.on("ChatMessageReceived", new SubscriptionHandler1<ChatMessage>() {
             @Override
             public void run(ChatMessage chatMessage) {
+                fireNotification(chatMessage.getMessageType(), chatMessage.getMessageText());
                 EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
             }
         }, ChatMessage.class);
@@ -354,19 +251,98 @@ public class SignalRService extends Service {
             }
         }, Position.class);
 
+        hub.on("AnswerAccepted", new SubscriptionHandler1<PostAnswerRequestInfo>() {
+            @Override
+            public void run(PostAnswerRequestInfo postAnswerRequestInfo) {
+                EventBus.getDefault().post(postAnswerRequestInfo);
+            }
+        }, PostAnswerRequestInfo.class);
+
+        //groups
+
+        hub.on("PrivateGroupsReceived", new SubscriptionHandler1<PrivateGroupsInfo>() {
+            @Override
+            public void run(PrivateGroupsInfo privateGroupsInfo) {
+                EventBus.getDefault().post(privateGroupsInfo);
+            }
+        }, PrivateGroupsInfo.class);
+
+        hub.on("PrivateGroupCreated", new SubscriptionHandler1<PrivateGroup>() {
+            @Override
+            public void run(PrivateGroup privateGroup) {
+                EventBus.getDefault().post(privateGroup);
+            }
+        }, PrivateGroup.class);
+
+        hub.on("AvailableGamesReceived", new SubscriptionHandler1<AvailableGame[]>() {
+            @Override
+            public void run(AvailableGame[] availableGames) {
+                EventBus.getDefault().post(availableGames);
+            }
+        }, AvailableGame[].class);
+
+        hub.on("LeagueRecordsReceived", new SubscriptionHandler1<LeagueRecord[]>() {
+            @Override
+            public void run(LeagueRecord[] leagueRecords) {
+                EventBus.getDefault().post(leagueRecords);
+            }
+        }, LeagueRecord[].class);
+
+        //privateGame
+
+        hub.on("PrivateGameCreated", new SubscriptionHandler1<String>() {
+            @Override
+            public void run(String privateGameId) {
+                EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameId) );
+            }
+        }, String.class);
+
+        hub.on("PlayerJoinedPrivateGame", new SubscriptionHandler1<GameInfo>() {
+            @Override
+            public void run(GameInfo gameInfo) {
+                EventBus.getDefault().post(new JoinGameEvent(gameInfo));
+            }
+        }, GameInfo.class);
+
+
+        //user
+
+        hub.on("LoggedInUserReceived", new SubscriptionHandler1<PlayerAssets>() {
+            @Override
+            public void run(PlayerAssets playerAssets) {
+                EventBus.getDefault().post(playerAssets);
+            }
+        }, PlayerAssets.class);
+
+        hub.on("PlayerImageSaved", new SubscriptionHandler1<Boolean>() {
+            @Override
+            public void run(Boolean playerImageSaved) {
+
+                EventBus.getDefault().post(playerImageSaved);
+            }
+        }, Boolean.class);
+
+
+        hub.on("UserProfileInfoReceived", new SubscriptionHandler1<UserProfileInfo>() {
+            @Override
+            public void run(UserProfileInfo userProfileInfo) {
+                EventBus.getDefault().post(userProfileInfo);
+            }
+        }, UserProfileInfo.class);
+
+        hub.on("PlayerAssetsReceived", new SubscriptionHandler1<PlayerAssets>() {
+            @Override
+            public void run(PlayerAssets playerAssets) {
+                EventBus.getDefault().post(playerAssets);
+            }
+        }, PlayerAssets.class);
+
         hub.on("IsGameActiveReceived", new SubscriptionHandler1<AvailableGame>() {
             @Override
             public void run(AvailableGame availableGame) {
                 EventBus.getDefault().post(availableGame);
             }
         }, AvailableGame.class);
-
-
-
-
-
-
-
 
     }
 
@@ -666,7 +642,7 @@ public class SignalRService extends Service {
     public void requestCreatePrivateGroup(String groupName, String groupType, String playerId, String selectedLanguage) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke("requestCreatePrivateGroup", groupName, groupType, playerId, selectedLanguage);
+        hub.invoke("RequestCreatePrivateGroup", groupName, groupType, playerId, selectedLanguage);
     }
 
     public void requestJoinPrivateGame(String gameId, String groupId, String privateGameId, String playerId, String androidDeviceId) {
@@ -675,18 +651,7 @@ public class SignalRService extends Service {
             return;
 
 
-        hub.invoke(GameInfo.class, "requestJoinPrivateGame", gameId, groupId,  privateGameId, playerId, androidDeviceId).done(new Action<GameInfo>() {
-
-            @Override
-            public void run(GameInfo gameInfo) throws Exception {
-                //EventBus.getDefault().post(new JoinGameEvent(gameInfo));
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
+        hub.invoke(GameInfo.class, "RequestJoinPrivateGame", gameId, groupId,  privateGameId, playerId, androidDeviceId);
     }
 
     public void requestUserProfileData(String playerId) {

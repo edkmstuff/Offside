@@ -6,10 +6,10 @@ package com.offsidegame.offside.models;
 
 public class GameInfo {
 
-    @com.google.gson.annotations.SerializedName("GI")
+    @com.google.gson.annotations.SerializedName("GAI")
     private String gameId;
 
-    @com.google.gson.annotations.SerializedName("PGC")
+    @com.google.gson.annotations.SerializedName("PRGI")
     private String privateGameId;
 
     @com.google.gson.annotations.SerializedName("PGT")
@@ -20,9 +20,6 @@ public class GameInfo {
 
     @com.google.gson.annotations.SerializedName("AT")
     private String awayTeam;
-
-    @com.google.gson.annotations.SerializedName("OC")
-    private int offsideCoins;
 
     @com.google.gson.annotations.SerializedName("MBS")
     private int minBetSize;
@@ -63,10 +60,6 @@ public class GameInfo {
         return awayTeam;
     }
 
-    public int getOffsideCoins() {
-        return offsideCoins;
-    }
-
     public int getMinBetSize() {
         return minBetSize;
     }
@@ -85,6 +78,26 @@ public class GameInfo {
 
     public void setMaxAllowedRewardVideosWatchPerGame(int maxAllowedRewardVideosWatchPerGame) {
         this.maxAllowedRewardVideosWatchPerGame = maxAllowedRewardVideosWatchPerGame;
+    }
+
+    public void setPrivateGameId(String privateGameId) {
+        this.privateGameId = privateGameId;
+    }
+
+    public void setPrivateGameTitle(String privateGameTitle) {
+        this.privateGameTitle = privateGameTitle;
+    }
+
+    public void setHomeTeam(String homeTeam) {
+        this.homeTeam = homeTeam;
+    }
+
+    public void setAwayTeam(String awayTeam) {
+        this.awayTeam = awayTeam;
+    }
+
+    public void setMinBetSize(int minBetSize) {
+        this.minBetSize = minBetSize;
     }
 
     public Player getPlayer() {

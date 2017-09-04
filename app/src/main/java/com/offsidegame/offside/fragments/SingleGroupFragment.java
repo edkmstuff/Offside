@@ -1,11 +1,7 @@
 package com.offsidegame.offside.fragments;
 
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -18,20 +14,15 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.activities.ChatActivity;
 import com.offsidegame.offside.adapters.LeagueAdapter;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
-import com.offsidegame.offside.events.ActiveGameEvent;
-import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.models.AvailableGame;
-import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.LeagueRecord;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
@@ -68,6 +59,12 @@ public class SingleGroupFragment extends Fragment {
     private TextView singleGroupPositionOutOfTextView;
     private ListView singleGroupLeagueListView;
 
+
+    public static SingleGroupFragment newInstance(){
+        SingleGroupFragment singleGroupFragment = new SingleGroupFragment();
+        EventBus.getDefault().register(singleGroupFragment);
+        return singleGroupFragment;
+    }
 
     @Nullable
     @Override
@@ -153,8 +150,6 @@ public class SingleGroupFragment extends Fragment {
     }
 
     public void showAvailableGames() {
-        //update groups stuff
-        //todo: create distinct of league types to send to fragment creator - they will define the tabs
 
         singleGroupLeagueRoot.setVisibility(View.GONE);
         singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenu);
@@ -204,11 +199,9 @@ public class SingleGroupFragment extends Fragment {
 
             OffsideApplication.setAvailableGames(availableGames);
 
-            //todo: create distinct of league types to send to fragment creator - they will define the tabs
-
             List<String> leagues = getDistinctLeagues(availableGames);
             for(String leagueType: leagues){
-                addLeaguePagesToSingleGroupFragment(leagueType);
+                addLeaguePageToSingleGroupFragment(leagueType);
 
             }
             viewPager.setCurrentItem(0);
@@ -241,7 +234,7 @@ public class SingleGroupFragment extends Fragment {
     }
 
 
-    public void addLeaguePagesToSingleGroupFragment(String leagueType) {
+    public void addLeaguePageToSingleGroupFragment(String leagueType) {
 
         try {
             addPage(leagueType);

@@ -22,6 +22,7 @@ import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroupsInfo;
 
 import org.acra.ACRA;
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -38,6 +39,14 @@ public class GroupsFragment extends Fragment {
     private FrameLayout loadingRoot;
     private TextView versionTextView;
     private TextView createPrivateGroupButtonTextView;
+
+
+    public static GroupsFragment newInstance(){
+        GroupsFragment groupsFragment = new GroupsFragment();
+        EventBus.getDefault().register(groupsFragment);
+
+        return groupsFragment;
+    }
 
     @Nullable
     @Override
@@ -148,17 +157,17 @@ public class GroupsFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePrivateGroupsInfo(PrivateGroupsInfo privateGroupsInfo) {
         try {
-            if (privateGroupsInfo == null || privateGroupsInfo.getPrivateGroups() == null)
-                return;
+            //todo: resolve issue this methos is called twice when user create group
+            if (privateGroupsInfo != null && privateGroupsInfo.getPrivateGroups() != null) {
+                OffsideApplication.setPrivateGroupsInfo(privateGroupsInfo);
 
-            OffsideApplication.setPrivateGroupsInfo(privateGroupsInfo);
+                addPagesToGroupsFragment();
+                viewPager.setCurrentItem(0);
 
-            addPagesToGroupsFragment();
-            viewPager.setCurrentItem(0);
+                loadingRoot.setVisibility(View.GONE);
+                groupsRoot.setVisibility(View.VISIBLE);
 
-            loadingRoot.setVisibility(View.GONE);
-            groupsRoot.setVisibility(View.VISIBLE);
-
+            }
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);

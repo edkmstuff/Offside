@@ -122,8 +122,8 @@ public class ChatActivity extends AppCompatActivity {
 
         try {
 
- //           super.onCreate(savedInstanceState);
- //           setContentView(R.layout.activity_chat);
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_chat);
 //            androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 //
 //            gameId = OffsideApplication.getGameInfo().getGameId();
@@ -324,27 +324,27 @@ public class ChatActivity extends AppCompatActivity {
         try {
             super.onResume();
             //IronSource.onResume(thisActivity);
-            OffsideApplication.setIsChatActivityVisible(true);
-            hideKeypad();
-
-            //reset to chat adapter
-            createNewChatAdapter(true);
-
-            Player player = OffsideApplication.getGameInfo().getPlayer();
-            offsideCoins = player != null? player.getOffsideCoins() : 0;
-            offsideCoinsTextView.setText(Integer.toString(offsideCoins));
-
-            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
-
-
-            // updating scoreboard in ui
-            Scoreboard scoreboard = OffsideApplication.getScoreboard();
-            if (scoreboard != null)
-                generateScoreboard();
-// updating player data in ui
-            if (player != null)
-                onReceivePlayer(player);
-
+//            OffsideApplication.setIsChatActivityVisible(true);
+//            hideKeypad();
+//
+//            //reset to chat adapter
+//            createNewChatAdapter(true);
+//
+//            Player player = OffsideApplication.getGameInfo().getPlayer();
+//            offsideCoins = player != null? player.getOffsideCoins() : 0;
+//            offsideCoinsTextView.setText(Integer.toString(offsideCoins));
+//
+//            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
+//
+//
+//            // updating scoreboard in ui
+//            Scoreboard scoreboard = OffsideApplication.getScoreboard();
+//            if (scoreboard != null)
+//                generateScoreboard();
+//// updating player data in ui
+//            if (player != null)
+//                onReceivePlayer(player);
+//
 
 
         } catch (Exception ex) {
@@ -427,19 +427,19 @@ public class ChatActivity extends AppCompatActivity {
 
         try {
 
-            chat = new Chat(chatEvent.getChat());
-
-            EventBus.getDefault().post(new PositionEvent(chat.getPosition()));
-
-            Player player = chat.getPlayer();
-            if (player == null)
-                return;
-
-            OffsideApplication.getGameInfo().setPlayer(player);
-            OffsideApplication.playerAnswers = player.getPlayerAnswers();
-
-            //scoreTextView.setText(String.valueOf((int) player.getPoints()));
-            //scoreTextView1.setText(String.valueOf((int) player.getPoints()));
+//            chat = new Chat(chatEvent.getChat());
+//
+//            EventBus.getDefault().post(new PositionEvent(chat.getPosition()));
+//
+//            Player player = chat.getPlayer();
+//            if (player == null)
+//                return;
+//
+//            OffsideApplication.getGameInfo().setPlayer(player);
+//            OffsideApplication.playerAnswers = player.getPlayerAnswers();
+//
+//            //scoreTextView.setText(String.valueOf((int) player.getPoints()));
+//            //scoreTextView1.setText(String.valueOf((int) player.getPoints()));
 
             createNewChatAdapter(false);
 
@@ -562,12 +562,12 @@ public class ChatActivity extends AppCompatActivity {
     public void onReceiveRewardEvent(RewardEvent rewardEvent) {
         try {
             int rewardAmount = rewardEvent.getRewardAmount();
-            Player player = OffsideApplication.getGameInfo().getPlayer();
-            if ( player == null || rewardAmount==0)
-                return;
-
-            player.incrementRewardVideoWatchCount();
-            OffsideApplication.signalRService.setPowerItems(gameId, playerId, rewardAmount, true);
+//            Player player = OffsideApplication.getGameInfo().getPlayer();
+//            if ( player == null || rewardAmount==0)
+//                return;
+//
+//            player.incrementRewardVideoWatchCount();
+//            OffsideApplication.signalRService.setPowerItems(gameId, playerId, rewardAmount, true);
 
 
         } catch (Exception ex) {
@@ -583,49 +583,49 @@ public class ChatActivity extends AppCompatActivity {
             if (updatedPlayer == null)
                 return;
 
-
-            OffsideApplication.playerAnswers = updatedPlayer.getPlayerAnswers();
-            //scoreTextView.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
-            //scoreTextView1.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
-
-            Player currentPlayer = OffsideApplication.getGameInfo().getPlayer();
-
-            if (currentPlayer != null) {
-                int oldOffsideCoinsValue = currentPlayer.getOffsideCoins();
-                int newOffsideCoinsValue = updatedPlayer.getOffsideCoins();
-                offsideCoinsTextView.setText(Integer.toString(newOffsideCoinsValue));
-                if (newOffsideCoinsValue != oldOffsideCoinsValue) {
-                    offsideCoinsImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
-
-                }
-
-//                int oldTrophiesValue = currentPlayer.getTrophies();
-//                int newTrophiesValue = updatedPlayer.getTrophies();
-//                if (newTrophiesValue != oldTrophiesValue) {
-//                    trophiesTextView.setText(Integer.toString(newTrophiesValue));
-//                    trophiesImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
+//
+//            OffsideApplication.playerAnswers = updatedPlayer.getPlayerAnswers();
+//            //scoreTextView.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
+//            //scoreTextView1.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
+//
+//            Player currentPlayer = OffsideApplication.getGameInfo().getPlayer();
+//
+//            if (currentPlayer != null) {
+//                int oldOffsideCoinsValue = currentPlayer.getOffsideCoins();
+//                int newOffsideCoinsValue = updatedPlayer.getOffsideCoins();
+//                offsideCoinsTextView.setText(Integer.toString(newOffsideCoinsValue));
+//                if (newOffsideCoinsValue != oldOffsideCoinsValue) {
+//                    offsideCoinsImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
 //
 //                }
-
-                int oldPowerItems = currentPlayer.getPowerItems();
-                int newPowerItems = updatedPlayer.getPowerItems();
-                powerItemsTextView.setText(Integer.toString(newPowerItems));
-                if (newPowerItems != oldPowerItems) {
-
-                    //powerItemImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
-                    Animation a = new RotateAnimation(0.0f, 360.0f,
-                            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                            0.5f);
-                    a.setRepeatCount(1);
-                    a.setDuration(1000);
-                    powerItemImageView.startAnimation(a);
-
-                }
-            }
-
-            //OffsideApplication.getGameInfo().setTrophies(updatedPlayer.getTrophies());
-            //OffsideApplication.setPlayer(updatedPlayer);
-            OffsideApplication.getGameInfo().setPlayer(updatedPlayer);
+//
+////                int oldTrophiesValue = currentPlayer.getTrophies();
+////                int newTrophiesValue = updatedPlayer.getTrophies();
+////                if (newTrophiesValue != oldTrophiesValue) {
+////                    trophiesTextView.setText(Integer.toString(newTrophiesValue));
+////                    trophiesImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
+////
+////                }
+//
+//                int oldPowerItems = currentPlayer.getPowerItems();
+//                int newPowerItems = updatedPlayer.getPowerItems();
+//                powerItemsTextView.setText(Integer.toString(newPowerItems));
+//                if (newPowerItems != oldPowerItems) {
+//
+//                    //powerItemImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
+//                    Animation a = new RotateAnimation(0.0f, 360.0f,
+//                            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+//                            0.5f);
+//                    a.setRepeatCount(1);
+//                    a.setDuration(1000);
+//                    powerItemImageView.startAnimation(a);
+//
+//                }
+//            }
+//
+//            //OffsideApplication.getGameInfo().setTrophies(updatedPlayer.getTrophies());
+//            //OffsideApplication.setPlayer(updatedPlayer);
+//            OffsideApplication.getGameInfo().setPlayer(updatedPlayer);
 
 
 

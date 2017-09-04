@@ -383,7 +383,7 @@ public class JoinGameActivity extends AppCompatActivity implements Serializable 
 //    @Subscribe(threadMode = ThreadMode.MAIN)
 //    public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
 //        try {
-//            String privateGameCode = privateGameGeneratedEvent.getPrivateGameCode();
+//            String privateGameCode = privateGameGeneratedEvent.getPrivateGameId();
 //            joinPrivateGame(privateGameCode);
 //            //privateGameCodeTextView.setText(privateGameCode);
 //            //gameCodeEditText.setText(privateGameCode);

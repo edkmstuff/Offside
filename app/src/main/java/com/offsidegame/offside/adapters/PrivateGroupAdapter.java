@@ -112,65 +112,66 @@ public class PrivateGroupAdapter extends BaseAdapter {
 
             viewHolder.groupNameTextView.setText(viewHolder.privateGroup.getName());
 
+            viewHolder.playersPlayInGroupRoot.removeAllViews();
+
+            ArrayList<PrivateGroupPlayer> players = viewHolder.privateGroup.getPrivateGroupPlayers();
+
+            Collections.sort(players, new Comparator<PrivateGroupPlayer>() {
+                public int compare(PrivateGroupPlayer p1, PrivateGroupPlayer p2) {
+                    if(  p1.getDisplayPriority() < p2.getDisplayPriority())
+                        return -1;
+                    if(  p1.getDisplayPriority() > p2.getDisplayPriority())
+                        return 1;
+
+                    return 0;
+
+                }
+            });
+
+
+
+            for(PrivateGroupPlayer privateGroupPlayer: players){
+
+                ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, viewHolder.playersPlayInGroupRoot,false);
+                FrameLayout playerItemRoot = (FrameLayout) playerLayout.getChildAt(0);
+                ImageView playerImageImageView = (ImageView) playerItemRoot.getChildAt(0);
+                playerImageImageView.getLayoutParams().height = 70;
+                playerImageImageView.getLayoutParams().width = 70;
+                playerImageImageView.requestLayout();
+                String imageUrl = privateGroupPlayer.getImageUrl() == null || privateGroupPlayer.getImageUrl().equals("")  ? OffsideApplication.getDefaultProfilePictureUrl(): privateGroupPlayer.getImageUrl();
+                Uri imageUri = Uri.parse(imageUrl);
+                ImageHelper.loadImage(context,playerImageImageView,imageUri);
+
+                //View isActiveIndicator = (View) playerLayout.getChildAt(1);
+                //LinearLayout isActiveIndicator = (LinearLayout) playerLayout.getChildAt(1);
+                ImageView isActiveIndicator = (ImageView) playerItemRoot.getChildAt(1);
+                isActiveIndicator.getLayoutParams().height = 25;
+                isActiveIndicator.getLayoutParams().width = 25;
+
+
+                if(privateGroupPlayer.getActive().booleanValue())
+                    isActiveIndicator.setVisibility(View.VISIBLE);
+                else
+                    isActiveIndicator.setVisibility(View.GONE);
+
+
+
+                viewHolder.playersPlayInGroupRoot.addView(playerLayout);
+            }
+
+
+            int countActivePlayersInPrivateGroup = viewHolder.privateGroup.getActivePlayersCount();
+
+            //viewHolder.groupGameStatusTextView.setVisibility(View.VISIBLE);
 
             if (viewHolder.privateGroup.isActive()) {
-
-                viewHolder.playersPlayInGroupRoot.removeAllViews();
-
-                //PrivateGroupPlayer[] players = viewHolder.privateGroup.getPrivateGroupPlayers();
-                ArrayList<PrivateGroupPlayer> players = viewHolder.privateGroup.getPrivateGroupPlayers();
-
-                Collections.sort(players, new Comparator<PrivateGroupPlayer>() {
-                    public int compare(PrivateGroupPlayer p1, PrivateGroupPlayer p2) {
-                        if(  p1.getDisplayPriority() < p2.getDisplayPriority())
-                            return -1;
-                        if(  p1.getDisplayPriority() > p2.getDisplayPriority())
-                            return 1;
-
-                        return 0;
-
-                    }
-                });
-
-
-
-                for(PrivateGroupPlayer privateGroupPlayer: players){
-
-                    ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, viewHolder.playersPlayInGroupRoot,false);
-                    FrameLayout playerItemRoot = (FrameLayout) playerLayout.getChildAt(0);
-                    ImageView playerImageImageView = (ImageView) playerItemRoot.getChildAt(0);
-                    playerImageImageView.getLayoutParams().height = 70;
-                    playerImageImageView.getLayoutParams().width = 70;
-                    playerImageImageView.requestLayout();
-                    String imageUrl = privateGroupPlayer.getImageUrl() == null || privateGroupPlayer.getImageUrl().equals("")  ? OffsideApplication.getDefaultProfilePictureUrl(): privateGroupPlayer.getImageUrl();
-                    Uri imageUri = Uri.parse(imageUrl);
-                    ImageHelper.loadImage(context,playerImageImageView,imageUri);
-
-                    //View isActiveIndicator = (View) playerLayout.getChildAt(1);
-                    //LinearLayout isActiveIndicator = (LinearLayout) playerLayout.getChildAt(1);
-                    ImageView isActiveIndicator = (ImageView) playerItemRoot.getChildAt(1);
-                    isActiveIndicator.getLayoutParams().height = 25;
-                    isActiveIndicator.getLayoutParams().width = 25;
-
-
-                    if(privateGroupPlayer.getActive().booleanValue())
-                        isActiveIndicator.setVisibility(View.VISIBLE);
-                    else
-                        isActiveIndicator.setVisibility(View.GONE);
-
-
-
-                    viewHolder.playersPlayInGroupRoot.addView(playerLayout);
-                }
-
-
-                int countActivePlayersInPrivateGroup = viewHolder.privateGroup.getActivePlayersCount();
-                viewHolder.totalPlayingPlayersInGroupTextView.setText(Integer.toString(countActivePlayersInPrivateGroup) +" "+context.getString(R.string.lbl_now_playing));
+                String title = String.format("%d %S",countActivePlayersInPrivateGroup,context.getString(R.string.lbl_now_playing));
+                viewHolder.totalPlayingPlayersInGroupTextView.setText(title);
                 viewHolder.groupGameStatusTextView.setText(R.string.lbl_game_is_active);
-                //viewHolder.groupGameStatusTextView.setVisibility(View.VISIBLE);
+
+
             } else {
                 viewHolder.totalPlayingPlayersInGroupTextView.setText(R.string.lbl_no_playing_players);
-                //viewHolder.groupGameStatusTextView.setVisibility(View.GONE);
                 viewHolder.groupGameStatusTextView.setText(R.string.lbl_play_here);
                 viewHolder.groupGameStatusTextView.setBackgroundResource(R.color.navigationMenuSelectedItem);
 

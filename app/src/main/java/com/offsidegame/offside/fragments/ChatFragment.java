@@ -160,8 +160,8 @@ public class ChatFragment extends Fragment {
         AvailableGame selectedAvailableGame = OffsideApplication.getSelectedAvailableGame();
         if (selectedAvailableGame != null) {
             String gameId = selectedAvailableGame.getGameId();
-            String currentPrivateGameId = selectedAvailableGame.getPrivateGameId();
-            String groupId = selectedAvailableGame.getGroupId();
+            String currentPrivateGameId = OffsideApplication.getCurrentPrivateGameId();
+            String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
             String androidDeviceId = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
 
             OffsideApplication.signalRService.requestJoinPrivateGame(gameId,groupId,currentPrivateGameId,playerId,androidDeviceId);
@@ -187,9 +187,7 @@ public class ChatFragment extends Fragment {
 
         versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
 
-
         return view;
-
 
     }
 
@@ -201,7 +199,7 @@ public class ChatFragment extends Fragment {
         androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
 
         gameId = OffsideApplication.getGameInfo().getGameId();
-        //todo: change to private game id
+
         gameCode = OffsideApplication.getGameInfo().getPrivateGameId();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -211,12 +209,9 @@ public class ChatFragment extends Fragment {
         homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
         awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
         Player player = OffsideApplication.getGameInfo().getPlayer();
-        offsideCoins = player != null ? player.getOffsideCoins() : OffsideApplication.getGameInfo().getOffsideCoins();
+        offsideCoins = player != null ? player.getOffsideCoins() :0 ;
         trophies = OffsideApplication.getGameInfo().getTrophies();
         powerItems = player.getPowerItems();
-
-
-
 
         root = (LinearLayout) view.findViewById(R.id.fc_root);
         chatListView = (ListView) view.findViewById(R.id.fc_chat_list_view);
@@ -236,7 +231,8 @@ public class ChatFragment extends Fragment {
         actionsFlowLayout = (FlowLayout) view.findViewById(R.id.fc_actions_flow_layout);
         loadingVideoTextView = (TextView) view.findViewById(R.id.fc_loading_video_text_view);
         privateGameNameTextView.setText(privateGameTitle);
-        gameTitleTextView.setText(homeTeam + " vs. " + awayTeam);
+        String title = String.format("%s vs. %s",homeTeam,awayTeam);
+        gameTitleTextView.setText(title);
 
         playerPictureImageView = (ImageView) view.findViewById(R.id.fc_player_picture_image_view);
 

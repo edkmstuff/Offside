@@ -120,9 +120,6 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
     public void onPrivateGroupCreated(PrivateGroup privateGroup) {
         try {
 
-
-            OffsideApplication.getPrivateGroupsInfo().getPrivateGroups().add(privateGroup);
-
             Intent intent = new Intent(context,LobbyActivity.class);
             startActivity(intent);
 

@@ -171,10 +171,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 try {
                     switch (item.getItemId()) {
                         case R.id.nav_action_groups:
-                            groupsFragment = new GroupsFragment();
-                            EventBus.getDefault().register(groupsFragment);
+
+                            groupsFragment = GroupsFragment.newInstance();
                             replaceFragment(groupsFragment);
                             OffsideApplication.signalRService.requestPrivateGroupsInfo(playerId);
+
                             return true;
 
                         case R.id.nav_action_profile:
@@ -189,16 +190,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                         case R.id.nav_action_play:
                             chatFragment = ChatFragment.newInstance(thisActivity, playerId);
-                            //EventBus.getDefault().register(chatFragment);
                             replaceFragment(chatFragment);
-//                            AvailableGame selectedAvailableGame = OffsideApplication.getSelectedAvailableGame();
-//                            if (selectedAvailableGame != null) {
-//                                String gameId = selectedAvailableGame.getGameId();
-//                                //todo: change to private game id
-//                                String currentPrivateGameId = selectedAvailableGame.getPrivateGameId();
-//                                String androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-//                                OffsideApplication.signalRService.requestGetChatMessages(gameId, currentPrivateGameId, playerId, androidDeviceId);
-//                            }
+
                             return true;
                     }
 
@@ -259,7 +252,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 return;
 
             Context eventContext = signalRServiceBoundEvent.getContext();
-            if (eventContext == context || eventContext == getApplicationContext()) {
+            if (eventContext == context) {
 
 //                if (OffsideApplication.isPlayerQuitGame()) {
 //                    loadingGameRoot.setVisibility(View.GONE);
@@ -319,7 +312,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             playerInfoRoot.setVisibility(View.VISIBLE);
 
             bottomNavigationView.setSelectedItemId(R.id.nav_action_groups);
-            //bottomNavigationView.getMenu().findItem(R.id.nav_action_groups).setChecked(true);
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -335,13 +328,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 return;
 
             groupId = privateGroup.getId();
-
-            singleGroupFragment = new SingleGroupFragment();
-            EventBus.getDefault().register(singleGroupFragment);
+            singleGroupFragment = SingleGroupFragment.newInstance();
             replaceFragment(singleGroupFragment);
 
-
-            //todo: make this one call that return both data in the same object
             OffsideApplication.signalRService.requestAvailableGames(playerId, groupId);
 
 

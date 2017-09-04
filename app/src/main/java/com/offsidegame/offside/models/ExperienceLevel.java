@@ -10,10 +10,18 @@ import java.util.ArrayList;
 
 public class ExperienceLevel {
 
+
+    @com.google.gson.annotations.SerializedName("NA")
     private String name;
+
+    @com.google.gson.annotations.SerializedName("MINV")
     private int minValue;
+
+    @com.google.gson.annotations.SerializedName("MAXV")
     private int maxValue;
+
     private int imageViewResourceId;
+
     private int imageViewResourceIdCurrent;
 
     public static ArrayList<ExperienceLevel> expLevels = new ArrayList<>();

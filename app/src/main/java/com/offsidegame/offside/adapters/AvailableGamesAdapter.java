@@ -147,8 +147,8 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
-//                    if(viewHolder.availableGame.getPrivateGameCode() != null)
-//                        OffsideApplication.setCurrentPrivateGameId(viewHolder.availableGame.getPrivateGameCode());
+//                    if(viewHolder.availableGame.getPrivateGameId() != null)
+//                        OffsideApplication.setCurrentPrivateGameId(viewHolder.availableGame.getPrivateGameId());
                     EventBus.getDefault().post(new JoinGameEvent(null));
                 }
             });

@@ -1,7 +1,5 @@
 package com.offsidegame.offside.models;
 
-import com.offsidegame.offside.R;
-
 import java.util.Map;
 
 /**
@@ -13,8 +11,8 @@ public class Player {
     private String userName;
     @com.google.gson.annotations.SerializedName("GI")
     private String gameId ;
-    @com.google.gson.annotations.SerializedName("PGC")
-    private String privateGameCode;
+    @com.google.gson.annotations.SerializedName("PGI")
+    private String privateGameId;
     @com.google.gson.annotations.SerializedName("PA")
     private Map<String, AnswerIdentifier> playerAnswers ;
 
@@ -54,12 +52,12 @@ public class Player {
         this.imageUrl = imageUrl;
     }
 
-    public String getPrivateGameCode() {
-        return privateGameCode;
+    public String getPrivateGameId() {
+        return privateGameId;
     }
 
-    public void setPrivateGameCode(String privateGameCode) {
-        this.privateGameCode = privateGameCode;
+    public void setPrivateGameId(String privateGameId) {
+        this.privateGameId = privateGameId;
     }
 
     public String getUserName() {

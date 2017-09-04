@@ -119,11 +119,11 @@ public class AvailableGame {
         this.privateGroupPlayers = privateGroupPlayers;
     }
 
-//    public String getPrivateGameCode() {
+//    public String getPrivateGameId() {
 //        return privateGameCode;
 //    }
 //
-//    public void setPrivateGameCode(String privateGameCode) {
+//    public void setPrivateGameId(String privateGameCode) {
 //        this.privateGameCode = privateGameCode;
 //    }
 
