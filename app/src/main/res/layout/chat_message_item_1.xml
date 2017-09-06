@@ -452,7 +452,7 @@
                                     <!--android:id="@+id/cm_incoming_bet_option_2_root"-->
                                     <!--android:layout_width="wrap_content"-->
                                     <!--android:layout_height="wrap_content"-->
-                                    <!--android:background="@drawable/shape_bg_rectangle_gray_border"-->
+                                    <!--android:background="@drawable/shape_bg_rectangle_bordered"-->
                                     <!--android:layout_marginLeft="5dp"-->
                                     <!--android:layout_marginRight="5dp"-->
                                     <!--android:gravity="center"-->

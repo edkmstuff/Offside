@@ -751,7 +751,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                 //update betSize button background
                                 for (int j = 0; j < viewHolder.betSizeOptionsRoots.length; j++) {
                                     if (j == index) {
-                                        viewHolder.betSizeOptionsRoots[j].setBackgroundResource(R.drawable.shape_bg_rectangle_gray_border);
+                                        viewHolder.betSizeOptionsRoots[j].setBackgroundResource(R.drawable.shape_bg_rectangle_bordered);
                                         //viewHolder.betSizeOptionsRoots[j].setTextColor(ContextCompat.getColor(context, R.color.chatPrimary));
                                     } else {
                                         viewHolder.betSizeOptionsRoots[j].setBackgroundResource(R.drawable.shape_bg_rectangle_gray_no_border);
@@ -775,7 +775,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
 
                         if (isHasMinRequiredCoinsToBet) {
-                            viewHolder.betSizeOptionsRoots[i].setBackgroundResource(i == 0 ? R.drawable.shape_bg_rectangle_gray_border : R.drawable.shape_bg_rectangle_gray_no_border);
+                            viewHolder.betSizeOptionsRoots[i].setBackgroundResource(i == 0 ? R.drawable.shape_bg_rectangle_bordered : R.drawable.shape_bg_rectangle_gray_no_border);
                             viewHolder.betSizeOptionsRoots[i].setVisibility(View.VISIBLE);
                             if (i == 0)
                                 viewHolder.betSizeOptionsRoots[0].performClick();
