@@ -1,5 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:components="http://schemas.android.com/apk/res-auto"
+
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -313,7 +313,7 @@
                             android:layout_marginTop="5dp"
                             android:gravity="center"
                             android:text="@string/lbl_question_time_expired_message"
-                            android:textColor="@color/answer4backgroundColor"
+                            android:textColor="@color/chatText"
                             android:textSize="16dp" />
                         <!--stats-->
                         <LinearLayout
@@ -346,11 +346,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="1dp"
-                            android:background="@color/colorWhite"
+
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
                             android:text="which team will offsideCoins next?"
-                            android:textColor="@color/colorBlack"
+                            android:textColor="@color/chatPrimary"
                             android:textSize="@dimen/OffsideMediumText" />
 
                         <!--bet panel-->
@@ -377,7 +377,7 @@
                                     android:layout_width="0dp"
                                     android:layout_weight="1"
                                     android:layout_height="wrap_content"
-                                    android:background="@drawable/shape_bg_rectangle_gray_border"
+                                    android:background="@drawable/shape_bg_rectangle_bordered"
                                     android:layout_marginLeft="5dp"
                                     android:layout_marginRight="5dp"
                                     android:gravity="center"
@@ -446,7 +446,7 @@
                                     <!--android:id="@+id/cm_incoming_bet_option_2_root"-->
                                     <!--android:layout_width="wrap_content"-->
                                     <!--android:layout_height="wrap_content"-->
-                                    <!--android:background="@drawable/shape_bg_rectangle_gray_border"-->
+                                    <!--android:background="@drawable/shape_bg_rectangle_bordered"-->
                                     <!--android:layout_marginLeft="5dp"-->
                                     <!--android:layout_marginRight="5dp"-->
                                     <!--android:gravity="center"-->
@@ -516,7 +516,7 @@
                             android:layout_marginTop="5dp"
                             android:gravity="center"
                             android:text="@string/lbl_not_enough_coins_to_play"
-                            android:textColor="@color/answer1backgroundColor"
+                            android:textColor="@color/chatText"
                             android:textSize="16dp" />
 
                         <TextView
@@ -526,7 +526,8 @@
                             android:layout_marginTop="5dp"
                             android:gravity="center"
                             android:text="@string/lbl_how_others_answered"
-                            android:textSize="16dp" />
+                            android:textSize="16dp"
+                            android:textColor="@color/chatText"/>
 
                         <!--answers-->
                         <LinearLayout
@@ -552,11 +553,11 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="1dp"
                                     android:layout_weight="1"
-                                    android:background="@color/answer1backgroundColor"
+
                                     android:gravity="center"
                                     android:minHeight="50dp"
                                     android:orientation="vertical"
-
+                                    android:background="@drawable/shape_bg_rectangle_bordered"
                                     >
 
                                     <TextView
@@ -596,10 +597,10 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="1dp"
                                     android:layout_weight="1"
-                                    android:background="@color/answer2backgroundColor"
                                     android:gravity="center"
                                     android:minHeight="50dp"
-                                    android:orientation="vertical">
+                                    android:orientation="vertical"
+                                    android:background="@drawable/shape_bg_rectangle_bordered">
 
                                     <TextView
 
@@ -647,10 +648,11 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="1dp"
                                     android:layout_weight="1"
-                                    android:background="@color/answer3backgroundColor"
+
                                     android:gravity="center"
                                     android:minHeight="50dp"
-                                    android:orientation="vertical">
+                                    android:orientation="vertical"
+                                    android:background="@drawable/shape_bg_rectangle_bordered">
 
                                     <TextView
                                         android:id="@+id/cm_incoming_answer_3_text_view"
@@ -687,10 +689,11 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="1dp"
                                     android:layout_weight="1"
-                                    android:background="@color/answer4backgroundColor"
+
                                     android:gravity="center"
                                     android:minHeight="50dp"
-                                    android:orientation="vertical">
+                                    android:orientation="vertical"
+                                    android:background="@drawable/shape_bg_rectangle_bordered">
 
                                     <TextView
                                         android:id="@+id/cm_incoming_answer_4_text_view"
