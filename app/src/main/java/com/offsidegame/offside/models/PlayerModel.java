@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Created by KFIR on 12/7/2016.
  */
-public class Player {
+public class PlayerModel {
 
     @com.google.gson.annotations.SerializedName("N")
     private String userName;

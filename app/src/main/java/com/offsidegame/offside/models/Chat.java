@@ -13,7 +13,7 @@ public class Chat {
     private ArrayList<ChatMessage> chatMessages;
 
     @com.google.gson.annotations.SerializedName("P")
-    private Player player;
+    private PlayerModel player;
 
     @com.google.gson.annotations.SerializedName("POS")
     private Position position;
@@ -52,11 +52,11 @@ public class Chat {
 
     }
 
-    public Player getPlayer() {
+    public PlayerModel getPlayer() {
         return player;
     }
 
-    public void setPlayer(Player player) {
+    public void setPlayer(PlayerModel player) {
         this.player = player;
     }
 

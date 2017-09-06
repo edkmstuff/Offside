@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -128,10 +129,12 @@ public class AvailableGamesAdapter extends BaseAdapter {
 
 
             viewHolder.playersPlayInGameRoot.removeAllViews();
+
             for (PrivateGroupPlayer privateGroupPlayer : viewHolder.availableGame.getPrivateGroupPlayers()) {
 
                 ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, viewHolder.playersPlayInGameRoot, false);
-                ImageView playerImageImageView = (ImageView) playerLayout.getChildAt(0);
+                FrameLayout playerItemRoot = (FrameLayout) playerLayout.getChildAt(0);
+                ImageView playerImageImageView = (ImageView) playerItemRoot.getChildAt(0);
                 playerImageImageView.getLayoutParams().height = 70;
                 playerImageImageView.getLayoutParams().width = 70;
                 playerImageImageView.requestLayout();
@@ -139,16 +142,19 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 Uri imageUri = Uri.parse(imageUrl);
                 ImageHelper.loadImage(context, playerImageImageView, imageUri);
 
+                ImageView isActiveIndicator = (ImageView) playerItemRoot.getChildAt(1);
+                isActiveIndicator.getLayoutParams().height = 25;
+                isActiveIndicator.getLayoutParams().width = 25;
+
                 viewHolder.playersPlayInGameRoot.addView(playerLayout);
             }
-
 
             viewHolder.joinPrivateGameButtonTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
 //                    if(viewHolder.availableGame.getPrivateGameId() != null)
-//                        OffsideApplication.setCurrentPrivateGameId(viewHolder.availableGame.getPrivateGameId());
+//                        OffsideApplication.setSelectedPrivateGameId(viewHolder.availableGame.getPrivateGameId());
                     EventBus.getDefault().post(new JoinGameEvent(null));
                 }
             });

@@ -142,18 +142,9 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 Uri imageUri = Uri.parse(imageUrl);
                 ImageHelper.loadImage(context,playerImageImageView,imageUri);
 
-                //View isActiveIndicator = (View) playerLayout.getChildAt(1);
-                //LinearLayout isActiveIndicator = (LinearLayout) playerLayout.getChildAt(1);
                 ImageView isActiveIndicator = (ImageView) playerItemRoot.getChildAt(1);
                 isActiveIndicator.getLayoutParams().height = 25;
                 isActiveIndicator.getLayoutParams().width = 25;
-
-
-                if(privateGroupPlayer.getActive().booleanValue())
-                    isActiveIndicator.setVisibility(View.VISIBLE);
-                else
-                    isActiveIndicator.setVisibility(View.GONE);
-
 
 
                 viewHolder.playersPlayInGroupRoot.addView(playerLayout);
@@ -161,8 +152,6 @@ public class PrivateGroupAdapter extends BaseAdapter {
 
 
             int countActivePlayersInPrivateGroup = viewHolder.privateGroup.getActivePlayersCount();
-
-            //viewHolder.groupGameStatusTextView.setVisibility(View.VISIBLE);
 
             if (viewHolder.privateGroup.isActive()) {
                 String title = String.format("%d %S",countActivePlayersInPrivateGroup,context.getString(R.string.lbl_now_playing));
@@ -182,6 +171,7 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     //Toast.makeText(context,"item clicked" ,Toast.LENGTH_SHORT).show();
                     OffsideApplication.setSelectedPrivateGroup(viewHolder.privateGroup);
+                    EventBus.getDefault().post(OffsideApplication.getSelectedPrivateGroup());
 
                 }
             });

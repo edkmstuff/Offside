@@ -18,21 +18,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!--Loading indicator-->
-        <LinearLayout
-            android:id="@+id/fc_loading_root"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:visibility="gone">
 
-            <ProgressBar
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"></ProgressBar>
+        <include
+            layout="@layout/shared_loading"
+            android:visibility="gone" />
 
-        </LinearLayout>
 
         <!--chat title root -->
 
@@ -290,9 +280,10 @@
 
 
         <!--chat content root-->
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/fc_content_root"
@@ -681,7 +672,7 @@
             </LinearLayout>
 
 
-        </FrameLayout>
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

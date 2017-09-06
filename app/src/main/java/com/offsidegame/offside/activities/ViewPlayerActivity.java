@@ -201,7 +201,7 @@ public class ViewPlayerActivity extends AppCompatActivity {
                     case R.id.nav_action_shop:
                         break;
                     case R.id.nav_action_play:
-                        Intent chatIntent = new Intent(context, ChatActivity.class);
+                        Intent chatIntent = new Intent(context, LobbyActivity.class);
                         startActivity(chatIntent);
                         break;
 

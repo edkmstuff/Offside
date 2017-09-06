@@ -6,9 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -29,10 +26,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.share.model.ShareHashtag;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareButton;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
@@ -42,12 +35,11 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.activities.JoinGameActivity;
+import com.offsidegame.offside.activities.LobbyActivity;
 import com.offsidegame.offside.activities.SlotActivity;
 import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
-import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
@@ -60,7 +52,7 @@ import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.Player;
+import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
 import com.offsidegame.offside.models.Score;
@@ -91,9 +83,8 @@ public class ChatFragment extends Fragment {
     private TextView chatSendTextView;
     private EditText chatMessageEditText;
     private SharedPreferences settings;
-    private String gameId;
-    private String gameCode;
-    private String playerId;
+
+
     private Chat chat;
     private ArrayList messages;
     private ChatMessageAdapter chatMessageAdapter;
@@ -125,7 +116,7 @@ public class ChatFragment extends Fragment {
     private LinearLayout actionExitGameRoot;
 
     private LinearLayout scoreboardRoot;
-    private String androidDeviceId;
+
 
     private TextView trophiesTextView;
     private TextView powerItemsTextView;
@@ -141,15 +132,20 @@ public class ChatFragment extends Fragment {
 
     private ShareButton facebookShareButton;
 
-    private  LinearLayout actionLeadersRoot;
-    private  LinearLayout actionCurrentQuestionRoot;
-    private  LinearLayout actionOffsideCoinsRoot;
-    private  LinearLayout actionReloadRoot;
-    private  LinearLayout actionCodeRoot;
-    private  LinearLayout actionShareRoot;
-    private  LinearLayout actionWatchVideoRoot;
+    private LinearLayout actionLeadersRoot;
+    private LinearLayout actionCurrentQuestionRoot;
+    private LinearLayout actionOffsideCoinsRoot;
+    private LinearLayout actionReloadRoot;
+    private LinearLayout actionCodeRoot;
+    private LinearLayout actionShareRoot;
+    private LinearLayout actionWatchVideoRoot;
 
-
+    private AvailableGame selectedAvailableGame = null;
+    private String gameId = null;
+    private String privateGameId = null;
+private String groupId = null;
+    private String androidDeviceId = null;
+    private String playerId = null;
 
     //</editor-fold>
 
@@ -157,17 +153,17 @@ public class ChatFragment extends Fragment {
         ChatFragment chatFragment = new ChatFragment();
         EventBus.getDefault().register(chatFragment);
         //chat data
-        AvailableGame selectedAvailableGame = OffsideApplication.getSelectedAvailableGame();
-        if (selectedAvailableGame != null) {
-            String gameId = selectedAvailableGame.getGameId();
-            String currentPrivateGameId = OffsideApplication.getCurrentPrivateGameId();
-            String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
-            String androidDeviceId = Settings.Secure.getString(activity.getContentResolver(), Settings.Secure.ANDROID_ID);
+        chatFragment.gameId = OffsideApplication.getSelectedGameId();
+        chatFragment.privateGameId = OffsideApplication.getSelectedPrivateGameId();
+        chatFragment.groupId = OffsideApplication.getSelectedPrivateGroupId();
+        chatFragment.androidDeviceId = OffsideApplication.getAndroidDeviceId();
+        chatFragment.playerId = playerId;
 
-            OffsideApplication.signalRService.requestJoinPrivateGame(gameId,groupId,currentPrivateGameId,playerId,androidDeviceId);
-            //OffsideApplication.signalRService.requestGetChatMessages(gameId, currentPrivateGameId, playerId, androidDeviceId);
+        if (chatFragment.gameId != null && chatFragment.privateGameId != null && chatFragment.groupId != null && chatFragment.androidDeviceId != null && chatFragment.playerId != null) {
+            OffsideApplication.signalRService.requestJoinPrivateGame(chatFragment.gameId, chatFragment.groupId, chatFragment.privateGameId, chatFragment.playerId, chatFragment.androidDeviceId);
+        } else {
+            Toast.makeText(activity, "Can not join this game", Toast.LENGTH_LONG);
         }
-
 
         return chatFragment;
     }
@@ -180,39 +176,16 @@ public class ChatFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        Context context = getContext();
-
-        getIDs(view, context);
+        getIDs(view);
         setEvents();
 
-        versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
-
         return view;
-
     }
 
-    private void getIDs(View view, Context context) {
+    private void getIDs(View view) {
 
         loadingRoot = (FrameLayout) view.findViewById(R.id.shared_loading_root);
         versionTextView = (TextView) view.findViewById(R.id.shared_version_text_view);
-
-        androidDeviceId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        gameId = OffsideApplication.getGameInfo().getGameId();
-
-        gameCode = OffsideApplication.getGameInfo().getPrivateGameId();
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        playerId = user.getUid();
-
-        privateGameTitle = OffsideApplication.getGameInfo().getPrivateGameTitle();
-        homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
-        awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
-        Player player = OffsideApplication.getGameInfo().getPlayer();
-        offsideCoins = player != null ? player.getOffsideCoins() :0 ;
-        trophies = OffsideApplication.getGameInfo().getTrophies();
-        powerItems = player.getPowerItems();
-
         root = (LinearLayout) view.findViewById(R.id.fc_root);
         chatListView = (ListView) view.findViewById(R.id.fc_chat_list_view);
         chatSendTextView = (TextView) view.findViewById(R.id.fc_chatSendTextView);
@@ -223,36 +196,17 @@ public class ChatFragment extends Fragment {
         scoreboardRoot = (LinearLayout) view.findViewById(R.id.fc_scoreboard_root);
         contentRoot = (RelativeLayout) view.findViewById(R.id.fc_content_root);
         actionsMenuRoot = (LinearLayout) view.findViewById(R.id.fc_actions_menu_root);
-        actionsMenuRoot.setScaleX(0f);
-        actionsMenuRoot.setScaleY(0f);
-        actionsMenuRoot.setAlpha(0.99f);
+
         chatActionsButton = (ImageView) view.findViewById(R.id.fc_chatActionsButton);
-        actionsMenuRoot.setVisibility(View.GONE);
         actionsFlowLayout = (FlowLayout) view.findViewById(R.id.fc_actions_flow_layout);
         loadingVideoTextView = (TextView) view.findViewById(R.id.fc_loading_video_text_view);
-        privateGameNameTextView.setText(privateGameTitle);
-        String title = String.format("%s vs. %s",homeTeam,awayTeam);
-        gameTitleTextView.setText(title);
-
         playerPictureImageView = (ImageView) view.findViewById(R.id.fc_player_picture_image_view);
-
         offsideCoinsTextView = (TextView) view.findViewById(R.id.fc_offside_coins_text_view);
         offsideCoinsImageView = (ImageView) view.findViewById(R.id.fc_offside_coins_image_view);
-
         powerItemsTextView = (TextView) view.findViewById(R.id.fc_power_items_text_view);
         powerItemImageView = (ImageView) view.findViewById(R.id.fc_power_item_image_view);
 
         facebookShareButton = (ShareButton) view.findViewById(R.id.fc_facebook_share_button);
-
-        createFacebookShareButton();
-
-        offsideCoinsTextView.setText(Integer.toString(offsideCoins));
-
-        powerItemsTextView.setText(Integer.toString(powerItems));
-
-        settings = context.getSharedPreferences(getString(R.string.preference_name), 0);
-        ImageHelper.loadImage((Activity)context, player != null ? player.getImageUrl() : settings.getString(getString(R.string.player_profile_picture_url_key), null), playerPictureImageView, "ChatActivity");
-
         actionExitGameRoot = (LinearLayout) view.findViewById(R.id.fc_action_exit_game_root);
 
         actionLeadersRoot = (LinearLayout) view.findViewById(R.id.fc_action_leaders_root);
@@ -263,21 +217,9 @@ public class ChatFragment extends Fragment {
         actionShareRoot = (LinearLayout) view.findViewById(R.id.fc_action_share_root);
         actionWatchVideoRoot = (LinearLayout) view.findViewById(R.id.fc_action_watch_video_root);
         rewardVideoLoadingRoot = (LinearLayout) view.findViewById(R.id.fc_reward_video_loading_root);
-
         chatListView = (ListView) view.findViewById(R.id.fc_chat_list_view);
-    }
 
-    private void createFacebookShareButton() {
 
-        Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.app_logo_25);
-        SharePhoto photo = new SharePhoto.Builder()
-                .setBitmap(image)
-                .build();
-        SharePhotoContent content = new SharePhotoContent.Builder()
-                .addPhoto(photo)
-                .build();
-
-        facebookShareButton.setShareContent(content);
     }
 
 
@@ -299,7 +241,7 @@ public class ChatFragment extends Fragment {
             public void onClick(View view) {
                 String message = chatMessageEditText.getText().toString();
                 if (message != null && message.length() > 0) {
-                    OffsideApplication.signalRService.requestSendChatMessage(gameId, gameCode, message, playerId);
+                    OffsideApplication.signalRService.requestSendChatMessage(gameId, privateGameId, message, playerId);
                     //clear text
                     chatMessageEditText.setText("");
                     //hide keypad
@@ -373,7 +315,7 @@ public class ChatFragment extends Fragment {
 
                             PackageManager pm = getContext().getPackageManager();
                             boolean isWhatsappInstalled = isPackageInstalled("com.whatsapp", pm);
-                            String shareMessage = "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + gameCode + "*";
+                            String shareMessage = "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + OffsideApplication.getSelectedPrivateGameId() + "*";
                             Intent sendIntent = new Intent();
                             sendIntent.setAction(Intent.ACTION_SEND);
                             sendIntent.setType("text/plain");
@@ -387,12 +329,12 @@ public class ChatFragment extends Fragment {
                             startActivity(sendIntent);
 
                         } else if (command.equals("!reload")) {
-                            Intent intent = new Intent(getContext(),SlotActivity.class);
+                            Intent intent = new Intent(getContext(), SlotActivity.class);
                             startActivity(intent);
 
 
                         } else {
-                            OffsideApplication.signalRService.requestSendChatMessage(gameId, gameCode, command, playerId);
+                            OffsideApplication.signalRService.requestSendChatMessage(selectedAvailableGame.getGameId(), OffsideApplication.getSelectedPrivateGameId(), command, OffsideApplication.getPlayerAssets().getPlayerId());
                         }
 
                         chatActionsButton.performClick();
@@ -407,6 +349,7 @@ public class ChatFragment extends Fragment {
             });
 
         }
+
 
         //<editor-fold desc="VIDEO AD">
 
@@ -448,7 +391,7 @@ public class ChatFragment extends Fragment {
             @Override
             public void onRewardedVideoAdLoaded() {
                 try {
-                    if (rewardedVideoAd.isLoaded()){
+                    if (rewardedVideoAd.isLoaded()) {
                         rewardedVideoAd.show();
                     }
                     resetElementsVisibility();
@@ -471,7 +414,7 @@ public class ChatFragment extends Fragment {
                 resetElementsVisibility();
             }
 
-            public void resetElementsVisibility(){
+            public void resetElementsVisibility() {
                 actionsFlowLayout.setVisibility(View.VISIBLE);
                 rewardVideoLoadingRoot.setVisibility(View.GONE);
             }
@@ -483,22 +426,18 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Player player = OffsideApplication.getGameInfo().getPlayer();
-                if(player==null)
+                PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
+                if (player == null)
                     return;
-                if(player.getRewardVideoWatchCount() < OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame() ){
-                    loadingVideoTextView.setText("Loading "+Integer.toString(player.getRewardVideoWatchCount()+1)+ " of "+ Integer.toString(OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame())+" allowed videos");
+                if (player.getRewardVideoWatchCount() < OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame()) {
+                    loadingVideoTextView.setText("Loading " + Integer.toString(player.getRewardVideoWatchCount() + 1) + " of " + Integer.toString(OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame()) + " allowed videos");
                     actionsFlowLayout.setVisibility(View.GONE);
                     rewardVideoLoadingRoot.setVisibility(View.VISIBLE);
 
                     loadRewardedVideoAd();
-                }
-                else
-                {
+                } else {
                     Toast.makeText(getContext(), R.string.lbl_exceed_allowed_reward_video_watch_message, Toast.LENGTH_SHORT).show();
                 }
-
-
 
 
             }
@@ -509,7 +448,7 @@ public class ChatFragment extends Fragment {
         actionExitGameRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String androidDeviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+                String androidDeviceId = OffsideApplication.getAndroidDeviceId();
                 OffsideApplication.signalRService.quitGame(gameId, playerId, androidDeviceId);
                 chatActionsButton.performClick();
                 SharedPreferences settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
@@ -517,18 +456,13 @@ public class ChatFragment extends Fragment {
 
                 editor.putString(getString(R.string.game_id_key), null);
                 editor.putString(getString(R.string.private_game_id_key), null);
+                editor.putString(getString(R.string.private_group_id_key), null);
                 editor.putString(getString(R.string.private_game_title_key), null);
                 editor.putString(getString(R.string.home_team_key), null);
                 editor.putString(getString(R.string.away_team_key), null);
 
-
-
                 editor.commit();
-                Intent intent = new Intent(getContext(),JoinGameActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-
+                Intent intent = new Intent(getContext(), LobbyActivity.class);
                 startActivity(intent);
             }
         });
@@ -542,15 +476,10 @@ public class ChatFragment extends Fragment {
         //</editor-fold>
 
 
-
         //loadRewardedVideoAd();
 
         actionsFlowLayout.setVisibility(View.VISIBLE);
         rewardVideoLoadingRoot.setVisibility(View.GONE);
-
-
-
-
 
 
     }
@@ -559,6 +488,7 @@ public class ChatFragment extends Fragment {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(root.getWindowToken(), 0);
     }
+
     private boolean isPackageInstalled(String packageName, PackageManager packageManager) {
         try {
             packageManager.getPackageInfo(packageName, 0);
@@ -574,7 +504,7 @@ public class ChatFragment extends Fragment {
             //Google Firebase Ad-Mob
             String rewardedVideoAdAppUnitId = getContext().getString(R.string.rewarded_video_ad_unit_id_key);
 
-            if(rewardedVideoAd == null)
+            if (rewardedVideoAd == null)
                 return;
 
             if (!rewardedVideoAd.isLoaded())
@@ -594,56 +524,6 @@ public class ChatFragment extends Fragment {
     }
 
 
-
-
-    public void resetVisibility() {
-
-
-
-    }
-
-
-
-    public void createFacebookShareButton(ShareButton facebookShareButton, Bitmap bitmapImage, String quote) {
-
-        try {
-            StringBuilder sb = new StringBuilder();
-
-            sb.append(quote);
-            sb.append("\r\n");
-            sb.append("\r\n");
-            sb.append("think you can do better than me? come join!!!");
-
-//    Share link content
-            ShareLinkContent content = new ShareLinkContent.Builder()
-                    .setContentUrl(Uri.parse(OffsideApplication.getAppLogoPictureUrl()))
-                    .setShareHashtag(new ShareHashtag.Builder()
-                            .setHashtag("#Sidekick#soccer#livegame")
-                            .build())
-                    //.setQuote(quote+"\r\n"+ "think you can bit me? come join!!!" )
-                    .setQuote(sb.toString())
-                    .build();
-            facebookShareButton.setShareContent(content);
-
-////    Share photo - not working
-//            SharePhoto photo = new SharePhoto.Builder()
-//                    .setBitmap(bitmapImage)
-//                    .build();
-//
-//            SharePhotoContent content = new SharePhotoContent.Builder()
-//                    .addPhoto(photo)
-//                    .build();
-//
-//            //ShareDialog.show(thisActivity, content);
-//            facebookShareButton.setShareContent(content);
-
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-
-    }
-
     private void createNewChatAdapter(boolean reset) {
         messages = new ArrayList();
 
@@ -654,59 +534,19 @@ public class ChatFragment extends Fragment {
         chatListView.setAdapter(chatMessageAdapter);
     }
 
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onConnectionEvent(ConnectionEvent connectionEvent) {
-//        isConnected = connectionEvent.getConnected();
-//
-//        if (isConnected) {
-//            Toast.makeText(getContext(), R.string.lbl_you_are_connected, Toast.LENGTH_SHORT).show();
-//            chatSendTextView.setAlpha(1f);
-//            chatActionsButton.setAlpha(1f);
-//            if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
-//                OffsideApplication.signalRService.requestGetChatMessages(gameId, gameCode, playerId, androidDeviceId);
-//            }
-//
-//
-//        } else {
-//            Toast.makeText(getContext(), R.string.lbl_you_are_disconnected, Toast.LENGTH_SHORT).show();
-//            chatSendTextView.setAlpha(0.4f);
-//            chatActionsButton.setAlpha(0.4f);
-//        }
-//
-//    }
-
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
-//        if (OffsideApplication.signalRService == null)
-//            return;
-//
-//        Context eventContext = signalRServiceBoundEvent.getContext();
-//
-//        if (eventContext == getContext() || eventContext == getApplicationContext()) {
-//
-//            if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
-//                OffsideApplication.signalRService.requestGetChatMessages(gameId, gameCode, playerId, androidDeviceId);
-//
-//            } else {
-//                Intent intent = new Intent(getContext(), JoinGameActivity.class);
-//                getContext().startActivity(intent);
-//            }
-//
-//        }
-//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlayerJoinedPrivateGame(JoinGameEvent joinGameEvent) {
         try {
 
-
             GameInfo gameInfo = joinGameEvent.getGameInfo();
             if (gameInfo == null) {
-                loadingRoot.setVisibility(View.GONE);
                 return;
             }
+
             String gameId = gameInfo.getGameId();
             String privateGameId = gameInfo.getPrivateGameId();
+            String privateGroupId = OffsideApplication.getSelectedPrivateGroupId();
             String privateGameTitle = gameInfo.getPrivateGameTitle();
             String homeTeam = gameInfo.getHomeTeam();
             String awayTeam = gameInfo.getAwayTeam();
@@ -717,13 +557,14 @@ public class ChatFragment extends Fragment {
             SharedPreferences.Editor editor = settings.edit();
 
             editor.putString(getString(R.string.game_id_key), gameId);
+            editor.putString(getString(R.string.private_group_id_key), privateGroupId);
             editor.putString(getString(R.string.private_game_id_key), privateGameId);
             editor.putString(getString(R.string.private_game_title_key), privateGameTitle);
             editor.putString(getString(R.string.home_team_key), homeTeam);
             editor.putString(getString(R.string.away_team_key), awayTeam);
-
-
             editor.commit();
+
+            init();
 
             OffsideApplication.signalRService.requestGetChatMessages(gameId, privateGameId, playerId, androidDeviceId);
 
@@ -733,6 +574,47 @@ public class ChatFragment extends Fragment {
         }
     }
 
+    private void init() {
+
+        versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
+        androidDeviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        gameId = OffsideApplication.getGameInfo().getGameId();
+
+        privateGameId = OffsideApplication.getGameInfo().getPrivateGameId();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        playerId = user.getUid();
+
+        privateGameTitle = OffsideApplication.getGameInfo().getPrivateGameTitle();
+        homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
+        awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
+        PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
+        offsideCoins = player != null ? player.getOffsideCoins() : 0;
+        trophies = OffsideApplication.getGameInfo().getTrophies();
+        powerItems = player.getPowerItems();
+
+
+        actionsMenuRoot.setScaleX(0f);
+        actionsMenuRoot.setScaleY(0f);
+        actionsMenuRoot.setAlpha(0.99f);
+
+
+        actionsMenuRoot.setVisibility(View.GONE);
+
+        privateGameNameTextView.setText(privateGameTitle);
+        String title = String.format("%s vs. %s", homeTeam, awayTeam);
+        gameTitleTextView.setText(title);
+
+        offsideCoinsTextView.setText(Integer.toString(offsideCoins));
+
+        powerItemsTextView.setText(Integer.toString(powerItems));
+
+        settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
+        ImageHelper.loadImage(getActivity(), player != null ? player.getImageUrl() : settings.getString(getString(R.string.player_profile_picture_url_key), null), playerPictureImageView, "ChatActivity");
+
+
+    }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -744,15 +626,12 @@ public class ChatFragment extends Fragment {
 
             EventBus.getDefault().post(new PositionEvent(chat.getPosition()));
 
-            Player player = chat.getPlayer();
+            PlayerModel player = chat.getPlayer();
             if (player == null)
                 return;
 
             OffsideApplication.getGameInfo().setPlayer(player);
             OffsideApplication.playerAnswers = player.getPlayerAnswers();
-
-            //scoreTextView.setText(String.valueOf((int) player.getPoints()));
-            //scoreTextView1.setText(String.valueOf((int) player.getPoints()));
 
             createNewChatAdapter(false);
 
@@ -806,7 +685,7 @@ public class ChatFragment extends Fragment {
 
             // this parameter will be null if the user does not answer
             String answerId = questionAnsweredEvent.getAnswerId();
-            OffsideApplication.signalRService.postAnswer(gameId, playerId, questionId, answerId, isSkipped, betSize);
+            OffsideApplication.signalRService.requestPostAnswer(gameId, playerId, questionId, answerId, isSkipped, betSize);
             if (!OffsideApplication.playerAnswers.containsKey(questionId))
                 OffsideApplication.playerAnswers.put(questionId, new AnswerIdentifier(answerId, isSkipped, betSize, true));
 
@@ -852,8 +731,8 @@ public class ChatFragment extends Fragment {
     public void onReceiveRewardEvent(RewardEvent rewardEvent) {
         try {
             int rewardAmount = rewardEvent.getRewardAmount();
-            Player player = OffsideApplication.getGameInfo().getPlayer();
-            if ( player == null || rewardAmount==0)
+            PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
+            if (player == null || rewardAmount == 0)
                 return;
 
             player.incrementRewardVideoWatchCount();
@@ -868,7 +747,7 @@ public class ChatFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceivePlayer(Player updatedPlayer) {
+    public void onReceivePlayer(PlayerModel updatedPlayer) {
         try {
             if (updatedPlayer == null)
                 return;
@@ -878,7 +757,7 @@ public class ChatFragment extends Fragment {
             //scoreTextView.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
             //scoreTextView1.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
 
-            Player currentPlayer = OffsideApplication.getGameInfo().getPlayer();
+            PlayerModel currentPlayer = OffsideApplication.getGameInfo().getPlayer();
 
             if (currentPlayer != null) {
                 int oldOffsideCoinsValue = currentPlayer.getOffsideCoins();
@@ -918,7 +797,6 @@ public class ChatFragment extends Fragment {
             OffsideApplication.getGameInfo().setPlayer(updatedPlayer);
 
 
-
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 
@@ -935,7 +813,7 @@ public class ChatFragment extends Fragment {
 
             if (scoreboard == null)
                 return;
-            Score[]  scores = scoreboard.getScores();
+            Score[] scores = scoreboard.getScores();
 
             if (scores == null || scores.length == 0)
                 return;
@@ -943,21 +821,21 @@ public class ChatFragment extends Fragment {
             //check if scoreboard was changed
             Scoreboard currentScoreboard = OffsideApplication.getScoreboard();
             boolean isScoreboardsEquals = false;
-            if (!scoreboard.isForceUpdate()&& currentScoreboard != null && currentScoreboard.getScores() != null && currentScoreboard.getScores().length == scores.length) {
-                Score [] currentScores = currentScoreboard.getScores();
-                for(int i=0; i<currentScores.length;i++){
+            if (!scoreboard.isForceUpdate() && currentScoreboard != null && currentScoreboard.getScores() != null && currentScoreboard.getScores().length == scores.length) {
+                Score[] currentScores = currentScoreboard.getScores();
+                for (int i = 0; i < currentScores.length; i++) {
                     boolean isEqualScore = currentScores[i].getImageUrl().equals(scores[i].getImageUrl()) &&
-                            currentScores[i].getPosition() ==scores[i].getPosition() &&
-                            currentScores[i].getOffsideCoins()==scores[i].getOffsideCoins();
+                            currentScores[i].getPosition() == scores[i].getPosition() &&
+                            currentScores[i].getOffsideCoins() == scores[i].getOffsideCoins();
 
-                    if(!isEqualScore)
+                    if (!isEqualScore)
                         break;
-                    if(i==currentScores.length-1)
+                    if (i == currentScores.length - 1)
                         isScoreboardsEquals = true;
                 }
 
             }
-            if(isScoreboardsEquals)
+            if (isScoreboardsEquals)
                 return;
 
             OffsideApplication.setScoreboard(scoreboard);
@@ -976,16 +854,16 @@ public class ChatFragment extends Fragment {
     private void generateScoreboard() {
         scoreboardRoot.removeAllViewsInLayout();
 
-        for(Score score: OffsideApplication.getScoreboard().getScores()){
+        for (Score score : OffsideApplication.getScoreboard().getScores()) {
 
-            ViewGroup layout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.scoreboard_item, scoreboardRoot,false);
+            ViewGroup layout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.scoreboard_item, scoreboardRoot, false);
 
             TextView rankTextView = (TextView) layout.getChildAt(0);
             ImageView imageView = (ImageView) layout.getChildAt(1);
             TextView textView = (TextView) layout.getChildAt(2);
 
             rankTextView.setText(Integer.toString(score.getPosition()));
-            ImageHelper.loadImage(((Activity)getContext()), score.getImageUrl(), imageView, "ChatActivity");
+            ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), imageView, "ChatActivity");
             textView.setText(Integer.toString(score.getOffsideCoins()));
 
             scoreboardRoot.addView(layout);

@@ -18,6 +18,8 @@ import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.OffsideApplication;
 
 
+import org.acra.ACRA;
+
 import java.util.ArrayList;
 
 
@@ -30,22 +32,29 @@ public class AvailableGamesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_available_games, container, false);
 
-        if (OffsideApplication.getAvailableGames() == null)
+        try {
+            View rootView = inflater.inflate(R.layout.fragment_available_games, container, false);
+
+            if (OffsideApplication.getAvailableGames() == null)
+                return rootView;
+
+            ListView listView = (ListView) rootView.findViewById(R.id.l_available_games_list_view);
+            AvailableGamesAdapter availableGamesAdapter = new AvailableGamesAdapter(this.getActivity(), getAvailableGames());
+            listView.setAdapter(availableGamesAdapter);
+
+
             return rootView;
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+            return null;
+        }
 
-        ListView listView = (ListView) rootView.findViewById(R.id.l_available_games_list_view);
-        AvailableGamesAdapter availableGamesAdapter = new AvailableGamesAdapter(this.getActivity(), getAvailableGames());
-        listView.setAdapter(availableGamesAdapter);
-
-
-        return rootView;
     }
 
 
     private ArrayList<AvailableGame> getAvailableGames() {
-        leagueType = leagueType != null ? leagueType :this.getArguments().getString("leagueType");
+        leagueType = leagueType != null ? leagueType : this.getArguments().getString("leagueType");
         availableGames = OffsideApplication.getAvailableGames();
 
         ArrayList filteredAvailableGamesList = new ArrayList<>();
@@ -58,10 +67,6 @@ public class AvailableGamesFragment extends Fragment {
         return filteredAvailableGamesList;
 
     }
-
-
-
-
 
 
 }

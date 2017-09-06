@@ -77,7 +77,7 @@ import java.io.Serializable;
 //        isPrivateGameCreator = privateGameCreator;
 //    }
 //
-//    public String getDeviceId() {
+//    public String getAndroidDeviceId() {
 //        return deviceId;
 //    }
 //

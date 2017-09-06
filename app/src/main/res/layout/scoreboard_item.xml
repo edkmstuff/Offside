@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:layout_marginLeft="10dp"
-    tools:context="com.offsidegame.offside.activities.ChatActivity">
+    tools:context="com.offsidegame.offside.activities.LobbyActivity">
 
     <TextView
         android:layout_width="wrap_content"

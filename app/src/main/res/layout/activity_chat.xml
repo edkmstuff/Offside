@@ -10,7 +10,7 @@
     android:keepScreenOn="true"
     android:layoutDirection="ltr"
     android:orientation="vertical"
-    tools:context="com.offsidegame.offside.activities.ChatActivity">
+    tools:context="com.offsidegame.offside.activities.LobbyActivity">
 
 
     <LinearLayout

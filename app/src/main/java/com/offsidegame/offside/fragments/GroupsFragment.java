@@ -2,6 +2,7 @@ package com.offsidegame.offside.fragments;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -19,6 +20,7 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.CreatePrivateGroupActivity;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupsInfo;
 
 import org.acra.ACRA;
@@ -157,7 +159,7 @@ public class GroupsFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePrivateGroupsInfo(PrivateGroupsInfo privateGroupsInfo) {
         try {
-            //todo: resolve issue this methos is called twice when user create group
+            //todo: resolve issue this methods is called twice when user create group
             if (privateGroupsInfo != null && privateGroupsInfo.getPrivateGroups() != null) {
                 OffsideApplication.setPrivateGroupsInfo(privateGroupsInfo);
 
@@ -167,12 +169,33 @@ public class GroupsFragment extends Fragment {
                 loadingRoot.setVisibility(View.GONE);
                 groupsRoot.setVisibility(View.VISIBLE);
 
+                //tryRejoinGameForReturningPlayer();
+
             }
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 
         }
+
+    }
+
+    public void tryRejoinGameForReturningPlayer(){
+
+        //check if player is already playing
+        SharedPreferences settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
+        String lastKnownGameId = settings.getString(getString(R.string.game_id_key), null);
+        String lastKnownPrivateGroupId = settings.getString(getString(R.string.private_group_id_key), null);
+        String lastKnownPrivateGameId = settings.getString(getString(R.string.private_game_id_key), null);
+        String playerId = OffsideApplication.getPlayerId();
+
+        OffsideApplication.setSelectedPrivateGameId(lastKnownPrivateGameId);
+        PrivateGroup selectedPrivateGroup = OffsideApplication.getPrivateGroupsInfo().findPrivateGroupById(lastKnownPrivateGroupId);
+        OffsideApplication.setSelectedPrivateGroup(selectedPrivateGroup);
+
+        if (lastKnownGameId != null && lastKnownGameId.length() > 0 && lastKnownPrivateGameId != null && lastKnownPrivateGameId.length() > 0)
+            OffsideApplication.signalRService.requestIsGameActive(lastKnownGameId, lastKnownPrivateGameId, playerId);
+
 
     }
 

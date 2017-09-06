@@ -2,17 +2,14 @@ package com.offsidegame.offside.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +18,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareButton;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
@@ -39,13 +33,12 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.SlotActivity;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
-import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.Player;
+import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Question;
 
 import com.squareup.picasso.Picasso;
@@ -415,7 +408,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             viewHolder.incomingGetCoinsNotEnoughCoinsMessageTextView.setText(viewHolder.chatMessage.getMessageText());
 
-            final Player player = OffsideApplication.getGameInfo().getPlayer();
+            final PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
 
             if (player != null && player.getRewardVideoWatchCount() < OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame()) {
 
@@ -568,10 +561,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             //viewHolder.incomingWinnerPointsTextView.setText(viewHolder.chatMessage.getMessageText());
 
-            List<Player> winners = viewHolder.chatMessage.getWinners();
+            List<PlayerModel> winners = viewHolder.chatMessage.getWinners();
             viewHolder.incomingWinnersRoot.removeAllViews();
 
-            for (Player winner : winners) {
+            for (PlayerModel winner : winners) {
 
                 ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.winner_item, viewHolder.incomingWinnersRoot, false);
                 TextView winnerScoreTextView = (TextView) layout.getChildAt(0);

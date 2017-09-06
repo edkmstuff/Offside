@@ -30,9 +30,8 @@ public class GameInfo {
     @com.google.gson.annotations.SerializedName("MARVWPG")
     private int maxAllowedRewardVideosWatchPerGame;
 
-    @com.google.gson.annotations.SerializedName("P")
-    private Player player;
-
+    @com.google.gson.annotations.SerializedName("PM")
+    private PlayerModel player;
 
 
 
@@ -100,11 +99,11 @@ public class GameInfo {
         this.minBetSize = minBetSize;
     }
 
-    public Player getPlayer() {
+    public PlayerModel getPlayer() {
         return player;
     }
 
-    public void setPlayer(Player player) {
+    public void setPlayer(PlayerModel player) {
         this.player = player;
     }
 }

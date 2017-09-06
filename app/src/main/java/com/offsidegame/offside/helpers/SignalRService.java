@@ -14,13 +14,14 @@ import android.support.v4.app.TaskStackBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.activities.ChatActivity;
-import com.offsidegame.offside.events.ActiveGameEvent;
+
+import com.offsidegame.offside.activities.LobbyActivity;
 import com.offsidegame.offside.events.AvailableGamesEvent;
 import com.offsidegame.offside.events.AvailableLanguagesEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.models.LeagueRecord;
+import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.ChatEvent;
@@ -33,10 +34,8 @@ import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.Player;
 import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.Position;
-import com.offsidegame.offside.models.PrivateGameCreationInfo;
 import com.offsidegame.offside.models.PrivateGroup;
 
 import com.offsidegame.offside.models.PrivateGroupsInfo;
@@ -237,12 +236,12 @@ public class SignalRService extends Service {
             }
         }, Scoreboard.class);
 
-        hub.on("PlayerDataReceived", new SubscriptionHandler1<Player>() {
+        hub.on("PlayerDataReceived", new SubscriptionHandler1<PlayerModel>() {
             @Override
-            public void run(Player player) {
+            public void run(PlayerModel player) {
                 EventBus.getDefault().post(player);
             }
-        }, Player.class);
+        }, PlayerModel.class);
 
         hub.on("PositionReceived", new SubscriptionHandler1<Position>() {
             @Override
@@ -386,7 +385,7 @@ public class SignalRService extends Service {
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
 
 // Creates an explicit intent for an Activity in your app
-                Intent chatIntent = new Intent(this, ChatActivity.class);
+                Intent chatIntent = new Intent(this, LobbyActivity.class);
 
 // The stack builder object will contain an artificial back stack for the
 // started Activity.
@@ -394,7 +393,7 @@ public class SignalRService extends Service {
 // your application to the Home screen.
                 TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 // Adds the back stack for the Intent (but not the Intent itself)
-                stackBuilder.addParentStack(ChatActivity.class);
+                stackBuilder.addParentStack(LobbyActivity.class);
 // Adds the Intent that starts the Activity to the top of the stack
                 stackBuilder.addNextIntent(chatIntent);
                 PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -532,11 +531,11 @@ public class SignalRService extends Service {
         hub.invoke(String.class, "RequestCreatePrivateGame", gameId, groupId, playerId, selectedLanguage);
     }
 
-    public void postAnswer(final String gameId, final String playerId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
+    public void requestPostAnswer(final String gameId, final String playerId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
 
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Boolean.class, "PostAnswer", gameId, playerId, questionId, answerId, isSkipped, betSize);
+        hub.invoke(Boolean.class, "RequestPostAnswer", gameId, playerId, questionId, answerId, isSkipped, betSize);
 
     }
 
@@ -581,7 +580,7 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return false;
 
-        hub.invoke(Player.class, "RequestSaveLoggedInUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri());
+        hub.invoke(PlayerModel.class, "RequestSaveLoggedInUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri());
 
         return true;
     }

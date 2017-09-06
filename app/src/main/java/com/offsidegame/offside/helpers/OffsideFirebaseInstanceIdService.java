@@ -1,21 +1,11 @@
 package com.offsidegame.offside.helpers;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.os.IBinder;
 import android.util.Log;
+
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.activities.JoinGameActivity;
-import com.offsidegame.offside.events.SignalRServiceBoundEvent;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by user on 12/26/2016.

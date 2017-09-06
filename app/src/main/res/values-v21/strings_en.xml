@@ -10,7 +10,7 @@
     <string messageText="ask_question">New Question</string>
     <string messageText="answer_question">Answer Question</string>
     <string messageText="lbl_welcome">Welcome</string>
-    <string messageText="lbl_goto_player_score">Go to Player Score</string>
+    <string messageText="lbl_goto_player_score">Go to PlayerModel Score</string>
     <string messageText="facebook_app_id">523024471208542</string>
     <string messageText="fb_login_protocol_scheme">fb523024471208542</string>
     <string messageText="preference_name">OffsidePlayerPreferences</string>

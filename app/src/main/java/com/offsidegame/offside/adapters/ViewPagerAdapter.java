@@ -48,11 +48,25 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void addFragment(Fragment fragment, String title) {
-        if(mFragmentList.contains(fragment))
+        if(mFragmentList.contains(fragment) )
             return;
-
+         if(isTabFragmentExist(title))
+             return;
         mFragmentList.add(fragment);
         mFragmentTitleList.add(title);
+    }
+
+    public boolean isTabFragmentExist(String title){
+        boolean tabFragmentExist = false;
+        for(String tabTitle : mFragmentTitleList){
+            if(tabTitle.equals(title)){
+                tabFragmentExist = true;
+                break;
+            }
+
+        }
+        return tabFragmentExist;
+
     }
 
     public void removeFrag(int position) {

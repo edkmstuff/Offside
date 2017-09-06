@@ -16,7 +16,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.helpers.Wheel;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.Player;
+import com.offsidegame.offside.models.PlayerModel;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -61,7 +61,7 @@ public class SlotActivity extends AppCompatActivity {
         goBackToChatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(context,ChatActivity.class);
+                Intent intent= new Intent(context,LobbyActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -208,7 +208,7 @@ public class SlotActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceivePlayer(Player player) {
+    public void onReceivePlayer(PlayerModel player) {
         try {
             if (player == null)
                 return;

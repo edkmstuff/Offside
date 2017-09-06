@@ -6,11 +6,17 @@ package com.offsidegame.offside.models;
 
 public class PostAnswerRequestInfo {
 
+    @com.google.gson.annotations.SerializedName("PI")
     private String playerId;
+    @com.google.gson.annotations.SerializedName("GI")
     private String gameId;
+    @com.google.gson.annotations.SerializedName("QI")
     private String questionId;
+    @com.google.gson.annotations.SerializedName("AI")
     private String answerId;
+    @com.google.gson.annotations.SerializedName("IS")
     private boolean isSkipped;
+    @com.google.gson.annotations.SerializedName("BS")
     private int betSize;
 
     public PostAnswerRequestInfo(String playerId, String gameId, String questionId, String answerId, boolean isSkipped, int betSize) {

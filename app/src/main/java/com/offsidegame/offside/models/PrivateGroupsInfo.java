@@ -49,4 +49,14 @@ public class PrivateGroupsInfo {
     public void setPrivateGroups(ArrayList<PrivateGroup> privateGroups) {
         this.privateGroups = privateGroups;
     }
+
+    public PrivateGroup findPrivateGroupById(String privateGroupId) {
+        for (PrivateGroup privateGroup:privateGroups) {
+            if(privateGroup.getId().equals(privateGroupId))
+                return privateGroup;
+        }
+        return null;
+
+
+    }
 }

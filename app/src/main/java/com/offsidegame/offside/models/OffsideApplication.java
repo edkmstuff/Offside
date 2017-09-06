@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.provider.Settings;
 
 import com.offsidegame.offside.BuildConfig;
 import com.offsidegame.offside.R;
@@ -21,7 +22,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +40,7 @@ import java.util.Map;
 )
 public class OffsideApplication extends Application {
 
-    private static  Context context;
+    private static Context context;
     private static String version = BuildConfig.VERSION_NAME;
     private static boolean isPlayerQuitGame = false;
     private static String messageTypeText = "TEXT";
@@ -59,7 +59,7 @@ public class OffsideApplication extends Application {
     private static String profileImageFileName = "profileImage.jpg";
 
     private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
-//    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
+    //    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
     private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
 
 //  private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
@@ -86,18 +86,19 @@ public class OffsideApplication extends Application {
     private static PrivateGroupsInfo privateGroupsInfo;
     private static AvailableGame[] availableGames;
 
-    private  static PrivateGroup selectedPrivateGroup;
-    private static  AvailableGame selectedAvailableGame;
+    private static PrivateGroup selectedPrivateGroup;
 
-    private static String currentPrivateGameId;
-    private static String currentGameId;
+    private static AvailableGame selectedAvailableGame;
+    private static String selectedPrivateGameId;
+
+
+
 
     private static UserProfileInfo userProfileInfo;
 
     private static PlayerAssets playerAssets;
 
-    private static HashMap<String,LeagueRecord[]> leaguesRecords;
-
+    private static HashMap<String, LeagueRecord[]> leaguesRecords;
 
 
     public static String getMessageTypeText() {
@@ -193,7 +194,6 @@ public class OffsideApplication extends Application {
     }
 
 
-
     public static PrivateGroupsInfo getPrivateGroupsInfo() {
         return privateGroupsInfo;
     }
@@ -221,7 +221,7 @@ public class OffsideApplication extends Application {
 
     public static void setSelectedPrivateGroup(PrivateGroup selectedPrivateGroup) {
         OffsideApplication.selectedPrivateGroup = selectedPrivateGroup;
-        EventBus.getDefault().post(OffsideApplication.selectedPrivateGroup);
+
     }
 
     public static UserProfileInfo getUserProfileInfo() {
@@ -255,20 +255,32 @@ public class OffsideApplication extends Application {
         OffsideApplication.selectedAvailableGame = selectedAvailableGame;
     }
 
-    public static String getCurrentPrivateGameId() {
-        return currentPrivateGameId;
+    public static String getSelectedPrivateGameId() {
+        return selectedPrivateGameId;
     }
 
-    public static void setCurrentPrivateGameId(String currentPrivateGameId) {
-        OffsideApplication.currentPrivateGameId = currentPrivateGameId;
+    public static void setSelectedPrivateGameId(String selectedPrivateGameId) {
+        OffsideApplication.selectedPrivateGameId = selectedPrivateGameId;
     }
 
-    public static String getCurrentGameId() {
-        return currentGameId;
+    public static String getSelectedGameId() {
+
+        return selectedAvailableGame != null? selectedAvailableGame.getGameId() : null;
     }
 
-    public static void setCurrentGameId(String currentGameId) {
-        OffsideApplication.currentGameId = currentGameId;
+
+    public static String getPlayerId() {
+        return playerAssets != null ? playerAssets.getPlayerId() : null;
+
+    }
+
+
+    public static String getSelectedPrivateGroupId() {
+        return selectedPrivateGroup != null ? selectedPrivateGroup.getId() : null;
+    }
+
+    public static String getAndroidDeviceId(){
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
 
@@ -298,8 +310,6 @@ public class OffsideApplication extends Application {
 //            FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/OpenSansHebrew-Regular.ttf");
 //
 //            TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/OpenSansHebrew-Regular.ttf");
-
-
 
 
         } catch (Exception ex) {
@@ -353,7 +363,7 @@ public class OffsideApplication extends Application {
 
             if (scoreboard == null)
                 return;
-            Score[]  scores = scoreboard.getScores();
+            Score[] scores = scoreboard.getScores();
 
             if (scores == null || scores.length == 0)
                 return;
@@ -361,21 +371,21 @@ public class OffsideApplication extends Application {
             //check if scoreboard was changed
             Scoreboard currentScoreboard = OffsideApplication.getScoreboard();
             boolean isScoreboardsEquals = false;
-            if (!scoreboard.isForceUpdate()&& currentScoreboard != null && currentScoreboard.getScores() != null && currentScoreboard.getScores().length == scores.length) {
-                Score [] currentScores = currentScoreboard.getScores();
-                for(int i=0; i<currentScores.length;i++){
+            if (!scoreboard.isForceUpdate() && currentScoreboard != null && currentScoreboard.getScores() != null && currentScoreboard.getScores().length == scores.length) {
+                Score[] currentScores = currentScoreboard.getScores();
+                for (int i = 0; i < currentScores.length; i++) {
                     boolean isEqualScore = currentScores[i].getImageUrl().equals(scores[i].getImageUrl()) &&
-                            currentScores[i].getPosition() ==scores[i].getPosition() &&
-                            currentScores[i].getOffsideCoins()==scores[i].getOffsideCoins();
+                            currentScores[i].getPosition() == scores[i].getPosition() &&
+                            currentScores[i].getOffsideCoins() == scores[i].getOffsideCoins();
 
-                    if(!isEqualScore)
+                    if (!isEqualScore)
                         break;
-                    if(i==currentScores.length-1)
+                    if (i == currentScores.length - 1)
                         isScoreboardsEquals = true;
                 }
 
             }
-            if(isScoreboardsEquals)
+            if (isScoreboardsEquals)
                 return;
 
             OffsideApplication.setScoreboard(scoreboard);
@@ -389,7 +399,7 @@ public class OffsideApplication extends Application {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceivePlayer(Player updatedPlayer) {
+    public void onReceivePlayer(PlayerModel updatedPlayer) {
         try {
             if (updatedPlayer == null)
                 return;
@@ -405,13 +415,12 @@ public class OffsideApplication extends Application {
     }
 
     public static String getVersion() {
-        return version;
+        return version == null ? "0.0": version;
     }
 
 //    public static void getEnvironmentUrls(String environment) {
 //
 //    }
-
 
 
 }
