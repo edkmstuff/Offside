@@ -313,6 +313,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayerAssets(PlayerAssets playerAssets) {
+
+        
         isInLoginProcess = false;
 
         OffsideApplication.setPlayerAssets(playerAssets);

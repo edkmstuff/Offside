@@ -75,8 +75,8 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:18313");
-    public final String ip = new String("10.0.0.17:18313");
+    public final String ip = new String("192.168.1.140:18313");
+    //public final String ip = new String("10.0.0.17:18313");
 
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
@@ -296,12 +296,16 @@ public class SignalRService extends Service {
             }
         }, String.class);
 
-        hub.on("PlayerJoinedPrivateGame", new SubscriptionHandler1<GameInfo>() {
+        hub.on("PlayerJoinedPrivateGame", new SubscriptionHandler1<String>() {
             @Override
-            public void run(GameInfo gameInfo) {
+            public void run(String gameInfoJson) {
+                final Gson gson = new GsonBuilder().create();
+                GameInfo gameInfo = gson.fromJson(gameInfoJson, GameInfo.class);
                 EventBus.getDefault().post(new JoinGameEvent(gameInfo));
             }
-        }, GameInfo.class);
+        }, String.class);
+
+
 
 
         //user

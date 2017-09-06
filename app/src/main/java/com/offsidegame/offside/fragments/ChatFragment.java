@@ -540,6 +540,8 @@ private String groupId = null;
         try {
 
             GameInfo gameInfo = joinGameEvent.getGameInfo();
+
+
             if (gameInfo == null) {
                 return;
             }

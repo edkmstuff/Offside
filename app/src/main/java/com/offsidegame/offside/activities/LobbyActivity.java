@@ -31,6 +31,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.fragments.ChatFragment;
@@ -39,6 +40,7 @@ import com.offsidegame.offside.fragments.PlayerFragment;
 import com.offsidegame.offside.fragments.SingleGroupFragment;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
+import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PrivateGroup;
@@ -390,6 +392,16 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlayerJoinedPrivateGame(JoinGameEvent joinGameEvent) {
+        GameInfo gameInfo = joinGameEvent.getGameInfo();
+        if (gameInfo != null) {
+            return;
+        }
+
+        onReceiveNavigation(new NavigationEvent(R.id.nav_action_play));
     }
 
 

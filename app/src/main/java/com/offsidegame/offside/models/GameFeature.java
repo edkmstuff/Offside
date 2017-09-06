@@ -5,9 +5,9 @@ package com.offsidegame.offside.models;
  */
 
 public class GameFeature {
-    @com.google.gson.annotations.SerializedName("N")
+    @com.google.gson.annotations.SerializedName("GFN")
     private String name;
-    @com.google.gson.annotations.SerializedName("C")
+    @com.google.gson.annotations.SerializedName("GFC")
     private int cost;
 
     public String getName() {
