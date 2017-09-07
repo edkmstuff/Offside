@@ -214,12 +214,14 @@ public class SignalRService extends Service {
 
         //chat
 
-        hub.on("ChatMessagesReceived", new SubscriptionHandler1<Chat>() {
+        hub.on("ChatMessagesReceived", new SubscriptionHandler1<String>() {
             @Override
-            public void run(Chat chat) {
+            public void run(String chatJson) {
+                final Gson gson = new GsonBuilder().create();
+                Chat chat = gson.fromJson(chatJson, Chat.class);
                 EventBus.getDefault().post(new ChatEvent(chat));
             }
-        }, Chat.class);
+        }, String.class);
 
         hub.on("ChatMessageReceived", new SubscriptionHandler1<ChatMessage>() {
             @Override
