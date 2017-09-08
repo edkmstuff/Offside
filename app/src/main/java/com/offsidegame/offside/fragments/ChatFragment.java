@@ -92,7 +92,7 @@ public class ChatFragment extends Fragment {
     private LinearLayout root;
     private ListView chatListView;
 
-    private String privateGameTitle;
+    private String privateGroupName;
     private String homeTeam;
     private String awayTeam;
     private int offsideCoins;
@@ -149,24 +149,37 @@ private String groupId = null;
 
     //</editor-fold>
 
-    public static ChatFragment newInstance(Activity activity, String playerId) {
+    public static ChatFragment newInstance() {
         ChatFragment chatFragment = new ChatFragment();
-        EventBus.getDefault().register(chatFragment);
-        //chat data
-        chatFragment.gameId = OffsideApplication.getSelectedGameId();
-        chatFragment.privateGameId = OffsideApplication.getSelectedPrivateGameId();
-        chatFragment.groupId = OffsideApplication.getSelectedPrivateGroupId();
-        chatFragment.androidDeviceId = OffsideApplication.getAndroidDeviceId();
-        chatFragment.playerId = playerId;
-
-        if (chatFragment.gameId != null && chatFragment.privateGameId != null && chatFragment.groupId != null && chatFragment.androidDeviceId != null && chatFragment.playerId != null) {
-            OffsideApplication.signalRService.requestJoinPrivateGame(chatFragment.gameId, chatFragment.groupId, chatFragment.privateGameId, chatFragment.playerId, chatFragment.androidDeviceId);
-        } else {
-            Toast.makeText(activity, "Can not join this game", Toast.LENGTH_LONG);
-        }
-
         return chatFragment;
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        EventBus.getDefault().register(this);
+
+        //chat data
+        gameId = OffsideApplication.getSelectedGameId();
+        privateGameId = OffsideApplication.getSelectedPrivateGameId();
+        groupId = OffsideApplication.getSelectedPrivateGroupId();
+        androidDeviceId = OffsideApplication.getAndroidDeviceId();
+        playerId = OffsideApplication.getPlayerId();
+        privateGroupName = OffsideApplication.getSelectedPrivateGroup().getName();
+
+        if (gameId != null && privateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
+            OffsideApplication.signalRService.requestJoinPrivateGame(gameId, groupId, privateGameId, playerId, androidDeviceId);
+        } else {
+            Toast.makeText(getActivity(), "Can not join this game", Toast.LENGTH_LONG);
+        }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
 
 
     @Nullable
@@ -524,15 +537,7 @@ private String groupId = null;
     }
 
 
-    private void createNewChatAdapter(boolean reset) {
-        messages = new ArrayList();
 
-        if (!reset && chat != null)
-            messages = chat.getChatMessages();
-
-        chatMessageAdapter = new ChatMessageAdapter(getContext(), messages, OffsideApplication.playerAnswers);
-        chatListView.setAdapter(chatMessageAdapter);
-    }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -587,8 +592,6 @@ private String groupId = null;
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         playerId = user.getUid();
-
-        privateGameTitle = OffsideApplication.getGameInfo().getPrivateGameTitle();
         homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
         awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
         PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
@@ -604,7 +607,8 @@ private String groupId = null;
 
         actionsMenuRoot.setVisibility(View.GONE);
 
-        privateGameNameTextView.setText(privateGameTitle);
+        String chatTitle = String.format("%s",privateGroupName);
+        privateGameNameTextView.setText(chatTitle);
         String title = String.format("%s vs. %s", homeTeam, awayTeam);
         gameTitleTextView.setText(title);
 
@@ -670,8 +674,16 @@ private String groupId = null;
             ACRA.getErrorReporter().handleSilentException(ex);
 
         }
+    }
 
+    private void createNewChatAdapter(boolean reset) {
+        messages = new ArrayList();
 
+        if (!reset && chat != null)
+            messages = chat.getChatMessages();
+
+        chatMessageAdapter = new ChatMessageAdapter(getActivity(), messages, OffsideApplication.playerAnswers);
+        chatListView.setAdapter(chatMessageAdapter);
     }
 
 

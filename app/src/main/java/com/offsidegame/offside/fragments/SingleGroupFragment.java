@@ -66,34 +66,47 @@ public class SingleGroupFragment extends Fragment {
     private int groupsCount = -1;
 
 
-    public static SingleGroupFragment newInstance(){
+    public static SingleGroupFragment newInstance() {
         SingleGroupFragment singleGroupFragment = new SingleGroupFragment();
 
-        EventBus.getDefault().register(singleGroupFragment);
-
-        singleGroupFragment.currentGroupSelectedIndex = OffsideApplication.getPrivateGroupsInfo().getPrivateGroups().indexOf(OffsideApplication.getSelectedPrivateGroup());
-        singleGroupFragment.groupsCount = OffsideApplication.getPrivateGroupsInfo().getPrivateGroups().size();
-        //OffsideApplication.signalRService.requestAvailableGames(OffsideApplication.getPlayerId(), OffsideApplication.getSelectedPrivateGroupId());
-
         return singleGroupFragment;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
+
+        currentGroupSelectedIndex = OffsideApplication.getPrivateGroupsInfo().getPrivateGroups().indexOf(OffsideApplication.getSelectedPrivateGroup());
+        groupsCount = OffsideApplication.getPrivateGroupsInfo().getPrivateGroups().size();
+
+        navigateGroup(0);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_single_group, container, false);
-        getIDs(view);
-        setEvents();
+        try {
+            View view = inflater.inflate(R.layout.fragment_single_group, container, false);
+            getIDs(view);
+            setEvents();
 
-        versionTextView.setText(OffsideApplication.getVersion() );
+            versionTextView.setText(OffsideApplication.getVersion());
+            return view;
 
-        navigateGroup(0);
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+            return null;
+        }
 
-
-
-
-        return view;
     }
 
     private void getIDs(View view) {
@@ -172,16 +185,17 @@ public class SingleGroupFragment extends Fragment {
         });
     }
 
-    private void navigateGroup (int step){
+    private void navigateGroup(int step) {
 
-        try
-        {
+        try {
             currentGroupSelectedIndex = currentGroupSelectedIndex + step;
-            int newSelectedGroupIndex =  currentGroupSelectedIndex % groupsCount;
+            int newSelectedGroupIndex = currentGroupSelectedIndex % groupsCount;
             // this is just to avoid negative indexes
             currentGroupSelectedIndex = newSelectedGroupIndex;
             PrivateGroup newSelectedGroup = OffsideApplication.getPrivateGroupsInfo().getPrivateGroups().get(newSelectedGroupIndex);
-            OffsideApplication.setSelectedPrivateGroup(newSelectedGroup);
+            if(step!=0)
+                OffsideApplication.setSelectedPrivateGroup(newSelectedGroup);
+
             groupNavigationGroupNameTextView.setText(OffsideApplication.getSelectedPrivateGroup().getName());
 
             OffsideApplication.signalRService.requestAvailableGames(OffsideApplication.getPlayerId(), OffsideApplication.getSelectedPrivateGroupId());
@@ -250,7 +264,7 @@ public class SingleGroupFragment extends Fragment {
                 return;
 
             String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
-            if(OffsideApplication.getLeaguesRecords().containsKey(groupId))
+            if (OffsideApplication.getLeaguesRecords().containsKey(groupId))
                 OffsideApplication.getLeaguesRecords().remove(groupId);
             OffsideApplication.getLeaguesRecords().put(groupId, leagueRecords);
 
@@ -273,7 +287,7 @@ public class SingleGroupFragment extends Fragment {
             OffsideApplication.setAvailableGames(availableGames);
 
             List<String> leagues = getDistinctLeagues(availableGames);
-            for(String leagueType: leagues){
+            for (String leagueType : leagues) {
                 addLeaguePageToSingleGroupFragment(leagueType);
 
             }
@@ -289,8 +303,6 @@ public class SingleGroupFragment extends Fragment {
         }
 
     }
-
-
 
 
     public void addLeaguePageToSingleGroupFragment(String leagueType) {
@@ -361,12 +373,12 @@ public class SingleGroupFragment extends Fragment {
 
     }
 
-    private List<String> getDistinctLeagues(AvailableGame[] availableGames){
+    private List<String> getDistinctLeagues(AvailableGame[] availableGames) {
 
         List<String> availableLeagues = new ArrayList<>();
-        for(int i=0;i<availableGames.length; i++){
+        for (int i = 0; i < availableGames.length; i++) {
             String currentLeague = availableGames[i].getLeagueName();
-            if(!availableLeagues.contains(currentLeague)){
+            if (!availableLeagues.contains(currentLeague)) {
                 availableLeagues.add(currentLeague);
             }
 

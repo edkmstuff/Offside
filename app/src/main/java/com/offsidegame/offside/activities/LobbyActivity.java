@@ -94,6 +94,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     //</editor-fold>
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
@@ -172,7 +174,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                             groupsFragment = GroupsFragment.newInstance();
                             replaceFragment(groupsFragment);
-                            OffsideApplication.signalRService.requestPrivateGroupsInfo(playerId);
+
 
                             return true;
 
@@ -187,7 +189,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                             return true;
 
                         case R.id.nav_action_play:
-                            chatFragment = ChatFragment.newInstance(thisActivity, playerId);
+                            chatFragment = ChatFragment.newInstance();
                             replaceFragment(chatFragment);
 
                             return true;
