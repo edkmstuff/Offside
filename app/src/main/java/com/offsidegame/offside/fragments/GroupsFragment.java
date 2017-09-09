@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.CreatePrivateGroupActivity;
@@ -41,14 +42,29 @@ public class GroupsFragment extends Fragment {
     private FrameLayout loadingRoot;
     private TextView versionTextView;
     private TextView createPrivateGroupButtonTextView;
+    private String playerId;
 
 
     public static GroupsFragment newInstance(){
         GroupsFragment groupsFragment = new GroupsFragment();
-        EventBus.getDefault().register(groupsFragment);
 
         return groupsFragment;
     }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        EventBus.getDefault().register(this);
+        playerId = OffsideApplication.getPlayerId();
+        OffsideApplication.signalRService.requestPrivateGroupsInfo(playerId);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
 
     @Nullable
     @Override
