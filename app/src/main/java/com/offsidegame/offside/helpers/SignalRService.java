@@ -349,6 +349,13 @@ public class SignalRService extends Service {
             }
         }, AvailableGame.class);
 
+        hub.on("FriendInviteReceived", new SubscriptionHandler1<String>() {
+            @Override
+            public void run(String friendInviteCode) {
+                EventBus.getDefault().post(friendInviteCode);
+            }
+        }, String.class);
+
     }
 
     private void fireNotification(String messageType, String message) {
