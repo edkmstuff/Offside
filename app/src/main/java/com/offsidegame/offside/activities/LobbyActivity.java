@@ -1,7 +1,6 @@
 package com.offsidegame.offside.activities;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
@@ -15,7 +14,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,13 +23,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.FriendInviteReceivedEvent;
+import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
@@ -322,39 +322,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    private int REQUEST_INVITE = 1;
-    private String TAG = "OFFSIDE_INVITE";
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onInviteButtonClicked(String invite) {
-
-        Intent intent = new AppInviteInvitation.IntentBuilder("Invite friends")
-                .setMessage("come join my group")
-                .setDeepLink(Uri.parse("https://drive.google.com/open?id=0BzxPyU28rpTaNV9EZlVyc1p4WGM"))
-                .setCustomImage(Uri.parse(OffsideApplication.getAppLogoPictureUrl()))
-                .setCallToActionText("call to action")
-                .build();
-        startActivityForResult(intent, REQUEST_INVITE);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
-
-        if (requestCode == REQUEST_INVITE) {
-            if (resultCode == RESULT_OK) {
-                // Get the invitation IDs of all sent messages
-                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
-                for (String id : ids) {
-                    Log.d(TAG, "onActivityResult: sent invitation " + id);
-
-                }
-            } else {
-                Log.d(TAG, "FAILED INVITE");
-            }
-        }
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveNavigation(NavigationEvent navigationEvent) {
@@ -367,7 +334,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveIsGameActive(AvailableGame availableGame) {
+    public void onReceiveAvailableGame(AvailableGame availableGame) {
         try {
 
 
@@ -405,6 +372,39 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         onReceiveNavigation(new NavigationEvent(R.id.nav_action_play));
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onGroupInvite(GroupInviteEvent groupInviteEvent){
+
+        String groupId= groupInviteEvent.getGroupId();
+        String gameId= groupInviteEvent.getGameId();
+        String privateGameId= groupInviteEvent.getPrivateGamaId();
+        String playerId = groupInviteEvent.getInviterPlayerId();
+
+        OffsideApplication.signalRService.requestInviteFriend(groupId, gameId, privateGameId, playerId);
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFriendInviteReceived(FriendInviteReceivedEvent friendInviteReceivedEvent){
+
+        String invitationUrl= friendInviteReceivedEvent.getInvitationUrl();
+        String inviterName = OffsideApplication.getPlayerAssets().getPlayerName();
+
+        String shareMessage = String.format("%s invited you to join a group in SideKick. Click to join %s",inviterName, invitationUrl);
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.setType("text/plain");
+        sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+
+
+        startActivity(Intent.createChooser(sendIntent,"Invite friendS" ));
+
+
+    }
+
+
+
 
 
     private Boolean exit = false;

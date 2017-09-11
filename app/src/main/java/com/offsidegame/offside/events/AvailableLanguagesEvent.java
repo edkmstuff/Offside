@@ -1,7 +1,5 @@
 package com.offsidegame.offside.events;
 
-import com.offsidegame.offside.models.AvailableGame;
-
 /**
  * Created by KFIR on 11/20/2016.
  */

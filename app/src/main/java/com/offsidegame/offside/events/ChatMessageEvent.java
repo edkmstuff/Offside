@@ -1,6 +1,5 @@
 package com.offsidegame.offside.events;
 
-import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 
 /**

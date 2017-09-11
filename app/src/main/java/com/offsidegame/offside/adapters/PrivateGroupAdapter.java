@@ -1,12 +1,8 @@
 package com.offsidegame.offside.adapters;
 
-import android.app.Activity;
+
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +11,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.facebook.share.model.AppInviteContent;
-import com.facebook.share.widget.AppInviteDialog;
-import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.events.LoginEvent;
-import com.offsidegame.offside.fragments.GroupsFragment;
-import com.offsidegame.offside.fragments.SingleGroupFragment;
+import com.offsidegame.offside.events.GroupInviteEvent;
+
 import com.offsidegame.offside.helpers.ImageHelper;
-import com.offsidegame.offside.models.LoginInfo;
+
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupPlayer;
@@ -38,7 +29,7 @@ import java.util.Comparator;
 
 
 
-import static com.facebook.FacebookSdk.getApplicationContext;
+
 
 /**
  * Created by user on 7/20/2017.
@@ -180,7 +171,9 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
 
-                    EventBus.getDefault().post("Invite");
+                    String groupId= viewHolder.privateGroup.getId();
+                    String playerId = OffsideApplication.getPlayerId();
+                    EventBus.getDefault().post(new GroupInviteEvent(groupId, null, null, playerId));
                 }
             });
 

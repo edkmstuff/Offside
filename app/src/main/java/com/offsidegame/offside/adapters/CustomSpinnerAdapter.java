@@ -1,6 +1,5 @@
 package com.offsidegame.offside.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;

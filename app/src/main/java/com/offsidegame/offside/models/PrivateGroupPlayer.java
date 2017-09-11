@@ -1,7 +1,5 @@
 package com.offsidegame.offside.models;
 
-import android.support.annotation.NonNull;
-
 import java.io.Serializable;
 
 /**

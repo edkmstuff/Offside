@@ -1,7 +1,5 @@
 package com.offsidegame.offside.models;
 
-import android.os.CountDownTimer;
-
 import java.io.Serializable;
 
 /**

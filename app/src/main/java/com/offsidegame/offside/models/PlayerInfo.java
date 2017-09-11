@@ -1,7 +1,5 @@
 package com.offsidegame.offside.models;
 
-import java.io.Serializable;
-
 /**
  * Created by KFIR on 11/21/2016.
  */

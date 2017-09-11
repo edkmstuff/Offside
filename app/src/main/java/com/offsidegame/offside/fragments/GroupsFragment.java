@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.CreatePrivateGroupActivity;
@@ -133,7 +132,7 @@ public class GroupsFragment extends Fragment {
     public void resetVisibility() {
 
         loadingRoot.setVisibility(View.VISIBLE);
-        groupsRoot.setVisibility(View.GONE);
+        groupsRoot.setVisibility(View.VISIBLE);
 
     }
 
@@ -182,10 +181,10 @@ public class GroupsFragment extends Fragment {
                 addPagesToGroupsFragment();
                 viewPager.setCurrentItem(0);
 
-                loadingRoot.setVisibility(View.GONE);
+
                 groupsRoot.setVisibility(View.VISIBLE);
 
-                //tryRejoinGameForReturningPlayer();
+                tryRejoinGameForReturningPlayer();
 
             }
 
@@ -209,8 +208,9 @@ public class GroupsFragment extends Fragment {
         PrivateGroup selectedPrivateGroup = OffsideApplication.getPrivateGroupsInfo().findPrivateGroupById(lastKnownPrivateGroupId);
         OffsideApplication.setSelectedPrivateGroup(selectedPrivateGroup);
 
-        if (lastKnownGameId != null && lastKnownGameId.length() > 0 && lastKnownPrivateGameId != null && lastKnownPrivateGameId.length() > 0)
-            OffsideApplication.signalRService.requestIsGameActive(lastKnownGameId, lastKnownPrivateGameId, playerId);
+        OffsideApplication.signalRService.requestAvailableGame(lastKnownGameId, lastKnownPrivateGameId, playerId);
+
+        loadingRoot.setVisibility(View.GONE);
 
 
     }

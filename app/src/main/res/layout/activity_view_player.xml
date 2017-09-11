@@ -242,7 +242,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="משחק אחרון"
+                            android:text="@string/lbl_most_recent_game"
                             android:textColor="@color/colorWhite" />
 
                     </LinearLayout>
@@ -260,7 +260,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="ארון גביעים"
+                            android:text="@string/lbl_trophies_closet"
                             android:textColor="@color/colorWhite" />
 
                     </LinearLayout>
@@ -278,7 +278,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="נתונים"
+                            android:text="@string/lbl_player_data"
                             android:textColor="@color/colorWhite" />
 
 
@@ -790,7 +790,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="משחקים"
+                                android:text="@string/lbl_games"
                                 android:textSize="@dimen/OffsideExtraSmallText"/>
 
                         </LinearLayout>
@@ -817,7 +817,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="גביעים"
+                                android:text="@string/lbl_titles"
                                 android:textSize="@dimen/OffsideExtraSmallText"
                                 android:layout_gravity="center"/>
 
@@ -844,7 +844,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="ממוצע למשחק"
+                                android:text="@string/lbl_average_per_game"
                                 android:layout_gravity="center"
                                 android:textSize="@dimen/OffsideExtraSmallText"/>
 

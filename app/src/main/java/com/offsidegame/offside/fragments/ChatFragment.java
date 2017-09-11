@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.facebook.share.widget.ShareButton;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
@@ -40,6 +41,7 @@ import com.offsidegame.offside.activities.SlotActivity;
 import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
+import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
@@ -80,7 +82,7 @@ public class ChatFragment extends Fragment {
     private FrameLayout loadingRoot;
     private TextView versionTextView;
 
-    private TextView chatSendTextView;
+    private ImageView chatSendImageView;
     private EditText chatMessageEditText;
     private SharedPreferences settings;
 
@@ -116,6 +118,8 @@ public class ChatFragment extends Fragment {
     private LinearLayout actionExitGameRoot;
 
     private LinearLayout scoreboardRoot;
+
+    private ImageView inviteFriendsImageView;
 
 
     private TextView trophiesTextView;
@@ -201,12 +205,13 @@ private String groupId = null;
         versionTextView = (TextView) view.findViewById(R.id.shared_version_text_view);
         root = (LinearLayout) view.findViewById(R.id.fc_root);
         chatListView = (ListView) view.findViewById(R.id.fc_chat_list_view);
-        chatSendTextView = (TextView) view.findViewById(R.id.fc_chatSendTextView);
+        chatSendImageView = (ImageView) view.findViewById(R.id.fc_chat_send_image_view);
         chatMessageEditText = (EditText) view.findViewById(R.id.fc_chat_message_edit_text);
         privateGameNameTextView = (TextView) view.findViewById(R.id.fc_private_game_name_text_view);
         gameTitleTextView = (TextView) view.findViewById(R.id.fc_game_title_text_view);
         positionTextView = (TextView) view.findViewById(R.id.fc_position_text_view);
         scoreboardRoot = (LinearLayout) view.findViewById(R.id.fc_scoreboard_root);
+        inviteFriendsImageView =(ImageView) view.findViewById(R.id.fc_invite_friends_image_view);
         contentRoot = (RelativeLayout) view.findViewById(R.id.fc_content_root);
         actionsMenuRoot = (LinearLayout) view.findViewById(R.id.fc_actions_menu_root);
 
@@ -238,6 +243,18 @@ private String groupId = null;
 
     private void setEvents() {
 
+        inviteFriendsImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String groupId= OffsideApplication.getSelectedPrivateGroupId();
+                gameId = OffsideApplication.getSelectedGameId();
+                privateGameId = OffsideApplication.getSelectedPrivateGameId();
+                String playerId = OffsideApplication.getPlayerId();
+                EventBus.getDefault().post(new GroupInviteEvent(groupId,gameId,privateGameId,playerId));
+            }
+        });
+
+
         chatMessageEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -249,7 +266,7 @@ private String groupId = null;
         });
 
 
-        chatSendTextView.setOnClickListener(new View.OnClickListener() {
+        chatSendImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String message = chatMessageEditText.getText().toString();
@@ -566,9 +583,7 @@ private String groupId = null;
             editor.putString(getString(R.string.game_id_key), gameId);
             editor.putString(getString(R.string.private_group_id_key), privateGroupId);
             editor.putString(getString(R.string.private_game_id_key), privateGameId);
-            editor.putString(getString(R.string.private_game_title_key), privateGameTitle);
-            editor.putString(getString(R.string.home_team_key), homeTeam);
-            editor.putString(getString(R.string.away_team_key), awayTeam);
+
             editor.commit();
 
             init();
@@ -872,13 +887,14 @@ private String groupId = null;
 
             ViewGroup layout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.scoreboard_item, scoreboardRoot, false);
 
-            TextView rankTextView = (TextView) layout.getChildAt(0);
-            ImageView imageView = (ImageView) layout.getChildAt(1);
-            TextView textView = (TextView) layout.getChildAt(2);
+            FrameLayout frameLayout = (FrameLayout) layout.getChildAt(0);
+            TextView rankTextView = (TextView) frameLayout.getChildAt(0);
+            ImageView imageView = (ImageView) frameLayout.getChildAt(1);
+            TextView scoreTextView = (TextView) layout.getChildAt(1);
 
             rankTextView.setText(Integer.toString(score.getPosition()));
-            ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), imageView, "ChatActivity");
-            textView.setText(Integer.toString(score.getOffsideCoins()));
+            ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), imageView, "LobbyActivity");
+            scoreTextView.setText(Integer.toString(score.getOffsideCoins()));
 
             scoreboardRoot.addView(layout);
         }

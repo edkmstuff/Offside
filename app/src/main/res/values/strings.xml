@@ -11,8 +11,6 @@
     <!--</string-array>-->
 
 
-    <string name="lbl_welcome">אהלן</string>
-
     <!--Eran -->
     <string name="facebook_application_id" translatable="false">523024471208542</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb523024471208542</string>
@@ -23,19 +21,14 @@
 
 
     <string name="player_profile_picture_url_key">userProfilePictureUrl</string>
-    <string name="lbl_no_such_game">משחק לא קיים או שהינך מחובר ממכשיר אחר</string>
     <string name="recent_token_key">recentToken</string>
     <string name="lbl_you_are_connected">מחובר</string>
     <string name="lbl_you_are_disconnected">מנותק , מנסה להתחבר...</string>
     <string name="private_game_id_key">privateGameId</string>
-    <string name="lbl_randomly_selected_answer_title">נראה שלא הספקת לענות, אל דאגה בחרנו עבורך תשובה</string>
     <string name="lbl_user_selected_answer_title">אתה חושב ש..</string>
-    <string name="offside_coins_key">offsideCoins</string>
-    <string name="balance_key">balance</string>
     <string name="private_game_title_key">privateGameTitle</string>
     <string name="home_team_key">homeTeam</string>
     <string name="away_team_key">awayTeam</string>
-    <string name="total_players_key">totalPlayers</string>
     <string name="crash_toast_text">Something went wrong... we are sending the info to the developers...</string>
     <string name="lbl_you_can_earn">רווח אפשרי</string>
     <string name="lbl_correct_answer_feedback">צדקת!</string>
@@ -43,16 +36,10 @@
     <string name="lbl_you_earned">זכית ב-</string>
     <string name="lbl_points">מטבעות</string>
     <string name="lbl_you_didnt_earn_points">לא זכית במטבעות</string>
-    <string name="lbl_bet_level">גובה הימור</string>
     <string name="lbl_balance">יתרה</string>
     <string name="lbl_wrong_answer_encourage_feedback">לא נורא אולי בשאלה הבאה</string>
-    <string name="lbl_select_game">בחר משחק</string>
     <string name="lbl_select_name_for_club">בחר שם לקבוצה</string>
-    <string name="lbl_create_private_game">פתח קבוצה חדשה וקבל קוד</string>
     <string name="lbl_create_private_group">פתח קבוצה</string>
-    <string name="lbl_no_available_games">לא נמצאו משחקים זמינים</string>
-    <string name="lbl_you_dont_have_code">אין לך קוד קבוצה?</string>
-    <string name="lbl_no_available_game_message_return_later">כרגע איו משחקים זמינים, אנא חזור במועד מאוחר יותר</string>
     <string name="lbl_type_message">הקלד הודעה</string>
     <string name="lbl_send">שלח</string>
     <string name="lbl_how_others_answered">כך ענו כולם</string>
@@ -60,7 +47,6 @@
     <string name="lbl_question_time_expired_message">תם הזמן לשאלה זו</string>
     <string name="lbl_we_have_an_answer">התשובה הנכונה לשאלה</string>
     <string name="lbl_in_few_seconds_you_will_see_others_answers">בעוד מספר שניות תראה כיצד חושבים כולם...</string>
-    <string name="lbl_type_in_game_code">הזן קוד קבוצה והצטרף</string>
     <string name="lbl_commands_leaders">מובילים</string>
     <string name="lbl_command_current_question">שאלה נוכחית</string>
     <string name="lbl_command_offside_coins">היתרה שלי</string>
@@ -68,11 +54,9 @@
     <string name="lbl_command_game_code">קוד המשחק</string>
     <string name="lbl_command_share_code">שתף קוד</string>
     <string name="rewarded_video_ad_unit_id_key">ca-app-pub-3734756240615742/4334945313</string>
-    <string name="rewarded_video_ad_unit_id_key_1">ca-app-pub-3940256099942544/5224354917</string>  <!--googles test aduinitid-->
+    <!--googles test aduinitid-->
 
     <string name="lbl_you_can_get_coins_doing_one_of_the_following">תוכל להשיג מטבעות באחת מהדרכים הבאות</string>
-    <string name="lbl_congrates_for_getting_more_offside_coins">צפית עד הסוף? זכית!</string>
-    <string name="lbl_updated_balance">יתרה מעודכנת</string>
     <string name="lbl_new_question_is_waiting_for_you">שאלה חדשה מחכה לך</string>
     <string name="lbl_click_to_answer">לחץ כדי לענות</string>
     <string name="lbl_click_to_view">לחץ כדי לראות</string>
@@ -83,8 +67,6 @@
     <string name="lbl_leave_game">צא מהמשחק</string>
     <string name="lbl_start_slot">לחץ כאן כדי להגריל</string>
     <string name="lbl_back_to_game">חזור למשחק</string>
-    <string name="lbl_well_done_you_earned_100_coins">כל הכבוד! הרווחת 100 מטבעות</string>
-    <string name="lbl_well_done_you_earned_500_coins">כל הכבוד! הרווחת 500 מטבעות</string>
     <string name="lbl_well_done_you_earned_1_power_items">כל הכבוד! זכית בכדור</string>
     <string name="lbl_well_done_you_earned_2_power_items">כל הכבוד! זכית ב - 2 כדורים</string>
     <string name="lbl_you_didnt_earn_balls">לא זכית בכדורים הפעם... לא נורא, תוכל לנסות שוב</string>
@@ -97,7 +79,6 @@
     <string name="lbl_and_the_winner_is">והמנצחים שלנו הם...</string>
     <string name="lbl_exceed_allowed_reward_video_watch_message">צפית במקסימום סרטונים המותרים למשחק אחד.</string>
     <string name="lbl_failed_to_load_video">טעינת וידאו נכשלה</string>
-    <string name="lbl_select_language">בחר שפה</string>
     <string name="lbl_seems_like_you_skipped_this_question">נראה שבחרת לא לענות על השאלה</string>
     <string name="lbl_you_are_out_of_coins">אין לך מספיק מטבעות , תוכל לחדש את המלאי במחצית</string>
     <string name="lbl_game_is_active">משחק פעיל</string>
@@ -107,14 +88,9 @@
     <string name="lbl_my_profile">פרופיל</string>
     <string name="lbl_shop">חנות</string>
     <string name="lbl_play">שחק</string>
-    <string name="lbl_start_a_game">התחל משחק</string>
-    <string name="title_activity_lobby_main">LobbyMainActivity</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="key_group_type">groupType</string>
     <string name="key_private_group_name">PRIVATE_GROUP</string>
     <string name="key_public_group_name">PUBLIC_GROUP</string>
-    <string name="lbl_unknown">לא ידוע</string>
     <string name="lbl_my_private_groups">הקבוצות שלי</string>
     <string name="lbl_public_groups">קבוצות ציבוריות</string>
     <string name="key_league_type">leagueType</string>
@@ -129,6 +105,16 @@
     <string name="lbl_champions_league">ליגת האלופות</string>
     <string name="lbl_play_here">שחק כאן</string>
     <string name="private_group_id_key">privateGroupId</string>
+    <string name="lbl_enter_game">כניסה למשחק</string>
+    <string name="lbl_open_game">פתח משחק</string>
+    <string name="lbl_games">משחקים</string>
+    <string name="lbl_ranking_table">דירוג</string>
+    <string name="lbl_your_position">מיקומך</string>
+    <string name="lbl_most_recent_game">משחק אחרון</string>
+    <string name="lbl_trophies_closet">ארון גביעים</string>
+    <string name="lbl_player_data">נתונים</string>
+    <string name="lbl_titles">תארים</string>
+    <string name="lbl_average_per_game">ממוצע למשחק</string>
 
 
 </resources>

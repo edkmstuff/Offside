@@ -110,7 +110,7 @@
                             android:id="@+id/ag_join_private_game_button_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="כניסה למשחק"
+                            android:text="@string/lbl_enter_game"
                             android:textSize="16dp"
                             android:textColor="@color/colorWhite" />
 
@@ -131,7 +131,7 @@
                             android:id="@+id/ag_create_private_game_button_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="פתח משחק"
+                            android:text="@string/lbl_open_game"
                             android:textSize="16dp"
                             android:textColor="@color/colorWhite" />
 

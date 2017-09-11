@@ -20,6 +20,7 @@ import com.offsidegame.offside.events.AvailableGamesEvent;
 import com.offsidegame.offside.events.AvailableLanguagesEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.models.LeagueRecord;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
@@ -342,7 +343,7 @@ public class SignalRService extends Service {
             }
         }, PlayerAssets.class);
 
-        hub.on("IsGameActiveReceived", new SubscriptionHandler1<AvailableGame>() {
+        hub.on("AvailableGameReceived", new SubscriptionHandler1<AvailableGame>() {
             @Override
             public void run(AvailableGame availableGame) {
                 EventBus.getDefault().post(availableGame);
@@ -352,7 +353,7 @@ public class SignalRService extends Service {
         hub.on("FriendInviteReceived", new SubscriptionHandler1<String>() {
             @Override
             public void run(String friendInviteCode) {
-                EventBus.getDefault().post(friendInviteCode);
+                EventBus.getDefault().post(new FriendInviteReceivedEvent(friendInviteCode));
             }
         }, String.class);
 
@@ -494,10 +495,10 @@ public class SignalRService extends Service {
         });
     }
 
-    public void requestIsGameActive(String gameId, String privateGameId, String playerId) {
+    public void requestAvailableGame(String gameId, String privateGameId, String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
-        hub.invoke(Boolean.class, "RequestIsGameActive", gameId, privateGameId, playerId);
+        hub.invoke(Boolean.class, "RequestAvailableGame", gameId, privateGameId, playerId);
     }
 
 
@@ -684,6 +685,14 @@ public class SignalRService extends Service {
             return;
         hub.invoke("RequestPlayerAssets", playerId);
     }
+
+    public void requestInviteFriend(String groupId, String gameId, String privateGameId, String inviterPlayerId) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke("RequestInviteFriend", groupId, gameId, privateGameId, inviterPlayerId);
+    }
+
+
 
 
     //</editor-fold>

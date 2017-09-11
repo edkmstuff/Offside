@@ -1,7 +1,5 @@
 package com.offsidegame.offside.models;
 
-import java.security.PublicKey;
-
 /**
  * Created by KFIR on 12/7/2016.
  */

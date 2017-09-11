@@ -2,7 +2,6 @@ package com.offsidegame.offside.adapters;
 
 import android.content.Context;
 import android.net.Uri;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,21 +11,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.JoinGameEvent;
-import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupPlayer;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 

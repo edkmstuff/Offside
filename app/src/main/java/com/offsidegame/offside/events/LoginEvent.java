@@ -1,9 +1,5 @@
 package com.offsidegame.offside.events;
 
-import com.facebook.Profile;
-
-import java.net.URI;
-
 /**
  * Created by KFIR on 11/17/2016.
  */

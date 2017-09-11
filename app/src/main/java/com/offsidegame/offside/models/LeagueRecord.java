@@ -1,9 +1,5 @@
 package com.offsidegame.offside.models;
 
-import com.offsidegame.offside.R;
-
-import java.util.Date;
-
 /**
  * Created by user on 8/1/2017.
  */

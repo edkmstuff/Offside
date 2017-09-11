@@ -7,8 +7,6 @@
 
 <resources>
 
-    <color name="colorSecondary">#404040</color>
-    <color name="windowBackground">#28408F</color>
     <color name="colorAccent">#80D8FF</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="colorBlack">#000000</color>
@@ -50,18 +48,10 @@
     <color name="buttonTextColor">#FFFFFF</color>
 
     <color name="answerTextColor">#000000</color>
-    <color name="answer1backgroundColor">#F6F3F2</color>
     <color name="answer2backgroundColor">#F6F3F2</color>
     <color name="answer3backgroundColor">#F6F3F2</color>
     <color name="answer4backgroundColor">#F6F3F2</color>
     <color name="chatIncoming">#F6F3F2</color>
-    <color name="gray">#5B5B5B</color>
-
-
-
-
-
-
 
 
 </resources>

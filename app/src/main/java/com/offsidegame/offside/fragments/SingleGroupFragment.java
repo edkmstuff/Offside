@@ -15,8 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.LeagueAdapter;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;

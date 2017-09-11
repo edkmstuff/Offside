@@ -350,7 +350,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/colorWhite"
-                            android:text="משחקים"
+                            android:text="@string/lbl_games"
                             />
 
                         <ImageView
@@ -378,7 +378,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/colorWhite"
-                            android:text="ליגה"
+                            android:text="@string/lbl_ranking_table"
                             />
 
                         <ImageView
@@ -448,7 +448,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="מיקומך:"/>
+                            android:text="@string/lbl_your_position"/>
 
                         <TextView
                             android:id="@+id/l_single_group_position_out_of_text_view"

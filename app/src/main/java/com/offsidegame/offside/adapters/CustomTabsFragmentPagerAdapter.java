@@ -3,9 +3,6 @@ package com.offsidegame.offside.adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-
-import com.offsidegame.offside.R;
 
 import java.util.ArrayList;
 
