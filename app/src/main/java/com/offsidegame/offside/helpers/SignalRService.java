@@ -16,6 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.offsidegame.offside.R;
 
 import com.offsidegame.offside.activities.LobbyActivity;
+import com.offsidegame.offside.events.AvailableGameEvent;
 import com.offsidegame.offside.events.AvailableGamesEvent;
 import com.offsidegame.offside.events.AvailableLanguagesEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
@@ -77,8 +78,9 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("192.168.1.140:18313");
-    public final String ip = new String("10.0.0.17:18313");
+    //public final String ip = new String("10.0.2.2:18313");
+    public final String ip = new String("192.168.1.140:18313");
+    //public final String ip = new String("10.0.0.17:18313");
 
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
@@ -354,7 +356,7 @@ public class SignalRService extends Service {
         hub.on("AvailableGameReceived", new SubscriptionHandler1<AvailableGame>() {
             @Override
             public void run(AvailableGame availableGame) {
-                EventBus.getDefault().post(availableGame);
+                EventBus.getDefault().post(new AvailableGameEvent(availableGame));
             }
         }, AvailableGame.class);
 

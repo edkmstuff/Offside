@@ -48,6 +48,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -285,7 +286,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingProcessedQuestionAnswersBarsRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_processed_question_answers_bars_root);
 
                 //social feed
-                viewHolder.incomingSocialFeedRoot  = (LinearLayout) convertView.findViewById(R.id.cm_incoming_social_feed_root);;
+                viewHolder.incomingSocialFeedRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_social_feed_root);
+                ;
                 viewHolder.incomingSocialFeedTextMessageTextView = (TextView) convertView.findViewById(R.id.cm_incoming_social_feed_text_message_text_view);
                 viewHolder.incomingSocialFeedPictureImageView = (ImageView) convertView.findViewById(R.id.cm_incoming_social_feed_image_view);
                 viewHolder.facebookShareButton = (ShareButton) convertView.findViewById(R.id.cm_facebook_share_button);
@@ -1132,8 +1134,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             String messageText = viewHolder.chatMessage.getMessageText();
             viewHolder.incomingSocialFeedTextMessageTextView.setText(messageText);
 
-            Bitmap bitmapImage = BitmapFactory.decodeResource( context.getResources(), R.drawable.app_logo_25);
-            shareOnFacebook(viewHolder.facebookShareButton, bitmapImage, messageText );
+            Bitmap bitmapImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.app_logo_25);
+            shareOnFacebook(viewHolder.facebookShareButton, bitmapImage, messageText);
 
             //background set
             if (viewHolder.isMessageFromBot)
@@ -1152,14 +1154,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         }
     }
 
-    public void shareOnFacebook(ShareButton facebookShareButton, Bitmap bitmapImage, String quote ){
+    public void shareOnFacebook(ShareButton facebookShareButton, Bitmap bitmapImage, String quote) {
 
         StringBuilder sb = new StringBuilder();
 
         sb.append(quote);
         sb.append("\r\n");
         sb.append("\r\n");
-        sb.append("think you can bit me? come join!!!" );
+        sb.append("think you can bit me? come join!!!");
         ShareLinkContent content = new ShareLinkContent.Builder()
                 .setContentUrl(Uri.parse(OffsideApplication.getAppLogoPictureUrl()))
                 .setShareHashtag(new ShareHashtag.Builder()
@@ -1395,8 +1397,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         }
 
     }
-
-
 
 
 }

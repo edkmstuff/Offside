@@ -147,7 +147,7 @@ public class ChatFragment extends Fragment {
     private AvailableGame selectedAvailableGame = null;
     private String gameId = null;
     private String privateGameId = null;
-private String groupId = null;
+    private String groupId = null;
     private String androidDeviceId = null;
     private String playerId = null;
 
@@ -159,9 +159,10 @@ private String groupId = null;
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         EventBus.getDefault().register(this);
+        OffsideApplication.setScoreboard(null);
 
         //chat data
         gameId = OffsideApplication.getSelectedGameId();
@@ -176,14 +177,15 @@ private String groupId = null;
         } else {
             Toast.makeText(getActivity(), "Can not join this game", Toast.LENGTH_LONG);
         }
+
+
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         EventBus.getDefault().unregister(this);
     }
-
 
 
     @Nullable
@@ -211,7 +213,7 @@ private String groupId = null;
         gameTitleTextView = (TextView) view.findViewById(R.id.fc_game_title_text_view);
         positionTextView = (TextView) view.findViewById(R.id.fc_position_text_view);
         scoreboardRoot = (LinearLayout) view.findViewById(R.id.fc_scoreboard_root);
-        inviteFriendsImageView =(ImageView) view.findViewById(R.id.fc_invite_friends_image_view);
+        inviteFriendsImageView = (ImageView) view.findViewById(R.id.fc_invite_friends_image_view);
         contentRoot = (RelativeLayout) view.findViewById(R.id.fc_content_root);
         actionsMenuRoot = (LinearLayout) view.findViewById(R.id.fc_actions_menu_root);
 
@@ -246,11 +248,11 @@ private String groupId = null;
         inviteFriendsImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String groupId= OffsideApplication.getSelectedPrivateGroupId();
+                String groupId = OffsideApplication.getSelectedPrivateGroupId();
                 gameId = OffsideApplication.getSelectedGameId();
                 privateGameId = OffsideApplication.getSelectedPrivateGameId();
                 String playerId = OffsideApplication.getPlayerId();
-                EventBus.getDefault().post(new GroupInviteEvent(groupId,gameId,privateGameId,playerId));
+                EventBus.getDefault().post(new GroupInviteEvent(groupId, gameId, privateGameId, playerId));
             }
         });
 
@@ -554,9 +556,6 @@ private String groupId = null;
     }
 
 
-
-
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlayerJoinedPrivateGame(JoinGameEvent joinGameEvent) {
         try {
@@ -622,7 +621,7 @@ private String groupId = null;
 
         actionsMenuRoot.setVisibility(View.GONE);
 
-        String chatTitle = String.format("%s",privateGroupName);
+        String chatTitle = String.format("%s", privateGroupName);
         privateGameNameTextView.setText(chatTitle);
         String title = String.format("%s vs. %s", homeTeam, awayTeam);
         gameTitleTextView.setText(title);
@@ -697,7 +696,7 @@ private String groupId = null;
         if (!reset && chat != null)
             messages = chat.getChatMessages();
 
-        chatMessageAdapter = new ChatMessageAdapter(getActivity(), messages, OffsideApplication.playerAnswers);
+        chatMessageAdapter = new ChatMessageAdapter(getContext(), messages, OffsideApplication.playerAnswers);
         chatListView.setAdapter(chatMessageAdapter);
     }
 
@@ -847,8 +846,11 @@ private String groupId = null;
             if (scores == null || scores.length == 0)
                 return;
 
+
+
             //check if scoreboard was changed
             Scoreboard currentScoreboard = OffsideApplication.getScoreboard();
+
             boolean isScoreboardsEquals = false;
             if (!scoreboard.isForceUpdate() && currentScoreboard != null && currentScoreboard.getScores() != null && currentScoreboard.getScores().length == scores.length) {
                 Score[] currentScores = currentScoreboard.getScores();
@@ -888,8 +890,9 @@ private String groupId = null;
             ViewGroup layout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.scoreboard_item, scoreboardRoot, false);
 
             FrameLayout frameLayout = (FrameLayout) layout.getChildAt(0);
-            TextView rankTextView = (TextView) frameLayout.getChildAt(0);
-            ImageView imageView = (ImageView) frameLayout.getChildAt(1);
+            ImageView imageView = (ImageView) frameLayout.getChildAt(0);
+            TextView rankTextView = (TextView) frameLayout.getChildAt(1);
+
             TextView scoreTextView = (TextView) layout.getChildAt(1);
 
             rankTextView.setText(Integer.toString(score.getPosition()));

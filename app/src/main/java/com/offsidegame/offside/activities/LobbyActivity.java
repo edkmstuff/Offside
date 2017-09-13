@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.AvailableGameEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
@@ -324,10 +325,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveAvailableGame(AvailableGame availableGame) {
+    public void onReceiveAvailableGame(AvailableGameEvent availableGameEvent) {
         try {
-
-            if (availableGame != null && availableGame.getGameId() != null) {
+            AvailableGame availableGame = availableGameEvent.getAvailableGame();
+            if (availableGame != null) {
                 String groupId = availableGame.getGroupId();
                 OffsideApplication.signalRService.requestPrivateGroup(playerId,groupId);
                 OffsideApplication.setSelectedAvailableGame(availableGame);

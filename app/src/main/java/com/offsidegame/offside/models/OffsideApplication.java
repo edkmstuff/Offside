@@ -29,8 +29,9 @@ import java.util.Map;
  * Created by KFIR on 1/15/2017.
  */
 @ReportsCrashes(
-        //formUri = "http://192.168.1.140:8080/api/Offside/AcraCrashReport",
-        formUri = "http://10.0.0.17:8080/api/Offside/AcraCrashReport",
+        formUri = "http://192.168.1.140:8080/api/Offside/AcraCrashReport",
+        //formUri = "http://10.0.2.2:8080/api/Offside/AcraCrashReport",
+        //formUri = "http://10.0.0.17:8080/api/Offside/AcraCrashReport",
         //formUri = "http://offside.somee.com/api/Offside/AcraCrashReport",
         //formUri = "http://offside.azurewebsites.net/api/Offside/AcraCrashReport",
 
@@ -58,13 +59,17 @@ public class OffsideApplication extends Application {
 
     private static String profileImageFileName = "profileImage.jpg";
 
-    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
-    //    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
-    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
+//    private static String initialsProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/";
+//    //    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
+//    private static String defaultProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/default";
 
-//  private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
+//    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
+    //    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
+//    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
+
+  private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
 //   // private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/Images/defaultImage.jpg";
-//    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
+    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
 
 //    private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";
@@ -166,7 +171,7 @@ public class OffsideApplication extends Application {
     }
 
     public static Scoreboard getScoreboard() {
-        return scoreboard;
+        return OffsideApplication.scoreboard;
     }
 
     public static void setScoreboard(Scoreboard scoreboard) {
@@ -367,48 +372,48 @@ public class OffsideApplication extends Application {
 
     };
 
-    @Subscribe
-    public void onReceiveScoreboard(ScoreboardEvent scoreboardEvent) {
-        try {
-
-            Scoreboard scoreboard = scoreboardEvent.getScoreboard();
-
-            if (scoreboard == null)
-                return;
-            Score[] scores = scoreboard.getScores();
-
-            if (scores == null || scores.length == 0)
-                return;
-
-            //check if scoreboard was changed
-            Scoreboard currentScoreboard = OffsideApplication.getScoreboard();
-            boolean isScoreboardsEquals = false;
-            if (!scoreboard.isForceUpdate() && currentScoreboard != null && currentScoreboard.getScores() != null && currentScoreboard.getScores().length == scores.length) {
-                Score[] currentScores = currentScoreboard.getScores();
-                for (int i = 0; i < currentScores.length; i++) {
-                    boolean isEqualScore = currentScores[i].getImageUrl().equals(scores[i].getImageUrl()) &&
-                            currentScores[i].getPosition() == scores[i].getPosition() &&
-                            currentScores[i].getOffsideCoins() == scores[i].getOffsideCoins();
-
-                    if (!isEqualScore)
-                        break;
-                    if (i == currentScores.length - 1)
-                        isScoreboardsEquals = true;
-                }
-
-            }
-            if (isScoreboardsEquals)
-                return;
-
-            OffsideApplication.setScoreboard(scoreboard);
-
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
-
-    }
+//    @Subscribe
+//    public void onReceiveScoreboard(ScoreboardEvent scoreboardEvent) {
+//        try {
+//
+//            Scoreboard scoreboard = scoreboardEvent.getScoreboard();
+//
+//            if (scoreboard == null)
+//                return;
+//            Score[] scores = scoreboard.getScores();
+//
+//            if (scores == null || scores.length == 0)
+//                return;
+//
+//            //check if scoreboard was changed
+//            Scoreboard currentScoreboard = OffsideApplication.getScoreboard();
+//            boolean isScoreboardsEquals = false;
+//            if (!scoreboard.isForceUpdate() && currentScoreboard != null && currentScoreboard.getScores() != null && currentScoreboard.getScores().length == scores.length) {
+//                Score[] currentScores = currentScoreboard.getScores();
+//                for (int i = 0; i < currentScores.length; i++) {
+//                    boolean isEqualScore = currentScores[i].getImageUrl().equals(scores[i].getImageUrl()) &&
+//                            currentScores[i].getPosition() == scores[i].getPosition() &&
+//                            currentScores[i].getOffsideCoins() == scores[i].getOffsideCoins();
+//
+//                    if (!isEqualScore)
+//                        break;
+//                    if (i == currentScores.length - 1)
+//                        isScoreboardsEquals = true;
+//                }
+//
+//            }
+//            if (isScoreboardsEquals)
+//                return;
+//
+//            OffsideApplication.setScoreboard(scoreboard);
+//
+//
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//
+//        }
+//
+//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayer(PlayerModel updatedPlayer) {
