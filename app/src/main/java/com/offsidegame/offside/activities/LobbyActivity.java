@@ -33,6 +33,7 @@ import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.fragments.ChatFragment;
 import com.offsidegame.offside.fragments.GroupsFragment;
@@ -295,7 +296,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             playerInfoRoot.setVisibility(View.VISIBLE);
 
-            bottomNavigationView.setSelectedItemId(R.id.nav_action_groups);
+            tryRejoinGameForReturningPlayer();
+
 
 
 
@@ -305,6 +307,63 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         }
 
     }
+
+    public void tryRejoinGameForReturningPlayer(){
+
+        //check if player is already playing
+        SharedPreferences settings = context.getSharedPreferences(getString(R.string.preference_name), 0);
+        String lastKnownGameId = settings.getString(getString(R.string.game_id_key), null);
+        String lastKnownPrivateGroupId = settings.getString(getString(R.string.private_group_id_key), null);
+        String lastKnownPrivateGameId = settings.getString(getString(R.string.private_game_id_key), null);
+        String playerId = OffsideApplication.getPlayerId();
+
+        OffsideApplication.setSelectedPrivateGameId(lastKnownPrivateGameId);
+
+        OffsideApplication.signalRService.requestAvailableGame(lastKnownGameId, lastKnownPrivateGameId, playerId);
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveAvailableGame(AvailableGame availableGame) {
+        try {
+
+            if (availableGame != null && availableGame.getGameId() != null) {
+                String groupId = availableGame.getGroupId();
+                OffsideApplication.signalRService.requestPrivateGroup(playerId,groupId);
+                OffsideApplication.setSelectedAvailableGame(availableGame);
+            }
+
+            else {
+                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+
+            }
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePrivateGroup(PrivateGroupEvent privateGroupEvent) {
+        try {
+            if (privateGroupEvent == null)
+                return;
+
+            PrivateGroup privateGroup = privateGroupEvent.getPrivateGroup();
+            OffsideApplication.setSelectedPrivateGroup(privateGroup);
+            EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_play));
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSelectedPrivateGroup(PrivateGroup privateGroup) {
@@ -333,21 +392,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveAvailableGame(AvailableGame availableGame) {
-        try {
-
-
-            if (availableGame != null) {
-                OffsideApplication.setSelectedAvailableGame(availableGame);
-                bottomNavigationView.setSelectedItemId(R.id.nav_action_play);
-            }
-
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)

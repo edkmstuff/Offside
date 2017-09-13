@@ -21,6 +21,7 @@ import com.offsidegame.offside.events.AvailableLanguagesEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
+import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.models.LeagueRecord;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
@@ -276,6 +277,13 @@ public class SignalRService extends Service {
             }
         }, PrivateGroup.class);
 
+        hub.on("PrivateGroupReceived", new SubscriptionHandler1<PrivateGroup>() {
+            @Override
+            public void run(PrivateGroup privateGroup) {
+                EventBus.getDefault().post(new PrivateGroupEvent(privateGroup));
+            }
+        }, PrivateGroup.class);
+
         hub.on("AvailableGamesReceived", new SubscriptionHandler1<AvailableGame[]>() {
             @Override
             public void run(AvailableGame[] availableGames) {
@@ -502,39 +510,6 @@ public class SignalRService extends Service {
     }
 
 
-    public void getAvailableLanguages() {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
-        hub.invoke(String[].class, "GetAvailableLanguages").done(new Action<String[]>() {
-
-            @Override
-            public void run(String[] availableLanguages) throws Exception {
-                EventBus.getDefault().post(new AvailableLanguagesEvent(availableLanguages));
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
-    }
-
-    public void getAvailableGames() {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
-        hub.invoke(AvailableGame[].class, "GetAvailableGames").done(new Action<AvailableGame[]>() {
-
-            @Override
-            public void run(AvailableGame[] availableGames) throws Exception {
-                EventBus.getDefault().post(new AvailableGamesEvent(availableGames));
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
-    }
 
     public void requestCreatePrivateGame(String gameId, String groupId, String playerId, String selectedLanguage) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
@@ -691,6 +666,14 @@ public class SignalRService extends Service {
             return;
         hub.invoke("RequestInviteFriend", groupId, gameId, privateGameId, inviterPlayerId);
     }
+
+    public void requestPrivateGroup(String playerId, String groupId) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        hub.invoke("RequestPrivateGroup", playerId, groupId);
+    }
+
+
 
 
 

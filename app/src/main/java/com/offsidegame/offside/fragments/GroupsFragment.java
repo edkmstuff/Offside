@@ -19,6 +19,8 @@ import android.widget.TextView;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.CreatePrivateGroupActivity;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
+import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupsInfo;
@@ -174,7 +176,7 @@ public class GroupsFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePrivateGroupsInfo(PrivateGroupsInfo privateGroupsInfo) {
         try {
-            //todo: resolve issue this methods is called twice when user create group
+
             if (privateGroupsInfo != null && privateGroupsInfo.getPrivateGroups() != null) {
                 OffsideApplication.setPrivateGroupsInfo(privateGroupsInfo);
 
@@ -182,9 +184,6 @@ public class GroupsFragment extends Fragment {
                 viewPager.setCurrentItem(0);
 
 
-                groupsRoot.setVisibility(View.VISIBLE);
-
-                tryRejoinGameForReturningPlayer();
 
             }
 
@@ -195,25 +194,6 @@ public class GroupsFragment extends Fragment {
 
     }
 
-    public void tryRejoinGameForReturningPlayer(){
-
-        //check if player is already playing
-        SharedPreferences settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
-        String lastKnownGameId = settings.getString(getString(R.string.game_id_key), null);
-        String lastKnownPrivateGroupId = settings.getString(getString(R.string.private_group_id_key), null);
-        String lastKnownPrivateGameId = settings.getString(getString(R.string.private_game_id_key), null);
-        String playerId = OffsideApplication.getPlayerId();
-
-        OffsideApplication.setSelectedPrivateGameId(lastKnownPrivateGameId);
-        PrivateGroup selectedPrivateGroup = OffsideApplication.getPrivateGroupsInfo().findPrivateGroupById(lastKnownPrivateGroupId);
-        OffsideApplication.setSelectedPrivateGroup(selectedPrivateGroup);
-
-        OffsideApplication.signalRService.requestAvailableGame(lastKnownGameId, lastKnownPrivateGameId, playerId);
-
-        loadingRoot.setVisibility(View.GONE);
-
-
-    }
 
     public void addPagesToGroupsFragment() {
 
