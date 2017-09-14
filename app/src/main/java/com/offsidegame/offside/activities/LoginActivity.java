@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
             getIds();
             loadingRoot.setVisibility(View.VISIBLE);
-            setupBackPress();
+            setupToSupportExitOnBackButtonPressed();
             //defineDeepLinking();
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     }
 
     // to allow exit by clicking on back button twice
-    private void setupBackPress(){
+    private void setupToSupportExitOnBackButtonPressed(){
         Intent intent = this.getIntent();
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

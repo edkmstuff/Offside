@@ -287,7 +287,9 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="2"
                                 android:gravity="center_horizontal"
-                                android:text="0:00" />
+                                android:text="0:00"
+                                android:textColor="@color/chatText"
+                                />
 
                             <ProgressBar
                                 android:id="@+id/cm_incoming_time_to_answer_progress_bar"
@@ -298,7 +300,6 @@
                                 android:height="30dp"
                                 android:max="15"
                                 android:progress="3"
-
                                 android:progressDrawable="@drawable/progress_bar"
                                 android:textColor="@color/colorWhite" />
 
@@ -314,7 +315,7 @@
                             android:gravity="center"
                             android:text="@string/lbl_question_time_expired_message"
                             android:textColor="@color/chatText"
-                            android:textSize="16dp" />
+                            android:textSize="12dp" />
                         <!--stats-->
                         <LinearLayout
                             android:id="@+id/cm_incoming_question_stat_root"
@@ -351,7 +352,7 @@
                             android:paddingTop="10dp"
                             android:text="which team will offsideCoins next?"
                             android:textColor="@color/chatPrimary"
-                            android:textSize="@dimen/OffsideMediumText" />
+                            android:textSize="@dimen/OffsideMediumSmallText" />
 
                         <!--bet panel-->
                         <LinearLayout
@@ -360,15 +361,66 @@
                             android:layout_height="wrap_content"
                             android:layoutDirection="rtl"
                             android:orientation="vertical">
-
-
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
                                 android:orientation="horizontal"
                                 android:gravity="center"
-                                android:weightSum="2">
+                                android:background="@drawable/double_up_button"
+                                >
+
+
+                                <LinearLayout
+                                    android:id="@+id/incoming_double_up_bet_root"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginRight="5dp"
+                                    android:gravity="center"
+                                    android:layoutDirection="rtl"
+                                    android:orientation="horizontal"
+                                    android:padding="5dp">
+                                    <ImageView
+                                        android:layout_width="25dp"
+                                        android:layout_height="25dp"
+                                        android:scaleType="centerCrop"
+
+                                        android:src="@mipmap/ic_soccer_ball"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="הכפל"
+                                        android:textSize="@dimen/OffsideMediumText"
+                                        android:textColor="@color/colorBlack"
+                                        android:textStyle="bold" />
+
+
+
+
+
+
+
+
+                                </LinearLayout>
+
+
+
+
+
+                            </LinearLayout>
+
+                            <!--bet panel previous version-->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:orientation="horizontal"
+                                android:gravity="center"
+                                android:weightSum="2"
+                                android:visibility="gone">
 
 
 

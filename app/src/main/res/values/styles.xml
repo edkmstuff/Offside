@@ -1,4 +1,4 @@
-<resources>
+    <resources>
 
     <!-- Base application theme. -->
     <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
@@ -95,6 +95,13 @@
         <item name="android:textColor">@color/buttonTextColor</item>
 
     </style>
+
+        <style name="GoldButton">
+            <item name="android:background">@color/colorGold</item>
+            <item name="android:textColor">@color/colorBlack    </item>
+
+        </style>
+
 
 
 </resources>

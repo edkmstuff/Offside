@@ -22,6 +22,7 @@ import com.offsidegame.offside.events.AvailableLanguagesEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
+import com.offsidegame.offside.events.PrivateGroupCreatedEvent;
 import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.models.LeagueRecord;
 import com.offsidegame.offside.models.PlayerModel;
@@ -79,8 +80,8 @@ public class SignalRService extends Service {
     private Date startReconnecting = null;
 
     //public final String ip = new String("10.0.2.2:18313");
-    public final String ip = new String("192.168.1.140:18313");
-    //public final String ip = new String("10.0.0.17:18313");
+    //public final String ip = new String("192.168.1.140:18313");
+    public final String ip = new String("10.0.0.17:18313");
 
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("offside.azurewebsites.net");
@@ -275,7 +276,7 @@ public class SignalRService extends Service {
         hub.on("PrivateGroupCreated", new SubscriptionHandler1<PrivateGroup>() {
             @Override
             public void run(PrivateGroup privateGroup) {
-                EventBus.getDefault().post(privateGroup);
+                EventBus.getDefault().post(new PrivateGroupCreatedEvent(privateGroup));
             }
         }, PrivateGroup.class);
 

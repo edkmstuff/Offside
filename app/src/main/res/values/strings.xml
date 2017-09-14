@@ -82,7 +82,7 @@
     <string name="lbl_seems_like_you_skipped_this_question">נראה שבחרת לא לענות על השאלה</string>
     <string name="lbl_you_are_out_of_coins">אין לך מספיק מטבעות , תוכל לחדש את המלאי במחצית</string>
     <string name="lbl_game_is_active">משחק פעיל</string>
-    <string name="lbl_no_playing_players">אין שחקנים פעילים</string>
+    <string name="lbl_no_playing_players">אין משחקים פעילים</string>
     <string name="lbl_now_playing">חברים כבר משחקים</string>
     <string name="lbl_private_groups">קבוצות</string>
     <string name="lbl_my_profile">פרופיל</string>
@@ -115,6 +115,10 @@
     <string name="lbl_player_data">נתונים</string>
     <string name="lbl_titles">תארים</string>
     <string name="lbl_average_per_game">ממוצע למשחק</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="lbl_sign_out">התנתק</string>
 
 
 </resources>

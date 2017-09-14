@@ -52,7 +52,7 @@
     <color name="answer3backgroundColor">#F6F3F2</color>
     <color name="answer4backgroundColor">#F6F3F2</color>
     <color name="chatIncoming">#F6F3F2</color>
-
+    <color name="colorGold">#E3BE77</color>
 
 </resources>
 

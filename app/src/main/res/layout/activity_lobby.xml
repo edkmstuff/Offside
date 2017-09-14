@@ -169,9 +169,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!--&lt;!&ndash; Progress bar &ndash;&gt;-->
-            <!--<include layout="@layout/shared_loading"-->
-                <!--android:visibility="gone"/>-->
 
             <!--***************FRAGMENT CONTAINER ROOT***********************************-->
             <LinearLayout
@@ -193,295 +190,27 @@
 
             </LinearLayout>
 
-            <!--***************SINGLE GROUP VIEW*********************************************-->
-            <LinearLayout
-                android:id="@+id/l_single_group_root"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/l_actions_root"
-                android:orientation="vertical"
-                >
-
-                <!-- GROUP NAVIGATION-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-
-                    android:paddingTop="20dp"
-                    android:paddingBottom="20dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="5dp">
-
-                    <!-- FIRST ROW, group nav -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:weightSum="10">
-
-                        <!-- Left  -->
-                        <LinearLayout
-
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"
-                            android:gravity="center_horizontal">
-
-                            <!-- LEFT TEXT-->
-                            <TextView
-                                android:id="@+id/l_group_navigation_left_button_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="\u003c"
-                                android:textColor="@color/colorWhite" />
-
-                        </LinearLayout>
-
-                        <!-- group name -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:gravity="center"
-                            android:orientation="vertical">
-
-                            <!-- GROUP NAME TEXT -->
-                            <TextView
-                                android:id="@+id/l_group_navigation_group_name_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="הכבשים"
-                                android:textColor="@color/colorWhite"
-                                android:textSize="@dimen/OffsideLargeText"
-
-                                />
-
-
-                        </LinearLayout>
-
-                        <!-- right  -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:layout_weight="3">
-
-                            <!-- RIGHT TEXT-->
-                            <TextView
-                                android:id="@+id/l_group_navigation_right_button_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="\u003e"
-                                android:textColor="@color/colorWhite" />
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
-
-
-                    <!-- SECOND ROW , last played -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:layout_marginTop="10dp"
-                        android:weightSum="10">
-
-                        <!--empty , just for layout reasons-->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"></LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:gravity="center_horizontal">
-
-                            <!-- LAST PLAYED TEXT -->
-                            <TextView
-                                android:id="@+id/l_group_navigation_last_played_text_view"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="שיחקו לפני 99 ימים"
-                                android:textSize="@dimen/OffsideSmallText"
-                                android:textColor="@color/colorWhite" />
-
-
-                        </LinearLayout>
-
-                        <!--empty , just for layout reasons-->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="3"></LinearLayout>
-
-
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-                <!-- GAMES / LEAGUE-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <!-- GAMES -->
-                    <LinearLayout
-                        android:id="@+id/l_single_group_games_tab_root"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:background="@color/navigationMenuSelectedItem"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:layout_weight="1">
-
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/colorWhite"
-                            android:text="@string/lbl_games"
-                            />
-
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_settings_button"/>
-
-
-
-                    </LinearLayout>
-
-                    <!-- LEAGUE-->
-                    <LinearLayout
-                        android:id="@+id/l_single_group_league_tab_root"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:background="@color/navigationMenu"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:layout_weight="1">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/colorWhite"
-                            android:text="@string/lbl_ranking_table"
-                            />
-
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_settings_button"/>
-
-                    </LinearLayout>
-
-
-
-                </LinearLayout>
-
-
-                <!-- GAMES-->
-                <LinearLayout
-                    android:id="@+id/l_single_group_games_root"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:visibility="gone"
-                    android:layout_above="@+id/l_actions_root">
-
-                    <android.support.design.widget.TabLayout
-                        android:id="@+id/l_leagues_selection_tab_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerHorizontal="true"
-                        app:tabMode="fixed"
-                        app:tabGravity="fill"
-                        />
-
-
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/l_leagues_pages_view_pager"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/l_leagues_selection_tab_layout"
-                        android:layout_centerHorizontal="true">
-                    </android.support.v4.view.ViewPager>
-
-
-
-
-                </LinearLayout>
-
-                <!-- LEAGUE-->
-                <LinearLayout
-                    android:id="@+id/l_single_group_league_root"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:visibility="visible"
-                    android:layout_above="@+id/l_actions_root">
-
-                    <!-- your position -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_horizontal"
-                        android:background="@color/colorPrimary"
-                        android:layoutDirection="rtl">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/lbl_your_position"/>
-
-                        <TextView
-                            android:id="@+id/l_single_group_position_out_of_text_view"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3/8"/>
-
-
-
-                    </LinearLayout>
-                    <ListView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/l_single_group_league_list_view"
-                        android:divider="@null"
-                        android:dividerHeight="0dp"
-                        android:listSelector="@android:color/transparent"
-                        android:transcriptMode="alwaysScroll"
-                        >
-
-                    </ListView>
-
-
-                </LinearLayout>
-
-
-
-
-            </LinearLayout>
 
 
 
             <!--navigation and actions root-->
+            <!--<TextView-->
+                <!--android:id="@+id/l_create_private_group_button_text_view"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/colorButton"-->
+                <!--android:gravity="center"-->
+                <!--android:minHeight="50dp"-->
+                <!--android:minWidth="100dp"-->
+                <!--android:padding="5dp"-->
+                <!--android:text="@string/lbl_create_private_group"-->
+                <!--android:textColor="@color/colorWhite"-->
+                <!--android:textDirection="rtl"-->
+                <!--android:layout_above="@+id/l_actions_root"-->
+                <!--android:layout_marginRight="6dp"-->
+                <!--android:layout_marginLeft="6dp"-->
+
+                <!--/>-->
             <LinearLayout
                 android:id="@+id/l_actions_root"
                 android:layout_width="match_parent"

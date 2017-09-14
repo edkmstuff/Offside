@@ -136,6 +136,13 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 isActiveIndicator.getLayoutParams().height = 25;
                 isActiveIndicator.getLayoutParams().width = 25;
 
+                if(privateGroupPlayer.getActive())
+                    isActiveIndicator.setVisibility(View.VISIBLE);
+                else
+                    isActiveIndicator.setVisibility(View.GONE);
+
+
+
 
                 viewHolder.playersPlayInGroupRoot.addView(playerLayout);
             }

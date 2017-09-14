@@ -4,6 +4,7 @@ package com.offsidegame.offside.fragments;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,9 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.CreatePrivateGroupActivity;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
@@ -134,7 +138,7 @@ public class GroupsFragment extends Fragment {
     public void resetVisibility() {
 
         loadingRoot.setVisibility(View.VISIBLE);
-        groupsRoot.setVisibility(View.VISIBLE);
+        groupsRoot.setVisibility(View.GONE);
 
     }
 
@@ -183,7 +187,7 @@ public class GroupsFragment extends Fragment {
                 addPagesToGroupsFragment();
                 viewPager.setCurrentItem(0);
 
-
+                groupsRoot.setVisibility(View.VISIBLE);
 
             }
 
@@ -212,4 +216,6 @@ public class GroupsFragment extends Fragment {
         }
 
     }
+
+
 }

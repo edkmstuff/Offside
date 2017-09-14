@@ -29,9 +29,9 @@ import java.util.Map;
  * Created by KFIR on 1/15/2017.
  */
 @ReportsCrashes(
-        formUri = "http://192.168.1.140:8080/api/Offside/AcraCrashReport",
+//        formUri = "http://192.168.1.140:8080/api/Offside/AcraCrashReport",
         //formUri = "http://10.0.2.2:8080/api/Offside/AcraCrashReport",
-        //formUri = "http://10.0.0.17:8080/api/Offside/AcraCrashReport",
+        formUri = "http://10.0.0.17:8080/api/Offside/AcraCrashReport",
         //formUri = "http://offside.somee.com/api/Offside/AcraCrashReport",
         //formUri = "http://offside.azurewebsites.net/api/Offside/AcraCrashReport",
 
@@ -63,13 +63,13 @@ public class OffsideApplication extends Application {
 //    //    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
 //    private static String defaultProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/default";
 
-//    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
-    //    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
-//    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
+    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
+        //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
+    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
 
-  private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
-//   // private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/Images/defaultImage.jpg";
-    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
+//  private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
+////   // private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/Images/defaultImage.jpg";
+//    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
 
 //    private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";

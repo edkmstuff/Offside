@@ -1,6 +1,7 @@
 package com.offsidegame.offside.activities;
 
 import android.app.Activity;
+import android.support.design.widget.BaseTransientBottomBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
@@ -28,6 +29,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.ShopFragment;
 import com.offsidegame.offside.events.AvailableGameEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
@@ -71,8 +73,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private ViewPager leaguesPagesViewPager;
     private ImageView settingsButtonImageView;
 
-    // single group view
-    private LinearLayout singlePrivateGroupRoot;
+
 
     //playerAssets
     private LinearLayout playerInfoRoot;
@@ -91,6 +92,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private PlayerFragment playerFragment;
     private SingleGroupFragment singleGroupFragment;
     private ChatFragment chatFragment;
+    private ShopFragment shopFragment;
+
+    private TextView createPrivateGroupButtonTextView;
 
 
     //</editor-fold>
@@ -113,6 +117,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             getIds();
             setEvents();
             resetVisibility();
+            setupToSupportExitOnBackButtonPressed();
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -126,7 +131,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         playerInfoRoot = (LinearLayout) findViewById(R.id.l_player_info_root);
         fragmentContainerRoot = (LinearLayout) findViewById(R.id.l_fragment_container_root);
-        //groupsFragment = (GroupsFragment) this.getSupportFragmentManager().findFragmentById(R.id.l_groups_fragment);
 
         settingsButtonImageView = (ImageView) findViewById(R.id.l_settings_button_image_view);
 
@@ -135,17 +139,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         powerItemsTextView = (TextView) findViewById(R.id.l_power_items_text_view);
 
         //createPrivateGroupButtonTextView = (TextView) findViewById(R.id.l_create_private_group_button_text_view);
+
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.l_bottom_navigation_view);
 
-        //single view
-        singlePrivateGroupRoot = (LinearLayout) findViewById(R.id.l_single_group_root);
 
-        //leagues
-        leaguesPagesViewPager = (ViewPager) findViewById(R.id.l_leagues_pages_view_pager);
-        //setup tabLayout
-        leaguesSelectionTabLayout = (TabLayout) findViewById(R.id.l_leagues_selection_tab_layout);
-        leaguesSelectionTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        leaguesSelectionTabLayout.setupWithViewPager(leaguesPagesViewPager);
 
     }
 
@@ -166,28 +163,39 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             }
         });
 
+//        createPrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Intent intent = new Intent(context, CreatePrivateGroupActivity.class);
+//                startActivity(intent);
+//
+//            }
+//        });
+
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 try {
+
                     switch (item.getItemId()) {
                         case R.id.nav_action_groups:
 
                             groupsFragment = GroupsFragment.newInstance();
                             replaceFragment(groupsFragment);
-
-
+                            createPrivateGroupButtonTextView.setVisibility(View.VISIBLE);
                             return true;
 
                         case R.id.nav_action_profile:
                             playerFragment = new PlayerFragment();
-                            EventBus.getDefault().register(playerFragment);
                             replaceFragment(playerFragment);
-                            OffsideApplication.signalRService.requestUserProfileData(playerId);
                             return true;
 
                         case R.id.nav_action_shop:
+                            shopFragment = ShopFragment.newInstance();
+                            replaceFragment(shopFragment);
+
                             return true;
 
                         case R.id.nav_action_play:
@@ -210,18 +218,26 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
+    private void resetVisibility() {
+
+        //playerInfoRoot.setVisibility(View.GONE);
+
+
+        fragmentContainerRoot.setVisibility(View.VISIBLE);
+    }
+
+    private void setupToSupportExitOnBackButtonPressed(){
+        Intent intent = this.getIntent();
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+    }
+
     private void replaceFragment(Fragment fragment) {
 
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.l_fragment_container_root, fragment, fragment.getTag()).commit();
 
-    }
-
-    private void resetVisibility() {
-
-        playerInfoRoot.setVisibility(View.GONE);
-        singlePrivateGroupRoot.setVisibility(View.GONE);
-        fragmentContainerRoot.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -297,7 +313,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             playerInfoRoot.setVisibility(View.VISIBLE);
 
-            tryRejoinGameForReturningPlayer();
+            Intent intent = getIntent();
+            boolean showGroups = intent.getBooleanExtra("showGroups", false);
+            if(showGroups)
+                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+            else
+                tryRejoinGameForReturningPlayer();
+
 
 
 
@@ -457,7 +479,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Override
     public void onBackPressed() {
 
-        resetVisibility();
         if (exit) {
             finish(); // finish activity
         } else {

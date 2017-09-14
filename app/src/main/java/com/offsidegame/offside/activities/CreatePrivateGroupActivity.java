@@ -16,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.PrivateGroupCreatedEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
@@ -117,12 +119,14 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPrivateGroupCreated(PrivateGroup privateGroup) {
+    public void onPrivateGroupCreated(PrivateGroupCreatedEvent privateGroupCreatedEvent) {
         try {
 
+            //PrivateGroup privateGroup = privateGroupCreatedEvent.getPrivateGroup();
+            EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
             Intent intent = new Intent(context,LobbyActivity.class);
+            intent.putExtra("showGroups",true);
             startActivity(intent);
-
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
