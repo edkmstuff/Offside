@@ -147,7 +147,7 @@ public class PlayerFragment extends Fragment {
             String userDisplayName = firebaseUser.getDisplayName();
             userDisplayName = userDisplayName == null ? "No Name" : userDisplayName;
 
-            ImageHelper.loadImage(context,playerPictureImageView,Uri.parse(playerAssets.getImageUrl()));
+            ImageHelper.loadImage(context,playerPictureImageView,Uri.parse(playerAssets.getImageUrl()), true);
             playerNameTextView.setText(userDisplayName);
 
             resetVisibility();
@@ -356,7 +356,7 @@ public class PlayerFragment extends Fragment {
 
                 for (Winner winner : winners) {
                     Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
-                    ImageHelper.loadImage(getContext(), winnersImageViews[j], winnerProfilePictureUri);
+                    ImageHelper.loadImage(getContext(), winnersImageViews[j], winnerProfilePictureUri, true);
                     winnersNamesTextViews[j].setText(winner.getPlayerName());
                     winnersCoinsTextViews[j].setText(Integer.toString(winner.getOffsideCoins()));
                     winnersPodiumRoots[j].setVisibility(View.VISIBLE);
@@ -413,7 +413,7 @@ public class PlayerFragment extends Fragment {
                     trophyImageImageView.requestLayout();
 
                     int trophyResourceId = reward.getRewardImageResourceIdByRewardType();
-                    ImageHelper.loadImage(getContext(), trophyImageImageView, trophyResourceId);
+                    ImageHelper.loadImage(getContext(), trophyImageImageView, trophyResourceId, true);
 
                     TextView gameTitleTextView = (TextView) trophiesLayout.getChildAt(3);
                     gameTitleTextView.setText(reward.getGameTitle());

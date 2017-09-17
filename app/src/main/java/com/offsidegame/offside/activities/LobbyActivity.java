@@ -287,7 +287,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             balanceTextView.setText(Integer.toString(balance));
             powerItemsTextView.setText(Integer.toString(powerItems));
 
-            ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName);
+            ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName, true);
 
             playerInfoRoot.setVisibility(View.VISIBLE);
 

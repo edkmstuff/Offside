@@ -631,7 +631,7 @@ public class ChatFragment extends Fragment {
         powerItemsTextView.setText(Integer.toString(powerItems));
 
         settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
-        ImageHelper.loadImage(getActivity(), player != null ? player.getImageUrl() : settings.getString(getString(R.string.player_profile_picture_url_key), null), playerPictureImageView, "ChatActivity");
+        ImageHelper.loadImage(getActivity(), player != null ? player.getImageUrl() : settings.getString(getString(R.string.player_profile_picture_url_key), null), playerPictureImageView, "ChatActivity", true);
 
 
     }
@@ -896,7 +896,7 @@ public class ChatFragment extends Fragment {
             TextView scoreTextView = (TextView) layout.getChildAt(1);
 
             rankTextView.setText(Integer.toString(score.getPosition()));
-            ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), imageView, "LobbyActivity");
+            ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), imageView, "LobbyActivity", true);
             scoreTextView.setText(Integer.toString(score.getOffsideCoins()));
 
             scoreboardRoot.addView(layout);

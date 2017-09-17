@@ -130,7 +130,7 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 playerImageImageView.requestLayout();
                 String imageUrl = privateGroupPlayer.getImageUrl() == null || privateGroupPlayer.getImageUrl().equals("")  ? OffsideApplication.getDefaultProfilePictureUrl(): privateGroupPlayer.getImageUrl();
                 Uri imageUri = Uri.parse(imageUrl);
-                ImageHelper.loadImage(context,playerImageImageView,imageUri);
+                ImageHelper.loadImage(context,playerImageImageView,imageUri, true);
 
                 ImageView isActiveIndicator = (ImageView) playerItemRoot.getChildAt(1);
                 isActiveIndicator.getLayoutParams().height = 25;

@@ -32,42 +32,17 @@ import java.net.URL;
 
 public class ImageHelper {
 
-    public static void loadImage(final Activity activity, final String imageUrl, final ImageView imageView, final String callerName) {
-
-//        AsyncTask.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                Picasso.with(activity).load(imageUrl).into(imageView, new com.squareup.picasso.Callback() {
-//                    @Override
-//                    public void onSuccess() {
-//                        activity.runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-//                                RoundImage roundedImage = new RoundImage(bm);
-//                                imageView.setImageDrawable(roundedImage);
-//                            }
-//                        });
-//                    }
-//
-//                    @Override
-//                    public void onError() {
-//                        Exception ex = new RuntimeException(callerName + " - onCreate - Error loading image with url: " + imageUrl);
-//                        ACRA.getErrorReporter().handleSilentException(ex);
-//                    }
-//                });
-//
-//
-//            }
-//        });
+    public static void loadImage(final Activity activity, final String imageUrl, final ImageView imageView, final String callerName, final boolean isRoundedImage) {
 
 
         Picasso.with(activity).load(imageUrl).into(imageView, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
-                        Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                        RoundImage roundedImage = new RoundImage(bm);
-                        imageView.setImageDrawable(roundedImage);
+                if (isRoundedImage) {
+                    Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                    RoundImage roundedImage = new RoundImage(bm);
+                    imageView.setImageDrawable(roundedImage);
+                }
             }
 
             @Override
@@ -83,13 +58,15 @@ public class ImageHelper {
 
     }
 
-    public static void loadImage(Context context, final File imagePath, final ImageView imageView, final String callerName) {
+    public static void loadImage(Context context, final File imagePath, final ImageView imageView, final String callerName, final boolean isRoundedImage) {
         Picasso.with(context).load(imagePath).into(imageView, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
-                Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                RoundImage roundedImage = new RoundImage(bm);
-                imageView.setImageDrawable(roundedImage);
+                if (isRoundedImage) {
+                    Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                    RoundImage roundedImage = new RoundImage(bm);
+                    imageView.setImageDrawable(roundedImage);
+                }
             }
 
             @Override
@@ -99,13 +76,15 @@ public class ImageHelper {
         });
     }
 
-    public static void loadImage(Context context, final ImageView fbProfilePicture, Uri fbImageUri) {
+    public static void loadImage(Context context, final ImageView fbProfilePicture, Uri fbImageUri, final boolean isRoundedImage) {
         Picasso.with(context).load(fbImageUri).into(fbProfilePicture, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
-                Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
-                RoundImage roundedImage = new RoundImage(bm);
-                fbProfilePicture.setImageDrawable(roundedImage);
+                if (isRoundedImage) {
+                    Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
+                    RoundImage roundedImage = new RoundImage(bm);
+                    fbProfilePicture.setImageDrawable(roundedImage);
+                }
             }
 
             @Override
@@ -115,13 +94,15 @@ public class ImageHelper {
         });
     }
 
-    public static void loadImage(Context context, final ImageView fbProfilePicture, int resourceId) {
+    public static void loadImage(Context context, final ImageView fbProfilePicture, int resourceId, final boolean isRoundedImage ) {
         Picasso.with(context).load(resourceId).into(fbProfilePicture, new com.squareup.picasso.Callback() {
             @Override
             public void onSuccess() {
-                Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
-                RoundImage roundedImage = new RoundImage(bm);
-                fbProfilePicture.setImageDrawable(roundedImage);
+                if (isRoundedImage) {
+                    Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
+                    RoundImage roundedImage = new RoundImage(bm);
+                    fbProfilePicture.setImageDrawable(roundedImage);
+                }
             }
 
             @Override

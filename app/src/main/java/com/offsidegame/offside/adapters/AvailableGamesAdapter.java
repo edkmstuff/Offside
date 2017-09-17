@@ -111,9 +111,9 @@ public class AvailableGamesAdapter extends BaseAdapter {
             viewHolder.homeTeamNameTextView.setText(viewHolder.availableGame.getHomeTeam());
             viewHolder.awayTeamNameTextView.setText(viewHolder.availableGame.getAwayTeam());
             Uri homeTeamLogoUri = Uri.parse(viewHolder.availableGame.getHomeTeamLogoUrl());
-            ImageHelper.loadImage(context, viewHolder.homeTeamLogoImageView, homeTeamLogoUri);
+            ImageHelper.loadImage(context, viewHolder.homeTeamLogoImageView, homeTeamLogoUri, false);
             Uri awayTeamLogoUri = Uri.parse(viewHolder.availableGame.getAwayTeamLogoUrl());
-            ImageHelper.loadImage(context, viewHolder.awayTeamLogoImageView, awayTeamLogoUri);
+            ImageHelper.loadImage(context, viewHolder.awayTeamLogoImageView, awayTeamLogoUri, false);
             viewHolder.startTimeTextView.setText(viewHolder.availableGame.getStartTimeString());
             viewHolder.startDateTextView.setText(viewHolder.availableGame.getStartDateString());
             if (viewHolder.availableGame.getPrivateGroupPlayers() == null)
@@ -133,7 +133,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 playerImageImageView.requestLayout();
                 String imageUrl = privateGroupPlayer.getImageUrl() == null || privateGroupPlayer.getImageUrl().equals("") ? OffsideApplication.getDefaultProfilePictureUrl() : privateGroupPlayer.getImageUrl();
                 Uri imageUri = Uri.parse(imageUrl);
-                ImageHelper.loadImage(context, playerImageImageView, imageUri);
+                ImageHelper.loadImage(context, playerImageImageView, imageUri, true);
 
                 ImageView isActiveIndicator = (ImageView) playerItemRoot.getChildAt(1);
                 isActiveIndicator.getLayoutParams().height = 25;

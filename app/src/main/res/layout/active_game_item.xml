@@ -47,7 +47,7 @@
                         android:id="@+id/ag_home_team_logo_image_view"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:scaleType="centerCrop"
+                        android:scaleType="centerInside"
                         android:src="@drawable/slot_heineken"
                         android:padding="4dp"
                         />
@@ -153,7 +153,7 @@
                         android:id="@+id/ag_away_team_logo_image_view"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:scaleType="centerCrop"
+                        android:scaleType="centerInside"
                         android:src="@drawable/slot_heineken"
                         android:padding="4dp" />
 

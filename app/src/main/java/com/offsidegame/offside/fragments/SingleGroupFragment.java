@@ -65,6 +65,9 @@ public class SingleGroupFragment extends Fragment {
     private TextView groupNavigationLastPlayedTextView;
 
 
+
+
+
     private int currentGroupSelectedIndex = -1;
     private int groupsCount = -1;
 
@@ -136,6 +139,7 @@ public class SingleGroupFragment extends Fragment {
         groupNavigationLeftButtonImageView = (ImageView) view.findViewById(R.id.fsg_group_navigation_left_button_image_view);
         groupNavigationRightButtonImageView = (ImageView) view.findViewById(R.id.fsg_group_navigation_right_button_image_view);
         groupNavigationLastPlayedTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_last_played_text_view);
+        singleGroupPositionOutOfTextView = (TextView) view.findViewById(R.id.fsg_single_group_position_out_of_text_view);
     }
 
     int selectedTabPosition;
@@ -256,6 +260,21 @@ public class SingleGroupFragment extends Fragment {
         singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenu);
         singleGroupLeagueRoot.setVisibility(View.VISIBLE);
         singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+
+        //calc my position
+        String myPlayerId = OffsideApplication.getPlayerId();
+        int myPosition = 0;
+        for(int i=0; i< leagueRecords.length;i++ ){
+            LeagueRecord lr =  leagueRecords[i];
+            if(lr.getPlayerId().equals(myPlayerId))
+                myPosition = i+1;
+        }
+
+        String myPositionOutOf = String.format("%d/%d", myPosition,leagueRecords.length );
+        singleGroupPositionOutOfTextView.setText(myPositionOutOf);
+
+
+
 
     }
 

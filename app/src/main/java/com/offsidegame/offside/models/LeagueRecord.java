@@ -22,6 +22,9 @@ public class LeagueRecord {
     @com.google.gson.annotations.SerializedName("FP")
     private int factorizedPoints;
 
+    @com.google.gson.annotations.SerializedName("PI")
+    private String playerId;
+
 
     public int getPosition() {
         return position;
@@ -61,6 +64,14 @@ public class LeagueRecord {
 
     public void setFactorizedPoints(int factorizedPoints) {
         this.factorizedPoints = factorizedPoints;
+    }
+
+    public String getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(String playerId) {
+        this.playerId = playerId;
     }
 }
 
