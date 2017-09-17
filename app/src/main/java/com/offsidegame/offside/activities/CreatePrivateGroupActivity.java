@@ -123,7 +123,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
         try {
 
             //PrivateGroup privateGroup = privateGroupCreatedEvent.getPrivateGroup();
-            EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+            //EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
             Intent intent = new Intent(context,LobbyActivity.class);
             intent.putExtra("showGroups",true);
             startActivity(intent);

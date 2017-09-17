@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
             getIds();
             loadingRoot.setVisibility(View.VISIBLE);
-            setupToSupportExitOnBackButtonPressed();
+
             //defineDeepLinking();
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -76,14 +76,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         loadingRoot = (FrameLayout) findViewById(R.id.shared_loading_root);
         versionTextView = (TextView) findViewById(R.id.shared_version_text_view);
         versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
-    }
-
-    // to allow exit by clicking on back button twice
-    private void setupToSupportExitOnBackButtonPressed(){
-        Intent intent = this.getIntent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
     }
 
     @Override
@@ -118,6 +110,19 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     public void onStop() {
         EventBus.getDefault().unregister(context);
         super.onStop();
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        finish();
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -319,6 +324,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         OffsideApplication.setPlayerAssets(playerAssets);
         Intent intent = new Intent(context, LobbyActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
 

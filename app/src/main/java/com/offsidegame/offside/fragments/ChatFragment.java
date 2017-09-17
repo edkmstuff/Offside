@@ -43,6 +43,7 @@ import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
@@ -57,6 +58,7 @@ import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
+import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.Score;
 import com.offsidegame.offside.models.Scoreboard;
 
@@ -170,13 +172,18 @@ public class ChatFragment extends Fragment {
         groupId = OffsideApplication.getSelectedPrivateGroupId();
         androidDeviceId = OffsideApplication.getAndroidDeviceId();
         playerId = OffsideApplication.getPlayerId();
-        privateGroupName = OffsideApplication.getSelectedPrivateGroup().getName();
-
-        if (gameId != null && privateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
-            OffsideApplication.signalRService.requestJoinPrivateGame(gameId, groupId, privateGameId, playerId, androidDeviceId);
-        } else {
-            Toast.makeText(getActivity(), "Can not join this game", Toast.LENGTH_LONG);
+        PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
+        if(selectedPrivateGroup == null) {
+            Toast.makeText(getActivity(), R.string.lbl_no_active_games, Toast.LENGTH_LONG).show();
+            EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
         }
+        else {
+            privateGroupName = selectedPrivateGroup.getName();
+            if (gameId != null && privateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
+                OffsideApplication.signalRService.requestJoinPrivateGame(gameId, groupId, privateGameId, playerId, androidDeviceId);
+            }
+        }
+
 
 
     }

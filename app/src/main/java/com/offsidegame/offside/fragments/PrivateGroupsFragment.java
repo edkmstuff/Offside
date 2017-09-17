@@ -4,14 +4,17 @@ package com.offsidegame.offside.fragments;
  * Created by user on 7/19/2017.
  */
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.activities.CreatePrivateGroupActivity;
 import com.offsidegame.offside.adapters.PrivateGroupAdapter;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
@@ -34,9 +37,25 @@ public class PrivateGroupsFragment extends Fragment {
         if (OffsideApplication.getPrivateGroupsInfo() == null)
             return rootView;
 
-        ListView listView = (ListView) rootView.findViewById(R.id.l_private_groups_list_view);
+        ImageView createPrivateGroupImageView = (ImageView) rootView.findViewById(R.id.fpg_create_private_group_image_view);
+        ListView listView = (ListView) rootView.findViewById(R.id.fpg_private_groups_list_view);
         PrivateGroupAdapter privateGroupAdapter = new PrivateGroupAdapter(this.getActivity(), getPrivateGroups());
         listView.setAdapter(privateGroupAdapter);
+
+        if(groupType.equals(getString(R.string.key_public_group_name)))
+            createPrivateGroupImageView.setVisibility(View.GONE);
+        else
+            createPrivateGroupImageView.setVisibility(View.VISIBLE);
+
+        createPrivateGroupImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(getContext(), CreatePrivateGroupActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
 
         return rootView;
