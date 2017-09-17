@@ -26,10 +26,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
 
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="0dp"
+            android:paddingRight="0dp">
 
             <!-- FIRST ROW, group nav -->
             <LinearLayout
@@ -44,16 +44,22 @@
 
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
+                    android:layout_weight="2"
                     android:gravity="center_horizontal">
 
                     <!-- LEFT TEXT-->
-                    <TextView
-                        android:id="@+id/fsg_group_navigation_left_button_text_view"
+                    <!--<TextView-->
+                        <!--android:id="@+id/fsg_group_navigation_left_button_text_view"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="\u003c"-->
+                        <!--android:textColor="@color/colorWhite" />-->
+
+                    <ImageView
+                        android:id="@+id/fsg_group_navigation_left_button_image_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="\u003c"
-                        android:textColor="@color/colorWhite" />
+                        android:src="@mipmap/ic_left"/>
 
                 </LinearLayout>
 
@@ -61,7 +67,7 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4"
+                    android:layout_weight="6"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -70,9 +76,9 @@
                         android:id="@+id/fsg_group_navigation_group_name_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="הכבשים"
+                        android:text="Kfir's friends"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/OffsideLargeText"
+                        android:textSize="@dimen/OffsideMediumText"
 
                         />
 
@@ -84,15 +90,20 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
-                    android:layout_weight="3">
+                    android:layout_weight="2">
 
                     <!-- RIGHT TEXT-->
-                    <TextView
-                        android:id="@+id/fsg_group_navigation_right_button_text_view"
+                    <!--<TextView-->
+                        <!--android:id="@+id/fsg_group_navigation_right_button_text_view"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="\u003e"-->
+                        <!--android:textColor="@color/colorWhite" />-->
+                    <ImageView
+                        android:id="@+id/fsg_group_navigation_right_button_image_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="\u003e"
-                        android:textColor="@color/colorWhite" />
+                        android:src="@mipmap/ic_right"/>
 
                 </LinearLayout>
 

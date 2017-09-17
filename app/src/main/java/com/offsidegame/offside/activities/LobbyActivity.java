@@ -67,13 +67,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private final Activity thisActivity = this;
 
     private BottomNavigationView bottomNavigationView;
-    private String groupId;
-
-    private TabLayout leaguesSelectionTabLayout;
-    private ViewPager leaguesPagesViewPager;
-    private ImageView settingsButtonImageView;
-
-
 
     //playerAssets
     private LinearLayout playerInfoRoot;
@@ -132,8 +125,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         playerInfoRoot = (LinearLayout) findViewById(R.id.l_player_info_root);
         fragmentContainerRoot = (LinearLayout) findViewById(R.id.l_fragment_container_root);
 
-        settingsButtonImageView = (ImageView) findViewById(R.id.l_settings_button_image_view);
-
         playerPictureImageView = (ImageView) findViewById(R.id.l_player_picture_image_view);
         balanceTextView = (TextView) findViewById(R.id.l_balance_text_view);
         powerItemsTextView = (TextView) findViewById(R.id.l_power_items_text_view);
@@ -148,20 +139,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     private void setEvents() {
 
-        settingsButtonImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AuthUI.getInstance()
-                        .signOut((FragmentActivity) context)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            public void onComplete(@NonNull Task<Void> task) {
-                                // user is now signed out
-                                startActivity(new Intent(context, LoginActivity.class));
-                                finish();
-                            }
-                        });
-            }
-        });
+
 
 //        createPrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
 //            @Override

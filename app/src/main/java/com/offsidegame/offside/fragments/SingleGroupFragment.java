@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -57,8 +58,12 @@ public class SingleGroupFragment extends Fragment {
     private TextView singleGroupPositionOutOfTextView;
     private ListView singleGroupLeagueListView;
     private TextView groupNavigationGroupNameTextView;
-    private TextView groupNavigationLeftButtonTextView;
-    private TextView groupNavigationRightButtonTextView;
+//    private TextView groupNavigationLeftButtonTextView;
+//    private TextView groupNavigationRightButtonTextView;
+    private ImageView groupNavigationLeftButtonImageView;
+    private ImageView groupNavigationRightButtonImageView;
+    private TextView groupNavigationLastPlayedTextView;
+
 
     private int currentGroupSelectedIndex = -1;
     private int groupsCount = -1;
@@ -126,9 +131,11 @@ public class SingleGroupFragment extends Fragment {
         singleGroupPositionOutOfTextView = (TextView) view.findViewById(R.id.fsg_single_group_position_out_of_text_view);
         singleGroupLeagueListView = (ListView) view.findViewById(R.id.fsg_single_group_league_list_view);
         groupNavigationGroupNameTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_group_name_text_view);
-        groupNavigationLeftButtonTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_left_button_text_view);
-        groupNavigationRightButtonTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_right_button_text_view);
-
+//        groupNavigationLeftButtonTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_left_button_text_view);
+//        groupNavigationRightButtonTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_right_button_text_view);
+        groupNavigationLeftButtonImageView = (ImageView) view.findViewById(R.id.fsg_group_navigation_left_button_image_view);
+        groupNavigationRightButtonImageView = (ImageView) view.findViewById(R.id.fsg_group_navigation_right_button_image_view);
+        groupNavigationLastPlayedTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_last_played_text_view);
     }
 
     int selectedTabPosition;
@@ -168,14 +175,14 @@ public class SingleGroupFragment extends Fragment {
             }
         });
 
-        groupNavigationLeftButtonTextView.setOnClickListener(new View.OnClickListener() {
+        groupNavigationLeftButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 navigateGroup(-1);
             }
         });
 
-        groupNavigationRightButtonTextView.setOnClickListener(new View.OnClickListener() {
+        groupNavigationRightButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 navigateGroup(1);
@@ -188,6 +195,8 @@ public class SingleGroupFragment extends Fragment {
         try {
             currentGroupSelectedIndex = currentGroupSelectedIndex + step;
             int newSelectedGroupIndex = currentGroupSelectedIndex % groupsCount;
+            if (newSelectedGroupIndex < 0)
+                newSelectedGroupIndex = newSelectedGroupIndex + groupsCount;
             // this is just to avoid negative indexes
             currentGroupSelectedIndex = newSelectedGroupIndex;
             PrivateGroup newSelectedGroup = OffsideApplication.getPrivateGroupsInfo().getPrivateGroups().get(newSelectedGroupIndex);
@@ -195,6 +204,7 @@ public class SingleGroupFragment extends Fragment {
                 OffsideApplication.setSelectedPrivateGroup(newSelectedGroup);
 
             groupNavigationGroupNameTextView.setText(OffsideApplication.getSelectedPrivateGroup().getName());
+            groupNavigationLastPlayedTextView.setText(OffsideApplication.getSelectedPrivateGroup().getPrettyLastPlayed());
 
             OffsideApplication.signalRService.requestAvailableGames(OffsideApplication.getPlayerId(), OffsideApplication.getSelectedPrivateGroupId());
 

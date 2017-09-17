@@ -119,6 +119,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="lbl_sign_out">התנתק</string>
+    <string name="lbl_settings">הגדרות</string>
 
 
 </resources>

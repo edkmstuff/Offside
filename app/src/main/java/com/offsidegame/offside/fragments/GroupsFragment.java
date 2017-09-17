@@ -14,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.offsidegame.offside.R;
@@ -46,7 +48,8 @@ public class GroupsFragment extends Fragment {
     private ViewPagerAdapter viewPagerAdapter;
     private FrameLayout loadingRoot;
     private TextView versionTextView;
-    private TextView createPrivateGroupButtonTextView;
+    //private TextView createPrivateGroupButtonTextView;
+    private ImageView createPrivateGroupImageView;
     private String playerId;
 
 
@@ -99,7 +102,9 @@ public class GroupsFragment extends Fragment {
         viewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), getActivity(), viewPager, tabLayout);
         viewPager.setAdapter(viewPagerAdapter);
 
-        createPrivateGroupButtonTextView = (TextView) view.findViewById(R.id.fg_create_private_group_button_text_view);
+        //createPrivateGroupButtonTextView = (TextView) view.findViewById(R.id.fg_create_private_group_button_text_view);
+        createPrivateGroupImageView = (ImageView) view.findViewById(R.id.fg_create_private_group_image_view);
+
     }
 
     int selectedTabPosition;
@@ -122,7 +127,7 @@ public class GroupsFragment extends Fragment {
             }
         });
 
-        createPrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
+        createPrivateGroupImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -131,6 +136,7 @@ public class GroupsFragment extends Fragment {
 
             }
         });
+
 
 
     }

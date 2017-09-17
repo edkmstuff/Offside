@@ -1,5 +1,7 @@
 package com.offsidegame.offside.models;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -76,6 +78,15 @@ public class PrivateGroup {
     public Date getLastPlayed() {
         return lastPlayed;
     }
+
+    public String getPrettyLastPlayed() {
+        String prettyLastPlayed = new PrettyTime().format(lastPlayed);
+        return String.format("%s %s", "Last played: ", prettyLastPlayed);
+    }
+
+
+
+
 
     public void setLastPlayed(Date lastPlayed) {
         this.lastPlayed = lastPlayed;
