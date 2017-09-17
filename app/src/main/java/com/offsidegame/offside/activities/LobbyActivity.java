@@ -1,7 +1,6 @@
 package com.offsidegame.offside.activities;
 
 import android.app.Activity;
-import android.support.design.widget.BaseTransientBottomBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.content.Context;
@@ -11,11 +10,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,13 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.ui.auth.AuthUI;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.ShopFragment;
+import com.offsidegame.offside.fragments.SettingsFragment;
+import com.offsidegame.offside.fragments.ShopFragment;
 import com.offsidegame.offside.events.AvailableGameEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
@@ -86,9 +81,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private SingleGroupFragment singleGroupFragment;
     private ChatFragment chatFragment;
     private ShopFragment shopFragment;
-
-    private TextView createPrivateGroupButtonTextView;
-
+    private SettingsFragment settingsFragment;
 
     //</editor-fold>
 
@@ -110,7 +103,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             getIds();
             setEvents();
             resetVisibility();
-            setupToSupportExitOnBackButtonPressed();
+            //setupToSupportExitOnBackButtonPressed();
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -156,13 +149,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 try {
-
+                    resetVisibility();
                     switch (item.getItemId()) {
                         case R.id.nav_action_groups:
 
                             groupsFragment = GroupsFragment.newInstance();
                             replaceFragment(groupsFragment);
-                            createPrivateGroupButtonTextView.setVisibility(View.VISIBLE);
+
                             return true;
 
                         case R.id.nav_action_profile:
@@ -179,6 +172,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                         case R.id.nav_action_play:
                             chatFragment = ChatFragment.newInstance();
                             replaceFragment(chatFragment);
+                            playerInfoRoot.setVisibility(View.GONE);
+
+                            return true;
+
+                        case R.id.nav_action_settings:
+                            settingsFragment = SettingsFragment.newInstance();
+                            replaceFragment(settingsFragment);
 
                             return true;
                     }
@@ -198,18 +198,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     private void resetVisibility() {
 
-        //playerInfoRoot.setVisibility(View.GONE);
-
-
+        playerInfoRoot.setVisibility(View.VISIBLE);
         fragmentContainerRoot.setVisibility(View.VISIBLE);
     }
 
-    private void setupToSupportExitOnBackButtonPressed(){
-        Intent intent = this.getIntent();
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-    }
 
     private void replaceFragment(Fragment fragment) {
 
@@ -234,12 +226,19 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        finish();
+
+
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(context);
 
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
@@ -448,31 +447,15 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-
-
-
-
-    private Boolean exit = false;
-
     @Override
     public void onBackPressed() {
-
-        if (exit) {
-            finish(); // finish activity
-        } else {
-            Toast.makeText(this, R.string.lbl_press_back_again_to_exit,
-                    Toast.LENGTH_LONG).show();
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3 * 1000);
-
-        }
+        if(bottomNavigationView.getSelectedItemId()==R.id.nav_action_groups)
+            finish();
+        else
+            EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
 
     }
+
 
 
 }

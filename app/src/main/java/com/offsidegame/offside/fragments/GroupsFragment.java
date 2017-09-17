@@ -49,7 +49,7 @@ public class GroupsFragment extends Fragment {
     private FrameLayout loadingRoot;
     private TextView versionTextView;
     //private TextView createPrivateGroupButtonTextView;
-    private ImageView createPrivateGroupImageView;
+    //private ImageView createPrivateGroupImageView;
     private String playerId;
 
 
@@ -71,6 +71,7 @@ public class GroupsFragment extends Fragment {
     public void onPause(){
         super.onPause();
         EventBus.getDefault().unregister(this);
+
     }
 
 
@@ -103,7 +104,7 @@ public class GroupsFragment extends Fragment {
         viewPager.setAdapter(viewPagerAdapter);
 
         //createPrivateGroupButtonTextView = (TextView) view.findViewById(R.id.fg_create_private_group_button_text_view);
-        createPrivateGroupImageView = (ImageView) view.findViewById(R.id.fg_create_private_group_image_view);
+        //createPrivateGroupImageView = (ImageView) view.findViewById(R.id.fg_create_private_group_image_view);
 
     }
 
@@ -127,15 +128,15 @@ public class GroupsFragment extends Fragment {
             }
         });
 
-        createPrivateGroupImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(getContext(), CreatePrivateGroupActivity.class);
-                startActivity(intent);
-
-            }
-        });
+//        createPrivateGroupImageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                Intent intent = new Intent(getContext(), CreatePrivateGroupActivity.class);
+//                startActivity(intent);
+//
+//            }
+//        });
 
 
 
