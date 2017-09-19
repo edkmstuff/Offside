@@ -22,6 +22,7 @@ import com.offsidegame.offside.events.AvailableLanguagesEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
+import com.offsidegame.offside.events.PrivateGroupChangedEvent;
 import com.offsidegame.offside.events.PrivateGroupCreatedEvent;
 import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.models.LeagueRecord;
@@ -79,12 +80,12 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    //public final String ip = new String("10.0.2.2:18313");
+    public final String ip = new String("10.0.2.2:18313");
     //public final String ip = new String("192.168.1.140:18313");
     //public final String ip = new String("10.0.0.17:18313");
 
     //public final String ip = new String("offside.somee.com");
-    public final String ip = new String("sidekicknode.azurewebsites.net");
+    //public final String ip = new String("sidekicknode.azurewebsites.net");
 
 
     public Boolean stoppedIntentionally = false;
@@ -281,6 +282,13 @@ public class SignalRService extends Service {
         }, PrivateGroup.class);
 
         hub.on("PrivateGroupReceived", new SubscriptionHandler1<PrivateGroup>() {
+            @Override
+            public void run(PrivateGroup privateGroup) {
+                EventBus.getDefault().post(new PrivateGroupChangedEvent(privateGroup));
+            }
+        }, PrivateGroup.class);
+
+        hub.on("PrivateGroupChangedReceived", new SubscriptionHandler1<PrivateGroup>() {
             @Override
             public void run(PrivateGroup privateGroup) {
                 EventBus.getDefault().post(new PrivateGroupEvent(privateGroup));

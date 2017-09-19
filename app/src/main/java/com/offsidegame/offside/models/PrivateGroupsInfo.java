@@ -59,4 +59,21 @@ public class PrivateGroupsInfo {
 
 
     }
+
+    public void replace(PrivateGroup newPrivateGroup) {
+        for (PrivateGroup privateGroup:privateGroups) {
+            if(privateGroup.getId().equals(newPrivateGroup.getId())){
+                //privateGroups.remove(privateGroup);
+                //privateGroups.add(newPrivateGroup);
+                privateGroup.setPrivateGroupPlayers(newPrivateGroup.getPrivateGroupPlayers());
+                if(OffsideApplication.getSelectedPrivateGroup().getId() == newPrivateGroup.getId())
+                    OffsideApplication.setSelectedPrivateGroup(privateGroup);
+
+            }
+
+        }
+
+
+
+    }
 }

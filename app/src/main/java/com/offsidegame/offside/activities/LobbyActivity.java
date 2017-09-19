@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.PrivateGroupChangedEvent;
 import com.offsidegame.offside.fragments.SettingsFragment;
 import com.offsidegame.offside.fragments.ShopFragment;
 import com.offsidegame.offside.events.AvailableGameEvent;
@@ -43,6 +44,7 @@ import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PrivateGroup;
+import com.offsidegame.offside.models.PrivateGroupsInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -50,6 +52,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 public class LobbyActivity extends AppCompatActivity implements Serializable {
@@ -353,6 +356,25 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             PrivateGroup privateGroup = privateGroupEvent.getPrivateGroup();
             OffsideApplication.setSelectedPrivateGroup(privateGroup);
             EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_play));
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePrivateGroupChanged(PrivateGroupChangedEvent privateGroupChangedEvent) {
+        try {
+            if (privateGroupChangedEvent == null)
+                return;
+
+            PrivateGroup updatedPrivateGroup = privateGroupChangedEvent.getPrivateGroup();
+
+            OffsideApplication.getPrivateGroupsInfo().replace(updatedPrivateGroup);
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
