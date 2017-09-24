@@ -100,7 +100,7 @@ public class ChatFragment extends Fragment {
     private String homeTeam;
     private String awayTeam;
     private int offsideCoins;
-    private int trophies;
+
     private int powerItems;
 
     private TextView privateGameNameTextView;
@@ -108,10 +108,9 @@ public class ChatFragment extends Fragment {
     private TextView positionTextView;
 
     private LinearLayout actionsMenuRoot;
-    private RelativeLayout contentRoot;
+
     private ImageView chatActionsButton;
 
-    private boolean isConnected = false;
     private boolean isActionMenuVisible = false;
 
     private RewardedVideoAd rewardedVideoAd;
@@ -123,20 +122,12 @@ public class ChatFragment extends Fragment {
 
     private ImageView inviteFriendsImageView;
 
-
-    private TextView trophiesTextView;
     private TextView powerItemsTextView;
     private TextView offsideCoinsTextView;
     private ImageView playerPictureImageView;
-
     private ImageView offsideCoinsImageView;
-    private ImageView trophiesImageView;
     private ImageView powerItemImageView;
-
-
     private FlowLayout actionsFlowLayout;
-
-    private ShareButton facebookShareButton;
 
     private LinearLayout actionLeadersRoot;
     private LinearLayout actionCurrentQuestionRoot;
@@ -173,7 +164,7 @@ public class ChatFragment extends Fragment {
         androidDeviceId = OffsideApplication.getAndroidDeviceId();
         playerId = OffsideApplication.getPlayerId();
         PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
-        if(selectedPrivateGroup == null) {
+        if(selectedPrivateGroup == null || privateGameId == null) {
             Toast.makeText(getActivity(), R.string.lbl_no_active_games, Toast.LENGTH_LONG).show();
             EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
         }
@@ -204,6 +195,7 @@ public class ChatFragment extends Fragment {
 
         getIDs(view);
         setEvents();
+        resetVisibility();
 
         return view;
     }
@@ -221,7 +213,7 @@ public class ChatFragment extends Fragment {
         positionTextView = (TextView) view.findViewById(R.id.fc_position_text_view);
         scoreboardRoot = (LinearLayout) view.findViewById(R.id.fc_scoreboard_root);
         inviteFriendsImageView = (ImageView) view.findViewById(R.id.fc_invite_friends_image_view);
-        contentRoot = (RelativeLayout) view.findViewById(R.id.fc_content_root);
+
         actionsMenuRoot = (LinearLayout) view.findViewById(R.id.fc_actions_menu_root);
 
         chatActionsButton = (ImageView) view.findViewById(R.id.fc_chatActionsButton);
@@ -233,7 +225,6 @@ public class ChatFragment extends Fragment {
         powerItemsTextView = (TextView) view.findViewById(R.id.fc_power_items_text_view);
         powerItemImageView = (ImageView) view.findViewById(R.id.fc_power_item_image_view);
 
-        facebookShareButton = (ShareButton) view.findViewById(R.id.fc_facebook_share_button);
         actionExitGameRoot = (LinearLayout) view.findViewById(R.id.fc_action_exit_game_root);
 
         actionLeadersRoot = (LinearLayout) view.findViewById(R.id.fc_action_leaders_root);
@@ -523,6 +514,13 @@ public class ChatFragment extends Fragment {
 
     }
 
+    public void resetVisibility() {
+
+        root.setVisibility(View.GONE);
+        loadingRoot.setVisibility(View.VISIBLE);
+
+    }
+
     private void hideKeypad() {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(root.getWindowToken(), 0);
@@ -577,9 +575,6 @@ public class ChatFragment extends Fragment {
             String gameId = gameInfo.getGameId();
             String privateGameId = gameInfo.getPrivateGameId();
             String privateGroupId = OffsideApplication.getSelectedPrivateGroupId();
-            String privateGameTitle = gameInfo.getPrivateGameTitle();
-            String homeTeam = gameInfo.getHomeTeam();
-            String awayTeam = gameInfo.getAwayTeam();
 
             OffsideApplication.setGameInfo(gameInfo);
 
@@ -608,7 +603,6 @@ public class ChatFragment extends Fragment {
         androidDeviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         gameId = OffsideApplication.getGameInfo().getGameId();
-
         privateGameId = OffsideApplication.getGameInfo().getPrivateGameId();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -617,7 +611,6 @@ public class ChatFragment extends Fragment {
         awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
         PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
         offsideCoins = player != null ? player.getOffsideCoins() : 0;
-        trophies = OffsideApplication.getGameInfo().getTrophies();
         powerItems = player.getPowerItems();
 
 
@@ -661,6 +654,8 @@ public class ChatFragment extends Fragment {
             OffsideApplication.playerAnswers = player.getPlayerAnswers();
 
             createNewChatAdapter(false);
+            loadingRoot.setVisibility(View.GONE);
+            root.setVisibility(View.VISIBLE);
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);

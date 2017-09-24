@@ -1,4 +1,4 @@
-    <resources>
+<resources>
 
     <!-- Base application theme. -->
     <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
@@ -96,11 +96,43 @@
 
     </style>
 
-        <style name="GoldButton">
-            <item name="android:background">@color/colorGold</item>
-            <item name="android:textColor">@color/colorBlack    </item>
+    <style name="GoldButton">
+        <item name="android:background">@color/colorGold</item>
+        <item name="android:textColor">@color/colorBlack</item>
 
-        </style>
+    </style>
+
+    <style name="questionText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/questionTextColor</item>
+    </style>
+
+    <style name="answerText">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/answerTextColor</item>
+    </style>
+
+    <style name="answerTextReturnValue">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/answerTextColor</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
+    <style name="answerTextSelected">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="answerTextReturnValueSelected">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textStyle">bold</item>
+
+    </style>
+
+
+
 
 
 

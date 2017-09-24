@@ -9,6 +9,9 @@
     android:layoutDirection="ltr"
     android:orientation="vertical">
 
+    <include
+        layout="@layout/shared_loading"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/fc_root"
@@ -16,9 +19,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include
-            layout="@layout/shared_loading"
-            android:visibility="gone" />
+
 
         <!--chat title root -->
         <LinearLayout

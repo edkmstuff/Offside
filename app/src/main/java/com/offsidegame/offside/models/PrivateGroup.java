@@ -85,9 +85,6 @@ public class PrivateGroup {
     }
 
 
-
-
-
     public void setLastPlayed(Date lastPlayed) {
         this.lastPlayed = lastPlayed;
     }

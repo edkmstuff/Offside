@@ -315,7 +315,7 @@
                             android:gravity="center"
                             android:text="@string/lbl_question_time_expired_message"
                             android:textColor="@color/chatText"
-                            android:textSize="12dp" />
+                            android:textSize="12sp" />
                         <!--stats-->
                         <LinearLayout
                             android:id="@+id/cm_incoming_question_stat_root"
@@ -327,7 +327,8 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@mipmap/ic_info"/>
+                                android:src="@mipmap/ic_info"
+                                android:scaleType="centerInside"/>
                             <TextView
                                 android:id="@+id/cm_incoming_question_stat_text_view"
                                 android:layout_width="match_parent"
@@ -347,12 +348,11 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="1dp"
-
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
                             android:text="which team will offsideCoins next?"
-                            android:textColor="@color/chatPrimary"
-                            android:textSize="@dimen/OffsideMediumSmallText" />
+                            style="@style/questionText"
+                             />
 
                         <!--bet panel-->
                         <LinearLayout
@@ -397,18 +397,7 @@
                                         android:textColor="@color/colorBlack"
                                         android:textStyle="bold" />
 
-
-
-
-
-
-
-
                                 </LinearLayout>
-
-
-
-
 
                             </LinearLayout>
 
@@ -578,7 +567,7 @@
                             android:layout_marginTop="5dp"
                             android:gravity="center"
                             android:text="@string/lbl_how_others_answered"
-                            android:textSize="16dp"
+                            android:textSize="12sp"
                             android:textColor="@color/chatText"/>
 
                         <!--answers-->
@@ -587,7 +576,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
-                            android:background="@color/colorWhite"
                             android:orientation="vertical"
                             android:weightSum="2">
 
@@ -605,7 +593,6 @@
                                     android:layout_height="wrap_content"
                                     android:layout_margin="1dp"
                                     android:layout_weight="1"
-
                                     android:gravity="center"
                                     android:minHeight="50dp"
                                     android:orientation="vertical"
@@ -619,26 +606,26 @@
                                         android:layout_marginLeft="1dp"
                                         android:layout_marginRight="1dp"
                                         android:text="answer 1"
-                                        android:textColor="@color/answerTextColor" />
+                                        style="@style/answerText" />
 
                                     <TextView
                                         android:id="@+id/cm_incoming_answer_1_return_text_view"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:gravity="center_horizontal"
-                                        android:text="to return"
-                                        android:textColor="@color/answerTextColor"
-                                        android:visibility="gone" />
+                                        android:text="250"
+                                        style="@style/answerTextReturnValue"
+                                        />
 
-                                    <TextView
-                                        android:id="@+id/cm_incoming_answer_1_percent_text_view"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:gravity="center_horizontal"
-                                        android:text="20%"
-                                        android:textColor="@color/answerTextColor"
-                                        android:textSize="@dimen/OffsideMediumText"
-                                        android:textStyle="bold" />
+                                    <!--<TextView-->
+                                        <!--android:id="@+id/cm_incoming_answer_1_percent_text_view"-->
+                                        <!--android:layout_width="wrap_content"-->
+                                        <!--android:layout_height="wrap_content"-->
+                                        <!--android:gravity="center_horizontal"-->
+                                        <!--android:text="20%"-->
+                                        <!--android:textColor="@color/answerTextColor"-->
+                                        <!--android:textSize="@dimen/OffsideMediumText"-->
+                                        <!--android:textStyle="bold" />-->
 
                                 </LinearLayout>
 
@@ -662,24 +649,24 @@
                                         android:layout_marginLeft="1dp"
                                         android:layout_marginRight="1dp"
                                         android:text="answer 2"
-                                        android:textColor="@color/answerTextColor" />
+                                        style="@style/answerText" />
 
                                     <TextView
                                         android:id="@+id/cm_incoming_answer_2_return_text_view"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="to return"
-                                        android:textColor="@color/answerTextColor"
-                                        android:visibility="gone" />
+                                        android:text="300"
+                                        style="@style/answerTextReturnValue"
+                                        />
 
-                                    <TextView
-                                        android:id="@+id/cm_incoming_answer_2_percent_text_view"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="30%"
-                                        android:textColor="@color/answerTextColor"
-                                        android:textSize="@dimen/OffsideMediumText"
-                                        android:textStyle="bold" />
+                                    <!--<TextView-->
+                                        <!--android:id="@+id/cm_incoming_answer_2_percent_text_view"-->
+                                        <!--android:layout_width="wrap_content"-->
+                                        <!--android:layout_height="wrap_content"-->
+                                        <!--android:text="30%"-->
+                                        <!--android:textColor="@color/answerTextColor"-->
+                                        <!--android:textSize="@dimen/OffsideMediumText"-->
+                                        <!--android:textStyle="bold" />-->
 
                                 </LinearLayout>
 
@@ -713,24 +700,24 @@
                                         android:layout_marginLeft="1dp"
                                         android:layout_marginRight="1dp"
                                         android:text="answer 3"
-                                        android:textColor="@color/answerTextColor" />
+                                        style="@style/answerText"/>
 
                                     <TextView
                                         android:id="@+id/cm_incoming_answer_3_return_text_view"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="to return"
-                                        android:textColor="@color/answerTextColor"
-                                        android:visibility="gone" />
+                                        android:text="150"
+                                        style="@style/answerTextReturnValue"
+                                         />
 
-                                    <TextView
-                                        android:id="@+id/cm_incoming_answer_3_percent_text_view"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="15%"
-                                        android:textColor="@color/answerTextColor"
-                                        android:textSize="@dimen/OffsideMediumText"
-                                        android:textStyle="bold" />
+                                    <!--<TextView-->
+                                        <!--android:id="@+id/cm_incoming_answer_3_percent_text_view"-->
+                                        <!--android:layout_width="wrap_content"-->
+                                        <!--android:layout_height="wrap_content"-->
+                                        <!--android:text="15%"-->
+                                        <!--android:textColor="@color/answerTextColor"-->
+                                        <!--android:textSize="@dimen/OffsideMediumText"-->
+                                        <!--android:textStyle="bold" />-->
 
                                 </LinearLayout>
 
@@ -760,18 +747,18 @@
                                         android:id="@+id/cm_incoming_answer_4_return_text_view"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="to return"
-                                        android:textColor="@color/answerTextColor"
-                                        android:visibility="gone" />
+                                        android:text="100"
+                                        style="@style/answerTextReturnValue"
+                                        />
 
-                                    <TextView
-                                        android:id="@+id/cm_incoming_answer_4_percent_text_view"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="25%"
-                                        android:textColor="@color/answerTextColor"
-                                        android:textSize="@dimen/OffsideMediumText"
-                                        android:textStyle="bold" />
+                                    <!--<TextView-->
+                                        <!--android:id="@+id/cm_incoming_answer_4_percent_text_view"-->
+                                        <!--android:layout_width="wrap_content"-->
+                                        <!--android:layout_height="wrap_content"-->
+                                        <!--android:text="25%"-->
+                                        <!--android:textColor="@color/answerTextColor"-->
+                                        <!--android:textSize="@dimen/OffsideMediumText"-->
+                                        <!--android:textStyle="bold" />-->
 
                                 </LinearLayout>
 

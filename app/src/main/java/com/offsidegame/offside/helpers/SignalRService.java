@@ -284,14 +284,14 @@ public class SignalRService extends Service {
         hub.on("PrivateGroupReceived", new SubscriptionHandler1<PrivateGroup>() {
             @Override
             public void run(PrivateGroup privateGroup) {
-                EventBus.getDefault().post(new PrivateGroupChangedEvent(privateGroup));
+                EventBus.getDefault().post(new PrivateGroupEvent(privateGroup));
             }
         }, PrivateGroup.class);
 
         hub.on("PrivateGroupChangedReceived", new SubscriptionHandler1<PrivateGroup>() {
             @Override
             public void run(PrivateGroup privateGroup) {
-                EventBus.getDefault().post(new PrivateGroupEvent(privateGroup));
+                EventBus.getDefault().post(new PrivateGroupChangedEvent(privateGroup));
             }
         }, PrivateGroup.class);
 

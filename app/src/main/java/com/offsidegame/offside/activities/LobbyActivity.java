@@ -152,7 +152,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 try {
-                    resetVisibility();
+                    //resetVisibility();
                     switch (item.getItemId()) {
                         case R.id.nav_action_groups:
 

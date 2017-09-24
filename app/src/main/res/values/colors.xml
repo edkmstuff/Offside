@@ -47,6 +47,7 @@
 
     <color name="buttonTextColor">#FFFFFF</color>
 
+    <color name="questionTextColor">#000000</color>
     <color name="answerTextColor">#000000</color>
     <color name="answer2backgroundColor">#F6F3F2</color>
     <color name="answer3backgroundColor">#F6F3F2</color>

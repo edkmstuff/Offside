@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="20%"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/chatPrimary"
             android:textSize="@dimen/OffsideMediumText"
             android:gravity="center"
             android:padding="4dp"
@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="שתי הקבוצות"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/chatPrimary"
             android:gravity="center_vertical"
             android:padding="4dp"
 

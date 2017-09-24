@@ -2,11 +2,13 @@ package com.offsidegame.offside.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
@@ -52,6 +54,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 /**
  * Created by KFIR on 11/21/2016.
  */
@@ -94,7 +98,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         public LinearLayout IncomingAnswers12Root;
 
         public TextView[] answerReturnTextViews = new TextView[4];
-        public TextView[] answerPercentTextViews = new TextView[4];
+        //public TextView[] answerPercentTextViews = new TextView[4];
         public TextView[] answerTextViews = new TextView[4];
         public LinearLayout[] answerRoots = new LinearLayout[4];
 
@@ -206,11 +210,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 for (int i = 0; i < 4; i++) {
                     final int answerNumber = i + 1;
                     final int returnTextViewResourceId = context.getResources().getIdentifier("cm_incoming_answer_" + answerNumber + "_return_text_view", "id", context.getPackageName());
-                    final int percentTextViewResourceId = context.getResources().getIdentifier("cm_incoming_answer_" + answerNumber + "_percent_text_view", "id", context.getPackageName());
+                    //final int percentTextViewResourceId = context.getResources().getIdentifier("cm_incoming_answer_" + answerNumber + "_percent_text_view", "id", context.getPackageName());
                     final int answerTextViewResourceId = context.getResources().getIdentifier("cm_incoming_answer_" + answerNumber + "_text_view", "id", context.getPackageName());
                     final int answerRootResourceId = context.getResources().getIdentifier("cm_incoming_answer_" + answerNumber + "_root", "id", context.getPackageName());
                     viewHolder.answerReturnTextViews[i] = (TextView) convertView.findViewById(returnTextViewResourceId);
-                    viewHolder.answerPercentTextViews[i] = (TextView) convertView.findViewById(percentTextViewResourceId);
+                    //viewHolder.answerPercentTextViews[i] = (TextView) convertView.findViewById(percentTextViewResourceId);
                     viewHolder.answerTextViews[i] = (TextView) convertView.findViewById(answerTextViewResourceId);
                     viewHolder.answerRoots[i] = (LinearLayout) convertView.findViewById(answerRootResourceId);
 
@@ -633,35 +637,47 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             resetWidgetsVisibility(viewHolder);
 
+            int gameMinBetSize = OffsideApplication.getGameInfo().getMinBetSize();
+
+            final int playerMinBetSize = OffsideApplication.getGameInfo().getPlayer().getOffsideCoins() < gameMinBetSize ? 0 : gameMinBetSize;
+
             //open question but user already answered it
             if (isAskedQuestion) {
 
                 if (isPlayerAnsweredQuestion) {
-                    String userAnswerId;
-                    int answerNumber = 0;
+                    String userAnswerId="";
+                    //int answerNumber = 0;
                     final AnswerIdentifier answerIdentifier = playerAnswers.get(questionId);
                     if (!answerIdentifier.isSkipped()) {
                         userAnswerId = answerIdentifier.getAnswerId();
-                        answerNumber = getAnswerNumber(viewHolder.question, userAnswerId);
+                        //answerNumber = getAnswerNumber(viewHolder.question, userAnswerId);
                     }
 
-                    int betSize = answerIdentifier.getBetSize();
+                    prepareQuestionDisplay(viewHolder, viewHolder.question.getAnswers(),playerMinBetSize,isAskedQuestion,isProcessedQuestion);
 
-                    final Answer answerOfTheUser;
-                    int returnValue = 0;
-                    if (answerNumber != 0) {
-                        answerOfTheUser = viewHolder.question.getAnswers()[answerNumber - 1];
-                        viewHolder.incomingSelectedAnswerTextView.setText(answerOfTheUser.getAnswerText());
-                        returnValue = (int) (betSize * answerOfTheUser.getPointsMultiplier());
-                        final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
-                        viewHolder.incomingSelectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
-                        viewHolder.incomingSelectedAnswerTextView.setVisibility(View.VISIBLE);
-                    }
+                    setDisplayForAnsweredQuestion(viewHolder, userAnswerId);
+                    viewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
+                    viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
 
-                    //set values to widgets
-                    viewHolder.incomingProcessingQuestionTextView.setText(viewHolder.question.getQuestionText());
 
-                    viewHolder.incomingSelectedAnswerReturnTextView.setText(Integer.toString(returnValue));
+//                    int betSize = answerIdentifier.getBetSize();
+//
+//                    final Answer answerOfTheUser;
+//                    int returnValue = 0;
+//
+//                    if (answerNumber != 0) {
+//                        answerOfTheUser = viewHolder.question.getAnswers()[answerNumber - 1];
+//                        viewHolder.incomingSelectedAnswerTextView.setText(answerOfTheUser.getAnswerText());
+//                        returnValue = (int) (betSize * answerOfTheUser.getPointsMultiplier());
+//                        final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
+//                        viewHolder.incomingSelectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
+//                        viewHolder.incomingSelectedAnswerTextView.setVisibility(View.VISIBLE);
+//                    }
+//
+//                    //set values to widgets
+//                    viewHolder.incomingProcessingQuestionTextView.setText(viewHolder.question.getQuestionText());
+//
+//                    viewHolder.incomingSelectedAnswerReturnTextView.setText(Integer.toString(returnValue));
 
                     if (answerIdentifier.isSkipped())
                         //viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_randomly_selected_answer_title);
@@ -675,7 +691,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                     //visibility set
 
-                    viewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
+                    //viewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
+                    viewHolder.incomingQuestionRoot.setVisibility(View.VISIBLE);
                     viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
                     return;
 
@@ -689,9 +706,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             }
 
-            int gameMinBetSize = OffsideApplication.getGameInfo().getMinBetSize();
 
-            final int playerMinBetSize = OffsideApplication.getGameInfo().getPlayer().getOffsideCoins() < gameMinBetSize ? 0 : gameMinBetSize;
             //final int minBetSize =  OffsideApplication.getGameInfo().getMinBetSize();
 
             final Answer[] answers = viewHolder.question.getAnswers();
@@ -703,25 +718,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingQuestionTextView.setText(viewHolder.question.getQuestionText());
 
 
-                for (int i = 0; i < answers.length; i++) {
-                    final String answerText = answers[i].getAnswerText();
-                    final String percentUserAnswered = String.valueOf((int) answers[i].getPercentUsersAnswered()) + "%";
-                    final int initialReturnValue = (int) answers[i].getPointsMultiplier() * playerMinBetSize;
-
-                    viewHolder.answerTextViews[i].setText(answerText);
-                    if (isAskedQuestion) {
-                        viewHolder.answerReturnTextViews[i].setText(String.valueOf(initialReturnValue));
-                        viewHolder.answerReturnTextViews[i].setVisibility(View.VISIBLE);
-                        viewHolder.answerPercentTextViews[i].setVisibility(View.GONE);
-
-                    } else if (isProcessedQuestion) {
-                        viewHolder.answerPercentTextViews[i].setText(percentUserAnswered);
-                        viewHolder.answerReturnTextViews[i].setVisibility(View.GONE);
-                        viewHolder.answerPercentTextViews[i].setVisibility(View.VISIBLE);
-                    }
-
-                    viewHolder.answerRoots[i].setVisibility(View.VISIBLE);
-                }
+                prepareQuestionDisplay(viewHolder, answers,playerMinBetSize,isAskedQuestion,isProcessedQuestion);
 
 
                 if (isAskedQuestion) {
@@ -898,7 +895,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     viewHolder.incomingQuestionProcessedQuestionTitleTextView.setVisibility(View.VISIBLE);
 
                     for (int i = 0; i < viewHolder.answerRoots.length; i++) {
-                        viewHolder.answerRoots[i].getBackground().mutate().setAlpha(90);
+                        if(viewHolder.answerRoots[i].getBackground() != null)
+                            viewHolder.answerRoots[i].getBackground().mutate().setAlpha(90);
                         viewHolder.answerRoots[i].setOnClickListener(null);
                     }
 
@@ -911,7 +909,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                             if (answers[i].getId().equals(userAnswerId)) {
                                 final int answerNumber = i + 1;
                                 final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
-                                viewHolder.answerRoots[i].getBackground().mutate().setAlpha(255);
+                                if(viewHolder.answerRoots[i].getBackground() != null)
+                                    viewHolder.answerRoots[i].getBackground().mutate().setAlpha(255);
                                 viewHolder.answerRoots[i].setBackgroundResource(backgroundColorResourceId);
                                 break;
                             }
@@ -957,16 +956,20 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                         percentAnsweredDisplayBar.setProgressDrawable(drawable);
 
-                        answerTextRoot.getBackground().mutate().setAlpha(90);
-                        progressBarRoot.getBackground().mutate().setAlpha(90);
-                        percentValueRoot.getBackground().mutate().setAlpha(90);
-                        //percentAnsweredDisplayBar.getProgressDrawable().setAlpha(90);
+                        if(answerTextRoot.getBackground()!=null)
+                            answerTextRoot.getBackground().mutate().setAlpha(90);
+                        if(progressBarRoot.getBackground()!=null)
+                            progressBarRoot.getBackground().mutate().setAlpha(90);
+                        if(percentValueRoot.getBackground()!=null)
+                            percentValueRoot.getBackground().mutate().setAlpha(90);
 
                         if (answer.getId().equals(userAnswerId)) {
-                            answerTextRoot.getBackground().mutate().setAlpha(255);
-                            progressBarRoot.getBackground().mutate().setAlpha(255);
-                            percentValueRoot.getBackground().mutate().setAlpha(255);
-                            //  percentAnsweredDisplayBar.getProgressDrawable().setAlpha(255);
+                            if(answerTextRoot.getBackground()!=null)
+                                answerTextRoot.getBackground().mutate().setAlpha(255);
+                            if(progressBarRoot.getBackground()!=null)
+                                progressBarRoot.getBackground().mutate().setAlpha(255);
+                            if(percentValueRoot.getBackground()!=null)
+                                percentValueRoot.getBackground().mutate().setAlpha(255);
                         }
 
                         j++;
@@ -1117,6 +1120,29 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     }
 
+    private void prepareQuestionDisplay(ViewHolder viewHolder,Answer[] answers, int playerMinBetSize, boolean isAskedQuestion, boolean isProcessedQuestion ){
+
+        for (int i = 0; i < answers.length; i++) {
+            final String answerText = answers[i].getAnswerText();
+            //final String percentUserAnswered = String.valueOf((int) answers[i].getPercentUsersAnswered()) + "%";
+            final int initialReturnValue = (int) answers[i].getPointsMultiplier() * playerMinBetSize;
+
+            viewHolder.answerTextViews[i].setText(answerText);
+            if (isAskedQuestion) {
+                viewHolder.answerReturnTextViews[i].setText(String.valueOf(initialReturnValue));
+                viewHolder.answerReturnTextViews[i].setVisibility(View.VISIBLE);
+                //viewHolder.answerPercentTextViews[i].setVisibility(View.GONE);
+
+            } else if (isProcessedQuestion) {
+                //viewHolder.answerPercentTextViews[i].setText(percentUserAnswered);
+                viewHolder.answerReturnTextViews[i].setVisibility(View.GONE);
+                //viewHolder.answerPercentTextViews[i].setVisibility(View.VISIBLE);
+            }
+
+            viewHolder.answerRoots[i].setVisibility(View.VISIBLE);
+        }
+    }
+
     private void generateSocialFeedChatMessage(ViewHolder viewHolder) {
 
         try {
@@ -1226,13 +1252,19 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             if (view != null) //null when question was skipped
                 view.animate().rotationX(360.0f).setDuration(200).start();
 
+            setDisplayForAnsweredQuestion(viewHolder, answerId);
+
             int delay = isSkipped ? 0 : 500;
 
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    myViewHolder.incomingQuestionRoot.setVisibility(View.GONE);
-                    myViewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
+                    //myViewHolder.incomingQuestionRoot.setVisibility(View.GONE);
+                    //myViewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
+                    myViewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
+                    myViewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
+
+
                     EventBus.getDefault().post(new QuestionAnsweredEvent(gameId, questionId, answerId, isSkipped, betSize));
                 }
             }, delay);
@@ -1269,6 +1301,23 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 
+        }
+
+
+    }
+
+    private void setDisplayForAnsweredQuestion(ViewHolder viewHolder, String answerId){
+        int answerNumber = getAnswerNumber(viewHolder.question, answerId);
+        viewHolder.answerRoots[answerNumber].setBackgroundResource(R.drawable.shape_bg_rectangle_answer_selected);
+
+        if (Build.VERSION.SDK_INT < 23) {
+
+            viewHolder.answerTextViews[answerNumber].setTextAppearance(getContext(),R.style.answerTextSelected);
+            viewHolder.answerReturnTextViews[answerNumber].setTextAppearance(getContext(),R.style.answerTextReturnValueSelected);
+        }
+        else{
+            viewHolder.answerTextViews[answerNumber].setTextAppearance(R.style.answerTextSelected);
+            viewHolder.answerReturnTextViews[answerNumber].setTextAppearance(R.style.answerTextReturnValueSelected);
         }
 
 
