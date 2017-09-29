@@ -322,7 +322,7 @@
 ////        try {
 ////            super.onResume();
 ////            //IronSource.onResume(thisActivity);
-//////            OffsideApplication.setIsChatActivityVisible(true);
+//////            OffsideApplication.setIsLobbyActivityVisible(true);
 //////            hideKeypad();
 //////
 //////            //reset to chat adapter
@@ -356,14 +356,14 @@
 ////    public void onPause(){
 ////        super.onPause();
 ////        //IronSource.onResume(thisActivity);
-////        OffsideApplication.setIsChatActivityVisible(false);
+////        OffsideApplication.setIsLobbyActivityVisible(false);
 ////    }
 ////
 ////    @Override
 ////    public void onStop() {
 ////
 ////        try {
-////            OffsideApplication.setIsChatActivityVisible(false);
+////            OffsideApplication.setIsLobbyActivityVisible(false);
 ////            EventBus.getDefault().unregister(context);
 ////            super.onStop();
 ////

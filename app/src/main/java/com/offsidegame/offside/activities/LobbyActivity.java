@@ -7,12 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -44,7 +42,6 @@ import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PrivateGroup;
-import com.offsidegame.offside.models.PrivateGroupsInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -52,7 +49,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
-import java.util.List;
 
 
 public class LobbyActivity extends AppCompatActivity implements Serializable {
@@ -68,6 +64,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     //playerAssets
     private LinearLayout playerInfoRoot;
+    private LinearLayout balanceRoot;
     private TextView balanceTextView;
     private TextView powerItemsTextView;
 
@@ -105,7 +102,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             getIds();
             setEvents();
-            resetVisibility();
+            togglePayerAssetsVisibility(true);
             //setupToSupportExitOnBackButtonPressed();
 
         } catch (Exception ex) {
@@ -119,9 +116,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
         playerInfoRoot = (LinearLayout) findViewById(R.id.l_player_info_root);
+
         fragmentContainerRoot = (LinearLayout) findViewById(R.id.l_fragment_container_root);
 
         playerPictureImageView = (ImageView) findViewById(R.id.l_player_picture_image_view);
+        balanceRoot = (LinearLayout) findViewById(R.id.l_balance_root);
         balanceTextView = (TextView) findViewById(R.id.l_balance_text_view);
         powerItemsTextView = (TextView) findViewById(R.id.l_power_items_text_view);
 
@@ -137,45 +136,47 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
 
-//        createPrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                Intent intent = new Intent(context, CreatePrivateGroupActivity.class);
-//                startActivity(intent);
-//
-//            }
-//        });
+        balanceRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_shop));
+
+            }
+        });
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 try {
-                    //resetVisibility();
                     switch (item.getItemId()) {
                         case R.id.nav_action_groups:
 
                             groupsFragment = GroupsFragment.newInstance();
                             replaceFragment(groupsFragment);
+                            togglePayerAssetsVisibility(true);
 
                             return true;
 
                         case R.id.nav_action_profile:
                             playerFragment = new PlayerFragment();
                             replaceFragment(playerFragment);
+                            togglePayerAssetsVisibility(true);
                             return true;
 
                         case R.id.nav_action_shop:
                             shopFragment = ShopFragment.newInstance();
                             replaceFragment(shopFragment);
+                            togglePayerAssetsVisibility(true);
 
                             return true;
 
                         case R.id.nav_action_play:
                             chatFragment = ChatFragment.newInstance();
                             replaceFragment(chatFragment);
-                            playerInfoRoot.setVisibility(View.GONE);
+                            togglePayerAssetsVisibility(false);
+
 
                             return true;
 
@@ -199,10 +200,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    private void resetVisibility() {
-
-        playerInfoRoot.setVisibility(View.VISIBLE);
-        fragmentContainerRoot.setVisibility(View.VISIBLE);
+    private void togglePayerAssetsVisibility(boolean isVisible) {
+        if(isVisible)
+            playerInfoRoot.setVisibility(View.VISIBLE);
+        else
+            playerInfoRoot.setVisibility(View.GONE);
     }
 
 
@@ -217,6 +219,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     public void onResume() {
 
         super.onResume();
+        OffsideApplication.setIsLobbyActivityVisible(true);
 
         EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
     }

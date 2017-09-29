@@ -10,7 +10,6 @@ import android.provider.Settings;
 
 import com.offsidegame.offside.BuildConfig;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.events.ScoreboardEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.helpers.FontsOverride;
 import com.offsidegame.offside.helpers.SignalRService;
@@ -86,7 +85,7 @@ public class OffsideApplication extends Application {
 
     private static GameInfo gameInfo;
 
-    private static boolean isChatActivityVisible = false;
+    private static boolean isLobbyActivityVisible = false;
 
     private static Scoreboard scoreboard;
 
@@ -161,11 +160,11 @@ public class OffsideApplication extends Application {
     }
 
     public static boolean isChatActivityVisible() {
-        return isChatActivityVisible;
+        return isLobbyActivityVisible;
     }
 
-    public static void setIsChatActivityVisible(boolean isChatActivityVisible) {
-        OffsideApplication.isChatActivityVisible = isChatActivityVisible;
+    public static void setIsLobbyActivityVisible(boolean isLobbyActivityVisible) {
+        OffsideApplication.isLobbyActivityVisible = isLobbyActivityVisible;
     }
 
     public static String getMessageTypeWinner() {

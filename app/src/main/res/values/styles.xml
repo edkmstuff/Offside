@@ -121,12 +121,12 @@
 
     <style name="answerTextSelected">
         <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textColor">@color/answerTextColor</item>
     </style>
 
     <style name="answerTextReturnValueSelected">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textColor">@color/answerTextColor</item>
         <item name="android:textStyle">bold</item>
 
     </style>

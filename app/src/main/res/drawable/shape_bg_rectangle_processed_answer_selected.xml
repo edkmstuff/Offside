@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <shape>
-            <solid  android:color="@color/chatIncoming" />
+            <solid  android:color="@color/colorAccent" />
             <corners
                 android:bottomLeftRadius="5dp"
                 android:bottomRightRadius="5dp"
@@ -22,7 +22,7 @@
         android:id="@android:id/progress" >
         <clip>
             <shape android:top="4dp" android:bottom="4dp" android:right="4dp">
-                <solid android:color="@color/chatPrimary"
+                <solid android:color="@color/colorPrimaryDark"
                     />
                 <corners
                     android:bottomLeftRadius="5dp"

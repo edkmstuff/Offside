@@ -30,92 +30,6 @@
             android:padding="4dp"
             android:visibility="visible">
 
-            <!--group name-->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:layout_marginTop="5dp">
-
-                <TextView
-                    android:id="@+id/fc_private_game_name_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Yoske's gang"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="18sp"/>
-
-            </LinearLayout>
-            <!-- game title Home Vs Away -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/fc_game_title_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="team A vs. team B"
-                    android:textColor="@color/colorWhite"
-                    android:visibility="visible" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:id="@+id/fc_game_home_team_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="1dp"
-                        android:text="barcelona"
-                        android:textColor="@color/colorWhite" />
-
-                    <TextView
-                        android:id="@+id/fc_game_home_team_goals_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="1dp"
-                        android:background="@drawable/shape_bg_rectangle_light_gray"
-                        android:padding="1dp"
-                        android:text="2"
-                        android:textColor="@color/colorWhite" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="1dp"
-                        android:text=":"
-                        android:textColor="@color/colorWhite" />
-
-                    <TextView
-                        android:id="@+id/fc_game_away_team_goals_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="1dp"
-                        android:background="@drawable/shape_bg_rectangle_light_gray"
-                        android:padding="1dp"
-                        android:text="0"
-                        android:textColor="@color/colorWhite" />
-
-                    <TextView
-                        android:id="@+id/fc_game_away_team_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="1dp"
-                        android:text="Real"
-                        android:textColor="@color/colorWhite" />
-
-
-                </LinearLayout>
-
-
-            </LinearLayout>
-
             <!-- players assets in game -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -224,10 +138,10 @@
 
                         <ImageView
                             android:id="@+id/fc_power_item_image_view"
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
                             android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_card" />
+                            android:src="@mipmap/ic_soccer_ball" />
 
                     </LinearLayout>
 
@@ -236,10 +150,94 @@
 
             </LinearLayout>
 
+            <!--group name-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:background="@color/transparentBackground">
 
+                <TextView
+                    android:id="@+id/fc_private_game_name_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Yoske's gang"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp"/>
+
+            </LinearLayout>
+            <!-- game title Home Vs Away -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:background="@color/transparentBackground">
+
+                <TextView
+                    android:id="@+id/fc_game_title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="team A vs. team B"
+                    android:textColor="@color/colorWhite"
+                    android:visibility="visible" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/fc_game_home_team_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
+                        android:text="barcelona"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:id="@+id/fc_game_home_team_goals_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
+                        android:background="@drawable/shape_bg_rectangle_light_gray"
+                        android:padding="1dp"
+                        android:text="2"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
+                        android:text=":"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:id="@+id/fc_game_away_team_goals_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
+                        android:background="@drawable/shape_bg_rectangle_light_gray"
+                        android:padding="1dp"
+                        android:text="0"
+                        android:textColor="@color/colorWhite" />
+
+                    <TextView
+                        android:id="@+id/fc_game_away_team_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1dp"
+                        android:text="Real"
+                        android:textColor="@color/colorWhite" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
-
 
         <!-- scoreboard -->
         <LinearLayout

@@ -8,7 +8,8 @@
     tools:context="com.offsidegame.offside.adapters.ChatMessageAdapter"
     android:paddingTop="3dp"
     android:paddingBottom="3dp"
-    android:weightSum="10">
+    android:weightSum="10"
+    android:background="@color/chatIncoming">
 
 
     <LinearLayout
@@ -44,8 +45,6 @@
             android:max="100"
             android:progress="10"
             android:progressDrawable="@drawable/shape_bg_rectangle_processed_answer"
-            android:textColor="@color/colorWhite"
-
             android:gravity="center_vertical"
             />
 

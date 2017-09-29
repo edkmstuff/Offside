@@ -34,6 +34,8 @@
         android:icon="@mipmap/ic_in_game"
         android:title="@string/lbl_play"
         app:showAsAction="always"
+        
+
         ></item>
 
     <item
