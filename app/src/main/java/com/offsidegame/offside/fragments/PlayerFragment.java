@@ -72,8 +72,8 @@ public class PlayerFragment extends Fragment {
     private LinearLayout podiumRoot;
     private LinearLayout[] winnersPodiumRoots = new LinearLayout[3];
 
-    private TextView powerItemsTextView;
-    private TextView balanceTextView;
+    //private TextView powerItemsTextView;
+    //private TextView balanceTextView;
     private TextView playerNameTextView;
     private TextView playerExperienceLevelTextView;
 
@@ -174,8 +174,8 @@ public class PlayerFragment extends Fragment {
         playerRecordsDetailsRoot = (LinearLayout) view.findViewById(R.id.vp_player_records_details_root);
         podiumRoot = (LinearLayout) view.findViewById(R.id.vp_latest_game_podium_root);
 
-        powerItemsTextView = (TextView) view.findViewById(R.id.vp_power_items_text_view);
-        balanceTextView = (TextView) view.findViewById(R.id.vp_balance_text_view);
+        //powerItemsTextView = (TextView) view.findViewById(R.id.vp_power_items_text_view);
+        //balanceTextView = (TextView) view.findViewById(R.id.vp_balance_text_view);
         playerNameTextView = (TextView) view.findViewById(R.id.vp_player_name_text_view);
         playerExperienceLevelTextView = (TextView) view.findViewById(R.id.vp_player_experience_level_text_view);
 

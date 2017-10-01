@@ -2,19 +2,31 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
     defaultConfig {
         applicationId "com.offsidegame.offside"
         minSdkVersion 19
-        targetSdkVersion 25
-        versionCode 11
-        versionName "5.0.0"
+        targetSdkVersion rootProject.ext.compileSdkVersion
+        versionCode 12
+        versionName "5.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
 
     }
+
+//    configurations.all {
+//        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+//            def requested = details.requested
+//            if (requested.group == 'com.android.support') {
+//                if (!requested.name.startsWith("multidex")) {
+//                    details.useVersion '26.0.0'
+//                }
+//            }
+//        }
+//    }
 
 //    signingConfigs {
 //        release {
@@ -42,13 +54,11 @@ repositories {
     mavenCentral()
     allprojects {
         repositories {
-            //maven { url 'https://maven.fabric.io/public' }
             maven { url "https://maven.google.com" }
-            //maven {url 'https://dl.bintray.com/ironsource-mobile/android-sdk'}
-
         }
     }
 }
+
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -62,21 +72,23 @@ dependencies {
     //    compile 'com.ironsource.sdk:mediationsdk:6.5.3@jar'
 
 
-    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile 'com.facebook.android:facebook-android-sdk:4.26.0'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.google.firebase:firebase-auth:11.0.2'
-    compile 'com.firebaseui:firebase-ui-auth:2.1.0'
+    compile 'com.google.firebase:firebase-auth:11.4.0'
+    compile 'com.firebaseui:firebase-ui-auth:2.4.0'
     compile 'ch.acra:acra:4.9.0'
     compile 'org.apmem.tools:layouts:1.10@aar'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.google.firebase:firebase-ads:11.0.2'
+    compile 'com.google.firebase:firebase-ads:11.4.0'
     compile 'com.felipecsl:gifimageview:2.1.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:25.1.1'
-    compile 'com.android.support:appcompat-v7:25.0.0'
     compile 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
-    compile 'com.android.support:support-v4:25.3.1'
+
+    compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:support-v4:${rootProject.ext.supportLibVersion}"
+
+
     testCompile 'junit:junit:4.12'
 }
 

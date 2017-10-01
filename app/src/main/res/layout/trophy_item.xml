@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="ltr"
@@ -7,7 +6,7 @@
     android:gravity="center"
     android:paddingLeft="15dp"
     android:paddingRight="15dp"
-    tools:context="com.offsidegame.offside.activities.ViewPlayerActivity">
+    >
 
     <TextView
         android:layout_width="wrap_content"

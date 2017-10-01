@@ -13,10 +13,8 @@ import android.widget.ListView;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.AvailableGamesAdapter;
-
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.OffsideApplication;
-
 
 import org.acra.ACRA;
 

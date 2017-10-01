@@ -41,7 +41,6 @@ import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Question;
-
 import com.squareup.picasso.Picasso;
 
 import org.acra.ACRA;

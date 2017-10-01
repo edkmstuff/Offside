@@ -1,16 +1,15 @@
 package com.offsidegame.offside.activities;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,20 +20,20 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.events.PrivateGroupChangedEvent;
-import com.offsidegame.offside.fragments.SettingsFragment;
-import com.offsidegame.offside.fragments.ShopFragment;
 import com.offsidegame.offside.events.AvailableGameEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.PrivateGroupChangedEvent;
 import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.fragments.ChatFragment;
 import com.offsidegame.offside.fragments.GroupsFragment;
 import com.offsidegame.offside.fragments.PlayerFragment;
+import com.offsidegame.offside.fragments.SettingsFragment;
+import com.offsidegame.offside.fragments.ShopFragment;
 import com.offsidegame.offside.fragments.SingleGroupFragment;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
@@ -160,7 +159,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                             return true;
 
                         case R.id.nav_action_profile:
-                            playerFragment = new PlayerFragment();
+                            playerFragment = PlayerFragment.newInstance();
                             replaceFragment(playerFragment);
                             togglePayerAssetsVisibility(true);
                             return true;

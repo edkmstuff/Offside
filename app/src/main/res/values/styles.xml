@@ -96,12 +96,6 @@
 
     </style>
 
-    <style name="GoldButton">
-        <item name="android:background">@color/colorGold</item>
-        <item name="android:textColor">@color/colorBlack</item>
-
-    </style>
-
     <style name="questionText">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/questionTextColor</item>
@@ -118,22 +112,6 @@
         <item name="android:textStyle">bold</item>
 
     </style>
-
-    <style name="answerTextSelected">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/answerTextColor</item>
-    </style>
-
-    <style name="answerTextReturnValueSelected">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/answerTextColor</item>
-        <item name="android:textStyle">bold</item>
-
-    </style>
-
-
-
-
 
 
 </resources>

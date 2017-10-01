@@ -11,11 +11,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.GroupInviteEvent;
-
 import com.offsidegame.offside.helpers.ImageHelper;
-
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupPlayer;

@@ -3,8 +3,8 @@ package com.offsidegame.offside.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -16,11 +16,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
-import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.PrivateGroupCreatedEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.PrivateGroup;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -34,7 +32,6 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
     //activity
     private final String activityName = "LobbyActivity";
     private final Context context = this;
-    private final Activity thisActivity = this;
     private FrameLayout loadingRoot;
 
     //create private group form
@@ -64,16 +61,27 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
             playerDisplayName = OffsideApplication.getUserProfileInfo().getPlayerName();
 
 
-        savePrivateGroupButtonTextView = (TextView) findViewById(R.id.cpg_save_private_group_button_text_view);
-
-        loadingRoot = (FrameLayout) findViewById(R.id.shared_loading_root);
-        createPrivateGroupRoot = (LinearLayout) findViewById(R.id.cpg_create_private_group_root);
-
-
-        privateGroupNameEditText = (EditText) findViewById(R.id.cpg_private_group_name_edit_text);
+        getIds();
+        setEvents();
 
         privateGroupNameEditText.setText(playerDisplayName.split(" ")[0] + "'s" + " friends");
-//
+
+
+    }
+
+    private void getIds(){
+        savePrivateGroupButtonTextView =  findViewById(R.id.cpg_save_private_group_button_text_view);
+        loadingRoot =  findViewById(R.id.shared_loading_root);
+        createPrivateGroupRoot =  findViewById(R.id.cpg_create_private_group_root);
+
+
+        privateGroupNameEditText =  findViewById(R.id.cpg_private_group_name_edit_text);
+
+
+    }
+
+    private void setEvents(){
+
         savePrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,7 +102,28 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
                 createPrivateGroupRoot.setVisibility(View.VISIBLE);
             }
         });
+
+//        Field1.addTextChangedListener(new TextWatcher() {
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {}
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start,
+//                                          int count, int after) {
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start,
+//                                      int before, int count) {
+//                if(s.length() != 0)
+//                    Field2.setText("");
+//            }
+//        });
+
     }
+
+
 
     @Override
     public void onResume() {

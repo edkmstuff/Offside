@@ -3,29 +3,20 @@
 
     <string name="app_name">SideKick</string>
 
-
-    <!--<string-array messageText="answers">-->
-    <!--<item>Always</item>-->
-    <!--<item>When possible</item>-->
-    <!--<item>Never</item>-->
-    <!--</string-array>-->
-
-
-    <!--Eran -->
     <string name="facebook_application_id" translatable="false">523024471208542</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb523024471208542</string>
+    <!-- was "Signing up..." -->
+    <string name="fui_progress_dialog_signing_up">מחברים אותך...</string>
+
     <string name="preference_name">OffsidePlayerPreferences</string>
     <string name="date_format">EEEE, dd/MM/yyyy/hh:mm:ss</string>
     <string name="log_tag">OffsideLog</string>
     <string name="game_id_key">gameId</string>
-
-
     <string name="player_profile_picture_url_key">userProfilePictureUrl</string>
     <string name="recent_token_key">recentToken</string>
     <string name="lbl_you_are_connected">מחובר</string>
     <string name="lbl_you_are_disconnected">מנותק , מנסה להתחבר...</string>
     <string name="private_game_id_key">privateGameId</string>
-    <string name="lbl_user_selected_answer_title">אתה חושב ש..</string>
     <string name="private_game_title_key">privateGameTitle</string>
     <string name="home_team_key">homeTeam</string>
     <string name="away_team_key">awayTeam</string>
@@ -41,7 +32,6 @@
     <string name="lbl_select_name_for_club">בחר שם לקבוצה</string>
     <string name="lbl_create_private_group">פתח קבוצה</string>
     <string name="lbl_type_message">הקלד הודעה</string>
-    <string name="lbl_send">שלח</string>
     <string name="lbl_how_others_answered">כך ענו כולם</string>
     <string name="lbl_not_enough_coins_to_play">אין לך מספיק מטבעות כדי להשתתף</string>
     <string name="lbl_question_time_expired_message">תם הזמן לשאלה זו</string>
@@ -75,7 +65,6 @@
     <string name="lbl_feeling_lucky">הגרל כדורים (סיכוי 1:10)</string>
     <string name="lbl_is">היא</string>
     <string name="lbl_your_answer_was">תשובתך היתה</string>
-    <string name="lbl_press_back_again_to_exit">לחץ שוב על חזרה כדי לצאת</string>
     <string name="lbl_and_the_winner_is">והמנצחים שלנו הם...</string>
     <string name="lbl_exceed_allowed_reward_video_watch_message">צפית במקסימום סרטונים המותרים למשחק אחד.</string>
     <string name="lbl_failed_to_load_video">טעינת וידאו נכשלה</string>
@@ -107,17 +96,8 @@
     <string name="private_group_id_key">privateGroupId</string>
     <string name="lbl_enter_game">כניסה למשחק</string>
     <string name="lbl_open_game">פתח משחק</string>
-    <string name="lbl_games">משחקים</string>
-    <string name="lbl_ranking_table">דירוג</string>
-    <string name="lbl_your_position">מיקומך</string>
-    <string name="lbl_most_recent_game">משחק אחרון</string>
-    <string name="lbl_trophies_closet">ארון גביעים</string>
-    <string name="lbl_player_data">נתונים</string>
-    <string name="lbl_titles">תארים</string>
-    <string name="lbl_average_per_game">ממוצע למשחק</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="lbl_sign_out">התנתק</string>
     <string name="lbl_settings">הגדרות</string>
     <string name="lbl_no_active_games">לא נמצא משחק פעיל</string>

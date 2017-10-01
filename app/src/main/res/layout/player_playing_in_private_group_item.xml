@@ -1,13 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="ltr"
     android:orientation="vertical"
     android:gravity="center"
     android:layout_marginLeft="10dp"
-    android:paddingBottom="5dp"
-    >
+    android:paddingBottom="5dp">
 
         <FrameLayout
             android:layout_width="wrap_content"
