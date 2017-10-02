@@ -113,5 +113,11 @@
 
     </style>
 
+    <style name="closedQuestionText">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/questionTextColor</item>
+    </style>
+
+
 
 </resources>

@@ -153,7 +153,6 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
             Intent intent = new Intent(context,LobbyActivity.class);
             intent.putExtra("showGroups",true);
             startActivity(intent);
-            finish();
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);

@@ -22,7 +22,7 @@
     <string name="away_team_key">awayTeam</string>
     <string name="crash_toast_text">Something went wrong... we are sending the info to the developers...</string>
     <string name="lbl_you_can_earn">רווח אפשרי</string>
-    <string name="lbl_correct_answer_feedback">צדקת!</string>
+    <string name="lbl_correct_answer_feedback">תשובה טובה</string>
     <string name="lbl_wrong_answer_feedback">הפעם טעית...</string>
     <string name="lbl_you_earned">זכית ב-</string>
     <string name="lbl_points">מטבעות</string>
@@ -63,8 +63,8 @@
     <string name="lbl_try_again">נסה שוב</string>
     <string name="lbl_you_missed_this_question">לא היית מחובר בזמן שנשלחה השאלה</string>
     <string name="lbl_feeling_lucky">הגרל כדורים (סיכוי 1:10)</string>
-    <string name="lbl_is">היא</string>
-    <string name="lbl_your_answer_was">תשובתך היתה</string>
+    <string name="lbl_is">התשובה הנכונה</string>
+    <string name="lbl_your_answer_was">תשובתך</string>
     <string name="lbl_and_the_winner_is">והמנצחים שלנו הם...</string>
     <string name="lbl_exceed_allowed_reward_video_watch_message">צפית במקסימום סרטונים המותרים למשחק אחד.</string>
     <string name="lbl_failed_to_load_video">טעינת וידאו נכשלה</string>

@@ -34,6 +34,7 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.SlotActivity;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
+import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.AnswerIdentifier;
@@ -76,6 +77,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         public LinearLayout incomingMessagesRoot;
         public ImageView incomingProfilePictureImageView;
+
+        public ImageView incomingClosedQuestionBotImageView;
+        public ImageView incomingClosedQuestionPlayerProfilePictureImageView;
+
         public TextView incomingTextMessageTextView;
         public TextView outgoingUserSentTextView;
         public TextView incomingUserSentTextView;
@@ -342,8 +347,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         //viewHolder.incomingWinnerPointsTextView = (TextView) convertView.findViewById(R.id.cm_incoming_winner_points_text_view);
         viewHolder.incomingWinnersRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_winners_root);
 
-        //viewHolder.incomingWinnerTrophyGifImageView = (GifImageView) convertView.findViewById(R.id.cm_incoming_winner_trophy_gif_image_view);
-
         viewHolder.incomingProcessedQuestionAnswersBarsRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_processed_question_answers_bars_root);
 
         //social feed
@@ -352,6 +355,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         viewHolder.incomingSocialFeedTextMessageTextView = (TextView) convertView.findViewById(R.id.cm_incoming_social_feed_text_message_text_view);
         viewHolder.incomingSocialFeedPictureImageView = (ImageView) convertView.findViewById(R.id.cm_incoming_social_feed_image_view);
         viewHolder.facebookShareButton = (ShareButton) convertView.findViewById(R.id.cm_facebook_share_button);
+
+        viewHolder.incomingClosedQuestionBotImageView = convertView.findViewById(R.id.cm_incoming_closed_question_bot_image_view);
+        viewHolder.incomingClosedQuestionPlayerProfilePictureImageView = convertView.findViewById(R.id.cm_incoming_closed_question_player_profile_picture_image_view);
+
 
 
     }
@@ -1086,6 +1093,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             if (isClosedQuestion) {
 
                 //<editor-fold desc="CLOSED QUESTION">
+                Uri botProfilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
+                Uri playerProfileImageUri = Uri.parse(OffsideApplication.getPlayerAssets().getImageUrl());
+
+                ImageHelper.loadImage(context,viewHolder.incomingClosedQuestionBotImageView,botProfilePictureUri,true);
+                ImageHelper.loadImage(context,viewHolder.incomingClosedQuestionPlayerProfilePictureImageView,playerProfileImageUri,true);
+
 
 
                 Answer correctAnswer = null;
@@ -1123,15 +1136,21 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     viewHolder.incomingCorrectAnswerReturnTextView.setText(isUserAnswerCorrect ? context.getString(R.string.lbl_you_earned) + " " + userReturnValue + " " + context.getString(R.string.lbl_points) : context.getString(R.string.lbl_you_didnt_earn_points));
 
                     if (isUserAnswerCorrect) {
+                        viewHolder.incomingCorrectWrongTitleTextView.setTextColor(ContextCompat.getColor(context,R.color.correctAnswerColor));
+                        viewHolder.incomingCorrectAnswerTextView.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_correct);
                         viewHolder.incomingFeedbackPlayerTextView.setVisibility(View.GONE);
-                        viewHolder.incomingClosedQuestionRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_correct);
+
 
                     } else {
-                        viewHolder.incomingClosedQuestionRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_wrong);
+
+
+                        viewHolder.incomingCorrectWrongTitleTextView.setTextColor(ContextCompat.getColor(context,R.color.wrongAnswerColor));
+                        viewHolder.incomingCorrectAnswerTextView.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_wrong);
+                        viewHolder.incomingPlayerAnswerTextView.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_wrong);
                         viewHolder.incomingPlayerAnswerTextView.setText(getAnswerText(viewHolder.question, userAnswerIdentifier.getAnswerId()));
-                        viewHolder.incomingFeedbackPlayerTextView.setText(context.getString(R.string.lbl_wrong_answer_encourage_feedback));
+                        //viewHolder.incomingFeedbackPlayerTextView.setText(context.getString(R.string.lbl_wrong_answer_encourage_feedback));
                         viewHolder.incomingPlayerAnswerRoot.setVisibility(View.VISIBLE);
-                        viewHolder.incomingFeedbackPlayerTextView.setVisibility(View.VISIBLE);
+                        //viewHolder.incomingFeedbackPlayerTextView.setVisibility(View.VISIBLE);
                     }
                 }
 

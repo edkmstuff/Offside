@@ -149,6 +149,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 try {
+
                     switch (item.getItemId()) {
                         case R.id.nav_action_groups:
 
@@ -233,8 +234,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Override
     public void onPause() {
         super.onPause();
-        finish();
-
 
     }
 
@@ -473,6 +472,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.setType("text/plain");
         sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+        sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        sendIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+
 
 
         startActivity(Intent.createChooser(sendIntent,"Invite friendS" ));

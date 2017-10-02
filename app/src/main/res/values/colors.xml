@@ -43,7 +43,7 @@
 
 
     <color name="colorPrimaryDark">#1A237E</color>
-    <color name="colorActive">#00C520</color>
+    <color name="colorActive">#00E676</color>
     <color name="navigationMenu">#151A50</color>
     <!--<color name="navigationMenuSelectedItem">#383C69</color>-->
     <color name="navigationMenuSelectedItem">#ACBED8</color>
@@ -62,6 +62,12 @@
     <color name="chatIncoming">#F6F3F2</color>
 
     <color name="timerTextColor">#FFFFFF</color>
+
+    <color name="correctAnswerColor">#00E676</color>
+    <color name="wrongAnswerColor">#E57373</color>
+
+
+
 
 
 

@@ -326,7 +326,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         Intent intent = new Intent(context, LobbyActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
         startActivity(intent);
     }
 
