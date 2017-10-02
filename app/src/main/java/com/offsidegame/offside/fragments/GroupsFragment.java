@@ -36,8 +36,6 @@ public class GroupsFragment extends Fragment {
     private ViewPagerAdapter viewPagerAdapter;
     private FrameLayout loadingRoot;
     private TextView versionTextView;
-    //private TextView createPrivateGroupButtonTextView;
-    //private ImageView createPrivateGroupImageView;
     private String playerId;
 
 
@@ -81,12 +79,12 @@ public class GroupsFragment extends Fragment {
 
     private void getIDs(View view) {
 
-        groupsRoot = (LinearLayout) view.findViewById(R.id.fg_groups_root);
-        loadingRoot = (FrameLayout) view.findViewById(R.id.shared_loading_root);
-        versionTextView = (TextView) view.findViewById(R.id.shared_version_text_view);
+        groupsRoot =  view.findViewById(R.id.fg_groups_root);
+        loadingRoot =  view.findViewById(R.id.shared_loading_root);
+        versionTextView =  view.findViewById(R.id.shared_version_text_view);
 
-        viewPager = (ViewPager) view.findViewById(R.id.fg_tabs_container_view_pager);
-        tabLayout = (TabLayout) view.findViewById(R.id.fg_groups_tab_layout);
+        viewPager =  view.findViewById(R.id.fg_tabs_container_view_pager);
+        tabLayout =  view.findViewById(R.id.fg_groups_tab_layout);
 
         viewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), getActivity(), viewPager, tabLayout);
         viewPager.setAdapter(viewPagerAdapter);

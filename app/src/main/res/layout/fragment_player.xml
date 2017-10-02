@@ -46,7 +46,7 @@
     <!-- Progress bar -->
     <include
         layout="@layout/shared_loading"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <!--***************PLAYER DATA*********************************************-->
     <LinearLayout

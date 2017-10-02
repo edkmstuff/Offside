@@ -244,7 +244,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         return null;
     }
 
-    private void getIds(ViewHolder viewHolder, View convertView){
+    private void getIds(ViewHolder viewHolder, View convertView) {
         //text message
         viewHolder.incomingMessagesRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_messages_root);
         viewHolder.incomingProfilePictureImageView = (ImageView) convertView.findViewById(R.id.cm_incoming_profile_picture_image_view);
@@ -379,6 +379,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     viewHolder.incomingTextMessageTextView.setBackgroundResource(R.drawable.shape_bg_incoming_bubble);
 
                 //visibility set
+                viewHolder.incomingMessagesRoot.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
                 viewHolder.incomingTextMessageTextView.setVisibility(View.VISIBLE);
 
@@ -389,7 +390,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.outgoingTextMessageTextView.setText(viewHolder.chatMessage.getMessageText());
 
                 //visibility set
+
                 viewHolder.outgoingMessagesRoot.setVisibility(View.VISIBLE);
+
             }
 
         } catch (Exception ex) {
@@ -646,13 +649,13 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 if (isPlayerAnsweredQuestion) {
                     removeClickListenerFromAnswers(viewHolder);
-                    String userAnswerId="";
+                    String userAnswerId = "";
                     final AnswerIdentifier answerIdentifier = playerAnswers.get(questionId);
                     if (!answerIdentifier.isSkipped()) {
                         userAnswerId = answerIdentifier.getAnswerId();
                     }
 
-                    setAnswersVisibility(viewHolder, viewHolder.question.getAnswers(),playerMinBetSize,isAskedQuestion,isProcessedQuestion);
+                    setAnswersVisibility(viewHolder, viewHolder.question.getAnswers(), playerMinBetSize, isAskedQuestion, isProcessedQuestion);
 
                     setStyleForSelectedAnswer(viewHolder, userAnswerId);
                     viewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
@@ -718,7 +721,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingQuestionTextView.setText(viewHolder.question.getQuestionText());
 
 
-                setAnswersVisibility(viewHolder, answers,playerMinBetSize,isAskedQuestion,isProcessedQuestion);
+                setAnswersVisibility(viewHolder, answers, playerMinBetSize, isAskedQuestion, isProcessedQuestion);
 
 
                 if (isAskedQuestion) {
@@ -971,44 +974,39 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         percentValueRoot.setBackgroundResource(backgroundColorResourceId);
 
                         answerTextTextView.setText(answer.getAnswerText());
-                        final String percentUserAnsweredDisplay =  Integer.toString((int) answer.getPercentUsersAnswered()) + "%";
+                        final String percentUserAnsweredDisplay = Integer.toString((int) answer.getPercentUsersAnswered()) + "%";
                         answerPercentAnsweredTextView.setText(percentUserAnsweredDisplay);
                         percentAnsweredDisplayBar.setMax(100);
                         int percentUserAnswered = (int) answer.getPercentUsersAnswered();
                         percentAnsweredDisplayBar.setProgress(percentUserAnswered);
 
                         Drawable drawable;
-                        int textColorResourceId;
 
-                        if (answer.getId().equals(userAnswerId)){
+                        if (answer.getId().equals(userAnswerId)) {
                             drawable = ContextCompat.getDrawable(context, R.drawable.shape_bg_rectangle_processed_answer_selected);
                             answerTextTextView.setTextColor(ContextCompat.getColor(context, R.color.answerTextColor));
                             answerPercentAnsweredTextView.setTextColor(ContextCompat.getColor(context, R.color.answerTextColor));
-                        }
-
-                        else{
+                        } else {
                             drawable = ContextCompat.getDrawable(context, R.drawable.shape_bg_rectangle_processed_answer);
-                            //textColortResourceId = context.getResources().getIdentifier("answerTextColor", "color", context.getPackageName());
                         }
 
                         percentAnsweredDisplayBar.setProgressDrawable(drawable);
 
-                        if(answerTextRoot.getBackground()!=null)
-                            answerTextRoot.getBackground().mutate().setAlpha(90);
-                        if(progressBarRoot.getBackground()!=null)
-                            progressBarRoot.getBackground().mutate().setAlpha(90);
-                        if(percentValueRoot.getBackground()!=null)
-                            percentValueRoot.getBackground().mutate().setAlpha(90);
+                        if (answerTextRoot.getBackground() != null)
+                            answerTextRoot.getBackground().mutate().setAlpha(20);
+                        if (progressBarRoot.getBackground() != null)
+                            progressBarRoot.getBackground().mutate().setAlpha(20);
+                        if (percentValueRoot.getBackground() != null)
+                            percentValueRoot.getBackground().mutate().setAlpha(20);
 
                         if (answer.getId().equals(userAnswerId)) {
-                            if(answerTextRoot.getBackground()!=null)
+                            if (answerTextRoot.getBackground() != null)
                                 answerTextRoot.getBackground().mutate().setAlpha(255);
-                            if(progressBarRoot.getBackground()!=null)
+                            if (progressBarRoot.getBackground() != null)
                                 progressBarRoot.getBackground().mutate().setAlpha(255);
-                            if(percentValueRoot.getBackground()!=null)
+                            if (percentValueRoot.getBackground() != null)
                                 percentValueRoot.getBackground().mutate().setAlpha(255);
                         }
-
 
 
                         viewHolder.incomingProcessedQuestionAnswersBarsRoot.addView(layout);
@@ -1157,7 +1155,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     }
 
-    private void setAnswersVisibility(ViewHolder viewHolder, Answer[] answers, int playerMinBetSize, boolean isAskedQuestion, boolean isProcessedQuestion ){
+    private void setAnswersVisibility(ViewHolder viewHolder, Answer[] answers, int playerMinBetSize, boolean isAskedQuestion, boolean isProcessedQuestion) {
 
         for (int i = 0; i < answers.length; i++) {
             final String answerText = answers[i].getAnswerText();
@@ -1343,9 +1341,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     }
 
-    private void setStyleForSelectedAnswer(ViewHolder viewHolder, String answerId){
+    private void setStyleForSelectedAnswer(ViewHolder viewHolder, String answerId) {
 
-        for(int i=0; i< viewHolder.answerRoots.length; i++){
+        for (int i = 0; i < viewHolder.answerRoots.length; i++) {
             viewHolder.answerRoots[i].setBackgroundResource(R.drawable.shape_bg_rectangle_answer_unselected);
             viewHolder.answerTextViews[i].setTextColor(ContextCompat.getColor(context, R.color.answerTextUnSelectedColor));
             viewHolder.answerReturnTextViews[i].setTextColor(ContextCompat.getColor(context, R.color.answerTextUnSelectedColor));
@@ -1470,7 +1468,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingProcessedQuestionAnswersBarsRoot.setVisibility(View.GONE);
             viewHolder.incomingSocialFeedRoot.setVisibility(View.GONE);
 
-            for(int i=0; i< viewHolder.answerRoots.length; i++){
+            for (int i = 0; i < viewHolder.answerRoots.length; i++) {
                 viewHolder.answerRoots[i].setBackgroundResource(R.drawable.shape_bg_rectangle_answer);
                 viewHolder.answerTextViews[i].setTextColor(Color.WHITE);
                 viewHolder.answerReturnTextViews[i].setTextColor(Color.WHITE);
@@ -1485,7 +1483,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     }
 
-    private void removeClickListenerFromAnswers(ViewHolder viewHolder){
+    private void removeClickListenerFromAnswers(ViewHolder viewHolder) {
         for (int i = 0; i < viewHolder.answerRoots.length; i++) {
             viewHolder.answerRoots[i].setOnClickListener(null);
         }
