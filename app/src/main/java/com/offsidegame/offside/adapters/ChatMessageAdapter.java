@@ -651,6 +651,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             final int playerMinBetSize = OffsideApplication.getGameInfo().getPlayer().getOffsideCoins() < gameMinBetSize ? 0 : gameMinBetSize;
 
+
             //open question but user already answered it
             if (isAskedQuestion) {
 
@@ -716,9 +717,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             }
 
-
-            //final int minBetSize =  OffsideApplication.getGameInfo().getMinBetSize();
-
             final Answer[] answers = viewHolder.question.getAnswers();
 
             if (isAskedQuestion || isProcessedQuestion) {
@@ -727,14 +725,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 viewHolder.incomingQuestionTextView.setText(viewHolder.question.getQuestionText());
 
-
                 setAnswersVisibility(viewHolder, answers, playerMinBetSize, isAskedQuestion, isProcessedQuestion);
-
 
                 if (isAskedQuestion) {
 
                     //<editor-fold desc="ASKED QUESTION">
-
                     String questionStatText = viewHolder.question.getQuestionStatText();
                     if (questionStatText.length() > 0) {
                         viewHolder.incomingQuestionStatTextView.setText(questionStatText);
@@ -758,8 +753,35 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         }
                     });
 
+                    //decide if to display a bet option, based on number of balls.
+                    boolean isAllowToDoubleup = OffsideApplication.getGameInfo().getPlayer().getPowerItems() > 0 && OffsideApplication.getGameInfo().getPlayer().getOffsideCoins() >= 2 * gameMinBetSize;
+                    boolean isHasMinRequiredCoinsToBet = playerMinBetSize >= gameMinBetSize;
 
-//                    //set on click event to bet options
+                    if (!isAllowToDoubleup) {
+                        viewHolder.incomingDoubleupBetRoot.setOnClickListener(null);
+                        viewHolder.incomingDoubleupBetRoot.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_unselected);
+                    }
+
+
+                    if (isHasMinRequiredCoinsToBet) {
+
+                        int betSize = playerMinBetSize;
+                        for (int i = 0; i < answers.length; i++) {
+                            final int returnValue = (int) Math.round(answers[i].getPointsMultiplier() * betSize);
+                            viewHolder.answerReturnTextViews[i].setText(String.valueOf(returnValue));
+                            answers[i].setScore(returnValue);
+                            answers[i].setSelectedBetSize(betSize);
+                        }
+
+                    }
+
+
+
+
+
+
+
+////                   //set on click event to bet options
 //                    for (int i = 0; i < viewHolder.betSizeOptionsRoots.length; i++) {
 //                        viewHolder.betSizeOptionsRoots[i].setTag(i);
 //                        viewHolder.betSizeOptionsRoots[i].setOnClickListener(new View.OnClickListener() {
@@ -797,18 +819,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 //                        //viewHolder.betSizeOptionsRoots[i].setVisibility(View.INVISIBLE);
 //
 //                        //decide if to display a bet option, based on number of balls.
-//                        boolean isAllowToDoubleup = OffsideApplication.getGameInfo().getPlayer().getPowerItems() > 0 && OffsideApplication.getGameInfo().getPlayer().getOffsideCoins() >= 2 * gameMinBetSize;
-//                        boolean isHasMinRequiredCoinsToBet = playerMinBetSize >= gameMinBetSize;
 //
-//                        if (!isAllowToDoubleup) {
-//                            viewHolder.incomingDoubleupBetRoot.setOnClickListener(null);
-//                            viewHolder.incomingDoubleupBetRoot.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_selected);
-//                        }
-//
-//
-//
-//
-//
+//                       boolean isHasMinRequiredCoinsToBet = playerMinBetSize >= gameMinBetSize;
 //
 ////                        if (isHasMinRequiredCoinsToBet) {
 ////                            viewHolder.betSizeOptionsRoots[i].setBackgroundResource(i == 0 ? R.drawable.shape_bg_rectangle_bordered : R.drawable.shape_bg_rectangle_gray_no_border);
@@ -827,7 +839,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 //
 //
 //                    }
-//
+
 
                     //set the timeToAskQuestion timer
                     //time to answer was attached to chat message and is updated in the server using timer
@@ -1493,6 +1505,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.answerReturnTextViews[i].setTextColor(Color.WHITE);
                 viewHolder.answerRoots[i].setVisibility(View.INVISIBLE);
             }
+
+            viewHolder.incomingMessagesRoot.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
 
         } catch (Exception ex) {

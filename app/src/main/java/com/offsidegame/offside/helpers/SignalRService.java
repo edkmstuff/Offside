@@ -21,6 +21,7 @@ import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.PrivateGroupChangedEvent;
@@ -240,12 +241,15 @@ public class SignalRService extends Service {
             }
         }, Scoreboard.class);
 
-        hub.on("PlayerDataReceived", new SubscriptionHandler1<PlayerModel>() {
+        hub.on("PlayerDataReceived", new SubscriptionHandler1<String>() {
             @Override
-            public void run(PlayerModel player) {
-                EventBus.getDefault().post(player);
+            public void run(String playerJson) {
+                final Gson gson = new GsonBuilder().create();
+                PlayerModel playerModel= gson.fromJson(playerJson, PlayerModel.class);
+
+                EventBus.getDefault().post(new PlayerModelEvent(playerModel));
             }
-        }, PlayerModel.class);
+        }, String.class);
 
         hub.on("PositionReceived", new SubscriptionHandler1<Position>() {
             @Override

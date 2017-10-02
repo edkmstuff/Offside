@@ -41,6 +41,7 @@ import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
@@ -774,8 +775,9 @@ public class ChatFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceivePlayer(PlayerModel updatedPlayer) {
+    public void onReceivePlayer(PlayerModelEvent playerModelEvent ) {
         try {
+            PlayerModel updatedPlayer = playerModelEvent.getPlayerModel();
             if (updatedPlayer == null)
                 return;
 
