@@ -18,26 +18,15 @@
 
 
         <!--INCOMING MESSAGES-->
+
+
         <LinearLayout
-            android:id="@+id/cm_incoming_messages_root"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:visibility="visible">
-
-            <!--sender image-->
-            <ImageView
-
-                android:id="@+id/cm_incoming_profile_picture_image_view"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:scaleType="centerCrop"
-                android:visibility="gone" />
-            <!--sender name | message content | time sent -->
-            <LinearLayout
+                android:id="@+id/cm_incoming_messages_root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@drawable/shape_bg_incoming_bubble"
+            >
 
                 <!--sender name-->
                 <!--<TextView-->
@@ -61,7 +50,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shape_bg_incoming_bubble"
+
                         android:orientation="vertical">
 
                         <!--sender name-->
@@ -1137,7 +1126,7 @@
             </LinearLayout>
 
 
-        </LinearLayout>
+
 
         <!-- OUTGOING -->
         <LinearLayout

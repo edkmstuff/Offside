@@ -76,7 +76,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         //<editor-fold desc="VIEWHOLDER PROPERTIES">
 
         public LinearLayout incomingMessagesRoot;
-        public ImageView incomingProfilePictureImageView;
 
         public ImageView incomingClosedQuestionBotImageView;
         public ImageView incomingClosedQuestionPlayerProfilePictureImageView;
@@ -252,7 +251,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
     private void getIds(ViewHolder viewHolder, View convertView) {
         //text message
         viewHolder.incomingMessagesRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_messages_root);
-        viewHolder.incomingProfilePictureImageView = (ImageView) convertView.findViewById(R.id.cm_incoming_profile_picture_image_view);
         viewHolder.incomingTextMessageTextView = (TextView) convertView.findViewById(R.id.cm_incoming_text_message_text_view);
         viewHolder.outgoingUserSentTextView = (TextView) convertView.findViewById(R.id.cm_outgoing_user_sent_text_view);
         viewHolder.incomingUserSentTextView = (TextView) convertView.findViewById(R.id.cm_incoming_user_sent_text_view);
@@ -368,13 +366,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         try {
 
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
 
             //visibility reset
             resetWidgetsVisibility(viewHolder);
 
             if (viewHolder.chatMessage.isIncoming()) {
-                loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
+
                 viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
                 viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
                 viewHolder.incomingTextMessageTextView.setText(viewHolder.chatMessage.getMessageText());
@@ -391,7 +388,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingTextMessageTextView.setVisibility(View.VISIBLE);
 
             } else {
-                loadFbImage(viewHolder.outgoingProfilePictureImageView, profilePictureUri);
                 viewHolder.outgoingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
                 viewHolder.outgoingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
                 viewHolder.outgoingTextMessageTextView.setText(viewHolder.chatMessage.getMessageText());
@@ -419,7 +415,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             viewHolder.incomingGetCoinsPlayerOptionsRoot.setVisibility(View.VISIBLE);
 
-            loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
             viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
             viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
 
@@ -566,13 +561,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         try {
 
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
-
 
             //visibility reset
             resetWidgetsVisibility(viewHolder);
 
-            loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
             viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
             viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
 
@@ -622,8 +614,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         try {
 
             //chat message properties
-            final Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
-            loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
             final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
             viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
             viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
@@ -1157,7 +1147,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
 
                         viewHolder.incomingCorrectWrongTitleTextView.setTextColor(ContextCompat.getColor(context,R.color.wrongAnswerColor));
-                        viewHolder.incomingCorrectAnswerTextView.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_wrong);
+                        viewHolder.incomingCorrectAnswerTextView.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_correct);
                         viewHolder.incomingPlayerAnswerTextView.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_wrong);
                         viewHolder.incomingPlayerAnswerTextView.setText(getAnswerText(viewHolder.question, userAnswerIdentifier.getAnswerId()));
                         //viewHolder.incomingFeedbackPlayerTextView.setText(context.getString(R.string.lbl_wrong_answer_encourage_feedback));
@@ -1211,12 +1201,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         try {
 
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
 
             //visibility reset
             resetWidgetsVisibility(viewHolder);
 
-            loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
             viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
             viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
 
@@ -1228,9 +1216,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             //background set
             if (viewHolder.isMessageFromBot)
-                viewHolder.incomingTextMessageTextView.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_from_bot);
+                viewHolder.incomingMessagesRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_from_bot);
             else
-                viewHolder.incomingTextMessageTextView.setBackgroundResource(R.drawable.shape_bg_incoming_bubble);
+                viewHolder.incomingMessagesRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble);
 
 
             //visibility set
