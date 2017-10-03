@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -102,7 +103,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             getIds();
             setEvents();
             togglePayerAssetsVisibility(true);
-            //setupToSupportExitOnBackButtonPressed();
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -149,6 +149,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 try {
+
                     switch (item.getItemId()) {
                         case R.id.nav_action_groups:
 
@@ -233,8 +234,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Override
     public void onPause() {
         super.onPause();
-        finish();
-
 
     }
 
@@ -297,8 +296,18 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             Intent intent = getIntent();
             boolean showGroups = intent.getBooleanExtra("showGroups", false);
-            if(showGroups)
-                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+            if(showGroups){
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+                    }
+                }, 500);
+
+
+            }
+
             else
                 tryRejoinGameForReturningPlayer();
 
@@ -318,7 +327,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         //check if player is already playing
         SharedPreferences settings = context.getSharedPreferences(getString(R.string.preference_name), 0);
         String lastKnownGameId = settings.getString(getString(R.string.game_id_key), null);
-        String lastKnownPrivateGroupId = settings.getString(getString(R.string.private_group_id_key), null);
         String lastKnownPrivateGameId = settings.getString(getString(R.string.private_game_id_key), null);
         String playerId = OffsideApplication.getPlayerId();
 
@@ -464,6 +472,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.setType("text/plain");
         sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+        sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        sendIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+
 
 
         startActivity(Intent.createChooser(sendIntent,"Invite friendS" ));
@@ -479,6 +491,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
 
     }
+
+
 
 
 

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -16,9 +18,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.PrivateGroupCreatedEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.PrivateGroup;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -33,6 +37,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
     private final String activityName = "LobbyActivity";
     private final Context context = this;
     private FrameLayout loadingRoot;
+    private TextView versionTextView;
 
     //create private group form
 
@@ -54,29 +59,29 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
         playerId = firebaseUser.getUid();
 
         if(OffsideApplication.getUserProfileInfo() == null)
-
             playerDisplayName = firebaseUser.getDisplayName();
-
         else
             playerDisplayName = OffsideApplication.getUserProfileInfo().getPlayerName();
-
 
         getIds();
         setEvents();
 
+        versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
+
         privateGroupNameEditText.setText(playerDisplayName.split(" ")[0] + "'s" + " friends");
+
 
 
     }
 
     private void getIds(){
+
         savePrivateGroupButtonTextView =  findViewById(R.id.cpg_save_private_group_button_text_view);
         loadingRoot =  findViewById(R.id.shared_loading_root);
+        versionTextView =  findViewById(R.id.shared_version_text_view);
         createPrivateGroupRoot =  findViewById(R.id.cpg_create_private_group_root);
 
-
         privateGroupNameEditText =  findViewById(R.id.cpg_private_group_name_edit_text);
-
 
     }
 
@@ -99,30 +104,15 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
                     throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
 
                 createPrivateGroupRoot.setVisibility(View.GONE);
-                createPrivateGroupRoot.setVisibility(View.VISIBLE);
+                loadingRoot.setVisibility(View.VISIBLE);
+
+
             }
         });
 
-//        Field1.addTextChangedListener(new TextWatcher() {
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {}
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start,
-//                                          int count, int after) {
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start,
-//                                      int before, int count) {
-//                if(s.length() != 0)
-//                    Field2.setText("");
-//            }
-//        });
+
 
     }
-
 
 
     @Override
@@ -145,14 +135,21 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
     public void onStop() {
         EventBus.getDefault().unregister(context);
         super.onStop();
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPrivateGroupCreated(PrivateGroupCreatedEvent privateGroupCreatedEvent) {
         try {
 
-            //PrivateGroup privateGroup = privateGroupCreatedEvent.getPrivateGroup();
-            //EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+//            PrivateGroup privateGroup = privateGroupCreatedEvent.getPrivateGroup();
+//            EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
             Intent intent = new Intent(context,LobbyActivity.class);
             intent.putExtra("showGroups",true);
             startActivity(intent);

@@ -107,7 +107,6 @@ public class OffsideApplication extends Application {
 
     private static HashMap<String, LeagueRecord[]> leaguesRecords;
 
-
     public static String getMessageTypeText() {
         return messageTypeText;
     }
@@ -302,7 +301,6 @@ public class OffsideApplication extends Application {
         return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
-
     public void onCreate() {
 
         try {
@@ -437,9 +435,9 @@ public class OffsideApplication extends Application {
         return version == null ? "0.0": version;
     }
 
-//    public static void getEnvironmentUrls(String environment) {
-//
-//    }
+
+
+
 
 
 }

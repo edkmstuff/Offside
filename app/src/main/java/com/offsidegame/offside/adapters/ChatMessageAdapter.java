@@ -34,6 +34,7 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.SlotActivity;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
+import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.AnswerIdentifier;
@@ -75,7 +76,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         //<editor-fold desc="VIEWHOLDER PROPERTIES">
 
         public LinearLayout incomingMessagesRoot;
-        public ImageView incomingProfilePictureImageView;
+
+        public ImageView incomingClosedQuestionBotImageView;
+        public ImageView incomingClosedQuestionPlayerProfilePictureImageView;
+
         public TextView incomingTextMessageTextView;
         public TextView outgoingUserSentTextView;
         public TextView incomingUserSentTextView;
@@ -244,10 +248,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         return null;
     }
 
-    private void getIds(ViewHolder viewHolder, View convertView){
+    private void getIds(ViewHolder viewHolder, View convertView) {
         //text message
         viewHolder.incomingMessagesRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_messages_root);
-        viewHolder.incomingProfilePictureImageView = (ImageView) convertView.findViewById(R.id.cm_incoming_profile_picture_image_view);
         viewHolder.incomingTextMessageTextView = (TextView) convertView.findViewById(R.id.cm_incoming_text_message_text_view);
         viewHolder.outgoingUserSentTextView = (TextView) convertView.findViewById(R.id.cm_outgoing_user_sent_text_view);
         viewHolder.incomingUserSentTextView = (TextView) convertView.findViewById(R.id.cm_incoming_user_sent_text_view);
@@ -342,8 +345,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         //viewHolder.incomingWinnerPointsTextView = (TextView) convertView.findViewById(R.id.cm_incoming_winner_points_text_view);
         viewHolder.incomingWinnersRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_winners_root);
 
-        //viewHolder.incomingWinnerTrophyGifImageView = (GifImageView) convertView.findViewById(R.id.cm_incoming_winner_trophy_gif_image_view);
-
         viewHolder.incomingProcessedQuestionAnswersBarsRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_processed_question_answers_bars_root);
 
         //social feed
@@ -353,6 +354,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         viewHolder.incomingSocialFeedPictureImageView = (ImageView) convertView.findViewById(R.id.cm_incoming_social_feed_image_view);
         viewHolder.facebookShareButton = (ShareButton) convertView.findViewById(R.id.cm_facebook_share_button);
 
+        viewHolder.incomingClosedQuestionBotImageView = convertView.findViewById(R.id.cm_incoming_closed_question_bot_image_view);
+        viewHolder.incomingClosedQuestionPlayerProfilePictureImageView = convertView.findViewById(R.id.cm_incoming_closed_question_player_profile_picture_image_view);
+
+
 
     }
 
@@ -361,13 +366,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         try {
 
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
 
             //visibility reset
             resetWidgetsVisibility(viewHolder);
 
             if (viewHolder.chatMessage.isIncoming()) {
-                loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
+
                 viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
                 viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
                 viewHolder.incomingTextMessageTextView.setText(viewHolder.chatMessage.getMessageText());
@@ -379,17 +383,19 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     viewHolder.incomingTextMessageTextView.setBackgroundResource(R.drawable.shape_bg_incoming_bubble);
 
                 //visibility set
+                viewHolder.incomingMessagesRoot.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
                 viewHolder.incomingTextMessageTextView.setVisibility(View.VISIBLE);
 
             } else {
-                loadFbImage(viewHolder.outgoingProfilePictureImageView, profilePictureUri);
                 viewHolder.outgoingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
                 viewHolder.outgoingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
                 viewHolder.outgoingTextMessageTextView.setText(viewHolder.chatMessage.getMessageText());
 
                 //visibility set
+
                 viewHolder.outgoingMessagesRoot.setVisibility(View.VISIBLE);
+
             }
 
         } catch (Exception ex) {
@@ -409,7 +415,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             viewHolder.incomingGetCoinsPlayerOptionsRoot.setVisibility(View.VISIBLE);
 
-            loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
             viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
             viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
 
@@ -556,13 +561,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         try {
 
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
-
 
             //visibility reset
             resetWidgetsVisibility(viewHolder);
 
-            loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
             viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
             viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
 
@@ -612,8 +614,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         try {
 
             //chat message properties
-            final Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
-            loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
             final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
             viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
             viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
@@ -641,18 +641,19 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             final int playerMinBetSize = OffsideApplication.getGameInfo().getPlayer().getOffsideCoins() < gameMinBetSize ? 0 : gameMinBetSize;
 
+
             //open question but user already answered it
             if (isAskedQuestion) {
 
                 if (isPlayerAnsweredQuestion) {
                     removeClickListenerFromAnswers(viewHolder);
-                    String userAnswerId="";
+                    String userAnswerId = "";
                     final AnswerIdentifier answerIdentifier = playerAnswers.get(questionId);
                     if (!answerIdentifier.isSkipped()) {
                         userAnswerId = answerIdentifier.getAnswerId();
                     }
 
-                    setAnswersVisibility(viewHolder, viewHolder.question.getAnswers(),playerMinBetSize,isAskedQuestion,isProcessedQuestion);
+                    setAnswersVisibility(viewHolder, viewHolder.question.getAnswers(), playerMinBetSize, isAskedQuestion, isProcessedQuestion);
 
                     setStyleForSelectedAnswer(viewHolder, userAnswerId);
                     viewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
@@ -706,9 +707,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             }
 
-
-            //final int minBetSize =  OffsideApplication.getGameInfo().getMinBetSize();
-
             final Answer[] answers = viewHolder.question.getAnswers();
 
             if (isAskedQuestion || isProcessedQuestion) {
@@ -717,14 +715,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 viewHolder.incomingQuestionTextView.setText(viewHolder.question.getQuestionText());
 
-
-                setAnswersVisibility(viewHolder, answers,playerMinBetSize,isAskedQuestion,isProcessedQuestion);
-
+                setAnswersVisibility(viewHolder, answers, playerMinBetSize, isAskedQuestion, isProcessedQuestion);
 
                 if (isAskedQuestion) {
 
                     //<editor-fold desc="ASKED QUESTION">
-
                     String questionStatText = viewHolder.question.getQuestionStatText();
                     if (questionStatText.length() > 0) {
                         viewHolder.incomingQuestionStatTextView.setText(questionStatText);
@@ -748,8 +743,35 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         }
                     });
 
+                    //decide if to display a bet option, based on number of balls.
+                    boolean isAllowToDoubleup = OffsideApplication.getGameInfo().getPlayer().getPowerItems() > 0 && OffsideApplication.getGameInfo().getPlayer().getOffsideCoins() >= 2 * gameMinBetSize;
+                    boolean isHasMinRequiredCoinsToBet = playerMinBetSize >= gameMinBetSize;
 
-//                    //set on click event to bet options
+                    if (!isAllowToDoubleup) {
+                        viewHolder.incomingDoubleupBetRoot.setOnClickListener(null);
+                        viewHolder.incomingDoubleupBetRoot.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_unselected);
+                    }
+
+
+                    if (isHasMinRequiredCoinsToBet) {
+
+                        int betSize = playerMinBetSize;
+                        for (int i = 0; i < answers.length; i++) {
+                            final int returnValue = (int) Math.round(answers[i].getPointsMultiplier() * betSize);
+                            viewHolder.answerReturnTextViews[i].setText(String.valueOf(returnValue));
+                            answers[i].setScore(returnValue);
+                            answers[i].setSelectedBetSize(betSize);
+                        }
+
+                    }
+
+
+
+
+
+
+
+////                   //set on click event to bet options
 //                    for (int i = 0; i < viewHolder.betSizeOptionsRoots.length; i++) {
 //                        viewHolder.betSizeOptionsRoots[i].setTag(i);
 //                        viewHolder.betSizeOptionsRoots[i].setOnClickListener(new View.OnClickListener() {
@@ -787,18 +809,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 //                        //viewHolder.betSizeOptionsRoots[i].setVisibility(View.INVISIBLE);
 //
 //                        //decide if to display a bet option, based on number of balls.
-//                        boolean isAllowToDoubleup = OffsideApplication.getGameInfo().getPlayer().getPowerItems() > 0 && OffsideApplication.getGameInfo().getPlayer().getOffsideCoins() >= 2 * gameMinBetSize;
-//                        boolean isHasMinRequiredCoinsToBet = playerMinBetSize >= gameMinBetSize;
 //
-//                        if (!isAllowToDoubleup) {
-//                            viewHolder.incomingDoubleupBetRoot.setOnClickListener(null);
-//                            viewHolder.incomingDoubleupBetRoot.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_selected);
-//                        }
-//
-//
-//
-//
-//
+//                       boolean isHasMinRequiredCoinsToBet = playerMinBetSize >= gameMinBetSize;
 //
 ////                        if (isHasMinRequiredCoinsToBet) {
 ////                            viewHolder.betSizeOptionsRoots[i].setBackgroundResource(i == 0 ? R.drawable.shape_bg_rectangle_bordered : R.drawable.shape_bg_rectangle_gray_no_border);
@@ -817,7 +829,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 //
 //
 //                    }
-//
+
 
                     //set the timeToAskQuestion timer
                     //time to answer was attached to chat message and is updated in the server using timer
@@ -971,44 +983,39 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         percentValueRoot.setBackgroundResource(backgroundColorResourceId);
 
                         answerTextTextView.setText(answer.getAnswerText());
-                        final String percentUserAnsweredDisplay =  Integer.toString((int) answer.getPercentUsersAnswered()) + "%";
+                        final String percentUserAnsweredDisplay = Integer.toString((int) answer.getPercentUsersAnswered()) + "%";
                         answerPercentAnsweredTextView.setText(percentUserAnsweredDisplay);
                         percentAnsweredDisplayBar.setMax(100);
                         int percentUserAnswered = (int) answer.getPercentUsersAnswered();
                         percentAnsweredDisplayBar.setProgress(percentUserAnswered);
 
                         Drawable drawable;
-                        int textColorResourceId;
 
-                        if (answer.getId().equals(userAnswerId)){
+                        if (answer.getId().equals(userAnswerId)) {
                             drawable = ContextCompat.getDrawable(context, R.drawable.shape_bg_rectangle_processed_answer_selected);
                             answerTextTextView.setTextColor(ContextCompat.getColor(context, R.color.answerTextColor));
                             answerPercentAnsweredTextView.setTextColor(ContextCompat.getColor(context, R.color.answerTextColor));
-                        }
-
-                        else{
+                        } else {
                             drawable = ContextCompat.getDrawable(context, R.drawable.shape_bg_rectangle_processed_answer);
-                            //textColortResourceId = context.getResources().getIdentifier("answerTextColor", "color", context.getPackageName());
                         }
 
                         percentAnsweredDisplayBar.setProgressDrawable(drawable);
 
-                        if(answerTextRoot.getBackground()!=null)
-                            answerTextRoot.getBackground().mutate().setAlpha(90);
-                        if(progressBarRoot.getBackground()!=null)
-                            progressBarRoot.getBackground().mutate().setAlpha(90);
-                        if(percentValueRoot.getBackground()!=null)
-                            percentValueRoot.getBackground().mutate().setAlpha(90);
+                        if (answerTextRoot.getBackground() != null)
+                            answerTextRoot.getBackground().mutate().setAlpha(20);
+                        if (progressBarRoot.getBackground() != null)
+                            progressBarRoot.getBackground().mutate().setAlpha(20);
+                        if (percentValueRoot.getBackground() != null)
+                            percentValueRoot.getBackground().mutate().setAlpha(20);
 
                         if (answer.getId().equals(userAnswerId)) {
-                            if(answerTextRoot.getBackground()!=null)
+                            if (answerTextRoot.getBackground() != null)
                                 answerTextRoot.getBackground().mutate().setAlpha(255);
-                            if(progressBarRoot.getBackground()!=null)
+                            if (progressBarRoot.getBackground() != null)
                                 progressBarRoot.getBackground().mutate().setAlpha(255);
-                            if(percentValueRoot.getBackground()!=null)
+                            if (percentValueRoot.getBackground() != null)
                                 percentValueRoot.getBackground().mutate().setAlpha(255);
                         }
-
 
 
                         viewHolder.incomingProcessedQuestionAnswersBarsRoot.addView(layout);
@@ -1088,6 +1095,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             if (isClosedQuestion) {
 
                 //<editor-fold desc="CLOSED QUESTION">
+                Uri botProfilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
+                Uri playerProfileImageUri = Uri.parse(OffsideApplication.getPlayerAssets().getImageUrl());
+
+                ImageHelper.loadImage(context,viewHolder.incomingClosedQuestionBotImageView,botProfilePictureUri,true);
+                ImageHelper.loadImage(context,viewHolder.incomingClosedQuestionPlayerProfilePictureImageView,playerProfileImageUri,true);
+
 
 
                 Answer correctAnswer = null;
@@ -1125,15 +1138,21 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     viewHolder.incomingCorrectAnswerReturnTextView.setText(isUserAnswerCorrect ? context.getString(R.string.lbl_you_earned) + " " + userReturnValue + " " + context.getString(R.string.lbl_points) : context.getString(R.string.lbl_you_didnt_earn_points));
 
                     if (isUserAnswerCorrect) {
+                        viewHolder.incomingCorrectWrongTitleTextView.setTextColor(ContextCompat.getColor(context,R.color.correctAnswerColor));
+                        viewHolder.incomingCorrectAnswerTextView.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_correct);
                         viewHolder.incomingFeedbackPlayerTextView.setVisibility(View.GONE);
-                        viewHolder.incomingClosedQuestionRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_correct);
+
 
                     } else {
-                        viewHolder.incomingClosedQuestionRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_wrong);
+
+
+                        viewHolder.incomingCorrectWrongTitleTextView.setTextColor(ContextCompat.getColor(context,R.color.wrongAnswerColor));
+                        viewHolder.incomingCorrectAnswerTextView.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_correct);
+                        viewHolder.incomingPlayerAnswerTextView.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_wrong);
                         viewHolder.incomingPlayerAnswerTextView.setText(getAnswerText(viewHolder.question, userAnswerIdentifier.getAnswerId()));
-                        viewHolder.incomingFeedbackPlayerTextView.setText(context.getString(R.string.lbl_wrong_answer_encourage_feedback));
+                        //viewHolder.incomingFeedbackPlayerTextView.setText(context.getString(R.string.lbl_wrong_answer_encourage_feedback));
                         viewHolder.incomingPlayerAnswerRoot.setVisibility(View.VISIBLE);
-                        viewHolder.incomingFeedbackPlayerTextView.setVisibility(View.VISIBLE);
+                        //viewHolder.incomingFeedbackPlayerTextView.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -1157,7 +1176,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     }
 
-    private void setAnswersVisibility(ViewHolder viewHolder, Answer[] answers, int playerMinBetSize, boolean isAskedQuestion, boolean isProcessedQuestion ){
+    private void setAnswersVisibility(ViewHolder viewHolder, Answer[] answers, int playerMinBetSize, boolean isAskedQuestion, boolean isProcessedQuestion) {
 
         for (int i = 0; i < answers.length; i++) {
             final String answerText = answers[i].getAnswerText();
@@ -1182,12 +1201,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         try {
 
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
 
             //visibility reset
             resetWidgetsVisibility(viewHolder);
 
-            loadFbImage(viewHolder.incomingProfilePictureImageView, profilePictureUri);
             viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
             viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
 
@@ -1199,9 +1216,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             //background set
             if (viewHolder.isMessageFromBot)
-                viewHolder.incomingTextMessageTextView.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_from_bot);
+                viewHolder.incomingMessagesRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_from_bot);
             else
-                viewHolder.incomingTextMessageTextView.setBackgroundResource(R.drawable.shape_bg_incoming_bubble);
+                viewHolder.incomingMessagesRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble);
 
 
             //visibility set
@@ -1343,9 +1360,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     }
 
-    private void setStyleForSelectedAnswer(ViewHolder viewHolder, String answerId){
+    private void setStyleForSelectedAnswer(ViewHolder viewHolder, String answerId) {
 
-        for(int i=0; i< viewHolder.answerRoots.length; i++){
+        for (int i = 0; i < viewHolder.answerRoots.length; i++) {
             viewHolder.answerRoots[i].setBackgroundResource(R.drawable.shape_bg_rectangle_answer_unselected);
             viewHolder.answerTextViews[i].setTextColor(ContextCompat.getColor(context, R.color.answerTextUnSelectedColor));
             viewHolder.answerReturnTextViews[i].setTextColor(ContextCompat.getColor(context, R.color.answerTextUnSelectedColor));
@@ -1470,12 +1487,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingProcessedQuestionAnswersBarsRoot.setVisibility(View.GONE);
             viewHolder.incomingSocialFeedRoot.setVisibility(View.GONE);
 
-            for(int i=0; i< viewHolder.answerRoots.length; i++){
+            for (int i = 0; i < viewHolder.answerRoots.length; i++) {
                 viewHolder.answerRoots[i].setBackgroundResource(R.drawable.shape_bg_rectangle_answer);
                 viewHolder.answerTextViews[i].setTextColor(Color.WHITE);
                 viewHolder.answerReturnTextViews[i].setTextColor(Color.WHITE);
                 viewHolder.answerRoots[i].setVisibility(View.INVISIBLE);
             }
+
+            viewHolder.incomingMessagesRoot.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
 
 
         } catch (Exception ex) {
@@ -1485,7 +1504,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     }
 
-    private void removeClickListenerFromAnswers(ViewHolder viewHolder){
+    private void removeClickListenerFromAnswers(ViewHolder viewHolder) {
         for (int i = 0; i < viewHolder.answerRoots.length; i++) {
             viewHolder.answerRoots[i].setOnClickListener(null);
         }

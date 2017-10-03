@@ -2,6 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical"
     android:visibility="visible"
@@ -9,23 +10,31 @@
     android:id="@+id/shared_loading_root">
 
     <ImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_gravity="center"
         android:src="@drawable/app_logo_25" />
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center">
+    <!--<ProgressBar-->
+        <!--style="?android:attr/progressBarStyleLarge"-->
+        <!--android:layout_width="120dp"-->
+        <!--android:layout_height="120dp"-->
+        <!--android:layout_gravity="center">-->
 
-    </ProgressBar>
+    <!--</ProgressBar>-->
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:indicatorName="BallPulseIndicator"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="130dp"
+        android:layout_marginTop="140dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -36,7 +45,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="2dp"
             android:gravity="center"
-            android:text="v3.1"
+            android:text="..."
             android:textColor="@color/grayText"
             android:textSize="12dp"
 

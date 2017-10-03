@@ -36,21 +36,42 @@
 
     <!--new colors-->
     <color name="colorPrimary">#0C155F</color>
-    <color name="colorButton">#4061A9</color>
+    <!--<color name="colorButton">#4061A9</color>-->
+    <!--<color name="colorButton">#8C9EFF</color>-->
+    <color name="colorButton">#ACBED8</color>
+
+
+
     <color name="colorPrimaryDark">#1A237E</color>
-    <color name="colorActive">#00C520</color>
+    <color name="colorActive">#00E676</color>
     <color name="navigationMenu">#151A50</color>
-    <color name="navigationMenuSelectedItem">#383C69</color>
+    <!--<color name="navigationMenuSelectedItem">#383C69</color>-->
+    <color name="navigationMenuSelectedItem">#ACBED8</color>
     <color name="transparentBackground">#50000000</color>
 
     <color name="buttonTextColor">#FFFFFF</color>
 
     <color name="questionTextColor">#000000</color>
     <color name="answerTextColor">#FFFFFF</color>
-
     <color name="answerTextUnSelectedColor">#000000</color>
+    <color name="answerBackgroundColor">#1A237E</color>
+    <color name="answerBackgroundColorUnSelected">#E8EBF7</color>
+    <!--<color name="colorGold">#F2D398</color>-->
+    <color name="colorGold">#FFD740</color>
+
     <color name="chatIncoming">#F6F3F2</color>
-    <color name="colorGold">#E3BE77</color>
+
+    <color name="timerTextColor">#FFFFFF</color>
+
+    <color name="correctAnswerColor">#00E676</color>
+    <color name="wrongAnswerColor">#E57373</color>
+
+
+
+
+
+
+
 
 </resources>
 

@@ -21,6 +21,10 @@ import com.offsidegame.offside.events.AvailableGameEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
+import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.PlayerModelEvent;
+import com.offsidegame.offside.events.PositionEvent;
+import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.PrivateGroupChangedEvent;
 import com.offsidegame.offside.events.PrivateGroupCreatedEvent;
 import com.offsidegame.offside.events.PrivateGroupEvent;
@@ -79,8 +83,12 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
     public final String ip = new String("10.0.2.2:18313");
+
+    //public final String ip = new String("10.0.2.2:18313");
     //public final String ip = new String("192.168.1.140:18313");
     //public final String ip = new String("10.0.0.17:18313");
+    public final String ip = new String("10.0.0.17:18313");
+
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("sidekicknode.azurewebsites.net");
 
@@ -266,13 +274,18 @@ public class SignalRService extends Service {
             }
         }, Scoreboard.class);
 
-        hub.on("PlayerDataReceived", new SubscriptionHandler1<PlayerModel>() {
+        hub.on("PlayerDataReceived", new SubscriptionHandler1<String>() {
             @Override
+            public void run(String playerJson) {
+                final Gson gson = new GsonBuilder().create();
+                PlayerModel playerModel= gson.fromJson(playerJson, PlayerModel.class);
+
+                EventBus.getDefault().post(new PlayerModelEvent(playerModel));
             public void run(PlayerModel player) {
                 playerDataReceived = true;
                 EventBus.getDefault().post(player);
             }
-        }, PlayerModel.class);
+        }, String.class);
 
         hub.on("PositionReceived", new SubscriptionHandler1<Position>() {
             @Override
@@ -518,6 +531,26 @@ public class SignalRService extends Service {
     //<editor-fold desc="methods for client activities">
 
 
+//    public void joinGame(String privateGameCode, String playerId, String playerDisplayName, String playerProfilePictureUrl, boolean isPrivateGameCreator, String androidDeviceId) {
+//        PlayerInfo playerInfo = new PlayerInfo(playerId, privateGameCode, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId, null);
+//        if (!(hubConnection.getState() == ConnectionState.Connected))
+//            return;
+//
+//        //hub.invoke(GameInfo.class, "JoinPrivateGame", privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId).done(new Action<GameInfo>() {
+//        hub.invoke(GameInfo.class, "requestJoinPrivateGame", playerInfo).done(new Action<GameInfo>() {
+//
+//            @Override
+//            public void run(GameInfo gameInfo) throws Exception {
+//                //EventBus.getDefault().post(new JoinGameEvent(gameInfo));
+//            }
+//        }).onError(new ErrorCallback() {
+//            @Override
+//            public void onError(Throwable error) {
+//                ACRA.getErrorReporter().handleSilentException(error);
+//            }
+//        });
+//    }
+
     public void quitGame(String gameId, String playerId, String androidDeviceId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
@@ -529,44 +562,6 @@ public class SignalRService extends Service {
             }
         });
     }
-
-    public void getQuestions(String gameId) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
-        hub.invoke(Question[].class, "GetQuestions", gameId).done(new Action<Question[]>() {
-
-            @Override
-            public void run(Question[] questions) throws Exception {
-                EventBus.getDefault().post(new QuestionsEvent(questions));
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
-    }
-
-    public boolean setPowerItems(String gameId, String playerId, int powerItems, boolean isDueToRewardVideo) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return false;
-
-        hub.invoke(Integer.class, "SetPowerItems", gameId, playerId, powerItems, isDueToRewardVideo).done(new Action<Integer>() {
-            @Override
-            public void run(Integer newPowerItemsValue) throws Exception {
-                EventBus.getDefault().post(newPowerItemsValue);
-            }
-
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
-
-        return true;
-    }
-
 
     public void requestAvailableGame(String gameId, String privateGameId, String playerId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))

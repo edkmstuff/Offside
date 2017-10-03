@@ -2,8 +2,8 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item>
-        <shape android:shape="rectangle"  >
-            <solid  android:color="@color/transparentBackground" />
+        <shape android:shape="rectangle" >
+            <solid android:color="@color/answerBackgroundColor" />
             <corners
                 android:bottomLeftRadius="0dp"
                 android:bottomRightRadius="0dp"
