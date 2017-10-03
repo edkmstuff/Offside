@@ -87,7 +87,7 @@ public class SignalRService extends Service {
     //public final String ip = new String("10.0.2.2:18313");
     //public final String ip = new String("192.168.1.140:18313");
     //public final String ip = new String("10.0.0.17:18313");
-    public final String ip = new String("10.0.0.17:18313");
+
 
     //public final String ip = new String("offside.somee.com");
     //public final String ip = new String("sidekicknode.azurewebsites.net");
@@ -277,14 +277,13 @@ public class SignalRService extends Service {
         hub.on("PlayerDataReceived", new SubscriptionHandler1<String>() {
             @Override
             public void run(String playerJson) {
+                playerDataReceived = true;
                 final Gson gson = new GsonBuilder().create();
-                PlayerModel playerModel= gson.fromJson(playerJson, PlayerModel.class);
+                PlayerModel playerModel = gson.fromJson(playerJson, PlayerModel.class);
 
                 EventBus.getDefault().post(new PlayerModelEvent(playerModel));
-            public void run(PlayerModel player) {
-                playerDataReceived = true;
-                EventBus.getDefault().post(player);
             }
+
         }, String.class);
 
         hub.on("PositionReceived", new SubscriptionHandler1<Position>() {
