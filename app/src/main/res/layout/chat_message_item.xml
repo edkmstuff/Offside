@@ -982,7 +982,7 @@
                                         android:paddingRight="10dp"
                                         android:text="Barcelona"
                                         style="@style/answerText"
-                                        android:background="@color/answerBackgroundColor"
+                                        android:background="@drawable/shape_bg_rectangle_answer_correct"
 
                                          />
 
@@ -1026,7 +1026,7 @@
                                         android:paddingRight="10dp"
                                         android:text="Real Madrid"
                                         style="@style/answerText"
-                                        android:background="@color/answerBackgroundColor"
+                                        android:background="@drawable/shape_bg_rectangle_answer_wrong"
                                         />
 
                                 </LinearLayout>

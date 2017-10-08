@@ -25,6 +25,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
@@ -151,30 +153,37 @@ public class ChatFragment extends Fragment {
 
     @Override
     public void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
-        OffsideApplication.setScoreboard(null);
 
-        //chat data
-        gameId = OffsideApplication.getSelectedGameId();
-        privateGameId = OffsideApplication.getSelectedPrivateGameId();
-        groupId = OffsideApplication.getSelectedPrivateGroupId();
-        androidDeviceId = OffsideApplication.getAndroidDeviceId();
-        playerId = OffsideApplication.getPlayerId();
-        PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
-        if(selectedPrivateGroup == null || privateGameId == null) {
-            Toast.makeText(getActivity(), R.string.lbl_no_active_games, Toast.LENGTH_LONG).show();
-            EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
-        }
-        else {
-            privateGroupName = selectedPrivateGroup.getName();
-            if (gameId != null && privateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
-                OffsideApplication.signalRService.requestJoinPrivateGame(gameId, groupId, privateGameId, playerId, androidDeviceId);
+        try
+        {
+            super.onResume();
+            EventBus.getDefault().register(this);
+            OffsideApplication.setScoreboard(null);
+
+            //chat data
+            gameId = OffsideApplication.getSelectedGameId();
+            privateGameId = OffsideApplication.getSelectedPrivateGameId();
+            groupId = OffsideApplication.getSelectedPrivateGroupId();
+            androidDeviceId = OffsideApplication.getAndroidDeviceId();
+            playerId = OffsideApplication.getPlayerId();
+            PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
+            if(selectedPrivateGroup == null || privateGameId == null) {
+                Toast.makeText(getActivity(), R.string.lbl_no_active_games, Toast.LENGTH_LONG).show();
+                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
             }
+            else {
+                privateGroupName = selectedPrivateGroup.getName();
+                if (gameId != null && privateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
+                    OffsideApplication.signalRService.requestJoinPrivateGame(gameId, groupId, privateGameId, playerId, androidDeviceId);
+                }
+            }
+
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
         }
-
-
-
     }
 
     @Override
@@ -189,13 +198,22 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_chat, container, false);
+        try
+        {
+            View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
-        getIDs(view);
-        setEvents();
-        resetVisibility();
+            getIDs(view);
+            setEvents();
+            resetVisibility();
 
-        return view;
+            return view;
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return null;
+        }
+
     }
 
     private void getIDs(View view) {
@@ -793,7 +811,8 @@ public class ChatFragment extends Fragment {
                 int newOffsideCoinsValue = updatedPlayer.getOffsideCoins();
                 offsideCoinsTextView.setText(Integer.toString(newOffsideCoinsValue));
                 if (newOffsideCoinsValue != oldOffsideCoinsValue) {
-                    offsideCoinsImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
+                    //offsideCoinsImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
+                    YoYo.with(Techniques.BounceIn).playOn(offsideCoinsImageView);
 
                 }
 

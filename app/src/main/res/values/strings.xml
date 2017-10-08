@@ -101,6 +101,7 @@
     <string name="lbl_sign_out">התנתק</string>
     <string name="lbl_settings">הגדרות</string>
     <string name="lbl_no_active_games">לא נמצא משחק פעיל</string>
+    <string name="lbl_news">חדשות</string>
 
 
 </resources>

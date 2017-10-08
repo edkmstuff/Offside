@@ -20,14 +20,14 @@
         app:showAsAction="always">
 
     </item>
-    <item
-        android:id="@+id/nav_action_shop"
-        android:enabled="true"
-        android:icon="@mipmap/ic_shop"
-        android:title="@string/lbl_shop"
-        app:showAsAction="always">
+    <!--<item-->
+        <!--android:id="@+id/nav_action_shop"-->
+        <!--android:enabled="true"-->
+        <!--android:icon="@mipmap/ic_shop"-->
+        <!--android:title="@string/lbl_shop"-->
+        <!--app:showAsAction="always">-->
 
-    </item>
+    <!--</item>-->
     <item
         android:id="@+id/nav_action_play"
         android:enabled="true"
@@ -37,6 +37,18 @@
         
 
         ></item>
+
+    <item
+        android:id="@+id/nav_action_news"
+        android:enabled="true"
+        android:icon="@mipmap/ic_action_news"
+        android:title="@string/lbl_news"
+        app:showAsAction="always"
+
+
+        >
+
+    </item>
 
     <item
         android:id="@+id/nav_action_settings"
@@ -49,5 +61,6 @@
         >
 
     </item>
+
 
 </menu>

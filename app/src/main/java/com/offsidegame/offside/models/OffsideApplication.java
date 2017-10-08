@@ -98,14 +98,15 @@ public class OffsideApplication extends Application {
     private static AvailableGame selectedAvailableGame;
     private static String selectedPrivateGameId;
 
-
-
-
     private static UserProfileInfo userProfileInfo;
 
     private static PlayerAssets playerAssets;
 
     private static HashMap<String, LeagueRecord[]> leaguesRecords;
+
+    private static boolean isBackFromNewsFeed = false;
+
+
 
     public static String getMessageTypeText() {
         return messageTypeText;
@@ -301,6 +302,15 @@ public class OffsideApplication extends Application {
         return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
+    public static boolean isBackFromNewsFeed() {
+        return isBackFromNewsFeed;
+    }
+
+    public static void setIsBackFromNewsFeed(boolean isBackFromNewsFeed) {
+        OffsideApplication.isBackFromNewsFeed = isBackFromNewsFeed;
+    }
+
+
     public void onCreate() {
 
         try {
@@ -434,9 +444,6 @@ public class OffsideApplication extends Application {
     public static String getVersion() {
         return version == null ? "0.0": version;
     }
-
-
-
 
 
 

@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.offsidegame.offside.R;
 
+import org.acra.ACRA;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -38,9 +40,8 @@ public class DateHelper {
         return dateAsString;
     }
 
-    public Date formatAsDate(String dateAsString, Context context){
-        //String loginExpirationTimeAsString = (String) settings.getString(getString(R.string.login_expiration_time), "");
-        String dateFormat = context.getString(R.string.date_format);
+    public static  Date formatAsDate(String dateAsString, String dateFormat, Context context){
+
         SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
         Date date;
         try {
@@ -48,6 +49,7 @@ public class DateHelper {
         }
         catch (ParseException pe) {
             Log.e(context.getString(R.string.log_tag), pe.getMessage());
+            ACRA.getErrorReporter().handleSilentException(pe);
             date = null;
         }
         return date;

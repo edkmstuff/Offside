@@ -25,7 +25,6 @@
             android:authorities="com.facebook.app.FacebookContentProvider523024471208542"
             android:exported="true" />
 
-
         <!--
              Set custom default icon. This is used when no icon is set for incoming notification messages.
              See README(https://goo.gl/l4GJaQ) for more.
@@ -50,29 +49,21 @@
             android:theme="@style/LaunchScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
-
-                <!--<action android:name="android.intent.action.VIEW"/>-->
-                <!--<category android:name="android.intent.category.DEFAULT"/>-->
-                <!--<category android:name="android.intent.category.BROWSABLE"/>-->
-                <!--<data-->
-                    <!--android:host="example.com"-->
-                    <!--android:scheme="https"/>-->
-
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.LobbyActivity"
             android:label="Lobby"
             android:screenOrientation="portrait"
-            android:theme="@style/BlueTheme">
-        </activity>
-
+            android:theme="@style/BlueTheme" />
         <activity
             android:name=".activities.CreatePrivateGroupActivity"
             android:label="Crate Group"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".activities.NewsDetailsActivity"></activity>
 
         <service
             android:name=".helpers.SignalRService"
@@ -82,7 +73,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        
         <!-- <activity -->
         <!-- android:name="com.ironsource.sdk.controller.ControllerActivity" -->
         <!-- android:configChanges="orientation|screenSize" -->

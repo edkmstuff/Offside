@@ -65,16 +65,24 @@ public class GroupsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_groups, container, false);
-        getIDs(view);
-        setEvents();
+        try
+        {
+            View view = inflater.inflate(R.layout.fragment_groups, container, false);
+            getIDs(view);
+            setEvents();
 
-        resetVisibility();
+            resetVisibility();
 
-        versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
+            versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
+
+            return view;
 
 
-        return view;
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return null;
+        }
+
     }
 
     private void getIDs(View view) {
@@ -104,13 +112,13 @@ public class GroupsFragment extends Fragment {
                 super.onTabSelected(tab);
                 viewPager.setCurrentItem(tab.getPosition());
                 selectedTabPosition = viewPager.getCurrentItem();
-                Log.d("Selected", "Selected " + tab.getPosition());
+               // Log.d("Selected", "Selected " + tab.getPosition());
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 super.onTabUnselected(tab);
-                Log.d("Unselected", "Unselected " + tab.getPosition());
+               // Log.d("Unselected", "Unselected " + tab.getPosition());
             }
         });
 

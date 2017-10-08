@@ -32,6 +32,7 @@ import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.fragments.ChatFragment;
 import com.offsidegame.offside.fragments.GroupsFragment;
+import com.offsidegame.offside.fragments.NewsFragment;
 import com.offsidegame.offside.fragments.PlayerFragment;
 import com.offsidegame.offside.fragments.SettingsFragment;
 import com.offsidegame.offside.fragments.ShopFragment;
@@ -75,17 +76,15 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private SharedPreferences settings;
 
     //using fragments
-    private LinearLayout fragmentContainerRoot;
     private GroupsFragment groupsFragment;
     private PlayerFragment playerFragment;
     private SingleGroupFragment singleGroupFragment;
     private ChatFragment chatFragment;
     private ShopFragment shopFragment;
+    private NewsFragment newsFragment;
     private SettingsFragment settingsFragment;
 
     //</editor-fold>
-
-
 
 
     @Override
@@ -102,7 +101,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             getIds();
             setEvents();
-            togglePayerAssetsVisibility(true);
+            togglePlayerAssetsVisibility(true);
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -116,8 +115,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         playerInfoRoot = (LinearLayout) findViewById(R.id.l_player_info_root);
 
-        fragmentContainerRoot = (LinearLayout) findViewById(R.id.l_fragment_container_root);
-
         playerPictureImageView = (ImageView) findViewById(R.id.l_player_picture_image_view);
         balanceRoot = (LinearLayout) findViewById(R.id.l_balance_root);
         balanceTextView = (TextView) findViewById(R.id.l_balance_text_view);
@@ -128,18 +125,21 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.l_bottom_navigation_view);
 
 
-
     }
 
     private void setEvents() {
 
 
-
         balanceRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //removed the shop from the bottom menu - limited to 5 items
+                //EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_shop));
+                //instead load shop fragment directly here
+                shopFragment = ShopFragment.newInstance();
+                replaceFragment(shopFragment);
+                togglePlayerAssetsVisibility(true);
 
-                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_shop));
 
             }
         });
@@ -155,27 +155,35 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                             groupsFragment = GroupsFragment.newInstance();
                             replaceFragment(groupsFragment);
-                            togglePayerAssetsVisibility(true);
+                            togglePlayerAssetsVisibility(true);
 
                             return true;
 
                         case R.id.nav_action_profile:
                             playerFragment = PlayerFragment.newInstance();
                             replaceFragment(playerFragment);
-                            togglePayerAssetsVisibility(true);
+                            togglePlayerAssetsVisibility(true);
                             return true;
 
-                        case R.id.nav_action_shop:
-                            shopFragment = ShopFragment.newInstance();
-                            replaceFragment(shopFragment);
-                            togglePayerAssetsVisibility(true);
-
-                            return true;
+//                        case R.id.nav_action_shop:
+//                            shopFragment = ShopFragment.newInstance();
+//                            replaceFragment(shopFragment);
+//                            togglePlayerAssetsVisibility(true);
+//
+//                            return true;
 
                         case R.id.nav_action_play:
                             chatFragment = ChatFragment.newInstance();
                             replaceFragment(chatFragment);
-                            togglePayerAssetsVisibility(false);
+                            togglePlayerAssetsVisibility(false);
+
+
+                            return true;
+
+                        case R.id.nav_action_news:
+                            newsFragment = NewsFragment.newInstance();
+                            replaceFragment(newsFragment);
+                            togglePlayerAssetsVisibility(false);
 
 
                             return true;
@@ -183,6 +191,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                         case R.id.nav_action_settings:
                             settingsFragment = SettingsFragment.newInstance();
                             replaceFragment(settingsFragment);
+                            togglePlayerAssetsVisibility(true);
 
                             return true;
                     }
@@ -200,8 +209,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    private void togglePayerAssetsVisibility(boolean isVisible) {
-        if(isVisible)
+    private void togglePlayerAssetsVisibility(boolean isVisible) {
+        if (isVisible)
             playerInfoRoot.setVisibility(View.VISIBLE);
         else
             playerInfoRoot.setVisibility(View.GONE);
@@ -210,8 +219,15 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     private void replaceFragment(Fragment fragment) {
 
-        FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction().replace(R.id.l_fragment_container_root, fragment, fragment.getTag()).commit();
+        try {
+            FragmentManager manager = getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.l_fragment_container_root, fragment, fragment.getTag()).commit();
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
 
     }
 
@@ -296,7 +312,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             Intent intent = getIntent();
             boolean showGroups = intent.getBooleanExtra("showGroups", false);
-            if(showGroups){
+            boolean showNewsFeed = OffsideApplication.isBackFromNewsFeed();
+            if (showGroups) {
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -305,14 +322,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     }
                 }, 500);
 
-
-            }
-
-            else
+            } else if (showNewsFeed) {
+                OffsideApplication.setIsBackFromNewsFeed(false);
+            } else {
                 tryRejoinGameForReturningPlayer();
-
-
-
+            }
 
 
         } catch (Exception ex) {
@@ -322,7 +336,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    public void tryRejoinGameForReturningPlayer(){
+    public void tryRejoinGameForReturningPlayer() {
 
         //check if player is already playing
         SharedPreferences settings = context.getSharedPreferences(getString(R.string.preference_name), 0);
@@ -342,11 +356,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             AvailableGame availableGame = availableGameEvent.getAvailableGame();
             if (availableGame != null) {
                 String groupId = availableGame.getGroupId();
-                OffsideApplication.signalRService.requestPrivateGroup(playerId,groupId);
+                OffsideApplication.signalRService.requestPrivateGroup(playerId, groupId);
                 OffsideApplication.setSelectedAvailableGame(availableGame);
-            }
-
-            else {
+            } else {
                 EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
 
             }
@@ -394,9 +406,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     }
 
 
-
-
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSelectedPrivateGroup(PrivateGroup privateGroup) {
         try {
@@ -425,7 +434,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     }
 
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onConnectionEvent(ConnectionEvent connectionEvent) {
         try {
@@ -450,11 +458,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onGroupInvite(GroupInviteEvent groupInviteEvent){
+    public void onGroupInvite(GroupInviteEvent groupInviteEvent) {
 
-        String groupId= groupInviteEvent.getGroupId();
-        String gameId= groupInviteEvent.getGameId();
-        String privateGameId= groupInviteEvent.getPrivateGamaId();
+        String groupId = groupInviteEvent.getGroupId();
+        String gameId = groupInviteEvent.getGameId();
+        String privateGameId = groupInviteEvent.getPrivateGamaId();
         String playerId = groupInviteEvent.getInviterPlayerId();
 
         OffsideApplication.signalRService.requestInviteFriend(groupId, gameId, privateGameId, playerId);
@@ -462,12 +470,12 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onFriendInviteReceived(FriendInviteReceivedEvent friendInviteReceivedEvent){
+    public void onFriendInviteReceived(FriendInviteReceivedEvent friendInviteReceivedEvent) {
 
-        String invitationUrl= friendInviteReceivedEvent.getInvitationUrl();
+        String invitationUrl = friendInviteReceivedEvent.getInvitationUrl();
         String inviterName = OffsideApplication.getPlayerAssets().getPlayerName();
 
-        String shareMessage = String.format("%s invited you to join a group in SideKick. Click to join %s",inviterName, invitationUrl);
+        String shareMessage = String.format("%s invited you to join a group in SideKick. Click to join %s", inviterName, invitationUrl);
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.setType("text/plain");
@@ -476,24 +484,19 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         sendIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
 
-
-
-        startActivity(Intent.createChooser(sendIntent,"Invite friendS" ));
+        startActivity(Intent.createChooser(sendIntent, "Invite friendS"));
 
 
     }
 
     @Override
     public void onBackPressed() {
-        if(bottomNavigationView.getSelectedItemId()==R.id.nav_action_groups)
+        if (bottomNavigationView.getSelectedItemId() == R.id.nav_action_groups)
             finish();
         else
             EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
 
     }
-
-
-
 
 
 }

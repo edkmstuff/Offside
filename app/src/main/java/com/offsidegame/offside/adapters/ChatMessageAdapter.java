@@ -1,5 +1,6 @@
 package com.offsidegame.offside.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -20,6 +21,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareButton;
@@ -189,7 +192,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder = new ViewHolder();
 
                 //<editor-fold desc="FIND WIDGETS">
-                getIds(viewHolder, convertView);
+                getIDs(viewHolder, convertView);
                 //</editor-fold>
                 convertView.setTag(viewHolder);
 
@@ -248,7 +251,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         return null;
     }
 
-    private void getIds(ViewHolder viewHolder, View convertView) {
+    private void getIDs(ViewHolder viewHolder, View convertView) {
         //text message
         viewHolder.incomingMessagesRoot = (LinearLayout) convertView.findViewById(R.id.cm_incoming_messages_root);
         viewHolder.incomingTextMessageTextView = (TextView) convertView.findViewById(R.id.cm_incoming_text_message_text_view);
@@ -402,6 +405,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
+
 
     private void generateGetCoinsChatMessage(final ViewHolder viewHolder) {
 
@@ -592,12 +596,13 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     layout.setPadding(0, 60, 0, 0);
 
                 winnerPrizeImageView.setImageResource(resourceId);
-                loadFbImage(winnerPictureImageView, winnerProfilePictureUri);
+
+                ImageHelper.loadImage(context,winnerPictureImageView,winnerProfilePictureUri,true);
                 winnerNameTextView.setText(winner.getUserName());
                 viewHolder.incomingWinnersRoot.addView(layout);
             }
 
-            //viewHolder.incomingWinnersRoot.invalidate();
+
 
 
             //visibility set
@@ -1142,7 +1147,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         viewHolder.incomingCorrectAnswerTextView.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_correct);
                         viewHolder.incomingFeedbackPlayerTextView.setVisibility(View.GONE);
 
-
                     } else {
 
 
@@ -1304,7 +1308,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             playerAnswers.put(questionId, new AnswerIdentifier(answerId, isSkipped, betSize, true));
             if (view != null) //null when question was skipped
-                view.animate().rotationX(360.0f).setDuration(200).start();
+                //view.animate().rotationX(360.0f).setDuration(200).start();
+                YoYo.with(Techniques.FlipInY).playOn(view);
+
 
             setStyleForSelectedAnswer(viewHolder, answerId);
 
@@ -1422,23 +1428,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         return "";
 
-    }
-
-    private void loadFbImage(final ImageView fbProfilePicture, Uri fbImageUri) {
-        Picasso.with(context).load(fbImageUri).into(fbProfilePicture, new com.squareup.picasso.Callback() {
-            @Override
-            public void onSuccess() {
-                Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
-                RoundImage roundedImage = new RoundImage(bm);
-                fbProfilePicture.setImageDrawable(roundedImage);
-                //fbProfilePicture.animate().alpha(1.1f).setDuration(200).start();
-            }
-
-            @Override
-            public void onError() {
-
-            }
-        });
     }
 
     private String formatTimerDisplay(long millisUntilFinished) {
