@@ -128,7 +128,7 @@ public class ReadRss extends AsyncTask<Void,Void, Void> {
     }
 
     private void processXml(Document data){
-        String defaultNewsItemImage= OffsideApplication.getDefaultProfilePictureUrl();
+        String defaultNewsItemImage= OffsideApplication.getDefaultPictureUrlHazavitFeed();
         if(data != null){
             feedItems = new ArrayList<>();
             Element root = data.getDocumentElement();

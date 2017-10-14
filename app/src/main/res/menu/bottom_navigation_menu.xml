@@ -3,64 +3,46 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-
         android:id="@+id/nav_action_groups"
         android:enabled="true"
         android:icon="@mipmap/ic_groups"
         android:title="@string/lbl_private_groups"
-        app:showAsAction="always">
+        app:showAsAction="always"></item>
 
-    </item>
     <item
         android:id="@+id/nav_action_profile"
         android:enabled="true"
         android:icon="@mipmap/ic_profile"
         android:title="@string/lbl_my_profile"
+        app:showAsAction="always"></item>
 
-        app:showAsAction="always">
-
-    </item>
-    <!--<item-->
-        <!--android:id="@+id/nav_action_shop"-->
-        <!--android:enabled="true"-->
-        <!--android:icon="@mipmap/ic_shop"-->
-        <!--android:title="@string/lbl_shop"-->
-        <!--app:showAsAction="always">-->
-
-    <!--</item>-->
     <item
         android:id="@+id/nav_action_play"
         android:enabled="true"
         android:icon="@mipmap/ic_in_game"
         android:title="@string/lbl_play"
-        app:showAsAction="always"
-        
-
-        ></item>
+        app:showAsAction="always"></item>
 
     <item
         android:id="@+id/nav_action_news"
         android:enabled="true"
         android:icon="@mipmap/ic_action_news"
         android:title="@string/lbl_news"
-        app:showAsAction="always"
+        app:showAsAction="always"></item>
 
-
-        >
-
-    </item>
+    <!--<item-->
+    <!--android:id="@+id/nav_action_settings"-->
+    <!--android:enabled="true"-->
+    <!--android:icon="@mipmap/ic_settings"-->
+    <!--android:title="@string/lbl_settings"-->
+    <!--app:showAsAction="always">-->
+    <!--</item>-->
 
     <item
-        android:id="@+id/nav_action_settings"
+        android:id="@+id/nav_action_shop"
         android:enabled="true"
-        android:icon="@mipmap/ic_settings"
-        android:title="@string/lbl_settings"
-        app:showAsAction="always"
-
-
-        >
-
-    </item>
-
+        android:icon="@mipmap/ic_shop"
+        android:title="@string/lbl_shop"
+        app:showAsAction="always"></item>
 
 </menu>

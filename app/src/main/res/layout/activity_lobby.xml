@@ -12,6 +12,32 @@
     android:orientation="vertical"
     tools:context="com.offsidegame.offside.activities.LobbyActivity">
 
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ListView
+                android:id="@+id/drawer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </ListView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="disconnect"/>
+
+        </LinearLayout>
+
+
+
+    </android.support.v4.widget.DrawerLayout>
+
 
     <!--lobby root-->
     <LinearLayout
@@ -21,16 +47,26 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="visible">
+
+
+
         <!--player info and settings-->
         <LinearLayout
             android:id="@+id/l_player_info_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="10"
+            android:weightSum="12"
             android:orientation="horizontal"
             android:gravity="center"
             android:padding="5dp"
             >
+            <!--<ImageView-->
+                <!--android:id="@+id/l_toggle_drawer_image_view"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:src="@mipmap/ic_action_news"-->
+                <!--android:layout_weight="2"-->
+                <!--/>-->
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="50dp"
@@ -150,21 +186,21 @@
             </LinearLayout>
 
             <!--settings button-->
-            <!--<LinearLayout-->
-                <!--android:layoutDirection="rtl"-->
-                <!--android:layout_weight="2"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content">-->
+            <LinearLayout
+                android:layoutDirection="rtl"
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content">
 
-                <!--<ImageView-->
-                    <!--android:id="@+id/l_settings_button_image_view"-->
-                    <!--android:layout_gravity="left"-->
-                    <!--android:layout_width="26dp"-->
-                    <!--android:layout_height="26dp"-->
-                    <!--android:scaleType="centerCrop"-->
-                    <!--android:src="@mipmap/ic_settings_button" />-->
+                <ImageView
+                    android:id="@+id/l_settings_button_image_view"
+                    android:layout_gravity="left"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/ic_settings" />
 
-            <!--</LinearLayout>-->
+            </LinearLayout>
 
 
         </LinearLayout>
@@ -248,6 +284,7 @@
 
 
     </LinearLayout>
+
 
 
 

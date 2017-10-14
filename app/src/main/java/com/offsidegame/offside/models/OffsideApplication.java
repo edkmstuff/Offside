@@ -61,26 +61,27 @@ public class OffsideApplication extends Application {
     /****************************DEVELOPMENT- LOCAL**************************/
 
     private static String initialsProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/";
-    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
-    private static String defaultProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/default";
+    private static String defaultProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
+    private static String defaultPictureUrlHazavitFeed = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
-    //private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
-        //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/Images/defaultImage.jpg";
-    //private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/default";
+//    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
+//    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
+//    private static String defaultPictureUrlHazavitFeed = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
+
 
 //  private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
-////   // private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/Images/defaultImage.jpg";
 //    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
+//    private static String defaultPictureUrlHazavitFeed = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
 /****************************TESTING**************************/
 //    private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
-//    private static String defaultProfilePictureUrl = "http://offside.somee.com/Images/defaultImage.jpg";
-//    private static String defaultProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/default";
+//    private static String defaultProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
+//    private static String defaultPictureUrlHazavitFeed = "http://offside.somee.com/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
 /****************************PRODUCTION**************************/
-//      private static String initialsProfilePictureUrl = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/";
-////    private static String defaultProfilePictureUrl = "http://offside.azurewebsites.net/Images/defaultImage.jpg";
-//     private static String defaultProfilePictureUrl = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/default";
+//    private static String initialsProfilePictureUrl = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/";
+//    private static String defaultProfilePictureUrl = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
+//    private static String defaultPictureUrlHazavitFeed = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
     private static String appLogoPictureUrl = "http://www.sidekickgame.com/img/logo.png";
 
@@ -134,6 +135,10 @@ public class OffsideApplication extends Application {
 
     public static String getDefaultProfilePictureUrl() {
         return defaultProfilePictureUrl;
+    }
+
+    public static String getDefaultPictureUrlHazavitFeed() {
+        return defaultPictureUrlHazavitFeed;
     }
 
     public static GameInfo getGameInfo() {
@@ -311,6 +316,7 @@ public class OffsideApplication extends Application {
     }
 
 
+
     public void onCreate() {
 
         try {
@@ -382,48 +388,6 @@ public class OffsideApplication extends Application {
 
     };
 
-//    @Subscribe
-//    public void onReceiveScoreboard(ScoreboardEvent scoreboardEvent) {
-//        try {
-//
-//            Scoreboard scoreboard = scoreboardEvent.getScoreboard();
-//
-//            if (scoreboard == null)
-//                return;
-//            Score[] scores = scoreboard.getScores();
-//
-//            if (scores == null || scores.length == 0)
-//                return;
-//
-//            //check if scoreboard was changed
-//            Scoreboard currentScoreboard = OffsideApplication.getScoreboard();
-//            boolean isScoreboardsEquals = false;
-//            if (!scoreboard.isForceUpdate() && currentScoreboard != null && currentScoreboard.getScores() != null && currentScoreboard.getScores().length == scores.length) {
-//                Score[] currentScores = currentScoreboard.getScores();
-//                for (int i = 0; i < currentScores.length; i++) {
-//                    boolean isEqualScore = currentScores[i].getImageUrl().equals(scores[i].getImageUrl()) &&
-//                            currentScores[i].getPosition() == scores[i].getPosition() &&
-//                            currentScores[i].getOffsideCoins() == scores[i].getOffsideCoins();
-//
-//                    if (!isEqualScore)
-//                        break;
-//                    if (i == currentScores.length - 1)
-//                        isScoreboardsEquals = true;
-//                }
-//
-//            }
-//            if (isScoreboardsEquals)
-//                return;
-//
-//            OffsideApplication.setScoreboard(scoreboard);
-//
-//
-//        } catch (Exception ex) {
-//            ACRA.getErrorReporter().handleSilentException(ex);
-//
-//        }
-//
-//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayer(PlayerModel updatedPlayer) {

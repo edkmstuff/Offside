@@ -10,11 +10,15 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,12 +66,14 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private final Activity thisActivity = this;
 
     private BottomNavigationView bottomNavigationView;
+    private ImageView settingsButtonImageView;
 
     //playerAssets
     private LinearLayout playerInfoRoot;
     private LinearLayout balanceRoot;
     private TextView balanceTextView;
     private TextView powerItemsTextView;
+
 
     //profile
     private ImageView playerPictureImageView;
@@ -99,9 +105,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             playerId = player.getUid();
 
-            getIds();
+            getIDs();
             setEvents();
             togglePlayerAssetsVisibility(true);
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -110,7 +117,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    private void getIds() {
+    private void getIDs() {
 
 
         playerInfoRoot = (LinearLayout) findViewById(R.id.l_player_info_root);
@@ -123,24 +130,35 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         //createPrivateGroupButtonTextView = (TextView) findViewById(R.id.l_create_private_group_button_text_view);
 
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.l_bottom_navigation_view);
-
+        settingsButtonImageView = findViewById(R.id.l_settings_button_image_view);
 
     }
 
     private void setEvents() {
 
 
+        playerPictureImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_profile));
+            }
+        });
+
         balanceRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //removed the shop from the bottom menu - limited to 5 items
-                //EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_shop));
-                //instead load shop fragment directly here
-                shopFragment = ShopFragment.newInstance();
-                replaceFragment(shopFragment);
+                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_shop));
+
+            }
+        });
+
+        settingsButtonImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                settingsFragment = SettingsFragment.newInstance();
+                replaceFragment(settingsFragment);
                 togglePlayerAssetsVisibility(true);
-
-
             }
         });
 
@@ -165,12 +183,12 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                             togglePlayerAssetsVisibility(true);
                             return true;
 
-//                        case R.id.nav_action_shop:
-//                            shopFragment = ShopFragment.newInstance();
-//                            replaceFragment(shopFragment);
-//                            togglePlayerAssetsVisibility(true);
-//
-//                            return true;
+                        case R.id.nav_action_shop:
+                            shopFragment = ShopFragment.newInstance();
+                            replaceFragment(shopFragment);
+                            togglePlayerAssetsVisibility(true);
+
+                            return true;
 
                         case R.id.nav_action_play:
                             chatFragment = ChatFragment.newInstance();
@@ -188,12 +206,12 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                             return true;
 
-                        case R.id.nav_action_settings:
-                            settingsFragment = SettingsFragment.newInstance();
-                            replaceFragment(settingsFragment);
-                            togglePlayerAssetsVisibility(true);
-
-                            return true;
+//                        case R.id.nav_action_settings:
+//                            settingsFragment = SettingsFragment.newInstance();
+//                            replaceFragment(settingsFragment);
+//                            togglePlayerAssetsVisibility(true);
+//
+//                            return true;
                     }
 
                     return true;
@@ -259,6 +277,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         EventBus.getDefault().unregister(context);
 
     }
+
+    //<editor-fold desc="Eventbus subscriptions">
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
@@ -386,7 +406,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePrivateGroupChanged(PrivateGroupChangedEvent privateGroupChangedEvent) {
         try {
@@ -404,7 +423,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         }
 
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSelectedPrivateGroup(PrivateGroup privateGroup) {
@@ -488,6 +506,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
     }
+
+    //</editor-fold>
 
     @Override
     public void onBackPressed() {
