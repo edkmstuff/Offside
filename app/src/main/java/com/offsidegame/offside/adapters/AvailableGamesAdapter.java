@@ -5,14 +5,13 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
+
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.caverock.androidsvg.SVGImageView;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.helpers.ImageHelper;

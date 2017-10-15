@@ -83,7 +83,6 @@ dependencies {
     compile 'com.daimajia.easing:library:2.0@aar'
     compile 'com.daimajia.androidanimations:library:2.3@aar'
     compile 'org.jsoup:jsoup:1.10.3'
-    compile 'com.caverock:androidsvg:1.2.1'
     testCompile 'junit:junit:4.12'
 }
 
