@@ -258,7 +258,7 @@
                     android:gravity="center_vertical"
                     android:layout_gravity="center"
                     android:padding="5dp"
-                    android:src="@mipmap/ic_invite_freind"
+                    android:src="@mipmap/ic_invite_friend"
                     />
 
 
@@ -288,7 +288,6 @@
 
         </LinearLayout>
 
-
         <!--chat content root-->
         <LinearLayout
             android:layout_width="match_parent"
@@ -314,16 +313,6 @@
                     android:orientation="horizontal"
                     android:weightSum="7">
 
-                    <!--<TextView-->
-                    <!--android:id="@+id/fc_chatActionsButton"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_weight="1"-->
-                    <!--android:background="@color/colorAccent"-->
-                    <!--android:gravity="center"-->
-                    <!--android:text="+"-->
-                    <!--android:textColor="@color/background_material_light"-->
-                    <!--android:textSize="@dimen/OffsideLargeText" />-->
 
                     <ImageView
                         android:id="@+id/fc_chatActionsButton"
@@ -332,8 +321,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:src="@mipmap/ic_menu"
-
-
+                        android:visibility="gone"
                         />
 
                     <EditText
@@ -343,7 +331,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginBottom="-2dp"
                         android:layout_toLeftOf="@+id/chatSendButton"
-                        android:layout_weight="5"
+                        android:layout_weight="6"
                         android:hint="@string/lbl_type_message"
                         android:inputType="textMultiLine" />
 
@@ -358,18 +346,6 @@
 
                         />
 
-                    <!--<TextView-->
-                        <!--android:id="@+id/fc_chatSendTextView"-->
-                        <!--android:layout_width="0dp"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_weight="1"-->
-                        <!--android:background="@color/colorAccent"-->
-                        <!--android:gravity="center"-->
-                        <!--android:text="@string/lbl_send"-->
-                        <!--android:textColor="@color/background_material_light"-->
-                        <!--android:textStyle="bold"-->
-
-                        <!--/>-->
 
                 </LinearLayout>
 
@@ -427,138 +403,6 @@
                     android:background="@color/chatText"
                     android:visibility="gone">
 
-                    <!--leaders-->
-                    <LinearLayout
-                        android:id="@+id/fc_action_leaders_root"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:minHeight="80dp"
-
-                        android:minWidth="80dp"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <ImageView
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@mipmap/ic_action_leaders" />
-
-                        <TextView
-                            style="@style/OffsideActionButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:text="@string/lbl_commands_leaders" />
-
-                    </LinearLayout>
-                    <!--player balance-->
-                    <LinearLayout
-                        android:id="@+id/fc_action_offside_coins_root"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-
-                        android:minHeight="80dp"
-                        android:minWidth="80dp"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@mipmap/ic_offside_coin_with_logo" />
-
-                        <TextView
-                            style="@style/OffsideActionButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:text="@string/lbl_command_offside_coins" />
-
-                    </LinearLayout>
-                    <!--send me code-->
-                    <LinearLayout
-                        android:id="@+id/fc_action_code_root"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-
-                        android:minHeight="80dp"
-                        android:minWidth="80dp"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@mipmap/ic_action_code" />
-
-                        <TextView
-                            style="@style/OffsideActionButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:text="@string/lbl_command_game_code" />
-
-                    </LinearLayout>
-                    <!--share code-->
-                    <LinearLayout
-                        android:id="@+id/fc_action_share_root"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-
-                        android:minHeight="80dp"
-                        android:minWidth="80dp"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@mipmap/ic_action_whatsapp" />
-
-                        <TextView
-                            style="@style/OffsideActionButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:text="@string/lbl_command_share_code" />
-
-                    </LinearLayout>
-                    <!--current question-->
-                    <LinearLayout
-                        android:id="@+id/fc_action_current_question_root"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:minHeight="80dp"
-                        android:minWidth="80dp"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@mipmap/ic_action_current_question" />
-
-                        <TextView
-                            style="@style/OffsideActionButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:text="@string/lbl_command_current_question" />
-
-                    </LinearLayout>
                     <!--reload coins - lottery-->
                     <LinearLayout
                         android:id="@+id/fc_action_reload_root"
@@ -613,31 +457,7 @@
                             android:text="@string/lbl_get_offside_coins" />
 
                     </LinearLayout>
-                    <!--exit game-->
-                    <LinearLayout
-                        android:id="@+id/fc_action_exit_game_root"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:minHeight="80dp"
-                        android:minWidth="80dp"
-                        android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@mipmap/ic_action_exit" />
-
-                        <TextView
-                            style="@style/OffsideActionButton"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="bottom"
-                            android:gravity="center"
-                            android:text="@string/lbl_leave_game" />
-
-                    </LinearLayout>
                     <!--Share On Facebook-->
                     <LinearLayout
                         android:id="@+id/fc_action_share_on_facebook_root"

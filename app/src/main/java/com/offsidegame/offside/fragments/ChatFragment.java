@@ -129,12 +129,8 @@ public class ChatFragment extends Fragment {
     private ImageView powerItemImageView;
     private FlowLayout actionsFlowLayout;
 
-    private LinearLayout actionLeadersRoot;
-    private LinearLayout actionCurrentQuestionRoot;
-    private LinearLayout actionOffsideCoinsRoot;
     private LinearLayout actionReloadRoot;
-    private LinearLayout actionCodeRoot;
-    private LinearLayout actionShareRoot;
+
     private LinearLayout actionWatchVideoRoot;
 
     private AvailableGame selectedAvailableGame = null;
@@ -241,14 +237,8 @@ public class ChatFragment extends Fragment {
         powerItemsTextView = (TextView) view.findViewById(R.id.fc_power_items_text_view);
         powerItemImageView = (ImageView) view.findViewById(R.id.fc_power_item_image_view);
 
-        actionExitGameRoot = (LinearLayout) view.findViewById(R.id.fc_action_exit_game_root);
 
-        actionLeadersRoot = (LinearLayout) view.findViewById(R.id.fc_action_leaders_root);
-        actionCurrentQuestionRoot = (LinearLayout) view.findViewById(R.id.fc_action_current_question_root);
-        actionOffsideCoinsRoot = (LinearLayout) view.findViewById(R.id.fc_action_offside_coins_root);
         actionReloadRoot = (LinearLayout) view.findViewById(R.id.fc_action_reload_root);
-        actionCodeRoot = (LinearLayout) view.findViewById(R.id.fc_action_code_root);
-        actionShareRoot = (LinearLayout) view.findViewById(R.id.fc_action_share_root);
         actionWatchVideoRoot = (LinearLayout) view.findViewById(R.id.fc_action_watch_video_root);
         rewardVideoLoadingRoot = (LinearLayout) view.findViewById(R.id.fc_reward_video_loading_root);
         chatListView = (ListView) view.findViewById(R.id.fc_chat_list_view);
@@ -298,23 +288,23 @@ public class ChatFragment extends Fragment {
             }
         });
 
-        chatActionsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                hideKeypad();
-                if (isActionMenuVisible) {
-                    actionsMenuRoot.animate().scaleX(0f).scaleY(0f);
-                    actionsMenuRoot.setVisibility(View.INVISIBLE);
-
-                } else {
-                    actionsMenuRoot.setVisibility(View.VISIBLE);
-                    actionsMenuRoot.animate().scaleX(1f).scaleY(1f);
-                }
-
-                isActionMenuVisible = !isActionMenuVisible;
-            }
-        });
+//        chatActionsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                hideKeypad();
+//                if (isActionMenuVisible) {
+//                    actionsMenuRoot.animate().scaleX(0f).scaleY(0f);
+//                    actionsMenuRoot.setVisibility(View.INVISIBLE);
+//
+//                } else {
+//                    actionsMenuRoot.setVisibility(View.VISIBLE);
+//                    actionsMenuRoot.animate().scaleX(1f).scaleY(1f);
+//                }
+//
+//                isActionMenuVisible = !isActionMenuVisible;
+//            }
+//        });
 
         chatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -332,69 +322,63 @@ public class ChatFragment extends Fragment {
         });
 
 
-        final Map<String, LinearLayout> actionButtons = new HashMap<String, LinearLayout>() {
-            {
-                put("!leaders", actionLeadersRoot);
-                put("!question", actionCurrentQuestionRoot);
-                put("!coins", actionOffsideCoinsRoot);
-                put("!reload", actionReloadRoot);
-                put("!code", actionCodeRoot);
-                put("!share", actionShareRoot);
-
-            }
-        };
-
-        for (String action : actionButtons.keySet()) {
-
-            final String command = action;
-            final LinearLayout actionElement = actionButtons.get(action);
-
-            actionElement.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    try {
-                        if (!isActionMenuVisible)
-                            return;
-
-                        if (command.equals("!share")) {
-
-                            PackageManager pm = getContext().getPackageManager();
-                            boolean isWhatsappInstalled = isPackageInstalled("com.whatsapp", pm);
-                            String shareMessage = "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + OffsideApplication.getSelectedPrivateGameId() + "*";
-                            Intent sendIntent = new Intent();
-                            sendIntent.setAction(Intent.ACTION_SEND);
-                            sendIntent.setType("text/plain");
-                            if (isWhatsappInstalled) {
-                                sendIntent.setPackage("com.whatsapp");
-                                sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-                            } else {
-                                sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage.replaceAll("[*]", ""));
-                            }
-
-                            startActivity(sendIntent);
-
-                        } else if (command.equals("!reload")) {
-                            Intent intent = new Intent(getContext(), SlotActivity.class);
-                            startActivity(intent);
-
-
-                        } else {
-                            OffsideApplication.signalRService.requestSendChatMessage(selectedAvailableGame.getGameId(), OffsideApplication.getSelectedPrivateGameId(), command, OffsideApplication.getPlayerAssets().getPlayerId());
-                        }
-
-                        chatActionsButton.performClick();
-
-                    } catch (Exception ex) {
-                        ACRA.getErrorReporter().handleSilentException(ex);
-                        chatActionsButton.performClick();
-                    }
-
-
-                }
-            });
-
-        }
+//        final Map<String, LinearLayout> actionButtons = new HashMap<String, LinearLayout>() {
+//            {
+//                put("!reload", actionReloadRoot);
+//            }
+//        };
+//
+//        for (String action : actionButtons.keySet()) {
+//
+//            final String command = action;
+//            final LinearLayout actionElement = actionButtons.get(action);
+//
+//            actionElement.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//
+//                    try {
+//                        if (!isActionMenuVisible)
+//                            return;
+//
+//                        if (command.equals("!share")) {
+//
+//                            PackageManager pm = getContext().getPackageManager();
+//                            boolean isWhatsappInstalled = isPackageInstalled("com.whatsapp", pm);
+//                            String shareMessage = "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + OffsideApplication.getSelectedPrivateGameId() + "*";
+//                            Intent sendIntent = new Intent();
+//                            sendIntent.setAction(Intent.ACTION_SEND);
+//                            sendIntent.setType("text/plain");
+//                            if (isWhatsappInstalled) {
+//                                sendIntent.setPackage("com.whatsapp");
+//                                sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+//                            } else {
+//                                sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage.replaceAll("[*]", ""));
+//                            }
+//
+//                            startActivity(sendIntent);
+//
+//                        } else if (command.equals("!reload")) {
+//                            Intent intent = new Intent(getContext(), SlotActivity.class);
+//                            startActivity(intent);
+//
+//
+//                        } else {
+//                            OffsideApplication.signalRService.requestSendChatMessage(selectedAvailableGame.getGameId(), OffsideApplication.getSelectedPrivateGameId(), command, OffsideApplication.getPlayerAssets().getPlayerId());
+//                        }
+//
+//                        chatActionsButton.performClick();
+//
+//                    } catch (Exception ex) {
+//                        ACRA.getErrorReporter().handleSilentException(ex);
+//                        chatActionsButton.performClick();
+//                    }
+//
+//
+//                }
+//            });
+//
+//        }
 
 
         //<editor-fold desc="VIDEO AD">
@@ -491,27 +475,27 @@ public class ChatFragment extends Fragment {
         //</editor-fold>
 
         //<editor-fold desc="exit game">
-        actionExitGameRoot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String androidDeviceId = OffsideApplication.getAndroidDeviceId();
-                OffsideApplication.signalRService.quitGame(gameId, playerId, androidDeviceId);
-                chatActionsButton.performClick();
-                SharedPreferences settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
-                SharedPreferences.Editor editor = settings.edit();
-
-                editor.putString(getString(R.string.game_id_key), null);
-                editor.putString(getString(R.string.private_game_id_key), null);
-                editor.putString(getString(R.string.private_group_id_key), null);
-                editor.putString(getString(R.string.private_game_title_key), null);
-                editor.putString(getString(R.string.home_team_key), null);
-                editor.putString(getString(R.string.away_team_key), null);
-
-                editor.commit();
-                Intent intent = new Intent(getContext(), LobbyActivity.class);
-                startActivity(intent);
-            }
-        });
+//        actionExitGameRoot.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String androidDeviceId = OffsideApplication.getAndroidDeviceId();
+//                OffsideApplication.signalRService.quitGame(gameId, playerId, androidDeviceId);
+//                chatActionsButton.performClick();
+//                SharedPreferences settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
+//                SharedPreferences.Editor editor = settings.edit();
+//
+//                editor.putString(getString(R.string.game_id_key), null);
+//                editor.putString(getString(R.string.private_game_id_key), null);
+//                editor.putString(getString(R.string.private_group_id_key), null);
+//                editor.putString(getString(R.string.private_game_title_key), null);
+//                editor.putString(getString(R.string.home_team_key), null);
+//                editor.putString(getString(R.string.away_team_key), null);
+//
+//                editor.commit();
+//                Intent intent = new Intent(getContext(), LobbyActivity.class);
+//                startActivity(intent);
+//            }
+//        });
 
 
         //</editor-fold>
@@ -801,8 +785,6 @@ public class ChatFragment extends Fragment {
 
 
             OffsideApplication.playerAnswers = updatedPlayer.getPlayerAnswers();
-            //scoreTextView.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
-            //scoreTextView1.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
 
             PlayerModel currentPlayer = OffsideApplication.getGameInfo().getPlayer();
 
@@ -816,13 +798,7 @@ public class ChatFragment extends Fragment {
 
                 }
 
-//                int oldTrophiesValue = currentPlayer.getTrophies();
-//                int newTrophiesValue = updatedPlayer.getTrophies();
-//                if (newTrophiesValue != oldTrophiesValue) {
-//                    trophiesTextView.setText(Integer.toString(newTrophiesValue));
-//                    trophiesImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
-//
-//                }
+
 
                 int oldPowerItems = currentPlayer.getPowerItems();
                 int newPowerItems = updatedPlayer.getPowerItems();
@@ -840,8 +816,6 @@ public class ChatFragment extends Fragment {
                 }
             }
 
-            //OffsideApplication.getGameInfo().setTrophies(updatedPlayer.getTrophies());
-            //OffsideApplication.setPlayer(updatedPlayer);
             OffsideApplication.getGameInfo().setPlayer(updatedPlayer);
 
 
