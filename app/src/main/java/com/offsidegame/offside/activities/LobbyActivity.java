@@ -366,7 +366,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         OffsideApplication.setSelectedPrivateGameId(lastKnownPrivateGameId);
 
-        OffsideApplication.signalRService.requestAvailableGame(lastKnownGameId, lastKnownPrivateGameId, playerId);
+        OffsideApplication.signalRService.requestAvailableGame(playerId, lastKnownGameId, lastKnownPrivateGameId);
 
     }
 
@@ -483,7 +483,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         String privateGameId = groupInviteEvent.getPrivateGamaId();
         String playerId = groupInviteEvent.getInviterPlayerId();
 
-        OffsideApplication.signalRService.requestInviteFriend(groupId, gameId, privateGameId, playerId);
+        OffsideApplication.signalRService.requestInviteFriend(playerId, groupId, gameId, privateGameId );
 
     }
 

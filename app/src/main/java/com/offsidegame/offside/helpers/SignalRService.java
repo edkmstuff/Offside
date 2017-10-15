@@ -550,11 +550,11 @@ public class SignalRService extends Service {
 //        });
 //    }
 
-    public void quitGame(String gameId, String playerId, String androidDeviceId) {
+    public void quitGame(String playerId, String gameId,  String androidDeviceId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
-        hub.invoke(Boolean.class, "QuitGame", gameId, playerId, androidDeviceId).onError(new ErrorCallback() {
+        hub.invoke(Boolean.class, "QuitGame", playerId, gameId, androidDeviceId).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
                 ACRA.getErrorReporter().handleSilentException(error);
@@ -562,11 +562,11 @@ public class SignalRService extends Service {
         });
     }
 
-    public void requestAvailableGame(String gameId, String privateGameId, String playerId) {
+    public void requestAvailableGame(String playerId, String gameId, String privateGameId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         availableGameReceived = false;
-        hub.invoke("RequestAvailableGame", gameId, privateGameId, playerId).done(new Action<Void>() {
+        hub.invoke("RequestAvailableGame", playerId, gameId, privateGameId).done(new Action<Void>() {
             @Override
             public void run(Void obj) throws Exception {
                 new Handler().postDelayed(new Runnable() {
@@ -586,13 +586,13 @@ public class SignalRService extends Service {
         });
     }
 
-    public void requestCreatePrivateGame(String gameId, String groupId, String playerId, String selectedLanguage) {
+    public void requestCreatePrivateGame(String playerId,String gameId, String groupId, String selectedLanguage) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
         //String languageLocale = Locale.getDefault().getDisplayLanguage();
         privateGameCreated = false;
-        hub.invoke("RequestCreatePrivateGame", gameId, groupId, playerId, selectedLanguage).done(new Action<Void>() {
+        hub.invoke("RequestCreatePrivateGame", playerId, gameId, groupId,  selectedLanguage).done(new Action<Void>() {
 
             @Override
             public void run(Void obj) throws Exception {
@@ -613,12 +613,12 @@ public class SignalRService extends Service {
         });
     }
 
-    public void requestPostAnswer(final String gameId, final String playerId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
+    public void requestPostAnswer(final String playerId, final String gameId,  final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
 
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         answerAccepted = false;
-        hub.invoke("RequestPostAnswer", gameId, playerId, questionId, answerId, isSkipped, betSize).done(new Action<Void>() {
+        hub.invoke("RequestPostAnswer", playerId, gameId,  questionId, answerId, isSkipped, betSize).done(new Action<Void>() {
 
             @Override
             public void run(Void obj) throws Exception {
@@ -665,13 +665,13 @@ public class SignalRService extends Service {
         });
     }
 
-    public void requestGetChatMessages(String gameId, String privateGameId, String playerId, String androidDeviceId) {
+    public void requestGetChatMessages(String playerId, String gameId, String privateGameId,  String androidDeviceId) {
 
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
         chatMessagesReceived = false;
-        hub.invoke("requestGetChatMessages", gameId, privateGameId, playerId, androidDeviceId).done(new Action<Void>() {
+        hub.invoke("requestGetChatMessages", playerId, gameId, privateGameId,  androidDeviceId).done(new Action<Void>() {
 
             @Override
             public void run(Void obj) throws Exception {
@@ -693,11 +693,11 @@ public class SignalRService extends Service {
 
     }
 
-    public void requestSendChatMessage(String gameId, String privateGameId, String message, String playerId) {
+    public void requestSendChatMessage(String playerId, String gameId, String privateGameId, String message) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         chatMessageReceived = false;
-        hub.invoke("RequestSendChatMessage", gameId, privateGameId, playerId, message).done(new Action<Void>() {
+        hub.invoke("RequestSendChatMessage", playerId, gameId, privateGameId,  message).done(new Action<Void>() {
 
             @Override
             public void run(Void obj) throws Exception {
@@ -749,11 +749,11 @@ public class SignalRService extends Service {
         return true;
     }
 
-    public boolean setPowerItems(String gameId, String playerId, int powerItems, boolean isDueToRewardVideo) {
+    public boolean setPowerItems(String playerId, String gameId, int powerItems, boolean isDueToRewardVideo) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return false;
 
-        hub.invoke(Integer.class, "SetPowerItems", gameId, playerId, powerItems, isDueToRewardVideo).done(new Action<Integer>() {
+        hub.invoke(Integer.class, "SetPowerItems", playerId, gameId,  powerItems, isDueToRewardVideo).done(new Action<Integer>() {
             @Override
             public void run(Integer newPowerItemsValue) throws Exception {
                 EventBus.getDefault().post(newPowerItemsValue);
@@ -845,11 +845,11 @@ public class SignalRService extends Service {
 
     }
 
-    public void requestCreatePrivateGroup(String groupName, String groupType, String playerId, String selectedLanguage) {
+    public void requestCreatePrivateGroup(String playerId,String groupName, String groupType,  String selectedLanguage) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         privateGroupCreated = false;
-        hub.invoke("RequestCreatePrivateGroup", groupName, groupType, playerId, selectedLanguage).done(new Action<Void>() {
+        hub.invoke("RequestCreatePrivateGroup", playerId, groupName, groupType,  selectedLanguage).done(new Action<Void>() {
             @Override
             public void run(Void obj) throws Exception {
                 new Handler().postDelayed(new Runnable() {
@@ -870,13 +870,13 @@ public class SignalRService extends Service {
 
     }
 
-    public void requestJoinPrivateGame(String gameId, String groupId, String privateGameId, String playerId, String androidDeviceId) {
+    public void requestJoinPrivateGame(String playerId, String gameId, String groupId, String privateGameId, String androidDeviceId) {
 
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
         playerJoinedPrivateGame = false;
-        hub.invoke("RequestJoinPrivateGame", gameId, groupId, privateGameId, playerId, androidDeviceId).done(new Action<Void>() {
+        hub.invoke("RequestJoinPrivateGame", playerId, gameId, groupId, privateGameId,  androidDeviceId).done(new Action<Void>() {
             @Override
             public void run(Void obj) throws Exception {
                 new Handler().postDelayed(new Runnable() {
@@ -968,11 +968,11 @@ public class SignalRService extends Service {
         });
     }
 
-    public void requestInviteFriend(String groupId, String gameId, String privateGameId, String inviterPlayerId) {
+    public void requestInviteFriend(String inviterPlayerId, String groupId, String gameId, String privateGameId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         friendInviteReceived = false;
-        hub.invoke("RequestInviteFriend", groupId, gameId, privateGameId, inviterPlayerId).done(new Action<Void>() {
+        hub.invoke("RequestInviteFriend", inviterPlayerId, groupId, gameId, privateGameId ).done(new Action<Void>() {
             @Override
             public void run(Void obj) throws Exception {
                 new Handler().postDelayed(new Runnable() {

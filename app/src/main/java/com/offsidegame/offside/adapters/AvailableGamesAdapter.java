@@ -160,7 +160,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                     String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
                     String playerId = OffsideApplication.getPlayerAssets().getPlayerId() ;
                     String selectedLanguage = "עברית";
-                    OffsideApplication.signalRService.requestCreatePrivateGame(gameId, groupId, playerId, selectedLanguage);
+                    OffsideApplication.signalRService.requestCreatePrivateGame(playerId, gameId, groupId,  selectedLanguage);
 
                 }
             });

@@ -170,7 +170,7 @@ public class ChatFragment extends Fragment {
             else {
                 privateGroupName = selectedPrivateGroup.getName();
                 if (gameId != null && privateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
-                    OffsideApplication.signalRService.requestJoinPrivateGame(gameId, groupId, privateGameId, playerId, androidDeviceId);
+                    OffsideApplication.signalRService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
                 }
             }
 
@@ -277,7 +277,7 @@ public class ChatFragment extends Fragment {
             public void onClick(View view) {
                 String message = chatMessageEditText.getText().toString();
                 if (message != null && message.length() > 0) {
-                    OffsideApplication.signalRService.requestSendChatMessage(gameId, privateGameId, message, playerId);
+                    OffsideApplication.signalRService.requestSendChatMessage(playerId, gameId, privateGameId, message );
                     //clear text
                     chatMessageEditText.setText("");
                     //hide keypad
@@ -589,7 +589,7 @@ public class ChatFragment extends Fragment {
 
             init();
 
-            OffsideApplication.signalRService.requestGetChatMessages(gameId, privateGameId, playerId, androidDeviceId);
+            OffsideApplication.signalRService.requestGetChatMessages(playerId, gameId, privateGameId,  androidDeviceId);
 
 
         } catch (Exception ex) {
@@ -715,7 +715,7 @@ public class ChatFragment extends Fragment {
 
             // this parameter will be null if the user does not answer
             String answerId = questionAnsweredEvent.getAnswerId();
-            OffsideApplication.signalRService.requestPostAnswer(gameId, playerId, questionId, answerId, isSkipped, betSize);
+            OffsideApplication.signalRService.requestPostAnswer(playerId,gameId,  questionId, answerId, isSkipped, betSize);
             if (!OffsideApplication.playerAnswers.containsKey(questionId))
                 OffsideApplication.playerAnswers.put(questionId, new AnswerIdentifier(answerId, isSkipped, betSize, true));
 
@@ -766,7 +766,7 @@ public class ChatFragment extends Fragment {
                 return;
 
             player.incrementRewardVideoWatchCount();
-            OffsideApplication.signalRService.setPowerItems(gameId, playerId, rewardAmount, true);
+            OffsideApplication.signalRService.setPowerItems(playerId, gameId,  rewardAmount, true);
 
 
         } catch (Exception ex) {

@@ -99,7 +99,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
                 String groupType= getResources().getString(R.string.key_private_group_name);
 
                 if (OffsideApplication.isBoundToSignalRService)
-                    OffsideApplication.signalRService.requestCreatePrivateGroup(groupName, groupType, playerId, selectedLanguage);
+                    OffsideApplication.signalRService.requestCreatePrivateGroup(playerId, groupName, groupType, selectedLanguage);
                 else
                     throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
 
