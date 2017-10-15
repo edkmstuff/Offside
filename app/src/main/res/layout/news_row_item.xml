@@ -10,23 +10,51 @@
     >
 
     <RelativeLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
 
-        <TextView
-            android:id="@+id/nri_publish_date_text_view"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/nri_news_item_info_root"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
+            android:orientation="horizontal"
 
-            android:layout_margin="@dimen/activityHorizontalMargin"
-            android:text="1/1/2017"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            >
 
+
+            <TextView
+                android:id="@+id/nri_publish_date_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="@dimen/activityHorizontalMargin"
+                android:text="1/1/2017"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="right">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_logo_hazavit"
+                    android:scaleType="centerCrop"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="@dimen/activityHorizontalMargin"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/nri_thumbnail_image_view"
@@ -34,7 +62,7 @@
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
             android:src="@drawable/app_logo_25"
-            android:layout_below="@id/nri_publish_date_text_view"
+            android:layout_below="@id/nri_news_item_info_root"
 
             />
 
