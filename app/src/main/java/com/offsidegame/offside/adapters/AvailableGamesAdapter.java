@@ -5,12 +5,14 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.caverock.androidsvg.SVGImageView;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.helpers.ImageHelper;
@@ -95,6 +97,8 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 viewHolder.createPrivateGameRoot = (LinearLayout) convertView.findViewById(R.id.ag_create_private_game_root);
                 viewHolder.createPrivateGameButtonTextView = (TextView) convertView.findViewById(R.id.ag_create_private_game_button_text_view);
 
+
+
                 convertView.setTag(viewHolder);
 
 
@@ -107,13 +111,15 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 return convertView;
 
 
-
             viewHolder.homeTeamNameTextView.setText(viewHolder.availableGame.getHomeTeam());
             viewHolder.awayTeamNameTextView.setText(viewHolder.availableGame.getAwayTeam());
             Uri homeTeamLogoUri = Uri.parse(viewHolder.availableGame.getHomeTeamLogoUrl());
             ImageHelper.loadImage(context, viewHolder.homeTeamLogoImageView, homeTeamLogoUri, false);
             Uri awayTeamLogoUri = Uri.parse(viewHolder.availableGame.getAwayTeamLogoUrl());
             ImageHelper.loadImage(context, viewHolder.awayTeamLogoImageView, awayTeamLogoUri, false);
+
+
+
             viewHolder.startTimeTextView.setText(viewHolder.availableGame.getStartTimeString());
             viewHolder.startDateTextView.setText(viewHolder.availableGame.getStartDateString());
             if (viewHolder.availableGame.getPrivateGroupPlayers() == null)
@@ -158,7 +164,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                     OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
                     String gameId = viewHolder.availableGame.getGameId();
                     String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
-                    String playerId = OffsideApplication.getPlayerAssets().getPlayerId() ;
+                    String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
                     String selectedLanguage = "עברית";
                     OffsideApplication.signalRService.requestCreatePrivateGame(gameId, groupId, playerId, selectedLanguage);
 
@@ -166,16 +172,14 @@ public class AvailableGamesAdapter extends BaseAdapter {
             });
 
             resetVisibility(viewHolder);
-            if(viewHolder.availableGame.getPrivateGroupPlayers().length==0){
+            if (viewHolder.availableGame.getPrivateGroupPlayers().length == 0) {
                 viewHolder.joinPrivateGameRoot.setVisibility(View.GONE);
                 viewHolder.createPrivateGameRoot.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 viewHolder.joinPrivateGameRoot.setVisibility(View.VISIBLE);
                 viewHolder.createPrivateGameRoot.setVisibility(View.GONE);
 
             }
-
 
 
             return convertView;
@@ -189,12 +193,11 @@ public class AvailableGamesAdapter extends BaseAdapter {
 
     }
 
-    private void resetVisibility(ViewHolder viewHolder){
+    private void resetVisibility(ViewHolder viewHolder) {
         viewHolder.joinPrivateGameRoot.setVisibility(View.GONE);
         viewHolder.createPrivateGameRoot.setVisibility(View.GONE);
 
     }
-
 
 
 }
