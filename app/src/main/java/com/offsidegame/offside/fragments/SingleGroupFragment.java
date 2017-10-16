@@ -21,6 +21,7 @@ import com.offsidegame.offside.adapters.LeagueAdapter;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
 import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
+import com.offsidegame.offside.events.PrivateGroupDeletedEvent;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.LeagueRecord;
 import com.offsidegame.offside.models.OffsideApplication;
@@ -64,12 +65,10 @@ public class SingleGroupFragment extends Fragment {
     private ImageView groupNavigationRightButtonImageView;
     private TextView groupNavigationLastPlayedTextView;
 
-
-
-
-
     private int currentGroupSelectedIndex = -1;
     private int groupsCount = -1;
+
+    private LinearLayout singleGroupDeletePrivateGroupButtonRoot;
 
 
     public static SingleGroupFragment newInstance() {
@@ -104,6 +103,7 @@ public class SingleGroupFragment extends Fragment {
             View view = inflater.inflate(R.layout.fragment_single_group, container, false);
             getIDs(view);
             setEvents();
+            resetVisibility();
 
             versionTextView.setText(OffsideApplication.getVersion());
             return view;
@@ -140,6 +140,7 @@ public class SingleGroupFragment extends Fragment {
         groupNavigationRightButtonImageView = (ImageView) view.findViewById(R.id.fsg_group_navigation_right_button_image_view);
         groupNavigationLastPlayedTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_last_played_text_view);
         singleGroupPositionOutOfTextView = (TextView) view.findViewById(R.id.fsg_single_group_position_out_of_text_view);
+        singleGroupDeletePrivateGroupButtonRoot = view.findViewById(R.id.fsg_single_group_delete_group_root);
     }
 
     int selectedTabPosition;
@@ -192,6 +193,26 @@ public class SingleGroupFragment extends Fragment {
                 navigateGroup(1);
             }
         });
+
+        singleGroupDeletePrivateGroupButtonRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OffsideApplication.signalRService.requestDeletePrivateGroup(OffsideApplication.getPlayerId(), OffsideApplication.getSelectedPrivateGroupId());
+
+            }
+        });
+    }
+
+    private void resetVisibility(){
+        PrivateGroup currentGroup = OffsideApplication.getSelectedPrivateGroup();
+        String groupCreator = currentGroup.getCreatedByUserId();
+        if(currentGroup.getGroupType().equalsIgnoreCase(getString(R.string.key_private_group_name))
+                && groupCreator.equals(OffsideApplication.getPlayerId()))
+            singleGroupDeletePrivateGroupButtonRoot.setVisibility(View.VISIBLE);
+        else
+            singleGroupDeletePrivateGroupButtonRoot.setVisibility(View.GONE);
+
+
     }
 
     private void navigateGroup(int step) {
@@ -284,54 +305,6 @@ public class SingleGroupFragment extends Fragment {
         OffsideApplication.signalRService.requestLeagueRecords(playerId, groupId);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveLeagueRecords(LeagueRecord[] leagueRecords) {
-        try {
-            if (leagueRecords == null || leagueRecords.length == 0)
-                return;
-
-            String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
-            if (OffsideApplication.getLeaguesRecords().containsKey(groupId))
-                OffsideApplication.getLeaguesRecords().remove(groupId);
-            OffsideApplication.getLeaguesRecords().put(groupId, leagueRecords);
-
-            showLeague();
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
-
-    }
-
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveAvailableGames(AvailableGame[] availableGames) {
-        try {
-            if (availableGames == null || availableGames.length == 0)
-                return;
-
-            OffsideApplication.setAvailableGames(availableGames);
-
-            List<String> leagues = getDistinctLeagues(availableGames);
-            for (String leagueType : leagues) {
-                addLeaguePageToSingleGroupFragment(leagueType);
-
-            }
-            viewPager.setCurrentItem(0);
-
-            loadingRoot.setVisibility(View.GONE);
-            showAvailableGames();
-
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
-
-    }
-
-
     public void addLeaguePageToSingleGroupFragment(String leagueType) {
 
         try {
@@ -380,20 +353,6 @@ public class SingleGroupFragment extends Fragment {
         return viewPagerAdapter != null && viewPagerAdapter.getCount() > 0;
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
-        try {
-
-            String currentPrivateGameId = privateGameGeneratedEvent.getPrivateGameId();
-            joinPrivateGame(currentPrivateGameId);
-
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-
-    }
-
     private void joinPrivateGame(String selectedPrivateGameId) {
         OffsideApplication.setSelectedPrivateGameId(selectedPrivateGameId);
         EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_play));
@@ -415,5 +374,82 @@ public class SingleGroupFragment extends Fragment {
 
 
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
+        try {
+
+            String currentPrivateGameId = privateGameGeneratedEvent.getPrivateGameId();
+            joinPrivateGame(currentPrivateGameId);
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveLeagueRecords(LeagueRecord[] leagueRecords) {
+        try {
+            if (leagueRecords == null || leagueRecords.length == 0)
+                return;
+
+            String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
+            if (OffsideApplication.getLeaguesRecords().containsKey(groupId))
+                OffsideApplication.getLeaguesRecords().remove(groupId);
+            OffsideApplication.getLeaguesRecords().put(groupId, leagueRecords);
+
+            showLeague();
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveAvailableGames(AvailableGame[] availableGames) {
+        try {
+            if (availableGames == null || availableGames.length == 0)
+                return;
+
+            OffsideApplication.setAvailableGames(availableGames);
+
+            List<String> leagues = getDistinctLeagues(availableGames);
+            for (String leagueType : leagues) {
+                addLeaguePageToSingleGroupFragment(leagueType);
+
+            }
+            viewPager.setCurrentItem(0);
+
+            loadingRoot.setVisibility(View.GONE);
+            showAvailableGames();
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePrivateGroupDeleted(PrivateGroupDeletedEvent privateGroupDeletedEvent) {
+        try {
+            if (privateGroupDeletedEvent == null)
+                return;
+            EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+
 
 }

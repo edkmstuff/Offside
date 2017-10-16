@@ -68,7 +68,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
         versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
 
-        privateGroupNameEditText.setText(playerDisplayName.split(" ")[0] + "'s" + " friends");
+        //privateGroupNameEditText.setText(playerDisplayName.split(" ")[0] + "'s" + " friends");
 
 
 

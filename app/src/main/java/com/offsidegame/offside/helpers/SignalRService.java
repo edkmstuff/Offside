@@ -27,6 +27,7 @@ import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.PrivateGroupChangedEvent;
 import com.offsidegame.offside.events.PrivateGroupCreatedEvent;
+import com.offsidegame.offside.events.PrivateGroupDeletedEvent;
 import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.models.LeagueRecord;
 import com.offsidegame.offside.models.PlayerModel;
@@ -117,6 +118,8 @@ public class SignalRService extends Service {
     private boolean friendInviteReceived = false;
     private boolean playerImageSaved = false;
     private boolean privateGroupsReceived = false;
+    private boolean privateGroupDeleted = false;
+
 
 
     //<editor-fold desc="constructors">
@@ -319,6 +322,14 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(new PrivateGroupCreatedEvent(privateGroup));
             }
         }, PrivateGroup.class);
+
+        hub.on("PrivateGroupDeletedReceived", new SubscriptionHandler1<Integer>() {
+            @Override
+            public void run(Integer numberOfDeletedGroups) {
+                privateGroupDeleted = true;
+                EventBus.getDefault().post(new PrivateGroupDeletedEvent(numberOfDeletedGroups));
+            }
+        }, Integer.class);
 
         hub.on("PrivateGroupReceived", new SubscriptionHandler1<PrivateGroup>() {
             @Override
@@ -1013,6 +1024,32 @@ public class SignalRService extends Service {
             }
         });
     }
+
+
+    public void requestDeletePrivateGroup(String playerId, String groupId) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        privateGroupDeleted = false;
+        hub.invoke("RequestDeletePrivateGroup", playerId, groupId).done(new Action<Void>() {
+            @Override
+            public void run(Void obj) throws Exception {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!privateGroupDeleted)
+                            EventBus.getDefault().post(new SignalRErrorEvent("RequestDeletePrivateGroup"));
+                    }
+                }, 15000);
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                EventBus.getDefault().post(new SignalRErrorEvent("RequestDeletePrivateGroup"));
+            }
+        });
+    }
+
+
 
 
     //</editor-fold>

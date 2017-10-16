@@ -26,8 +26,8 @@ public class PrivateGroup {
     @com.google.gson.annotations.SerializedName("LU")
     private Date lastUpdated;
 
-    @com.google.gson.annotations.SerializedName("LUB")
-    private String lastUpdatedBy;
+    @com.google.gson.annotations.SerializedName("CBUI")
+    private String createdByUserId;
 
 
     @com.google.gson.annotations.SerializedName("LP")
@@ -115,15 +115,15 @@ public class PrivateGroup {
         this.lastUpdated = lastUpdated;
     }
 
-    public String getLastUpdatedBy() {
-        return lastUpdatedBy;
+    public String getCreatedByUserId() {
+        return createdByUserId;
     }
 
-    public void setLastUpdatedBy(String lastUpdatedBy) {
-        this.lastUpdatedBy = lastUpdatedBy;
+    public void setCreatedByUserId(String createdByUserId) {
+        this.createdByUserId = createdByUserId;
     }
 
-    public Date orderDate() {
+    public Date getLastDateUpdated() {
         if (lastPlayed == null && lastUpdated == null)
             return new Date(0);
         else if (lastPlayed == null)
