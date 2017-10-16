@@ -218,6 +218,7 @@ public class SingleGroupFragment extends Fragment {
     private void navigateGroup(int step) {
 
         try {
+            resetVisibility();
             currentGroupSelectedIndex = currentGroupSelectedIndex + step;
             int newSelectedGroupIndex = currentGroupSelectedIndex % groupsCount;
             if (newSelectedGroupIndex < 0)
