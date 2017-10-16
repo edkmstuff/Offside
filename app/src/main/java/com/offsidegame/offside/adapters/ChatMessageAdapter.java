@@ -45,6 +45,7 @@ import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Question;
+import com.offsidegame.offside.models.Winner;
 import com.squareup.picasso.Picasso;
 
 import org.acra.ACRA;
@@ -574,10 +575,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             //viewHolder.incomingWinnerPointsTextView.setText(viewHolder.chatMessage.getMessageText());
 
-            List<PlayerModel> winners = viewHolder.chatMessage.getWinners();
+            List<Winner> winners = viewHolder.chatMessage.getWinners();
             viewHolder.incomingWinnersRoot.removeAllViews();
 
-            for (PlayerModel winner : winners) {
+            for (Winner winner : winners) {
 
                 ViewGroup layout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.winner_item, viewHolder.incomingWinnersRoot, false);
                 TextView winnerScoreTextView = (TextView) layout.getChildAt(0);
@@ -587,18 +588,18 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
                 winnerScoreTextView.setText(Integer.toString(winner.getOffsideCoins()));
-                int resourceId = winner.getPrivateGamePosition() == 1 ? R.mipmap.trophy_gold : winner.getPrivateGamePosition() == 2 ? R.mipmap.trophy_silver : R.mipmap.trophy_bronze;
-                if (winner.getPrivateGamePosition() == 2)
+                int resourceId = winner.getPosition() == 1 ? R.mipmap.trophy_gold : winner.getPosition() == 2 ? R.mipmap.trophy_silver : R.mipmap.trophy_bronze;
+                if (winner.getPosition() == 2)
                     layout.setPadding(0, 30, 0, 0);
 
 
-                if (winner.getPrivateGamePosition() == 3)
+                if (winner.getPosition() == 3)
                     layout.setPadding(0, 60, 0, 0);
 
                 winnerPrizeImageView.setImageResource(resourceId);
 
                 ImageHelper.loadImage(context,winnerPictureImageView,winnerProfilePictureUri,true);
-                winnerNameTextView.setText(winner.getUserName());
+                winnerNameTextView.setText(winner.getPlayerName());
                 viewHolder.incomingWinnersRoot.addView(layout);
             }
 
