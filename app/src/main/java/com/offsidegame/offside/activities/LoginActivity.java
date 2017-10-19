@@ -196,7 +196,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()
                                         ))
                                 //.setTosUrl("https://superapp.example.com/terms-of-service.html")
-                                //.setPrivacyPolicyUrl("https://superapp.example.com/privacy-policy.html")
+                                .setPrivacyPolicyUrl("http://sidekickgame.com/privacy_policy.html")
                                 .setIsSmartLockEnabled(false)
                                 //.setIsSmartLockEnabled(!BuildConfig.DEBUG)
                                 .setTheme(R.style.BlueTheme)
@@ -328,6 +328,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         startActivity(intent);
+
     }
 
 

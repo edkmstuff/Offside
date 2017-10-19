@@ -9,8 +9,8 @@ android {
         applicationId "com.offsidegame.offside"
         minSdkVersion 19
         targetSdkVersion rootProject.ext.compileSdkVersion
-        versionCode 12
-        versionName "5.0.1"
+        versionCode 14
+        versionName "5.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -35,6 +35,19 @@ android {
         }
 
 
+    }
+
+    packagingOptions {
+//        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+//        exclude 'META-INF/NOTICE.txt'
+//        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+//        exclude 'META-INF/DEPENDENCIES'
+//        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+//        exclude 'META-INF/dependencies.txt'
+//        exclude 'META-INF/LGPL2.1'
     }
 
 }
@@ -62,29 +75,36 @@ dependencies {
 
 
     compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
-    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:support-compat:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:support-v4:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:recyclerview-v7:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:cardview-v7:${rootProject.ext.supportLibVersion}"
-    compile 'com.facebook.android:facebook-android-sdk:4.26.0'
+
+    compile 'com.facebook.android:facebook-android-sdk:4.27.0'
+    compile "com.google.firebase:firebase-auth:${rootProject.ext.firebaseVersion}"
+    compile "com.google.firebase:firebase-ads:${rootProject.ext.firebaseVersion}"
+    compile "com.firebaseui:firebase-ui-auth:${rootProject.ext.firebaseUiAuthVersion}"
+
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'com.google.firebase:firebase-auth:11.4.0'
-    compile 'com.firebaseui:firebase-ui-auth:2.4.0'
     compile 'ch.acra:acra:4.9.0'
-    compile 'org.apmem.tools:layouts:1.10@aar'
+
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.google.firebase:firebase-ads:11.4.0'
-    compile 'com.felipecsl:gifimageview:2.1.0'
+
     compile 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
-    compile 'com.wang.avi:library:2.1.3'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:support-compat:25.1.1'
+    compile 'com.wang.avi:library:2.1.3'   //loading indicator
     compile 'com.daimajia.easing:library:2.0@aar'
     compile 'com.daimajia.androidanimations:library:2.3@aar'
     compile 'org.jsoup:jsoup:1.10.3'
+    //compile 'com.squareup.okhttp3:okhttp:3.9.0'
+    //compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'org.apmem.tools:layouts:1.10@aar'  //FlowLayout
+    //compile 'com.felipecsl:gifimageview:2.1.0'
     testCompile 'junit:junit:4.12'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
 //apply plugin: 'com.android.application'
+

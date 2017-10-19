@@ -105,6 +105,7 @@
     <string name="lbl_your_position">מיקומך:</string>
     <string name="lbl_create_private_group_hint">הכרישים</string>
     <string name="lbl_delete_private_group">מחק קבוצה</string>
+    <string name="lbl_error_user_profile_picture_not_saved">User Image was not saved</string>
 
 
 </resources>

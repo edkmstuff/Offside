@@ -2,15 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="3"
+    android:background="@drawable/player_info_background">
 
     <!--user image, name, level-->
     <LinearLayout
         android:id="@+id/vp_player_main_details_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/player_info_header_background_tran"
+        >
 
 
         <ImageView
@@ -52,10 +57,12 @@
     <LinearLayout
         android:id="@+id/vp_player_details_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
         android:layout_above="@+id/vp_actions_root"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="visible"
+        >
 
 
         <!-- tabs: LAST+GAME / TROPHIES / RECORDS -->

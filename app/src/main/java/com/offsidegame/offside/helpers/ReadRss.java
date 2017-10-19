@@ -18,6 +18,7 @@ import com.offsidegame.offside.models.FeedItem;
 import com.offsidegame.offside.models.OffsideApplication;
 
 import org.acra.ACRA;
+
 import org.jsoup.Jsoup;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
