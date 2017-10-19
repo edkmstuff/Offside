@@ -19,8 +19,11 @@ import com.firebase.ui.auth.ResultCodes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.CompletedHttpRequestEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.helpers.HttpHelper;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
@@ -35,6 +38,9 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 import microsoft.aspnet.signalr.client.ConnectionState;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 
 public class LoginActivity extends AppCompatActivity implements Serializable {
@@ -46,6 +52,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private String playerId;
     private String playerDisplayName;
     private String playerProfilePictureUrl;
+    private boolean isUserImageUrlValid = false;
     private String playerEmail;
 
 
@@ -223,28 +230,53 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
         playerEmail = firebaseUser.getEmail();
 
-        // in case user does not have profile picture, we generate image with Initials
-        if (playerProfilePictureUrl == null) {
+        HttpHelper httpHelper = new HttpHelper(playerProfilePictureUrl);
+        httpHelper.execute();
 
-            String displayName = playerDisplayName.toUpperCase();
-            String[] displayNameParts = displayName.trim().split(" ");
-            String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
-            Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context);
-            byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
-            String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
+        //String imageUrlResponse = validateImageUrl(playerProfilePictureUrl);
+//        isUserImageUrlValid = (imageUrlResponse!= null || imageUrlResponse=="200");
 
-            OffsideApplication.signalRService.requestSaveImageInDatabase(playerId, imageString);
+//        // in case user does not have profile picture, we generate image with Initials
+//        if (!isUserImageUrlValid) {
+//
+//            String displayName = playerDisplayName.toUpperCase();
+//            String[] displayNameParts = displayName.trim().split(" ");
+//            String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
+//            Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context);
+//            byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
+//            String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
+//
+//            OffsideApplication.signalRService.requestSaveImageInDatabase(playerId, imageString);
+//
+//
+//        }
+//        else {
+//            saveLoggedInUser();
+//        }
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
 
+    private String validateImageUrl(String url) {
+
+        if(url==null)
+            return null;
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            return response.body().string();
         }
-        else {
-            saveLoggedInUser();
+        catch (Exception e) {
+            return null;
         }
     }
 
     public void saveLoggedInUser(){
 
-        if(playerProfilePictureUrl== null)
+        if(!isUserImageUrlValid)
             playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
@@ -306,7 +338,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveSavedPlayerImage(Boolean playerImageSaved) {
+    public void onReceiveSavedPlayerImage(PlayerImageSavedEvent playerImageSavedEvent) {
         try {
             saveLoggedInUser();
 
@@ -328,6 +360,31 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         startActivity(intent);
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public  void onImageValidationCompleted(CompletedHttpRequestEvent completedHttpRequestEvent){
+
+        isUserImageUrlValid = completedHttpRequestEvent.isUrlValid();
+        // in case user does not have profile picture, we generate image with Initials
+        if (!isUserImageUrlValid) {
+
+            String displayName = playerDisplayName.toUpperCase();
+            String[] displayNameParts = displayName.trim().split(" ");
+            String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
+            Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context);
+            byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
+            String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
+
+            OffsideApplication.signalRService.requestSaveImageInDatabase(playerId, imageString);
+
+
+        }
+        else {
+            saveLoggedInUser();
+        }
+
 
     }
 

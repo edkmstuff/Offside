@@ -84,33 +84,7 @@ public class ReadRss extends AsyncTask<Void,Void, Void> {
         recyclerView.addItemDecoration(new VerticalSpace(50));
         recyclerView.setAdapter(newsFeedAdapter);
 
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//                if (!recyclerView.canScrollVertically(1))
-//                    onScrolledToBottom();
-//            }
-//        });
     }
-
-//    private void onScrolledToBottom() {
-//        if (top10feedItems.size() < feedItems.size()) {
-//            int x, y;
-//            if ((feedItems.size() - top10feedItems.size()) >= 10) {
-//                x = top10feedItems.size();
-//                y = x + 10;
-//            } else {
-//                x = top10feedItems.size();
-//                y = x + feedItems.size() - top10feedItems.size();
-//            }
-//            for (int i = x; i < y; i++) {
-//                top10feedItems.add(feedItems.get(i));
-//            }
-//            newsFeedAdapter.notifyDataSetChanged();
-//        }
-//
-//    }
 
     @Override
     protected Void doInBackground(Void... params) {

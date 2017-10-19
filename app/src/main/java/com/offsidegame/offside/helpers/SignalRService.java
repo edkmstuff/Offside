@@ -22,6 +22,7 @@ import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
@@ -32,11 +33,9 @@ import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.models.LeagueRecord;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
-import com.offsidegame.offside.events.JoinGameEvent;
+
 import com.offsidegame.offside.events.ChatEvent;
-import com.offsidegame.offside.events.PositionEvent;
-import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
-import com.offsidegame.offside.events.QuestionsEvent;
+
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.Chat;
@@ -399,7 +398,7 @@ public class SignalRService extends Service {
             @Override
             public void run(Boolean playerImageSaved) {
                 playerImageSaved = true;
-                EventBus.getDefault().post(playerImageSaved);
+                EventBus.getDefault().post(new PlayerImageSavedEvent(playerImageSaved));
             }
         }, Boolean.class);
 
