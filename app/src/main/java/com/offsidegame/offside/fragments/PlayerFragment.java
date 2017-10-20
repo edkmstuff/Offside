@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,6 +91,10 @@ public class PlayerFragment extends Fragment {
     private TextView playerRecordsNumberOfGamesTextView;
     private TextView playerRecordsNumberOfTrophiesTextView;
     private TextView playerRecordsAverageProfitPerGameTextView;
+
+    private TextView latestGameTabTextView;
+    private TextView trophiesTabTextView;
+    private TextView playerRecordsTabTextView;
 
 
     private ImageView[] winnersImageViews = new ImageView[3];
@@ -191,6 +196,10 @@ public class PlayerFragment extends Fragment {
         playerRecordsNumberOfTrophiesTextView = (TextView) view.findViewById(R.id.vp_player_records_number_of_trophies_text_view);
         playerRecordsAverageProfitPerGameTextView = (TextView) view.findViewById(R.id.vp_player_records_average_profit_per_game_text_view);
 
+        latestGameTabTextView = view.findViewById(R.id.vp_latest_game_tab_text_view);
+        trophiesTabTextView = view.findViewById(R.id.vp_trophies_tab_text_view);
+        playerRecordsTabTextView = view.findViewById(R.id.vp_records_tab_text_view);
+
 
         playerPictureImageView = (ImageView) view.findViewById(R.id.vp_player_picture_image_view);
         //playerExperienceLevelImageView = (ImageView) view.findViewById(R.id.vp_player_experience_level_image_view);
@@ -237,15 +246,22 @@ public class PlayerFragment extends Fragment {
 
     private void setEvents() {
 
+        final int selectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuSelectedItem);
+        final int unSelectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuUnSelectedItem);
+
         latestGameTabRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 latestGameDetailsRoot.setVisibility(View.VISIBLE);
-                latestGameTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+                //latestGameTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+                latestGameTabTextView.setTextColor(selectedTabColor);
+
                 trophiesDetailsRoot.setVisibility(View.GONE);
-                trophiesTabRoot.setBackgroundResource(R.color.navigationMenu);
+                //trophiesTabRoot.setBackgroundResource(R.color.navigationMenu);
+                trophiesTabTextView.setTextColor(unSelectedTabColor);
                 playerRecordsDetailsRoot.setVisibility(View.GONE);
-                playerRecordsTabRoot.setBackgroundResource(R.color.navigationMenu);
+                //playerRecordsTabRoot.setBackgroundResource(R.color.navigationMenu);
+                playerRecordsTabTextView.setTextColor(unSelectedTabColor);
 
             }
         });
@@ -254,11 +270,14 @@ public class PlayerFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 latestGameDetailsRoot.setVisibility(View.GONE);
-                latestGameTabRoot.setBackgroundResource(R.color.navigationMenu);
+                //latestGameTabRoot.setBackgroundResource(R.color.navigationMenu);
+                latestGameTabTextView.setTextColor(unSelectedTabColor);
                 trophiesDetailsRoot.setVisibility(View.VISIBLE);
-                trophiesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+                //trophiesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+                trophiesTabTextView.setTextColor(selectedTabColor);
                 playerRecordsDetailsRoot.setVisibility(View.GONE);
-                playerRecordsTabRoot.setBackgroundResource(R.color.navigationMenu);
+                //playerRecordsTabRoot.setBackgroundResource(R.color.navigationMenu);
+                playerRecordsTabTextView.setTextColor(unSelectedTabColor);
             }
         });
 
@@ -266,12 +285,14 @@ public class PlayerFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 latestGameDetailsRoot.setVisibility(View.GONE);
-                latestGameTabRoot.setBackgroundResource(R.color.navigationMenu);
+                //latestGameTabRoot.setBackgroundResource(R.color.navigationMenu);
+                latestGameTabTextView.setTextColor(unSelectedTabColor);
                 trophiesDetailsRoot.setVisibility(View.GONE);
-                trophiesTabRoot.setBackgroundResource(R.color.navigationMenu);
+                //trophiesTabRoot.setBackgroundResource(R.color.navigationMenu);
+                trophiesTabTextView.setTextColor(unSelectedTabColor);
                 playerRecordsDetailsRoot.setVisibility(View.VISIBLE);
-                playerRecordsTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
-
+                //playerRecordsTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+                playerRecordsTabTextView.setTextColor(selectedTabColor);
                 playerRecordsDetailsRoot.setVisibility(View.VISIBLE);
             }
         });
@@ -280,9 +301,13 @@ public class PlayerFragment extends Fragment {
 
     public void resetVisibility() {
 
+        final int selectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuSelectedItem);
+        final int unSelectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuUnSelectedItem);
+
         playerDetailsRoot.setVisibility(View.GONE);
 
-        latestGameTabRoot.setBackgroundResource(R.color.navigationMenu);
+        //latestGameTabRoot.setBackgroundResource(R.color.navigationMenu);
+        latestGameTabTextView.setTextColor(unSelectedTabColor);
         latestGameDetailsRoot.setVisibility(View.GONE);
         latestGameDetailsElementsRoot.setVisibility(View.GONE);
         latestGameNotExistTextView.setVisibility(View.GONE);
@@ -291,12 +316,14 @@ public class PlayerFragment extends Fragment {
             winnersPodiumRoots[i].setVisibility(View.GONE);
         }
 
-        playerRecordsTabRoot.setBackgroundResource(R.color.navigationMenu);
+        //playerRecordsTabRoot.setBackgroundResource(R.color.navigationMenu);
+        playerRecordsTabTextView.setTextColor(unSelectedTabColor);
         playerRecordsDetailsRoot.setVisibility(View.GONE);
         //default set to trophies tab
         trophiesClosetNoTitlesTextView.setVisibility(View.GONE);
         trophiesClosetScrollView.setVisibility(View.GONE);
-        trophiesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+        //trophiesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+        trophiesTabTextView.setTextColor(selectedTabColor);
         trophiesDetailsRoot.setVisibility(View.VISIBLE);
 
     }

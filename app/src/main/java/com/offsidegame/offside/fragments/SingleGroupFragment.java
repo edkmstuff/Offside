@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,6 +65,9 @@ public class SingleGroupFragment extends Fragment {
     private ImageView groupNavigationLeftButtonImageView;
     private ImageView groupNavigationRightButtonImageView;
     private TextView groupNavigationLastPlayedTextView;
+    private TextView singleGroupGamesTabTextView;
+    private TextView singleGroupLeagueTabTextView;
+
 
     private int currentGroupSelectedIndex = -1;
     private int groupsCount = -1;
@@ -134,13 +138,15 @@ public class SingleGroupFragment extends Fragment {
         singleGroupPositionOutOfTextView = (TextView) view.findViewById(R.id.fsg_single_group_position_out_of_text_view);
         singleGroupLeagueListView = (ListView) view.findViewById(R.id.fsg_single_group_league_list_view);
         groupNavigationGroupNameTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_group_name_text_view);
-//        groupNavigationLeftButtonTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_left_button_text_view);
-//        groupNavigationRightButtonTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_right_button_text_view);
+
         groupNavigationLeftButtonImageView = (ImageView) view.findViewById(R.id.fsg_group_navigation_left_button_image_view);
         groupNavigationRightButtonImageView = (ImageView) view.findViewById(R.id.fsg_group_navigation_right_button_image_view);
         groupNavigationLastPlayedTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_last_played_text_view);
         singleGroupPositionOutOfTextView = (TextView) view.findViewById(R.id.fsg_single_group_position_out_of_text_view);
         singleGroupDeletePrivateGroupButtonRoot = view.findViewById(R.id.fsg_single_group_delete_group_root);
+
+        singleGroupGamesTabTextView = view.findViewById(R.id.fsg_single_group_games_text_view);
+        singleGroupLeagueTabTextView = view.findViewById(R.id.fsg_single_group_league_text_view);
     }
 
     int selectedTabPosition;
@@ -152,13 +158,13 @@ public class SingleGroupFragment extends Fragment {
                 super.onTabSelected(tab);
                 viewPager.setCurrentItem(tab.getPosition());
                 selectedTabPosition = viewPager.getCurrentItem();
-                Log.d("Selected", "Selected " + tab.getPosition());
+                //Log.d("Selected", "Selected " + tab.getPosition());
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 super.onTabUnselected(tab);
-                Log.d("Unselected", "Unselected " + tab.getPosition());
+                //Log.d("Unselected", "Unselected " + tab.getPosition());
             }
         });
 
@@ -166,16 +172,25 @@ public class SingleGroupFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 singleGroupTabSwitched(view);
-                singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
-                singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenu);
+//                singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+//                singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenu);
+                final int selectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuSelectedItem);
+                final int unSelectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuUnSelectedItem);
+                singleGroupGamesTabTextView.setTextColor(selectedTabColor);
+                singleGroupLeagueTabTextView.setTextColor(unSelectedTabColor);
+
             }
         });
 
         singleGroupLeagueTabRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenu);
-                singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+                final int selectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuSelectedItem);
+                final int unSelectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuUnSelectedItem);
+//                singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenu);
+//                singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+                singleGroupGamesTabTextView.setTextColor(unSelectedTabColor);
+                singleGroupLeagueTabTextView.setTextColor(selectedTabColor);
                 singleGroupTabSwitched(view);
             }
         });
@@ -251,10 +266,14 @@ public class SingleGroupFragment extends Fragment {
 
     public void showAvailableGames() {
 
+        final int selectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuSelectedItem);
+        final int unSelectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuUnSelectedItem);
         singleGroupLeagueRoot.setVisibility(View.GONE);
-        singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenu);
+        //singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenu);
+        singleGroupLeagueTabTextView.setTextColor(unSelectedTabColor);
         singleGroupGamesRoot.setVisibility(View.VISIBLE);
-        singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+        //singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+        singleGroupGamesTabTextView.setTextColor(selectedTabColor);
 
         loadingRoot.setVisibility(View.GONE);
         singleGroupLeagueRoot.setVisibility(View.GONE);
@@ -278,10 +297,15 @@ public class SingleGroupFragment extends Fragment {
         LeagueAdapter leagueAdapter = new LeagueAdapter(getActivity(), new ArrayList<>(Arrays.asList(leagueRecords)));
         singleGroupLeagueListView.setAdapter(leagueAdapter);
 
+        final int selectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuSelectedItem);
+        final int unSelectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuUnSelectedItem);
+
         singleGroupGamesRoot.setVisibility(View.GONE);
-        singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenu);
+        //singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenu);
+        singleGroupGamesTabTextView.setTextColor(unSelectedTabColor);
         singleGroupLeagueRoot.setVisibility(View.VISIBLE);
-        singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+        singleGroupLeagueTabTextView.setTextColor(selectedTabColor);
+        //singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
 
         //calc my position
         String myPlayerId = OffsideApplication.getPlayerId();

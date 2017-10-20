@@ -101,6 +101,7 @@ dependencies {
     compile 'org.apmem.tools:layouts:1.10@aar'  //FlowLayout
     //compile 'com.felipecsl:gifimageview:2.1.0'
     testCompile 'junit:junit:4.12'
+    compile 'com.aurelhubert:ahbottomnavigation:2.0.4'
 
 }
 

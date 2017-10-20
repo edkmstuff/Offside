@@ -167,12 +167,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/navigationMenuSelectedItem"
+                android:background="@color/navigationMenu"
                 android:gravity="center"
                 android:padding="10dp">
 
 
                 <TextView
+                    android:id="@+id/fsg_single_group_games_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="משחקים"
@@ -193,11 +194,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@color/navigationMenu"
                 android:gravity="center"
+                android:background="@color/navigationMenu"
                 android:padding="10dp">
 
                 <TextView
+                    android:id="@+id/fsg_single_group_league_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="ליגה"

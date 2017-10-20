@@ -50,6 +50,13 @@
 
     <!--Offside Styles-->
 
+    <style name="SimpleNavigationTabSelected">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+    <style name="SimpleNavigationTabUnSelected">
+        <item name="android:textColor">@color/navigationMenuUnSelectedItem</item>
+    </style>
+
     <style name="OffsideAnswer" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>

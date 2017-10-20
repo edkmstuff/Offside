@@ -4,24 +4,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.widget.DrawerLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
@@ -65,7 +62,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private final Context context = this;
     private final Activity thisActivity = this;
 
-    private BottomNavigationView bottomNavigationView;
+    private AHBottomNavigation bottomNavigation;
+
     private ImageView settingsButtonImageView;
 
     //playerAssets
@@ -90,6 +88,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private NewsFragment newsFragment;
     private SettingsFragment settingsFragment;
 
+
     //</editor-fold>
 
 
@@ -107,6 +106,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             getIDs();
             setEvents();
+            createNavigationMenu();
             togglePlayerAssetsVisibility(true);
 
 
@@ -129,8 +129,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         //createPrivateGroupButtonTextView = (TextView) findViewById(R.id.l_create_private_group_button_text_view);
 
-        bottomNavigationView = (BottomNavigationView) findViewById(R.id.l_bottom_navigation_view);
         settingsButtonImageView = findViewById(R.id.l_settings_button_image_view);
+        bottomNavigation = findViewById(R.id.l_bottom_navigation);
 
     }
 
@@ -162,68 +162,116 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             }
         });
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            public boolean onTabSelected(int position, boolean wasSelected) {
 
                 try {
 
-                    switch (item.getItemId()) {
-                        case R.id.nav_action_groups:
+                    switch (position) {
+                        case 0:
 
                             groupsFragment = GroupsFragment.newInstance();
                             replaceFragment(groupsFragment);
                             togglePlayerAssetsVisibility(true);
-
                             return true;
 
-                        case R.id.nav_action_profile:
+                        case 1:
                             playerFragment = PlayerFragment.newInstance();
                             replaceFragment(playerFragment);
                             togglePlayerAssetsVisibility(true);
                             return true;
 
-                        case R.id.nav_action_shop:
-                            shopFragment = ShopFragment.newInstance();
-                            replaceFragment(shopFragment);
-                            togglePlayerAssetsVisibility(true);
-
-                            return true;
-
-                        case R.id.nav_action_play:
+                        case 2:
                             chatFragment = ChatFragment.newInstance();
                             replaceFragment(chatFragment);
                             togglePlayerAssetsVisibility(false);
-
-
                             return true;
 
-                        case R.id.nav_action_news:
+                        case 3:
                             newsFragment = NewsFragment.newInstance();
                             replaceFragment(newsFragment);
                             togglePlayerAssetsVisibility(false);
-
-
                             return true;
 
-//                        case R.id.nav_action_settings:
-//                            settingsFragment = SettingsFragment.newInstance();
-//                            replaceFragment(settingsFragment);
-//                            togglePlayerAssetsVisibility(true);
-//
-//                            return true;
+                        case 4:
+                            shopFragment = ShopFragment.newInstance();
+                            replaceFragment(shopFragment);
+                            togglePlayerAssetsVisibility(true);
+                            return true;
+
+
                     }
 
-                    return true;
 
                 } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
                     return false;
+
                 }
+                return true;
+            }
+        });
+        bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
+            @Override
+            public void onPositionChange(int position) {
+
 
             }
         });
+    }
 
+    private void createNavigationMenu() {
+
+        int[] navigationItemsIds = {R.id.nav_action_groups, R.id.nav_action_profile, R.id.nav_action_play, R.id.nav_action_news, R.id.nav_action_shop};
+        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.bottom_navigation_menu);
+        navigationAdapter.setupWithBottomNavigation(bottomNavigation, navigationItemsIds);
+
+        // Set current item programmatically
+        bottomNavigation.setCurrentItem(0);
+
+        // Set background color
+        bottomNavigation.setDefaultBackgroundColor(ContextCompat.getColor(context, R.color.navigationMenu));
+
+        // Change colors
+        bottomNavigation.setAccentColor(ContextCompat.getColor(context, R.color.navigationMenuSelectedItem));
+        bottomNavigation.setInactiveColor(ContextCompat.getColor(context, R.color.navigationMenuUnSelectedItem));
+
+
+        // Force to tint the drawable (useful for font with icon for example)
+        bottomNavigation.setForceTint(false);
+
+        // Display color under navigation bar (API 21+)
+        // Don't forget these lines in your style-v21
+        // <item name="android:windowTranslucentNavigation">true</item>
+        // <item name="android:fitsSystemWindows">true</item>
+        bottomNavigation.setTranslucentNavigationEnabled(false);
+
+        // Manage titles
+        //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
+        //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
+
+        // Use colored navigation with circle reveal effect
+        bottomNavigation.setColored(false);
+
+        // Customize notification (title, background, typeface)
+        bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
+
+        // Add or remove notification for each item
+        bottomNavigation.setNotification("15", 3);
+        // OR
+        // AHNotification notification = new AHNotification.Builder()
+        //.setText("1")
+        //.setBackgroundColor(ContextCompat.getColor(DemoActivity.this, R.color.color_notification_back))
+        //.setTextColor(ContextCompat.getColor(DemoActivity.this, R.color.color_notification_text))
+        //.build();
+        //bottomNavigation.setNotification(notification, 1);
+
+    // Enable / disable item & set disable color
+    // bottomNavigation.enableItemAtPosition(2);
+    // bottomNavigation.disableItemAtPosition(2);
+    // bottomNavigation.setItemDisableColor(Color.parseColor("#3A000000"));
 
     }
 
@@ -444,7 +492,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveNavigation(NavigationEvent navigationEvent) {
         try {
-            bottomNavigationView.setSelectedItemId(navigationEvent.getNavigationItemId());
+            //bottomNavigationView.setSelectedItemId(navigationEvent.getNavigationItemId());
+            bottomNavigation.setCurrentItem(navigationEvent.getNavigationItemId());
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -483,7 +533,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         String privateGameId = groupInviteEvent.getPrivateGamaId();
         String playerId = groupInviteEvent.getInviterPlayerId();
 
-        OffsideApplication.signalRService.requestInviteFriend(playerId, groupId, gameId, privateGameId );
+        OffsideApplication.signalRService.requestInviteFriend(playerId, groupId, gameId, privateGameId);
 
     }
 
@@ -511,7 +561,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     @Override
     public void onBackPressed() {
-        if (bottomNavigationView.getSelectedItemId() == R.id.nav_action_groups)
+        if (bottomNavigation.getCurrentItem() == 0) //groups
             finish();
         else
             EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
