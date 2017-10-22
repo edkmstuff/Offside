@@ -30,6 +30,9 @@ ext {
     // Having consistent versions between modules can avoid conflicts with behavior.
     supportLibVersion = "26.0.1"
 
+    firebaseVersion = "11.4.2"
+    firebaseUiAuthVersion = "3.1.0"
+
 }
 
 task clean(type: Delete) {
