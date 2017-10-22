@@ -19,10 +19,13 @@ import com.firebase.ui.auth.ResultCodes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
+
 import com.offsidegame.offside.events.CompletedHttpRequestEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
+
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+
 import com.offsidegame.offside.helpers.HttpHelper;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.OffsideApplication;
@@ -38,9 +41,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 import microsoft.aspnet.signalr.client.ConnectionState;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+
 
 
 public class LoginActivity extends AppCompatActivity implements Serializable {

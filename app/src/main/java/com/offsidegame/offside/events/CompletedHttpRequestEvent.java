@@ -7,6 +7,7 @@ package com.offsidegame.offside.events;
 public class CompletedHttpRequestEvent {
     private boolean isUrlValid;
 
+
     public CompletedHttpRequestEvent(boolean isUrlValid) {
         this.isUrlValid = isUrlValid;
     }
