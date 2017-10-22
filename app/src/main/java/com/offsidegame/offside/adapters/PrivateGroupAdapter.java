@@ -156,12 +156,13 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 String title = String.format("%d %S",countActivePlayersInPrivateGroup,context.getString(R.string.lbl_now_playing));
                 viewHolder.totalPlayingPlayersInGroupTextView.setText(title);
                 viewHolder.groupGameStatusTextView.setText(R.string.lbl_game_is_active);
+                viewHolder.groupGameStatusTextView.setBackgroundResource(R.color.colorActive);
 
 
             } else {
                 viewHolder.totalPlayingPlayersInGroupTextView.setText(R.string.lbl_no_playing_players);
                 viewHolder.groupGameStatusTextView.setText(R.string.lbl_play_here);
-                viewHolder.groupGameStatusTextView.setBackgroundResource(R.color.navigationMenuSelectedItem);
+                viewHolder.groupGameStatusTextView.setBackgroundResource(R.color.colorButton);
 
             }
 

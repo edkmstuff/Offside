@@ -1,9 +1,6 @@
 package com.offsidegame.offside.events;
 
-import android.view.MenuItem;
-
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.models.OffsideApplication;
 
 /**
  * Created by KFIR on 11/20/2016.
@@ -18,10 +15,10 @@ public class NavigationEvent {
 
 
     public int getNavigationItemId() {
-        return getItemPositionByNavigatinId();
+        return getItemPositionByNavigationId();
     }
 
-    public int getItemPositionByNavigatinId() {
+    public int getItemPositionByNavigationId() {
 
         switch (navigationItemId) {
             case R.id.nav_action_groups:

@@ -255,24 +255,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 //        }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
 
-    private String validateImageUrl(String url) {
-
-        if(url==null)
-            return null;
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(url)
-                .build();
-
-        try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
-        }
-        catch (Exception e) {
-            return null;
-        }
-    }
 
     public void saveLoggedInUser(){
 

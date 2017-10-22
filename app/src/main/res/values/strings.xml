@@ -103,7 +103,7 @@
     <string name="lbl_no_active_games">לא נמצא משחק פעיל</string>
     <string name="lbl_news">חדשות</string>
     <string name="lbl_your_position">מיקומך:</string>
-    <string name="lbl_create_private_group_hint">הכרישים</string>
+    <string name="lbl_create_private_group_hint">בחר שם לקבוצה</string>
     <string name="lbl_delete_private_group">מחק קבוצה</string>
     <string name="lbl_error_user_profile_picture_not_saved">User Image was not saved</string>
 

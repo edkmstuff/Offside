@@ -29,8 +29,11 @@ public class HttpHelper extends AsyncTask<Void,Void, Void> {
 
     protected Void doInBackground(Void... urls) {
 
-        if(url==null)
+        if(url==null) {
             responseCode =0;
+            return null;
+        }
+
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .url(url)

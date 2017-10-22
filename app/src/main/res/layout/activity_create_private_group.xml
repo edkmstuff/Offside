@@ -62,13 +62,13 @@
 
 
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/lbl_select_name_for_club"
-                    android:textColor="@color/grayText" />
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="10dp"-->
+                    <!--android:layout_marginTop="20dp"-->
+                    <!--android:text="@string/lbl_select_name_for_club"-->
+                    <!--android:textColor="@color/grayText" />-->
 
                 <EditText
                     android:id="@+id/cpg_private_group_name_edit_text"

@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -215,6 +216,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
             @Override
             public void onPositionChange(int position) {
+                Log.d("SIDEKICK_GAME", "onNavigationPositionListenre");
 
 
             }
@@ -378,10 +380,16 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             playerInfoRoot.setVisibility(View.VISIBLE);
 
+            //check if player is already playing
+            String lastKnownGameId = settings.getString(getString(R.string.game_id_key), null);
+            String lastKnownPrivateGameId = settings.getString(getString(R.string.private_game_id_key), null);
+            String playerId = OffsideApplication.getPlayerId();
+            boolean userRequiresRejoin = (lastKnownGameId != null && lastKnownPrivateGameId!=null && playerId !=null);
+
             Intent intent = getIntent();
             boolean showGroups = intent.getBooleanExtra("showGroups", false);
             boolean showNewsFeed = OffsideApplication.isBackFromNewsFeed();
-            if (showGroups) {
+            if (showGroups || !userRequiresRejoin) {
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -393,7 +401,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             } else if (showNewsFeed) {
                 OffsideApplication.setIsBackFromNewsFeed(false);
             } else {
-                tryRejoinGameForReturningPlayer();
+                tryRejoinGameForReturningPlayer(playerId, lastKnownGameId, lastKnownPrivateGameId);
             }
 
 
@@ -404,13 +412,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    public void tryRejoinGameForReturningPlayer() {
-
-        //check if player is already playing
-        SharedPreferences settings = context.getSharedPreferences(getString(R.string.preference_name), 0);
-        String lastKnownGameId = settings.getString(getString(R.string.game_id_key), null);
-        String lastKnownPrivateGameId = settings.getString(getString(R.string.private_game_id_key), null);
-        String playerId = OffsideApplication.getPlayerId();
+    public void tryRejoinGameForReturningPlayer(String playerId, String lastKnownGameId, String lastKnownPrivateGameId) {
 
         OffsideApplication.setSelectedPrivateGameId(lastKnownPrivateGameId);
 
@@ -492,7 +494,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveNavigation(NavigationEvent navigationEvent) {
         try {
-            //bottomNavigationView.setSelectedItemId(navigationEvent.getNavigationItemId());
+
             bottomNavigation.setCurrentItem(navigationEvent.getNavigationItemId());
 
 
