@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
+import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
@@ -29,6 +30,7 @@ import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.NotificationBubbleEvent;
 import com.offsidegame.offside.events.PrivateGroupChangedEvent;
 import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
@@ -88,6 +90,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private ShopFragment shopFragment;
     private NewsFragment newsFragment;
     private SettingsFragment settingsFragment;
+    private int chatNavigationItemNotificationCount =0;
 
 
     //</editor-fold>
@@ -168,6 +171,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             public boolean onTabSelected(int position, boolean wasSelected) {
 
                 try {
+                    if (wasSelected){
+                        return true;
+                    }
 
                     switch (position) {
                         case 0:
@@ -187,6 +193,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                             chatFragment = ChatFragment.newInstance();
                             replaceFragment(chatFragment);
                             togglePlayerAssetsVisibility(false);
+
+                            // remove notification badge
+                            bottomNavigation.setNotification(new AHNotification(), position);
+                            chatNavigationItemNotificationCount =0;
+
                             return true;
 
                         case 3:
@@ -230,7 +241,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         navigationAdapter.setupWithBottomNavigation(bottomNavigation, navigationItemsIds);
 
         // Set current item programmatically
-        bottomNavigation.setCurrentItem(0);
+        bottomNavigation.setCurrentItem(1);
 
         // Set background color
         bottomNavigation.setDefaultBackgroundColor(ContextCompat.getColor(context, R.color.navigationMenu));
@@ -238,6 +249,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         // Change colors
         bottomNavigation.setAccentColor(ContextCompat.getColor(context, R.color.navigationMenuSelectedItem));
         bottomNavigation.setInactiveColor(ContextCompat.getColor(context, R.color.navigationMenuUnSelectedItem));
+
+        bottomNavigation.setBehaviorTranslationEnabled(true);
 
 
         // Force to tint the drawable (useful for font with icon for example)
@@ -247,7 +260,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         // Don't forget these lines in your style-v21
         // <item name="android:windowTranslucentNavigation">true</item>
         // <item name="android:fitsSystemWindows">true</item>
-        bottomNavigation.setTranslucentNavigationEnabled(false);
+        //bottomNavigation.setTranslucentNavigationEnabled(true);
 
         // Manage titles
         //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
@@ -261,7 +274,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
 
         // Add or remove notification for each item
-        bottomNavigation.setNotification("15", 3);
+        bottomNavigation.setNotification("5", 2);
         // OR
         // AHNotification notification = new AHNotification.Builder()
         //.setText("1")
@@ -555,9 +568,21 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
         startActivity(Intent.createChooser(sendIntent, "Invite friendS"));
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNotificationBubbleReceived(NotificationBubbleEvent notificationBubbleEvent) {
+        if(bottomNavigation.getCurrentItem()==2)
+            return;
+        String notificationBubbleName = notificationBubbleEvent.getNavigationItemName();
+        if(notificationBubbleName.equalsIgnoreCase(NotificationBubbleEvent.navigationItemChat)){
+            chatNavigationItemNotificationCount +=1;
+            bottomNavigation.setNotification(String.format("%d",chatNavigationItemNotificationCount),2);
+        }
 
     }
+
+
 
     //</editor-fold>
 

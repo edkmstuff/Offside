@@ -22,6 +22,7 @@ import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.NotificationBubbleEvent;
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PositionEvent;
@@ -83,15 +84,15 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    public final String ip = new String("10.0.2.2:18313");
+//    public final String ip = new String("10.0.2.2:18313");
 
     //public final String ip = new String("10.0.2.2:18313");
     //public final String ip = new String("192.168.1.140:18313");
-    //public final String ip = new String("10.0.0.17:18313");
+    public final String ip = new String("10.0.0.17:18313");
 
 
-    //public final String ip = new String("offside.somee.com");
-    //public final String ip = new String("sidekicknode.azurewebsites.net");
+
+//    public final String ip = new String("sidekicknode.azurewebsites.net");
 
     public Boolean stoppedIntentionally = false;
     private int mId = -1;
@@ -266,6 +267,7 @@ public class SignalRService extends Service {
                 chatMessageReceived = true;
                 fireNotification(chatMessage.getMessageType(), chatMessage.getMessageText());
                 EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
+                EventBus.getDefault().post(new NotificationBubbleEvent(NotificationBubbleEvent.navigationItemChat));
             }
         }, ChatMessage.class);
 

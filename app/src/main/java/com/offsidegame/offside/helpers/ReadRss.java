@@ -20,6 +20,7 @@ import com.offsidegame.offside.models.OffsideApplication;
 import org.acra.ACRA;
 
 import org.jsoup.Jsoup;
+import org.jsoup.select.Elements;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -44,6 +45,7 @@ public class ReadRss extends AsyncTask<Void,Void, Void> {
 
     Context context;
     String address = "https://hazavit.co.il/feed/";
+    String feedSource = "hazavit.co.il"; //this is required in order to identify valid image in article (we dont want to put ads image by mistake)
     //String address = "http://www.one.co.il/cat/coop/xml/rss/";
     //String address = "http://rss.cnn.com/rss/edition_sport.rss/";
     //String address = "http://rss.walla.co.il/?w=/3/0/12/@rss.e";
@@ -158,7 +160,19 @@ public class ReadRss extends AsyncTask<Void,Void, Void> {
                             String htmlContent = currentNode.getTextContent();
                             String imageUrl = null;
                             try{
-                               imageUrl = Jsoup.parse(htmlContent).getElementsByAttribute("src").get(0).attr("src");
+                                Elements elements = Jsoup.parse(htmlContent).getElementsByAttribute("src");
+                                for(int ii=0;ii<elements.size();ii++){
+                                    String imageHref = Jsoup.parse(htmlContent).getElementsByAttribute("src").get(ii).parentNode().attr("href");
+                                    boolean isValidImage = (imageHref.indexOf(feedSource) >-1);
+                                    if(isValidImage){
+                                        imageUrl = Jsoup.parse(htmlContent).getElementsByAttribute("src").get(ii).attr("src");
+                                        break;
+                                    }
+
+                                }
+
+
+
                             }
                             catch (Exception ex){
                             }
