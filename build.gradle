@@ -25,10 +25,10 @@ allprojects {
 ext {
     // The following are only a few examples of the types of properties you can define.
     compileSdkVersion = 26
-    buildToolsVersion = "26.0.1"
+    buildToolsVersion = "26.0.2"
     // You can also create properties to specify versions for dependencies.
     // Having consistent versions between modules can avoid conflicts with behavior.
-    supportLibVersion = "26.0.1"
+    supportLibVersion = "26.1.0"
 
     firebaseVersion = "11.4.2"
     firebaseUiAuthVersion = "3.1.0"

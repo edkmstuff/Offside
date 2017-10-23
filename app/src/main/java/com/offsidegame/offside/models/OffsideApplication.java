@@ -30,9 +30,9 @@ import java.util.Map;
  */
 @ReportsCrashes(
 //        formUri = "http://192.168.1.140:8080/api/Offside/AcraCrashReport",
-//        formUri = "http://10.0.2.2:8080/api/Offside/AcraCrashReport",
+        formUri = "http://10.0.2.2:8080/api/Offside/AcraCrashReport",
 //       formUri = "http://10.0.0.17:8080/api/Offside/AcraCrashReport",
-        formUri = "http://offside.azurewebsites.net/api/Offside/AcraCrashReport",
+//        formUri = "http://offside.azurewebsites.net/api/Offside/AcraCrashReport",
 
         httpMethod = HttpSender.Method.POST,
         mode = ReportingInteractionMode.TOAST,
@@ -69,9 +69,9 @@ public class OffsideApplication extends Application {
 //    private static String defaultPictureUrlHazavitFeed = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
 
-//  private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
-//    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
-//    private static String defaultPictureUrlHazavitFeed = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
+  private static String initialsProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/";
+    private static String defaultProfilePictureUrl = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/default";
+    private static String defaultPictureUrlHazavitFeed = "http://192.168.1.140:8080/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
 /****************************TESTING**************************/
 //    private static String initialsProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/";
@@ -79,9 +79,9 @@ public class OffsideApplication extends Application {
 //    private static String defaultPictureUrlHazavitFeed = "http://offside.somee.com/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
 /****************************PRODUCTION**************************/
-    private static String initialsProfilePictureUrl = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/";
-    private static String defaultProfilePictureUrl = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
-    private static String defaultPictureUrlHazavitFeed = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
+//    private static String initialsProfilePictureUrl = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/";
+//    private static String defaultProfilePictureUrl = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
+//    private static String defaultPictureUrlHazavitFeed = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
     private static String appLogoPictureUrl = "http://www.sidekickgame.com/img/logo.png";
 

@@ -26,14 +26,14 @@ public class NavigationEvent {
             case R.id.nav_action_profile:
                 return 1;
 
-            case R.id.nav_action_shop:
+            case R.id.nav_action_play:
                 return 2;
 
-            case R.id.nav_action_play:
+            case R.id.nav_action_news:
 
                 return 3;
 
-            case R.id.nav_action_news:
+            case R.id.nav_action_shop:
 
                 return 4;
         }

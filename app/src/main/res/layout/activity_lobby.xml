@@ -186,13 +186,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout
+            <FrameLayout
             android:id="@+id/l_fragment_container_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_above="@+id/l_actions_root"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+
             android:visibility="visible"
+
             >
             <!--elements will be created here on run time -->
             <!--**PRIVATE GROUPS**-->
@@ -201,7 +202,7 @@
             <!--**PLAY**-->
             <!--********-->
 
-            </LinearLayout>
+            </FrameLayout>
 
             <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
                 android:id="@+id/l_bottom_navigation"
