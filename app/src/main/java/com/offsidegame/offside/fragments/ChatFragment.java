@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -35,15 +37,14 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.activities.LobbyActivity;
-import com.offsidegame.offside.activities.SlotActivity;
+
 import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NavigationEvent;
-import com.offsidegame.offside.events.NotificationBubbleEvent;
+
 import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
@@ -70,8 +71,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
 
 /**
  * Created by user on 8/22/2017.
@@ -165,8 +165,11 @@ public class ChatFragment extends Fragment {
             playerId = OffsideApplication.getPlayerId();
             PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
             if(selectedPrivateGroup == null || privateGameId == null) {
-                Toast.makeText(getActivity(), R.string.lbl_no_active_games, Toast.LENGTH_LONG).show();
+                loadingRoot.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), R.string.lbl_no_active_games, Toast.LENGTH_SHORT).show();
                 EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+
+
             }
             else {
                 privateGroupName = selectedPrivateGroup.getName();
@@ -202,6 +205,7 @@ public class ChatFragment extends Fragment {
             getIDs(view);
             setEvents();
             resetVisibility();
+            versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
 
             return view;
 
@@ -599,8 +603,6 @@ public class ChatFragment extends Fragment {
     }
 
     private void init() {
-
-        versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
         androidDeviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         gameId = OffsideApplication.getGameInfo().getGameId();

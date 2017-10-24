@@ -274,7 +274,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
 
         // Add or remove notification for each item
-        bottomNavigation.setNotification("5", 2);
+        //bottomNavigation.setNotification("5", 2);
         // OR
         // AHNotification notification = new AHNotification.Builder()
         //.setText("1")
