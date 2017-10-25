@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
     android:id="@+id/activity_lobby"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,37 +24,35 @@
         android:visibility="visible">
 
 
-
         <!--player info and settings-->
         <LinearLayout
             android:id="@+id/l_player_info_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="12"
-            android:orientation="horizontal"
             android:gravity="center"
+            android:orientation="horizontal"
             android:padding="5dp"
-            >
+            android:weightSum="12">
             <!--<ImageView-->
-                <!--android:id="@+id/l_toggle_drawer_image_view"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:src="@mipmap/ic_action_news"-->
-                <!--android:layout_weight="2"-->
-                <!--/>-->
+            <!--android:id="@+id/l_toggle_drawer_image_view"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:src="@mipmap/ic_action_news"-->
+            <!--android:layout_weight="2"-->
+            <!--/>-->
             <!--<ImageView-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:scaleType="centerCrop"-->
-                <!--android:src="@mipmap/ic_app_logo_name_only"-->
-                <!--android:layout_weight="2"-->
-                <!--/>-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:scaleType="centerCrop"-->
+            <!--android:src="@mipmap/ic_app_logo_name_only"-->
+            <!--android:layout_weight="2"-->
+            <!--/>-->
 
             <!-- player status -->
             <LinearLayout
-                android:layout_weight="10"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="10"
 
                 android:orientation="horizontal">
 
@@ -71,8 +71,7 @@
                         android:id="@+id/l_player_picture_image_view"
                         android:layout_width="22dp"
                         android:layout_height="22dp"
-                        android:scaleType="centerCrop"
-                         />
+                        android:scaleType="centerCrop" />
 
                 </LinearLayout>
 
@@ -160,16 +159,16 @@
 
             <!--settings button-->
             <LinearLayout
-                android:layoutDirection="rtl"
-                android:layout_weight="2"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:layoutDirection="rtl">
 
                 <ImageView
                     android:id="@+id/l_settings_button_image_view"
-                    android:layout_gravity="left"
                     android:layout_width="26dp"
                     android:layout_height="26dp"
+                    android:layout_gravity="left"
                     android:scaleType="centerCrop"
                     android:src="@mipmap/ic_settings" />
 
@@ -178,45 +177,87 @@
 
         </LinearLayout>
 
-
-        <!--*************************************************-->
-
-        <android.support.design.widget.CoordinatorLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
-
-            <FrameLayout
+        <FrameLayout
             android:id="@+id/l_fragment_container_root"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:visibility="visible"
-            android:orientation="vertical"
-            android:layout_marginBottom="50dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             >
-            <!--elements will be created here on run time -->
-            <!--**PRIVATE GROUPS**-->
-            <!--TBD**PROFILE**-->
-            <!--TBD**SHOP**-->
-            <!--**PLAY**-->
-            <!--********-->
 
-            </FrameLayout>
+        </FrameLayout>
 
-            <com.aurelhubert.ahbottomnavigation.AHBottomNavigation
-                android:id="@+id/l_bottom_navigation"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom" />
 
-        </android.support.design.widget.CoordinatorLayout>
+
+        <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+            android:id="@+id/l_bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemIconTint="@color/colorBlack"
+            android:background="@color/colorPrimary"
+
+
+
+            android:layout_alignParentBottom="true"
+
+
+            app:menu="@menu/bottom_navigation_menu_items" />
+
+        <!--
+
+        app:itemIconTint="@color/selector_item_color"
+            app:itemTextColor="@color/selector_item_color"
+        -->
+
+
+        <!--<android.support.design.widget.BottomNavigationView-->
+            <!---->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="start"-->
+            <!--design:menu="@menu/bottom_navigation_menu_items" />-->
+
+
+
+
+        <!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical">-->
+
+            <!--<LinearLayout-->
+                <!--android:id="@+id/l_fragment_container_root2"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical"-->
+                <!--android:visibility="visible"-->
+
+                <!--&gt;-->
+                <!--&lt;!&ndash;elements will be created here on run time &ndash;&gt;-->
+                <!--&lt;!&ndash;**PRIVATE GROUPS**&ndash;&gt;-->
+                <!--&lt;!&ndash;TBD**PROFILE**&ndash;&gt;-->
+                <!--&lt;!&ndash;TBD**SHOP**&ndash;&gt;-->
+                <!--&lt;!&ndash;**PLAY**&ndash;&gt;-->
+                <!--&lt;!&ndash;********&ndash;&gt;-->
+
+            <!--</LinearLayout>-->
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content">-->
+
+
+                <!--<com.aurelhubert.ahbottomnavigation.AHBottomNavigation-->
+                <!--android:id="@+id/l_bottom_navigation1"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+
+                <!--/>-->
+            <!--</LinearLayout>-->
+
+
+        <!--</LinearLayout>-->
 
     </LinearLayout>
-
-
-
 
 
 </LinearLayout>

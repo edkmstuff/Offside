@@ -5,13 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationItemView;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +28,7 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.AvailableGameEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
@@ -41,6 +47,7 @@ import com.offsidegame.offside.fragments.PlayerFragment;
 import com.offsidegame.offside.fragments.SettingsFragment;
 import com.offsidegame.offside.fragments.ShopFragment;
 import com.offsidegame.offside.fragments.SingleGroupFragment;
+import com.offsidegame.offside.helpers.BottomNavigationViewHelper;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
@@ -55,6 +62,9 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 
+import q.rorbin.badgeview.Badge;
+import q.rorbin.badgeview.QBadgeView;
+
 
 public class LobbyActivity extends AppCompatActivity implements Serializable {
 
@@ -65,7 +75,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private final Context context = this;
     private final Activity thisActivity = this;
 
-    private AHBottomNavigation bottomNavigation;
+    private BottomNavigationViewEx bottomNavigation;
+
 
     private ImageView settingsButtonImageView;
 
@@ -92,6 +103,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private SettingsFragment settingsFragment;
     private int chatNavigationItemNotificationCount =0;
 
+    private Badge qBadgeView = null;
+
 
     //</editor-fold>
 
@@ -110,7 +123,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             getIDs();
             setEvents();
-            createNavigationMenu();
+            //createNavigationMenu();
             togglePlayerAssetsVisibility(true);
 
 
@@ -135,6 +148,25 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         settingsButtonImageView = findViewById(R.id.l_settings_button_image_view);
         bottomNavigation = findViewById(R.id.l_bottom_navigation);
+
+        bottomNavigation.enableAnimation(false);
+        bottomNavigation.enableShiftingMode(false);
+        bottomNavigation.enableItemShiftingMode(false);
+        bottomNavigation.setTextVisibility(false);
+        int iconSize = 36;
+        bottomNavigation.setIconSize(iconSize,iconSize);
+        bottomNavigation.setItemHeight(BottomNavigationViewEx.dp2px(this, iconSize + 16));
+
+
+
+        //bottomNavigation.setIconTintList();
+        //bottomNavigationItemBackgroundResourceId = bottomNavigation.getItemBackgroundResource();
+
+
+
+
+
+
 
     }
 
@@ -166,52 +198,81 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             }
         });
 
-        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+
+        bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
                 try {
-                    if (wasSelected){
-                        return true;
+
+                    for(int i=0; i< bottomNavigation.getItemCount();i++){
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                            bottomNavigation.setIconTintList(i,getResources().getColorStateList(R.color.colorWhiteSemiTransparent, context.getTheme()));
+                        } else {
+                            bottomNavigation.setIconTintList(i,getResources().getColorStateList(R.color.colorWhiteSemiTransparent));
+                        }
+
+
+
+
                     }
 
-                    switch (position) {
-                        case 0:
+                    int itemPosition = bottomNavigation.getMenuItemPosition(item);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                        bottomNavigation.setIconTintList(itemPosition,getResources().getColorStateList(R.color.colorWhite, context.getTheme()));
+                    } else {
+                        bottomNavigation.setIconTintList(itemPosition,getResources().getColorStateList(R.color.colorWhite));
+                    }
+
+
+                    //int itemPosition = bottomNavigation.getMenuItemPosition(item);
+
+
+//                    for(MenuItem item: bottomNavigation.getItemCount())
+//                        bottomNavigation.setIconTintList();
+//                    bottomNavigation.setItemBackgroundResource(bottomNavigationItemBackgroundResourceId);
+
+
+                    switch (item.getItemId()) {
+                        case R.id.nav_action_groups :
+
 
                             groupsFragment = GroupsFragment.newInstance();
                             replaceFragment(groupsFragment);
                             togglePlayerAssetsVisibility(true);
                             return true;
 
-                        case 1:
+                        case R.id.nav_action_profile:
+
                             playerFragment = PlayerFragment.newInstance();
                             replaceFragment(playerFragment);
                             togglePlayerAssetsVisibility(true);
                             return true;
 
-                        case 2:
+                        case R.id.nav_action_play:
+                            //bottomNavigation.setItemBackground(itemPosition, R.color.navigationMenuSelectedItem);
+                            if (qBadgeView != null)
+                                qBadgeView.hide(true);
+                            chatNavigationItemNotificationCount = 0;
                             chatFragment = ChatFragment.newInstance();
                             replaceFragment(chatFragment);
                             togglePlayerAssetsVisibility(false);
-
-                            // remove notification badge
-                            bottomNavigation.setNotification(new AHNotification(), position);
-                            chatNavigationItemNotificationCount =0;
-
                             return true;
 
-                        case 3:
+                        case R.id.nav_action_news:
+                            //bottomNavigation.setItemBackground(itemPosition, R.color.navigationMenuSelectedItem);
                             newsFragment = NewsFragment.newInstance();
                             replaceFragment(newsFragment);
                             togglePlayerAssetsVisibility(false);
                             return true;
 
-                        case 4:
+                        case R.id.nav_action_shop:
+                            //bottomNavigation.setItemBackground(itemPosition, R.color.navigationMenuSelectedItem);
                             shopFragment = ShopFragment.newInstance();
                             replaceFragment(shopFragment);
                             togglePlayerAssetsVisibility(true);
                             return true;
-
 
                     }
 
@@ -221,74 +282,146 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     return false;
 
                 }
+
+
+
+
+
+
+
+
+
+
+
+
+
                 return true;
             }
         });
-        bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
-            @Override
-            public void onPositionChange(int position) {
-                Log.d("SIDEKICK_GAME", "onNavigationPositionListenre");
 
-
-            }
-        });
+//        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+//            @Override
+//            public boolean onTabSelected(int position, boolean wasSelected) {
+//
+//                try {
+//                    if (wasSelected){
+//                        return true;
+//                    }
+//
+//                    switch (position) {
+//                        case 0:
+//
+//                            groupsFragment = GroupsFragment.newInstance();
+//                            replaceFragment(groupsFragment);
+//                            togglePlayerAssetsVisibility(true);
+//                            return true;
+//
+//                        case 1:
+//                            playerFragment = PlayerFragment.newInstance();
+//                            replaceFragment(playerFragment);
+//                            togglePlayerAssetsVisibility(true);
+//                            return true;
+//
+//                        case 2:
+//                            chatFragment = ChatFragment.newInstance();
+//                            replaceFragment(chatFragment);
+//                            togglePlayerAssetsVisibility(false);
+//
+//                            // remove notification badge
+//                            bottomNavigation.setNotification(new AHNotification(), position);
+//                            chatNavigationItemNotificationCount =0;
+//
+//                            return true;
+//
+//                        case 3:
+//                            newsFragment = NewsFragment.newInstance();
+//                            replaceFragment(newsFragment);
+//                            togglePlayerAssetsVisibility(false);
+//                            return true;
+//
+//                        case 4:
+//                            shopFragment = ShopFragment.newInstance();
+//                            replaceFragment(shopFragment);
+//                            togglePlayerAssetsVisibility(true);
+//                            return true;
+//
+//
+//                    }
+//
+//
+//                } catch (Exception ex) {
+//                    ACRA.getErrorReporter().handleSilentException(ex);
+//                    return false;
+//
+//                }
+//                return true;
+//            }
+//        });
+//        bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
+//            @Override
+//            public void onPositionChange(int position) {
+//                Log.d("SIDEKICK_GAME", "onNavigationPositionListenre");
+//
+//
+//            }
+//        });
     }
 
-    private void createNavigationMenu() {
-
-        int[] navigationItemsIds = {R.id.nav_action_groups, R.id.nav_action_profile, R.id.nav_action_play, R.id.nav_action_news, R.id.nav_action_shop};
-        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.bottom_navigation_menu);
-        navigationAdapter.setupWithBottomNavigation(bottomNavigation, navigationItemsIds);
-
-        // Set current item programmatically
-        bottomNavigation.setCurrentItem(1);
-
-        // Set background color
-        bottomNavigation.setDefaultBackgroundColor(ContextCompat.getColor(context, R.color.navigationMenu));
-
-        // Change colors
-        bottomNavigation.setAccentColor(ContextCompat.getColor(context, R.color.navigationMenuSelectedItem));
-        bottomNavigation.setInactiveColor(ContextCompat.getColor(context, R.color.navigationMenuUnSelectedItem));
-
-        bottomNavigation.setBehaviorTranslationEnabled(true);
-
-
-        // Force to tint the drawable (useful for font with icon for example)
-        bottomNavigation.setForceTint(false);
-
-        // Display color under navigation bar (API 21+)
-        // Don't forget these lines in your style-v21
-        // <item name="android:windowTranslucentNavigation">true</item>
-        // <item name="android:fitsSystemWindows">true</item>
-        //bottomNavigation.setTranslucentNavigationEnabled(true);
-
-        // Manage titles
-        //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
-        //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
-        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
-
-        // Use colored navigation with circle reveal effect
-        bottomNavigation.setColored(false);
-
-        // Customize notification (title, background, typeface)
-        bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
-
-        // Add or remove notification for each item
-        //bottomNavigation.setNotification("5", 2);
-        // OR
-        // AHNotification notification = new AHNotification.Builder()
-        //.setText("1")
-        //.setBackgroundColor(ContextCompat.getColor(DemoActivity.this, R.color.color_notification_back))
-        //.setTextColor(ContextCompat.getColor(DemoActivity.this, R.color.color_notification_text))
-        //.build();
-        //bottomNavigation.setNotification(notification, 1);
-
-    // Enable / disable item & set disable color
-    // bottomNavigation.enableItemAtPosition(2);
-    // bottomNavigation.disableItemAtPosition(2);
-    // bottomNavigation.setItemDisableColor(Color.parseColor("#3A000000"));
-
-    }
+//    private void createNavigationMenu() {
+//
+//        int[] navigationItemsIds = {R.id.nav_action_groups, R.id.nav_action_profile, R.id.nav_action_play, R.id.nav_action_news, R.id.nav_action_shop};
+//        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.bottom_navigation_menu_items);
+//        navigationAdapter.setupWithBottomNavigation(bottomNavigation, navigationItemsIds);
+//
+//        // Set current item programmatically
+//        bottomNavigation.setCurrentItem(1);
+//
+//        // Set background color
+//        bottomNavigation.setDefaultBackgroundColor(ContextCompat.getColor(context, R.color.navigationMenu));
+//
+//        // Change colors
+//        bottomNavigation.setAccentColor(ContextCompat.getColor(context, R.color.navigationMenuSelectedItem));
+//        bottomNavigation.setInactiveColor(ContextCompat.getColor(context, R.color.navigationMenuUnSelectedItem));
+//
+//        bottomNavigation.setBehaviorTranslationEnabled(true);
+//
+//
+//        // Force to tint the drawable (useful for font with icon for example)
+//        bottomNavigation.setForceTint(false);
+//
+//        // Display color under navigation bar (API 21+)
+//        // Don't forget these lines in your style-v21
+//        // <item name="android:windowTranslucentNavigation">true</item>
+//        // <item name="android:fitsSystemWindows">true</item>
+//        //bottomNavigation.setTranslucentNavigationEnabled(true);
+//
+//        // Manage titles
+//        //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
+//        //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
+//        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
+//
+//        // Use colored navigation with circle reveal effect
+//        bottomNavigation.setColored(false);
+//
+//        // Customize notification (title, background, typeface)
+//        bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
+//
+//        // Add or remove notification for each item
+//        //bottomNavigation.setNotification("5", 2);
+//        // OR
+//        // AHNotification notification = new AHNotification.Builder()
+//        //.setText("1")
+//        //.setBackgroundColor(ContextCompat.getColor(DemoActivity.this, R.color.color_notification_back))
+//        //.setTextColor(ContextCompat.getColor(DemoActivity.this, R.color.color_notification_text))
+//        //.build();
+//        //bottomNavigation.setNotification(notification, 1);
+//
+//    // Enable / disable item & set disable color
+//    // bottomNavigation.enableItemAtPosition(2);
+//    // bottomNavigation.disableItemAtPosition(2);
+//    // bottomNavigation.setItemDisableColor(Color.parseColor("#3A000000"));
+//
+//    }
 
     private void togglePlayerAssetsVisibility(boolean isVisible) {
         if (isVisible)
@@ -508,7 +641,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     public void onReceiveNavigation(NavigationEvent navigationEvent) {
         try {
 
-            bottomNavigation.setCurrentItem(navigationEvent.getNavigationItemId());
+            //bottomNavigation.setCurrentItem(navigationEvent.getNavigationItemId());
+            bottomNavigation.setSelectedItemId(navigationEvent.getNavigationItemId());
 
 
         } catch (Exception ex) {
@@ -572,12 +706,32 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNotificationBubbleReceived(NotificationBubbleEvent notificationBubbleEvent) {
-        if(bottomNavigation.getCurrentItem()==2)
+        if(bottomNavigation.getSelectedItemId() == R.id.nav_action_play)
             return;
         String notificationBubbleName = notificationBubbleEvent.getNavigationItemName();
         if(notificationBubbleName.equalsIgnoreCase(NotificationBubbleEvent.navigationItemChat)){
             chatNavigationItemNotificationCount +=1;
-            bottomNavigation.setNotification(String.format("%d",chatNavigationItemNotificationCount),2);
+
+            MenuItem chatItem = bottomNavigation.getMenu().findItem(R.id.nav_action_play);
+
+
+            int position  = bottomNavigation.getMenuItemPosition(chatItem);
+            if (qBadgeView != null){
+                qBadgeView.hide(false);
+                qBadgeView = null;
+            }
+
+            qBadgeView =  new QBadgeView(this)
+                    .setBadgeNumber(chatNavigationItemNotificationCount)
+                    .setGravityOffset(12, 2, true)
+                    .bindTarget(bottomNavigation.getBottomNavigationItemView(position));
+
+
+
+
+
+            //new QBadgeView(context).bindTarget(textview).setBadgeNumber(5);
+            //bottomNavigation.setNotification(String.format("%d",chatNavigationItemNotificationCount),2);
         }
 
     }
@@ -588,7 +742,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     @Override
     public void onBackPressed() {
-        if (bottomNavigation.getCurrentItem() == 0) //groups
+        if (bottomNavigation.getSelectedItemId() == R.id.nav_action_groups) //groups
             finish();
         else
             EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));

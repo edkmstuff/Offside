@@ -15,7 +15,8 @@ public class NavigationEvent {
 
 
     public int getNavigationItemId() {
-        return getItemPositionByNavigationId();
+        return navigationItemId;
+        //return getItemPositionByNavigationId();
     }
 
     public int getItemPositionByNavigationId() {

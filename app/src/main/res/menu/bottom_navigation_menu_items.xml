@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/nav_action_groups"
+        android:icon="@drawable/groups"
+        android:title="@string/lbl_private_groups"></item>
+
+    <item
+        android:id="@+id/nav_action_profile"
+
+        android:icon="@drawable/profile"
+        android:title="@string/lbl_my_profile"></item>
+
+    <item
+        android:id="@+id/nav_action_play"
+
+        android:icon="@drawable/play"
+        android:title="@string/lbl_play"></item>
+
+    <item
+        android:id="@+id/nav_action_news"
+
+        android:icon="@mipmap/ic_action_news"
+        android:title="@string/lbl_news"></item>
+
+    <!--<item-->
+    <!--android:id="@+id/nav_action_settings"-->
+    <!--android:enabled="true"-->
+    <!--android:icon="@mipmap/ic_settings"-->
+    <!--android:title="@string/lbl_settings"-->
+    <!--app:showAsAction="always">-->
+    <!--</item>-->
+
+    <item
+        android:id="@+id/nav_action_shop"
+        android:icon="@drawable/shop"
+        android:title="@string/lbl_shop"></item>
+
+</menu>

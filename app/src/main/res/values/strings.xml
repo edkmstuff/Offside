@@ -73,10 +73,10 @@
     <string name="lbl_game_is_active">משחק פעיל</string>
     <string name="lbl_no_playing_players">אין משחקים פעילים</string>
     <string name="lbl_now_playing">חברים כבר משחקים</string>
-    <string name="lbl_private_groups">קבוצות</string>
-    <string name="lbl_my_profile">פרופיל</string>
-    <string name="lbl_shop">חנות</string>
-    <string name="lbl_play">שחק</string>
+    <string name="lbl_private_groups">groups</string>
+    <string name="lbl_my_profile">profile</string>
+    <string name="lbl_shop">store</string>
+    <string name="lbl_play">play</string>
     <string name="key_group_type">groupType</string>
     <string name="key_private_group_name">PRIVATE_GROUP</string>
     <string name="key_public_group_name">PUBLIC_GROUP</string>
@@ -101,7 +101,7 @@
     <string name="lbl_sign_out">התנתק</string>
     <string name="lbl_settings">הגדרות</string>
     <string name="lbl_no_active_games">לא נמצא משחק פעיל</string>
-    <string name="lbl_news">חדשות</string>
+    <string name="lbl_news">news</string>
     <string name="lbl_your_position">מיקומך:</string>
     <string name="lbl_create_private_group_hint">בחר שם לקבוצה</string>
     <string name="lbl_delete_private_group">מחק קבוצה</string>
