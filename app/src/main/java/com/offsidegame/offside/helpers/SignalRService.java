@@ -84,15 +84,14 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-//    public final String ip = new String("10.0.2.2:18313");
-
-    //public final String ip = new String("10.0.2.2:18313");
+    /***********************DEVELOPMENT****************************************************/
+    public final String ip = new String("10.0.2.2:18313");
     //public final String ip = new String("192.168.1.140:18313");
-//    public final String ip = new String("10.0.0.17:18313");
+    //public final String ip = new String("10.0.0.17:18313");
 
 
-
-    public final String ip = new String("sidekicknode.azurewebsites.net");
+    /***********************PRODUCTION****************************************************/
+//    public final String ip = new String("sidekicknode.azurewebsites.net");
 
     public Boolean stoppedIntentionally = false;
     private int mId = -1;
@@ -120,7 +119,6 @@ public class SignalRService extends Service {
     private boolean playerImageSaved = false;
     private boolean privateGroupsReceived = false;
     private boolean privateGroupDeleted = false;
-
 
 
     //<editor-fold desc="constructors">
@@ -563,7 +561,7 @@ public class SignalRService extends Service {
 //        });
 //    }
 
-    public void quitGame(String playerId, String gameId,  String androidDeviceId) {
+    public void quitGame(String playerId, String gameId, String androidDeviceId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
@@ -599,13 +597,13 @@ public class SignalRService extends Service {
         });
     }
 
-    public void requestCreatePrivateGame(String playerId,String gameId, String groupId, String selectedLanguage) {
+    public void requestCreatePrivateGame(String playerId, String gameId, String groupId, String selectedLanguage) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
         //String languageLocale = Locale.getDefault().getDisplayLanguage();
         privateGameCreated = false;
-        hub.invoke("RequestCreatePrivateGame", playerId, gameId, groupId,  selectedLanguage).done(new Action<Void>() {
+        hub.invoke("RequestCreatePrivateGame", playerId, gameId, groupId, selectedLanguage).done(new Action<Void>() {
 
             @Override
             public void run(Void obj) throws Exception {
@@ -626,12 +624,12 @@ public class SignalRService extends Service {
         });
     }
 
-    public void requestPostAnswer(final String playerId, final String gameId,  final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
+    public void requestPostAnswer(final String playerId, final String gameId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
 
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         answerAccepted = false;
-        hub.invoke("RequestPostAnswer", playerId, gameId,  questionId, answerId, isSkipped, betSize).done(new Action<Void>() {
+        hub.invoke("RequestPostAnswer", playerId, gameId, questionId, answerId, isSkipped, betSize).done(new Action<Void>() {
 
             @Override
             public void run(Void obj) throws Exception {
@@ -678,13 +676,13 @@ public class SignalRService extends Service {
         });
     }
 
-    public void requestGetChatMessages(String playerId, String gameId, String privateGameId,  String androidDeviceId) {
+    public void requestGetChatMessages(String playerId, String gameId, String privateGameId, String androidDeviceId) {
 
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
         chatMessagesReceived = false;
-        hub.invoke("requestGetChatMessages", playerId, gameId, privateGameId,  androidDeviceId).done(new Action<Void>() {
+        hub.invoke("requestGetChatMessages", playerId, gameId, privateGameId, androidDeviceId).done(new Action<Void>() {
 
             @Override
             public void run(Void obj) throws Exception {
@@ -710,7 +708,7 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         chatMessageReceived = false;
-        hub.invoke("RequestSendChatMessage", playerId, gameId, privateGameId,  message).done(new Action<Void>() {
+        hub.invoke("RequestSendChatMessage", playerId, gameId, privateGameId, message).done(new Action<Void>() {
 
             @Override
             public void run(Void obj) throws Exception {
@@ -731,7 +729,6 @@ public class SignalRService extends Service {
         });
 
     }
-
 
 
     public boolean requestSaveLoggedInUser(User user) {
@@ -766,7 +763,7 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return false;
 
-        hub.invoke(Integer.class, "SetPowerItems", playerId, gameId,  powerItems, isDueToRewardVideo).done(new Action<Integer>() {
+        hub.invoke(Integer.class, "SetPowerItems", playerId, gameId, powerItems, isDueToRewardVideo).done(new Action<Integer>() {
             @Override
             public void run(Integer newPowerItemsValue) throws Exception {
                 EventBus.getDefault().post(newPowerItemsValue);
@@ -781,7 +778,6 @@ public class SignalRService extends Service {
 
         return true;
     }
-
 
 
     public void requestSaveImageInDatabase(String playerId, String imageString) {
@@ -858,11 +854,11 @@ public class SignalRService extends Service {
 
     }
 
-    public void requestCreatePrivateGroup(String playerId,String groupName, String groupType,  String selectedLanguage) {
+    public void requestCreatePrivateGroup(String playerId, String groupName, String groupType, String selectedLanguage) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         privateGroupCreated = false;
-        hub.invoke("RequestCreatePrivateGroup", playerId, groupName, groupType,  selectedLanguage).done(new Action<Void>() {
+        hub.invoke("RequestCreatePrivateGroup", playerId, groupName, groupType, selectedLanguage).done(new Action<Void>() {
             @Override
             public void run(Void obj) throws Exception {
                 new Handler().postDelayed(new Runnable() {
@@ -889,7 +885,7 @@ public class SignalRService extends Service {
             return;
 
         playerJoinedPrivateGame = false;
-        hub.invoke("RequestJoinPrivateGame", playerId, gameId, groupId, privateGameId,  androidDeviceId).done(new Action<Void>() {
+        hub.invoke("RequestJoinPrivateGame", playerId, gameId, groupId, privateGameId, androidDeviceId).done(new Action<Void>() {
             @Override
             public void run(Void obj) throws Exception {
                 new Handler().postDelayed(new Runnable() {
@@ -985,7 +981,7 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         friendInviteReceived = false;
-        hub.invoke("RequestInviteFriend", inviterPlayerId, groupId, gameId, privateGameId ).done(new Action<Void>() {
+        hub.invoke("RequestInviteFriend", inviterPlayerId, groupId, gameId, privateGameId).done(new Action<Void>() {
             @Override
             public void run(Void obj) throws Exception {
                 new Handler().postDelayed(new Runnable() {
@@ -1050,8 +1046,6 @@ public class SignalRService extends Service {
             }
         });
     }
-
-
 
 
     //</editor-fold>

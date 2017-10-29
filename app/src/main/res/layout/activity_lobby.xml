@@ -170,7 +170,7 @@
                     android:layout_height="26dp"
                     android:layout_gravity="left"
                     android:scaleType="centerCrop"
-                    android:src="@mipmap/ic_settings" />
+                    android:src="@drawable/settings" />
 
             </LinearLayout>
 

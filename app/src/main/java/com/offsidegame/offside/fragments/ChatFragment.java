@@ -3,12 +3,12 @@ package com.offsidegame.offside.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
+
 import android.os.Bundle;
-import android.os.Handler;
+
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -233,7 +233,7 @@ public class ChatFragment extends Fragment {
 
         actionsMenuRoot = (LinearLayout) view.findViewById(R.id.fc_actions_menu_root);
 
-        chatActionsButton = (ImageView) view.findViewById(R.id.fc_chatActionsButton);
+        //chatActionsButton = (ImageView) view.findViewById(R.id.fc_chatActionsButton);
         actionsFlowLayout = (FlowLayout) view.findViewById(R.id.fc_actions_flow_layout);
         loadingVideoTextView = (TextView) view.findViewById(R.id.fc_loading_video_text_view);
         playerPictureImageView = (ImageView) view.findViewById(R.id.fc_player_picture_image_view);

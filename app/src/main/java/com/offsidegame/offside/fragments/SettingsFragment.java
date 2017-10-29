@@ -16,6 +16,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.LoginActivity;
+import com.offsidegame.offside.models.OffsideApplication;
 
 public class SettingsFragment extends Fragment {
 
@@ -62,6 +63,7 @@ public class SettingsFragment extends Fragment {
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             public void onComplete(@NonNull Task<Void> task) {
                                 // user is now signed out
+                                OffsideApplication.cleanUserPreferences();
 
                                 //set up required to exit in back button pressed
                                 Intent intent = new Intent(context, LoginActivity.class);

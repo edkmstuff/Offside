@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.provider.Settings;
 
@@ -30,9 +31,9 @@ import java.util.Map;
  */
 @ReportsCrashes(
 //        formUri = "http://192.168.1.140:8080/api/Offside/AcraCrashReport",
-//        formUri = "http://10.0.2.2:8080/api/Offside/AcraCrashReport",
+        formUri = "http://10.0.2.2:8080/api/Offside/AcraCrashReport",
 //       formUri = "http://10.0.0.17:8080/api/Offside/AcraCrashReport",
-        formUri = "http://offside.azurewebsites.net/api/Offside/AcraCrashReport",
+//        formUri = "http://offside.azurewebsites.net/api/Offside/AcraCrashReport",
 
         httpMethod = HttpSender.Method.POST,
         mode = ReportingInteractionMode.TOAST,
@@ -60,9 +61,9 @@ public class OffsideApplication extends Application {
 
     /****************************DEVELOPMENT- LOCAL**************************/
 
-//    private static String initialsProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/";
-//    private static String defaultProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
-//    private static String defaultPictureUrlHazavitFeed = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
+    private static String initialsProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/";
+    private static String defaultProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
+    private static String defaultPictureUrlHazavitFeed = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
 //    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
@@ -78,10 +79,10 @@ public class OffsideApplication extends Application {
 //    private static String defaultProfilePictureUrl = "http://offside.somee.com/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
 //    private static String defaultPictureUrlHazavitFeed = "http://offside.somee.com/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
-/****************************PRODUCTION**************************/
-    private static String initialsProfilePictureUrl = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/";
-    private static String defaultProfilePictureUrl = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
-    private static String defaultPictureUrlHazavitFeed = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
+    /****************************PRODUCTION**************************/
+//    private static String initialsProfilePictureUrl = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/";
+//    private static String defaultProfilePictureUrl = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
+//    private static String defaultPictureUrlHazavitFeed = "http://sidekicknode.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
     private static String appLogoPictureUrl = "http://www.sidekickgame.com/img/logo.png";
 
@@ -106,7 +107,6 @@ public class OffsideApplication extends Application {
     private static HashMap<String, LeagueRecord[]> leaguesRecords;
 
     private static boolean isBackFromNewsFeed = false;
-
 
 
     public static String getMessageTypeText() {
@@ -270,8 +270,7 @@ public class OffsideApplication extends Application {
     public static String getSelectedPrivateGameId() {
         if (selectedPrivateGameId != null) {
             return selectedPrivateGameId;
-        }
-        else if (selectedAvailableGame != null ){
+        } else if (selectedAvailableGame != null) {
             return selectedAvailableGame.getPrivateGameId();
         }
 
@@ -283,7 +282,7 @@ public class OffsideApplication extends Application {
     }
 
     public static String getSelectedGameId() {
-        return selectedAvailableGame != null? selectedAvailableGame.getGameId() : null;
+        return selectedAvailableGame != null ? selectedAvailableGame.getGameId() : null;
     }
 
 
@@ -294,16 +293,16 @@ public class OffsideApplication extends Application {
 
 
     public static String getSelectedPrivateGroupId() {
-        if (selectedPrivateGroup != null ){
+        if (selectedPrivateGroup != null) {
             return selectedPrivateGroup.getId();
-        }else if (selectedAvailableGame != null){
+        } else if (selectedAvailableGame != null) {
             return selectedAvailableGame.getGroupId();
         }
 
         return null;
     }
 
-    public static String getAndroidDeviceId(){
+    public static String getAndroidDeviceId() {
         return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
@@ -314,7 +313,6 @@ public class OffsideApplication extends Application {
     public static void setIsBackFromNewsFeed(boolean isBackFromNewsFeed) {
         OffsideApplication.isBackFromNewsFeed = isBackFromNewsFeed;
     }
-
 
 
     public void onCreate() {
@@ -405,10 +403,28 @@ public class OffsideApplication extends Application {
 
     }
 
-    public static String getVersion() {
-        return version == null ? "0.0": version;
+    public static void cleanUserPreferences() {
+        try {
+            SharedPreferences settings = getContext().getSharedPreferences(context.getString(R.string.preference_name), 0);
+            SharedPreferences.Editor editor = settings.edit();
+
+            editor.putString(context.getString(R.string.game_id_key), null);
+            editor.putString(context.getString(R.string.private_group_id_key), null);
+            editor.putString(context.getString(R.string.private_game_id_key), null);
+
+            editor.commit();
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
+
+    public static String getVersion() {
+        return version == null ? "0.0" : version;
+    }
 
 
 }
