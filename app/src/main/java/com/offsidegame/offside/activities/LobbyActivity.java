@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,8 +27,13 @@ import android.widget.Toast;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
+import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.AvailableGameEvent;
@@ -47,7 +53,8 @@ import com.offsidegame.offside.fragments.PlayerFragment;
 import com.offsidegame.offside.fragments.SettingsFragment;
 import com.offsidegame.offside.fragments.ShopFragment;
 import com.offsidegame.offside.fragments.SingleGroupFragment;
-import com.offsidegame.offside.helpers.BottomNavigationViewHelper;
+
+import com.offsidegame.offside.helpers.DynamicLinkHelper;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
@@ -104,6 +111,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private int chatNavigationItemNotificationCount =0;
 
     private Badge qBadgeView = null;
+
+    private int REQUEST_INVITE = 100;
+    private String TAG = "SIDEKICK";
 
 
     //</editor-fold>
@@ -282,146 +292,12 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     return false;
 
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
                 return true;
             }
         });
 
-//        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-//            @Override
-//            public boolean onTabSelected(int position, boolean wasSelected) {
-//
-//                try {
-//                    if (wasSelected){
-//                        return true;
-//                    }
-//
-//                    switch (position) {
-//                        case 0:
-//
-//                            groupsFragment = GroupsFragment.newInstance();
-//                            replaceFragment(groupsFragment);
-//                            togglePlayerAssetsVisibility(true);
-//                            return true;
-//
-//                        case 1:
-//                            playerFragment = PlayerFragment.newInstance();
-//                            replaceFragment(playerFragment);
-//                            togglePlayerAssetsVisibility(true);
-//                            return true;
-//
-//                        case 2:
-//                            chatFragment = ChatFragment.newInstance();
-//                            replaceFragment(chatFragment);
-//                            togglePlayerAssetsVisibility(false);
-//
-//                            // remove notification badge
-//                            bottomNavigation.setNotification(new AHNotification(), position);
-//                            chatNavigationItemNotificationCount =0;
-//
-//                            return true;
-//
-//                        case 3:
-//                            newsFragment = NewsFragment.newInstance();
-//                            replaceFragment(newsFragment);
-//                            togglePlayerAssetsVisibility(false);
-//                            return true;
-//
-//                        case 4:
-//                            shopFragment = ShopFragment.newInstance();
-//                            replaceFragment(shopFragment);
-//                            togglePlayerAssetsVisibility(true);
-//                            return true;
-//
-//
-//                    }
-//
-//
-//                } catch (Exception ex) {
-//                    ACRA.getErrorReporter().handleSilentException(ex);
-//                    return false;
-//
-//                }
-//                return true;
-//            }
-//        });
-//        bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
-//            @Override
-//            public void onPositionChange(int position) {
-//                Log.d("SIDEKICK_GAME", "onNavigationPositionListenre");
-//
-//
-//            }
-//        });
-    }
 
-//    private void createNavigationMenu() {
-//
-//        int[] navigationItemsIds = {R.id.nav_action_groups, R.id.nav_action_profile, R.id.nav_action_play, R.id.nav_action_news, R.id.nav_action_shop};
-//        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.bottom_navigation_menu_items);
-//        navigationAdapter.setupWithBottomNavigation(bottomNavigation, navigationItemsIds);
-//
-//        // Set current item programmatically
-//        bottomNavigation.setCurrentItem(1);
-//
-//        // Set background color
-//        bottomNavigation.setDefaultBackgroundColor(ContextCompat.getColor(context, R.color.navigationMenu));
-//
-//        // Change colors
-//        bottomNavigation.setAccentColor(ContextCompat.getColor(context, R.color.navigationMenuSelectedItem));
-//        bottomNavigation.setInactiveColor(ContextCompat.getColor(context, R.color.navigationMenuUnSelectedItem));
-//
-//        bottomNavigation.setBehaviorTranslationEnabled(true);
-//
-//
-//        // Force to tint the drawable (useful for font with icon for example)
-//        bottomNavigation.setForceTint(false);
-//
-//        // Display color under navigation bar (API 21+)
-//        // Don't forget these lines in your style-v21
-//        // <item name="android:windowTranslucentNavigation">true</item>
-//        // <item name="android:fitsSystemWindows">true</item>
-//        //bottomNavigation.setTranslucentNavigationEnabled(true);
-//
-//        // Manage titles
-//        //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
-//        //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
-//        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
-//
-//        // Use colored navigation with circle reveal effect
-//        bottomNavigation.setColored(false);
-//
-//        // Customize notification (title, background, typeface)
-//        bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
-//
-//        // Add or remove notification for each item
-//        //bottomNavigation.setNotification("5", 2);
-//        // OR
-//        // AHNotification notification = new AHNotification.Builder()
-//        //.setText("1")
-//        //.setBackgroundColor(ContextCompat.getColor(DemoActivity.this, R.color.color_notification_back))
-//        //.setTextColor(ContextCompat.getColor(DemoActivity.this, R.color.color_notification_text))
-//        //.build();
-//        //bottomNavigation.setNotification(notification, 1);
-//
-//    // Enable / disable item & set disable color
-//    // bottomNavigation.enableItemAtPosition(2);
-//    // bottomNavigation.disableItemAtPosition(2);
-//    // bottomNavigation.setItemDisableColor(Color.parseColor("#3A000000"));
-//
-//    }
+    }
 
     private void togglePlayerAssetsVisibility(boolean isVisible) {
         if (isVisible)
@@ -682,9 +558,77 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         String privateGameId = groupInviteEvent.getPrivateGamaId();
         String playerId = groupInviteEvent.getInviterPlayerId();
 
-        OffsideApplication.signalRService.requestInviteFriend(playerId, groupId, gameId, privateGameId);
+        //OffsideApplication.signalRService.requestInviteFriend(playerId, groupId, gameId, privateGameId);
+        startFirebaseInvite(groupId, playerId);
+        //shareShortDynamicLink();
 
     }
+
+    private void startFirebaseInvite(String groupId,String playerId) {
+
+        Intent intent = new AppInviteInvitation.IntentBuilder("Invite friends")
+                .setMessage(String.format("Invitation from %s to play Sidekick",OffsideApplication.getPlayerAssets().getPlayerName()))
+                .setDeepLink(Uri.parse("https://tmg9s.app.goo.gl/?link=app://sidekickgame.com?groupId="+groupId+"&referrer="+playerId+"&apn=com.offsidegame.offside&ibi=com.offsidegame.offside.ios&isi=12345"))
+                .setCustomImage(Uri.parse(OffsideApplication.getAppLogoPictureUrl()))
+                .setCallToActionText("Download Now!")
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+    private void shareShortDynamicLink(){
+        String link = "http://www.sidekickgame.com";
+        String description = "LinkToAppOnGooglePlay";
+        String titleSocial = "Invite friends to play with you";
+        String source = "Sidekick Soccer";
+
+        Task<ShortDynamicLink> createLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                .setDynamicLinkDomain("tmg9s.app.goo.gl")
+                .setLink(Uri.parse(DynamicLinkHelper.buildDynamicLink(link,description,titleSocial,source)))
+                .buildShortDynamicLink()
+                .addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
+                    @Override
+                    public void onComplete(@NonNull Task<ShortDynamicLink> task) {
+                        if(task.isSuccessful()){
+                            Uri shortLink = task.getResult().getShortLink();
+                            Uri flowchartLink = task.getResult().getPreviewLink();
+                            Log.d(TAG,"Short link: "+shortLink.toString());
+                            Log.d(TAG,"flowchartLink link: "+flowchartLink.toString());
+                            Intent intent = new Intent();
+                            String message = String.format("Invitation from %s to play Sidekick. /nWant to join ? follow this link /n %s ",OffsideApplication.getPlayerAssets().getPlayerName(),shortLink.toString());
+
+                            intent.setAction(Intent.ACTION_SEND);
+                            intent.putExtra(Intent.EXTRA_TEXT,message);
+                            intent.setType("text/plain");
+                            startActivity(intent);
+                        }
+                        else {
+                            Log.d(TAG,"Error building short link");
+                        }
+                    }
+                });
+                
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    Log.d(TAG, "onActivityResult: sent invitation " + id);
+                }
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                Log.d(TAG, "invitation send failed");
+            }
+        }
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onFriendInviteReceived(FriendInviteReceivedEvent friendInviteReceivedEvent) {

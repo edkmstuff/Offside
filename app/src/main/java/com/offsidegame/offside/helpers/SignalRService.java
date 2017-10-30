@@ -24,6 +24,7 @@ import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
+import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
@@ -85,9 +86,9 @@ public class SignalRService extends Service {
     private Date startReconnecting = null;
 
     /***********************DEVELOPMENT****************************************************/
-    public final String ip = new String("10.0.2.2:18313");
+//    public final String ip = new String("10.0.2.2:18313");
     //public final String ip = new String("192.168.1.140:18313");
-    //public final String ip = new String("10.0.0.17:18313");
+    public final String ip = new String("10.0.0.17:18313");
 
 
     /***********************PRODUCTION****************************************************/
@@ -119,6 +120,8 @@ public class SignalRService extends Service {
     private boolean playerImageSaved = false;
     private boolean privateGroupsReceived = false;
     private boolean privateGroupDeleted = false;
+    private boolean playerJoinPrivateGroupReceived = false;
+
 
 
     //<editor-fold desc="constructors">
@@ -330,6 +333,16 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(new PrivateGroupDeletedEvent(numberOfDeletedGroups));
             }
         }, Integer.class);
+
+        hub.on("PlayerJoinedPrivateGroupReceived", new SubscriptionHandler1<Integer>() {
+            @Override
+            public void run(Integer numberOfPlayerAdded) {
+                playerJoinPrivateGroupReceived = true;
+                EventBus.getDefault().post(new PlayerJoinPrivateGroupEvent(numberOfPlayerAdded));
+            }
+        }, Integer.class);
+
+
 
         hub.on("PrivateGroupReceived", new SubscriptionHandler1<PrivateGroup>() {
             @Override
@@ -1043,6 +1056,29 @@ public class SignalRService extends Service {
             @Override
             public void onError(Throwable error) {
                 EventBus.getDefault().post(new SignalRErrorEvent("RequestDeletePrivateGroup"));
+            }
+        });
+    }
+
+    public void requestJoinPrivateGroup(String playerId, String groupId) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        playerJoinPrivateGroupReceived = false;
+        hub.invoke("RequestJoinPrivateGroup", playerId, groupId).done(new Action<Void>() {
+            @Override
+            public void run(Void obj) throws Exception {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!playerJoinPrivateGroupReceived)
+                            EventBus.getDefault().post(new SignalRErrorEvent("RequestJoinPrivateGroup"));
+                    }
+                }, 15000);
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                EventBus.getDefault().post(new SignalRErrorEvent("RequestJoinPrivateGroup"));
             }
         });
     }

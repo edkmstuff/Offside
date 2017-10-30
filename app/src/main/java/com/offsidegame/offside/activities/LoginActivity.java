@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -16,14 +20,21 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ResultCodes;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.offsidegame.offside.R;
 
 import com.offsidegame.offside.events.CompletedHttpRequestEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
+import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 
 import com.offsidegame.offside.helpers.HttpHelper;
@@ -36,12 +47,18 @@ import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jsoup.helper.StringUtil;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import microsoft.aspnet.signalr.client.ConnectionState;
-
 
 
 public class LoginActivity extends AppCompatActivity implements Serializable {
@@ -61,8 +78,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private TextView versionTextView;
     private boolean isInLoginProcess = false;
 
-
-
+    private FirebaseAnalytics analytics;
+    private String TAG = "SIDEKICK";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,13 +91,13 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             getIds();
             loadingRoot.setVisibility(View.VISIBLE);
 
-            //defineDeepLinking();
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
+
     }
 
-    private void getIds(){
+    private void getIds() {
         loadingRoot = (FrameLayout) findViewById(R.id.shared_loading_root);
         versionTextView = (TextView) findViewById(R.id.shared_version_text_view);
         versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
@@ -92,25 +109,19 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     }
 
-
-
-
-
-   // String TAG = "DYNAMIC_LINK";
-
-//   6
-
     @Override
     public void onResume() {
 
         super.onResume();
         EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(context);
+
 
     }
 
@@ -256,11 +267,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 //        }
     }
 
+    public void saveLoggedInUser() {
 
-
-    public void saveLoggedInUser(){
-
-        if(!isUserImageUrlValid)
+        if (!isUserImageUrlValid)
             playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
@@ -269,7 +278,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         editor.commit();
         User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl);
         OffsideApplication.signalRService.requestSaveLoggedInUser(user);
-   }
+    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -321,6 +330,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     }
 
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSavedPlayerImage(PlayerImageSavedEvent playerImageSavedEvent) {
         try {
@@ -335,20 +345,105 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayerAssets(PlayerAssets playerAssets) {
 
-        
         isInLoginProcess = false;
 
         OffsideApplication.setPlayerAssets(playerAssets);
-        Intent intent = new Intent(context, LobbyActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        startActivity(intent);
+        analyzeDynamicLink();
+
+
+    }
+
+    public void analyzeDynamicLink(){
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        Uri data = intent.getData();
+        if(data==null){
+            startLobyActivity();
+            return;
+        }
+
+
+        Log.d(TAG, "------action-----: " + action);
+        Log.d(TAG, "------data-----: " + (data != null ? data.toString() : "empty"));
+
+
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        // Get deep link from result (may be null if no link is found)
+                        Uri deepLink = null;
+                        if (pendingDynamicLinkData != null) {
+                            analytics = FirebaseAnalytics.getInstance(context);
+                            deepLink = pendingDynamicLinkData.getLink();
+                            if(deepLink==null)
+                                Log.d(TAG, "*****deepLink***** = null");
+                            else
+                                Log.d(TAG, "*****deepLink*****"+deepLink.toString());
+                            FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(pendingDynamicLinkData);
+                            if(invite!=null){
+                                String inviteId = invite.getInvitationId();
+                                if(!TextUtils.isEmpty(inviteId))
+                                    Log.d(TAG, "ACCPET invitation Id" + inviteId);
+
+                                URL url = null;
+                                try {
+                                    url = new URL("http",Uri.parse(deepLink.getQuery()).getHost(),deepLink.getQuery().toString());
+                                    try {
+
+                                        Map<String, List<String>> dynamicLinkQueryPairs = HttpHelper.splitQuery(url);
+                                        String groupId = dynamicLinkQueryPairs.get("groupId").get(0);
+                                        //TBD: idea: reward referrer when the invited player acept nvite - motivate him to convince users to play
+                                        //String inviter = dynamicLinkQueryPairs.get("referrer").get(0);
+                                        OffsideApplication.signalRService.requestJoinPrivateGroup(playerId,groupId);
+
+
+                                    }
+                                    catch (UnsupportedEncodingException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                }
+
+
+
+
+
+
+
+                                // Handle the deep link. For example, open the linked
+                                // content, or apply promotional credit to the user's
+                                // account.
+                                // ...
+
+                                //apply promotional credit to referrer
+                                //tun accept invitation (Add player to group)
+                                //redirect to login activity
+
+                                // ...
+                            }
+
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "analyzeDynamicLink:onFailure", e);
+                    }
+                });
+
+
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public  void onImageValidationCompleted(CompletedHttpRequestEvent completedHttpRequestEvent){
+    public void onImageValidationCompleted(CompletedHttpRequestEvent completedHttpRequestEvent) {
 
         isUserImageUrlValid = completedHttpRequestEvent.isUrlValid();
         // in case user does not have profile picture, we generate image with Initials
@@ -364,17 +459,28 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             OffsideApplication.signalRService.requestSaveImageInDatabase(playerId, imageString);
 
 
-        }
-        else {
+        } else {
             saveLoggedInUser();
         }
 
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlayerJoinedPrivateGroup(PlayerJoinPrivateGroupEvent playerJoinPrivateGroupEvent) {
 
+        startLobyActivity();
 
+    }
 
+    public void startLobyActivity(){
+
+        Intent intent = new Intent(context, LobbyActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        startActivity(intent);
+    }
 
 
 }

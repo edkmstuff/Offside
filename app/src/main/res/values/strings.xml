@@ -106,6 +106,7 @@
     <string name="lbl_create_private_group_hint">בחר שם לקבוצה</string>
     <string name="lbl_delete_private_group">מחק קבוצה</string>
     <string name="lbl_error_user_profile_picture_not_saved">User Image was not saved</string>
+    <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"https://www.sidekickgame.com\",\n  }\n}]</string>
 
 
 </resources>

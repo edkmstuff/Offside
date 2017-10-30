@@ -11,20 +11,23 @@
         android:name=".models.OffsideApplication"
         android:allowBackup="true"
         android:extractNativeLibs="false"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/app_logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Base"
-        tools:targetApi="m"
-        android:hardwareAccelerated="false"
-        android:largeHeap="true"
-        >
+        tools:targetApi="m">
+
         <!--
         added to avoid outOfMemory error due to usage in bitmap
         android:hardwareAccelerated="false"
         android:largeHeap="true"
         https://stackoverflow.com/questions/32244851/androidjava-lang-outofmemoryerror-failed-to-allocate-a-23970828-byte-allocatio
         -->
+        <meta-data
+            android:name="asset_statements"
+            android:resource="@string/asset_statements" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_application_id" />
@@ -47,10 +50,11 @@
         <!-- android:name="com.google.firebase.messaging.default_notification_color" -->
         <!-- android:resource="@color/colorAccent" /> -->
 
-        <!--<activity-->
-            <!--android:name=".activities.SlotActivity"-->
-            <!--android:label="Sidekick"-->
-            <!--android:screenOrientation="portrait" />-->
+
+        <!-- <activity -->
+        <!-- android:name=".activities.SlotActivity" -->
+        <!-- android:label="Sidekick" -->
+        <!-- android:screenOrientation="portrait" /> -->
         <activity
             android:name=".activities.LoginActivity"
             android:label="Sidekick"
@@ -60,20 +64,33 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- Accept chrome links -->
+            <intent-filter >
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="app" android:host="sidekickgame.com" />
+
+                <!--<data android:host="sidekickgame.com" android:scheme="http"/>-->
+                <!--<data android:host="sidekickgame.com" android:scheme="https"/>-->
+            </intent-filter>
+
+
         </activity>
 
         <activity
             android:name=".activities.LobbyActivity"
             android:label="Lobby"
             android:screenOrientation="portrait"
-            android:theme="@style/BlueTheme"
-            />
+            android:theme="@style/BlueTheme" />
+
         <activity
             android:name=".activities.CreatePrivateGroupActivity"
             android:label="Crate Group"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".activities.NewsDetailsActivity"></activity>
+        <activity android:name=".activities.NewsDetailsActivity" />
 
         <service
             android:name=".helpers.SignalRService"
