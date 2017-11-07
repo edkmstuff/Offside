@@ -6,6 +6,7 @@ package com.offsidegame.offside.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,17 +38,19 @@ public class PrivateGroupsFragment extends Fragment {
         if (OffsideApplication.getPrivateGroupsInfo() == null)
             return rootView;
 
-        ImageView createPrivateGroupImageView = (ImageView) rootView.findViewById(R.id.fpg_create_private_group_image_view);
+        //ImageView createPrivateGroupImageView = (ImageView) rootView.findViewById(R.id.fpg_create_private_group_image_view);
+        FloatingActionButton createPrivateGroupFloatingActionButton = rootView.findViewById(R.id.fpg_create_private_group_floating_action_button);
+
         ListView listView = (ListView) rootView.findViewById(R.id.fpg_private_groups_list_view);
         PrivateGroupAdapter privateGroupAdapter = new PrivateGroupAdapter(this.getActivity(), getPrivateGroups());
         listView.setAdapter(privateGroupAdapter);
 
         if(groupType.equals(getString(R.string.key_public_group_name)))
-            createPrivateGroupImageView.setVisibility(View.GONE);
+            createPrivateGroupFloatingActionButton.setVisibility(View.GONE);
         else
-            createPrivateGroupImageView.setVisibility(View.VISIBLE);
+            createPrivateGroupFloatingActionButton.setVisibility(View.VISIBLE);
 
-        createPrivateGroupImageView.setOnClickListener(new View.OnClickListener() {
+        createPrivateGroupFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

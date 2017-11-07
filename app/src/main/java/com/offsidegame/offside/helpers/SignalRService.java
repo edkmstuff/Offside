@@ -26,6 +26,7 @@ import com.offsidegame.offside.events.NotificationBubbleEvent;
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
+import com.offsidegame.offside.events.PlayerRewardedReceivedEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.PrivateGroupChangedEvent;
@@ -121,6 +122,7 @@ public class SignalRService extends Service {
     private boolean privateGroupsReceived = false;
     private boolean privateGroupDeleted = false;
     private boolean playerJoinPrivateGroupReceived = false;
+    private boolean playerRewardSaved = false;
 
 
 
@@ -448,6 +450,16 @@ public class SignalRService extends Service {
             }
         }, String.class);
 
+        hub.on("PlayerRewardedReceived", new SubscriptionHandler1<Integer>() {
+            @Override
+            public void run(Integer rewardValue) {
+                playerRewardSaved = true;
+                EventBus.getDefault().post(new PlayerRewardedReceivedEvent(rewardValue));
+            }
+        }, Integer.class);
+
+
+
     }
 
     private void fireNotification(String messageType, String message) {
@@ -695,7 +707,7 @@ public class SignalRService extends Service {
             return;
 
         chatMessagesReceived = false;
-        hub.invoke("requestGetChatMessages", playerId, gameId, privateGameId, androidDeviceId).done(new Action<Void>() {
+        hub.invoke("RequestGetChatMessages", playerId, gameId, privateGameId, androidDeviceId).done(new Action<Void>() {
 
             @Override
             public void run(Void obj) throws Exception {
@@ -1079,6 +1091,32 @@ public class SignalRService extends Service {
             @Override
             public void onError(Throwable error) {
                 EventBus.getDefault().post(new SignalRErrorEvent("RequestJoinPrivateGroup"));
+            }
+        });
+    }
+
+    public void requestToRewardPlayer(String playerId, String rewardType, String rewardReason, int quantity) {
+
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        playerRewardSaved = false;
+        hub.invoke("RequestToRewardPlayer", playerId, rewardType, rewardReason, quantity).done(new Action<Void>() {
+
+            @Override
+            public void run(Void obj) throws Exception {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!playerRewardSaved)
+                            EventBus.getDefault().post(new SignalRErrorEvent("RequestToRewardPlayer"));
+                    }
+                }, 15000);
+
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                EventBus.getDefault().post(new SignalRErrorEvent("RequestToRewardPlayer"));
             }
         });
     }

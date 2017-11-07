@@ -1,12 +1,15 @@
 <resources>
-    <dimen name="OffsideXtraLargeText">42sp</dimen>
+    <dimen name="OffsideXXtraLargeText">42sp</dimen>
+    <dimen name="OffsideXtraLargeText">34sp</dimen>
+    <dimen name="OffsideLargeText">26sp</dimen>
     <dimen name="OffsideMediumText">18sp</dimen>
     <dimen name="OffsideMediumSmallText">14sp</dimen>
     <dimen name="OffsideSmallText">10sp</dimen>
     <dimen name="OffsideExtraSmallText">9sp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activityHorizontalMargin">16dp</dimen>
-    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="floatingActionButtonMargin">16dp</dimen>
+
 
 
 </resources>

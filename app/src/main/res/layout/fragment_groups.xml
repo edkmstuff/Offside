@@ -14,19 +14,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-        <!--create  group button-->
-        <LinearLayout
-            android:id="@+id/fg_create_private_group_root"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp">
-
-
-
-        </LinearLayout>
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="80dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/sidekick_logo_text_only"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:alpha="0.85"
+            />
         <android.support.design.widget.TabLayout
             android:id="@+id/fg_groups_tab_layout"
             android:layout_width="match_parent"
@@ -35,7 +31,13 @@
             android:layout_centerHorizontal="true"
             app:tabMode="fixed"
             app:tabGravity="fill"
+            style="@style/TabLayoutStyle"
+            app:tabBackground="@color/transparentBackground"
             />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/navigationMenuUnSelectedItem"></View>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/fg_tabs_container_view_pager"

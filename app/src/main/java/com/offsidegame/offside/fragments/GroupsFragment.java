@@ -1,6 +1,7 @@
 package com.offsidegame.offside.fragments;
 
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -112,28 +113,18 @@ public class GroupsFragment extends Fragment {
                 super.onTabSelected(tab);
                 viewPager.setCurrentItem(tab.getPosition());
                 selectedTabPosition = viewPager.getCurrentItem();
-               // Log.d("Selected", "Selected " + tab.getPosition());
+                //viewPagerAdapter.refreshTabLayout(selectedTabPosition);
+
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 super.onTabUnselected(tab);
-               // Log.d("Unselected", "Unselected " + tab.getPosition());
+
+
+
             }
         });
-
-//        createPrivateGroupImageView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                Intent intent = new Intent(getContext(), CreatePrivateGroupActivity.class);
-//                startActivity(intent);
-//
-//            }
-//        });
-
-
-
     }
 
     public void resetVisibility() {

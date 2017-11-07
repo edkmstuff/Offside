@@ -1,29 +1,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:gravity="center"
     android:layoutDirection="ltr"
     android:orientation="vertical"
-    android:padding="2dp"
-    tools:context="com.offsidegame.offside.activities.LobbyActivity">
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:background="#50000000"
-        android:minHeight="140dp">
+        android:background="@drawable/shape_bg_league_record_odd"
+        android:minHeight="100dp"
+        >
 
         <LinearLayout
             android:id="@+id/ag_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:animateLayoutChanges="true"
             android:gravity="center"
             android:layoutDirection="ltr"
-            android:orientation="vertical"
-            android:layout_gravity="center">
+            android:orientation="vertical">
 
             <!-- MATCH -->
             <LinearLayout
@@ -37,8 +36,8 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -46,20 +45,19 @@
                         android:id="@+id/ag_home_team_logo_image_view"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/slot_heineken"
                         android:padding="4dp"
-                        />
+                        android:scaleType="centerInside"
+                        android:src="@drawable/slot_heineken" />
 
                     <TextView
-                        android:layout_marginTop="2dp"
                         android:id="@+id/ag_home_team_name_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:padding="2dp"
                         android:text="HOME TEAM"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/OffsideSmallText"
-                        android:padding="2dp"
 
                         />
 
@@ -74,65 +72,113 @@
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
+                    <LinearLayout
+                        style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
+                        android:gravity="center">
 
-                    <TextView
-                        android:id="@+id/ag_start_time_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="14dp"
-                        android:layout_marginTop="4dp"
-                        android:textColor="@color/colorWhite"
-                        android:text="21:45" />
+                        <TextView
+                            android:id="@+id/ag_start_date_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="4dp"
+                            android:text="20/4/17"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/OffsideMediumSmallText" />
 
-                    <TextView
-                        android:id="@+id/ag_start_date_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="12dp"
-                        android:textColor="@color/colorWhite"
-                        android:layout_marginTop="4dp"
-                        android:text="20/4/17" />
+                        <TextView
+                            android:id="@+id/ag_start_time_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_margin="4dp"
+                            android:text="21:45"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/OffsideMediumSmallText" />
 
+                    </LinearLayout>
                     <!--JOIN GAME-->
                     <LinearLayout
                         android:id="@+id/ag_join_private_game_root"
-                        android:layout_marginTop="8dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorBlue"
-                        android:paddingTop="5dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/shade_button"
+                        android:minWidth="135dp"
+                        android:orientation="vertical"
                         android:paddingBottom="5dp"
                         android:paddingLeft="20dp"
-                        android:paddingRight="20dp">
+                        android:paddingRight="20dp"
+                        android:paddingTop="5dp"
+                        android:gravity="center">
 
                         <TextView
                             android:id="@+id/ag_join_private_game_button_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/lbl_enter_game"
+                            android:textColor="@color/colorWhite"
                             android:textSize="16dp"
-                            android:textColor="@color/colorWhite" />
+                            android:layout_gravity="center"
+                            />
+
+                        <LinearLayout
+                            android:id="@+id/ag_game_enter_fee_root"
+                            style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@mipmap/ic_coin" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="200" />
+                        </LinearLayout>
+
 
                     </LinearLayout>
                     <!--CREATE GAME-->
                     <LinearLayout
                         android:id="@+id/ag_create_private_game_root"
-                        android:layout_marginTop="8dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@color/colorBlue"
-                        android:paddingTop="5dp"
+                        android:layout_marginTop="8dp"
+                        android:background="@drawable/shade_button"
+                        android:minWidth="135dp"
+                        android:orientation="vertical"
                         android:paddingBottom="5dp"
                         android:paddingLeft="20dp"
-                        android:paddingRight="20dp">
+                        android:paddingRight="20dp"
+                        android:paddingTop="5dp"
+                        android:gravity="center">
 
                         <TextView
                             android:id="@+id/ag_create_private_game_button_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/lbl_open_game"
+                            android:textColor="@color/colorWhite"
                             android:textSize="16dp"
-                            android:textColor="@color/colorWhite" />
+                            android:layout_gravity="center"/>
+
+                        <LinearLayout
+                            android:id="@+id/ag_game_create_fee_root"
+                            style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:src="@mipmap/ic_coin" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="200" />
+                        </LinearLayout>
 
                     </LinearLayout>
 
@@ -143,28 +189,28 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:layout_gravity="center"
                     android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/ag_away_team_logo_image_view"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
+                        android:padding="4dp"
                         android:scaleType="centerInside"
-                        android:src="@drawable/slot_heineken"
-                        android:padding="4dp" />
+                        android:src="@drawable/slot_heineken" />
 
                     <TextView
-                        android:layout_marginTop="2dp"
                         android:id="@+id/ag_away_team_name_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:padding="2dp"
                         android:text="HOME TEAM"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/OffsideSmallText"
-                        android:padding="2dp"
 
                         />
 
@@ -174,16 +220,19 @@
             </LinearLayout>
 
             <!--PLAYERS PLAYING THE GAME-->
+            <LinearLayout
+                style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
+                android:gravity="center">
 
                 <HorizontalScrollView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp">
 
                     <LinearLayout
                         android:id="@+id/ag_players_play_in_game_root"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:animateLayoutChanges="true"
                         android:gravity="center_vertical"
                         android:layoutDirection="ltr"
@@ -193,18 +242,26 @@
                     </LinearLayout>
 
                 </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/ag_more_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=".."
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/OffsideLargeText" />
+
                 <TextView
                     android:id="@+id/ag_players_count_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="7 חברים רשומים"
-                    />
+                    android:gravity="left"
+                    android:lines="1"
+                    android:text="12 חברים"
+                    android:textColor="@color/navigationMenuUnSelectedItem"
+                    android:textSize="@dimen/OffsideExtraSmallText" />
 
-
-
-
-
-
+            </LinearLayout>
 
 
         </LinearLayout>

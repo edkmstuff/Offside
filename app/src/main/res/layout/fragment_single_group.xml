@@ -10,24 +10,26 @@
         layout="@layout/shared_loading"
         android:visibility="gone" />
 
-
     <LinearLayout
         android:id="@+id/fsg_single_group_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:weightSum="10"
         android:orientation="vertical">
 
         <!-- GROUP NAVIGATION-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="2"
             android:orientation="vertical"
-
             android:paddingBottom="10dp"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
-            android:paddingTop="10dp">
+            android:paddingTop="10dp"
+
+
+            >
 
             <!-- FIRST ROW, group nav -->
             <LinearLayout
@@ -43,21 +45,21 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:gravity="center_horizontal">
+                    android:gravity="right">
 
                     <!-- LEFT TEXT-->
-                    <!--<TextView-->
-                    <!--android:id="@+id/fsg_group_navigation_left_button_text_view"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="\u003c"-->
-                    <!--android:textColor="@color/colorWhite" />-->
-
-                    <ImageView
-                        android:id="@+id/fsg_group_navigation_left_button_image_view"
+                    <TextView
+                        android:id="@+id/fsg_group_navigation_left_button_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_left" />
+                        android:text="\u003c"
+                        android:textColor="@color/colorWhite" />
+
+                    <!--<ImageView-->
+                    <!--android:id="@+id/fsg_group_navigation_left_button_image_view"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:src="@mipmap/ic_left" />-->
 
                 </LinearLayout>
 
@@ -66,17 +68,21 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="6"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:gravity="center|center_vertical"
+                    android:orientation="vertical"
+                    >
 
                     <!-- GROUP NAME TEXT -->
                     <TextView
                         android:id="@+id/fsg_group_navigation_group_name_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Kfir's friends"
+                        android:lines="1"
+                        android:paddingBottom="2dp"
+                        android:text="החברים"
                         android:textColor="@color/colorWhite"
-                        android:textSize="@dimen/OffsideMediumText"
+                        android:textSize="@dimen/OffsideXtraLargeText"
+                        android:fontFamily="@font/open_sans_hebrew_light"
 
                         />
 
@@ -88,26 +94,25 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:gravity="center_horizontal">
+                    android:gravity="left">
 
                     <!-- RIGHT TEXT-->
-                    <!--<TextView-->
-                    <!--android:id="@+id/fsg_group_navigation_right_button_text_view"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="\u003e"-->
-                    <!--android:textColor="@color/colorWhite" />-->
-                    <ImageView
-                        android:id="@+id/fsg_group_navigation_right_button_image_view"
+                    <TextView
+                        android:id="@+id/fsg_group_navigation_right_button_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_right" />
+                        android:text="\u003e"
+                        android:textColor="@color/colorWhite" />
+                    <!--<ImageView-->
+                    <!--android:id="@+id/fsg_group_navigation_right_button_image_view"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:src="@mipmap/ic_right" />-->
 
                 </LinearLayout>
 
 
             </LinearLayout>
-
 
             <!-- SECOND ROW , last played -->
             <LinearLayout
@@ -136,7 +141,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="שיחקו לפני 99 ימים"
-                        android:textColor="@color/colorWhite"
+                        android:textColor="@color/grayText"
                         android:textSize="@dimen/OffsideSmallText" />
 
 
@@ -157,7 +162,8 @@
         <!-- GAMES / LEAGUE-->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:orientation="horizontal"
             android:weightSum="2">
 
@@ -165,11 +171,11 @@
             <LinearLayout
                 android:id="@+id/fsg_single_group_games_tab_root"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@color/navigationMenu"
+                android:background="@color/navBackgroundColor"
                 android:gravity="center"
-                android:padding="10dp">
+                android:padding="14dp">
 
 
                 <TextView
@@ -192,11 +198,11 @@
             <LinearLayout
                 android:id="@+id/fsg_single_group_league_tab_root"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:background="@color/navBackgroundColor"
                 android:gravity="center"
-                android:background="@color/navigationMenu"
-                android:padding="10dp">
+                android:padding="14dp">
 
                 <TextView
                     android:id="@+id/fsg_single_group_league_text_view"
@@ -220,9 +226,12 @@
         <LinearLayout
             android:id="@+id/fsg_single_group_games_root"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="gone"
+
+            >
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/fsg_leagues_selection_tab_layout"
@@ -231,7 +240,14 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 app:tabGravity="fill"
-                app:tabMode="fixed" />
+                app:tabMode="fixed"
+                style="@style/TabLayoutStyle"
+                app:tabBackground="@color/transparentBackground"
+                />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/navigationMenuUnSelectedItem"></View>
 
 
             <android.support.v4.view.ViewPager
@@ -239,7 +255,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/fsg_leagues_selection_tab_layout"
-                android:layout_centerHorizontal="true"></android.support.v4.view.ViewPager>
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/single_group_background"
+                ></android.support.v4.view.ViewPager>
 
 
         </LinearLayout>
@@ -248,9 +266,12 @@
         <LinearLayout
             android:id="@+id/fsg_single_group_league_root"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:background="@drawable/single_group_background"
+            android:visibility="visible"
+            >
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -260,7 +281,7 @@
                     android:id="@+id/fsg_league_title_root"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
+
                     android:gravity="center_horizontal"
                     android:layoutDirection="rtl"
                     android:orientation="horizontal"
@@ -269,23 +290,74 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/lbl_your_position" />
+                        android:text="@string/lbl_your_position"
+                        android:textColor="@color/grayText"/>
 
                     <TextView
                         android:id="@+id/fsg_single_group_position_out_of_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/grayText"
                         android:text="3/8" />
 
 
                 </LinearLayout>
-                <!--league table-->
 
+                <!--Table headers-->
+                <LinearLayout
+                    android:id="@+id/fsg_league_header_root"
+                    style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
+                    android:layoutDirection="ltr"
+                    android:orientation="horizontal"
+                    android:weightSum="6"
+                    android:padding="5dp"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:layout_below="@+id/fsg_league_title_root"
+                    >
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        style="@style/LeagueHeader"
+                        android:text="POS"
+
+                        />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="3"
+                        style="@style/LeagueHeader"
+                        android:text="PLAYER"
+                        >
+
+                    </TextView>
+
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        style="@style/LeagueHeader"
+                        android:text="GAMES" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        style="@style/LeagueHeader"
+                        android:text="POINTS" />
+
+
+
+                </LinearLayout>
+                <!--league table-->
                 <ListView
                     android:id="@+id/fsg_single_group_league_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/fsg_league_title_root"
+                    android:layout_below="@+id/fsg_league_header_root"
                     android:divider="@null"
                     android:dividerHeight="0dp"
                     android:listSelector="@android:color/transparent"
@@ -300,13 +372,14 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:padding="10dp">
+                    android:padding="10dp"
+                    android:layout_below="@+id/fsg_single_group_league_list_view">
 
                     <TextView
                         android:id="@+id/fsg_single_group_delete_group_text_view"
+                        style="@style/Button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/Button"
                         android:gravity="center"
                         android:minHeight="50dp"
                         android:minWidth="100dp"
@@ -317,9 +390,6 @@
                         />
 
                 </LinearLayout>
-
-
-
 
 
             </RelativeLayout>

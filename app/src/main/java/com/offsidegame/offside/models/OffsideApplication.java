@@ -336,11 +336,11 @@ public class OffsideApplication extends Application {
 
             //override fonts
             FontsOverride.setDefaultFont(this, "DEFAULT", "fonts/OpenSansHebrew-Regular.ttf");
-//            FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/OpenSansHebrew-Regular.ttf");
-//            FontsOverride.setDefaultFont(this, "SERIF", "fonts/OpenSansHebrew-Regular.ttf");
-//            FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/OpenSansHebrew-Regular.ttf");
+//            FontsOverride.setDefaultFont(this, "MONOSPACE", "fonts/font_open_sans_hebrew_regular.ttf");
+//            FontsOverride.setDefaultFont(this, "SERIF", "fonts/font_open_sans_hebrew_regular.ttf");
+//            FontsOverride.setDefaultFont(this, "SANS_SERIF", "fonts/font_open_sans_hebrew_regular.ttf");
 //
-//            TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/OpenSansHebrew-Regular.ttf");
+//            TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/font_open_sans_hebrew_regular.ttf");
 
 
         } catch (Exception ex) {
@@ -411,6 +411,24 @@ public class OffsideApplication extends Application {
             editor.putString(context.getString(R.string.game_id_key), null);
             editor.putString(context.getString(R.string.private_group_id_key), null);
             editor.putString(context.getString(R.string.private_game_id_key), null);
+
+            editor.commit();
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+    public static void setUserPreferences(String groupId, String gameId, String privateGameId ) {
+        try {
+            SharedPreferences settings = getContext().getSharedPreferences(context.getString(R.string.preference_name), 0);
+            SharedPreferences.Editor editor = settings.edit();
+
+            editor.putString(context.getString(R.string.game_id_key), gameId);
+            editor.putString(context.getString(R.string.private_group_id_key), groupId);
+            editor.putString(context.getString(R.string.private_game_id_key), privateGameId);
 
             editor.commit();
 

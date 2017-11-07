@@ -24,26 +24,26 @@
     <color name="correctAnswer">#388E3C</color>
     <color name="chatText">#5B5B5B</color>
 
-
-    <!--<color name="answerTextColor">#FFFFFF</color>-->
-    <!--<color name="answer1backgroundColor">#DE1831</color>-->
-    <!--<color name="answer2backgroundColor">#1F57A5</color>-->
-    <!--<color name="answer3backgroundColor">#D89E00</color>-->
-    <!--<color name="answer4backgroundColor">#60991F</color>-->
-
     <color name="grayText">#c7c7c7</color>
 
 
     <!--new colors-->
-    <color name="colorPrimary">#0C155F</color>
+    <color name="navBackgroundColor">#15194e</color>
+    <color name="navSelectedItemColor">#ffffff</color>
+    <color name="navUnSelectedItemColor">#25ffffff</color>
+
+
+    <color name="colorPrimary">#0D123F</color>
     <!--<color name="colorButton">#4061A9</color>-->
     <!--<color name="colorButton">#8C9EFF</color>-->
-    <color name="colorButton">#ACBED8</color>
+    <color name="colorButton">#4061A9</color>
+    <color name="playerAssetsBackgroundColor">#212836</color>
+    <!--<color name="playerAssetsBackgroundColor">#F9000030</color>-->
 
 
 
     <color name="colorPrimaryDark">#1A237E</color>
-    <color name="colorActive">#00E676</color>
+    <color name="colorActive">#00c420</color>
     <!--<color name="navigationMenu">#151A50</color>-->
     <color name="navigationMenu">#1A237E</color>
     <!--<color name="navigationMenuSelectedItem">#383C69</color>-->
@@ -67,6 +67,30 @@
 
     <color name="correctAnswerColor">#00E676</color>
     <color name="wrongAnswerColor">#E57373</color>
+    <color name="popupBackgroundColor">#E57373</color>
+
+    <color name="leagueRecordOddGradientStart">#1F4294</color>
+    <color name="leagueRecordOddGradientEnd">#1D459A</color>
+
+    <color name="leagueRecordEvenGradientStart">#042A7F</color>
+    <color name="leagueRecordEvenGradientEnd">#023892</color>
+
+    <color name="leagueRecordEvenSolid">#201c1c1c</color>
+    <color name="leagueRecordOddSolid">#01cfc6c6</color>
+
+
+
+    <color name="defaultImageBackgroundColor1">#BA68C8</color>
+    <color name="defaultImageBackgroundColor2">#009688</color>
+    <color name="defaultImageBackgroundColor3">#43A047</color>
+    <color name="defaultImageBackgroundColor4">#E65100</color>
+    <color name="defaultImageBackgroundColor5">#78909C</color>
+    <color name="defaultImageBackgroundColor6">#E64A19</color>
+
+
+
+
+
 
 
 

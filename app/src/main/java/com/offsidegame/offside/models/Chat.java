@@ -18,12 +18,16 @@ public class Chat {
     @com.google.gson.annotations.SerializedName("POS")
     private Position position;
 
+    @com.google.gson.annotations.SerializedName("SB")
+    private Scoreboard scoreboard;
+
     private HashMap<String,ChatMessage> chatMessagesDictionary;
 
     public Chat(Chat chat){
         chatMessages= chat.getChatMessages();
         player= chat.getPlayer();
         position = chat.getPosition();
+        scoreboard = chat.getScoreboard();
         chatMessagesDictionary= new HashMap<>();
         for(ChatMessage cm : chat.getChatMessages() ){
             chatMessagesDictionary.put(cm.getId(),cm);
@@ -75,5 +79,13 @@ public class Chat {
 
     public void setChatMessages(ArrayList<ChatMessage> chatMessages) {
         this.chatMessages = chatMessages;
+    }
+
+    public Scoreboard getScoreboard() {
+        return scoreboard;
+    }
+
+    public void setScoreboard(Scoreboard scoreboard) {
+        this.scoreboard = scoreboard;
     }
 }

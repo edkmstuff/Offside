@@ -1,39 +1,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
-    <ImageView
-        android:id="@+id/fpg_create_private_group_image_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/ic_add_group"
-        android:layout_above="@+id/fpg_private_groups_scroll_view"
-        android:layout_marginLeft="5dp"
-        />
 
-    <ScrollView
-        android:id="@+id/fpg_private_groups_scroll_view"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none"
-        android:scrollbarSize="0dp"
-        android:fillViewport="true"
-
-
-        >
-        <ListView
-            android:id="@+id/fpg_private_groups_list_view"
-            android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fpg_create_private_group_floating_action_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            android:listSelector="@android:color/transparent"
-            android:transcriptMode="alwaysScroll"
-            >
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/floatingActionButtonMargin"
+            android:src="@mipmap/ic_add"
+            app:backgroundTint="@color/colorButton"
+            app:fabSize="mini"
+            />
 
-        </ListView>
-    </ScrollView>
+        <ScrollView
+            android:id="@+id/fpg_private_groups_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:scrollbarSize="0dp"
+            android:fillViewport="true"
+
+
+            >
+            <ListView
+                android:id="@+id/fpg_private_groups_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:listSelector="@android:color/transparent"
+                android:transcriptMode="alwaysScroll"
+                >
+
+            </ListView>
+        </ScrollView>
+
+    </FrameLayout>
+
+
+
 
 </LinearLayout>

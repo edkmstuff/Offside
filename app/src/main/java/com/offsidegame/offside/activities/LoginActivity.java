@@ -47,14 +47,12 @@ import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jsoup.helper.StringUtil;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,6 +78,10 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     private FirebaseAnalytics analytics;
     private String TAG = "SIDEKICK";
+
+//    private String groupIdFromInvitation;
+//    private String gameIdFromInvitation;
+//    private String privateGameIdFromInvitation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -360,11 +362,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         String action = intent.getAction();
         Uri data = intent.getData();
         if(data==null){
-            startLobyActivity();
+            startLobbyActivity();
             return;
         }
-
-
         Log.d(TAG, "------action-----: " + action);
         Log.d(TAG, "------data-----: " + (data != null ? data.toString() : "empty"));
 
@@ -395,11 +395,18 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                     try {
 
                                         Map<String, List<String>> dynamicLinkQueryPairs = HttpHelper.splitQuery(url);
-                                        String groupId = dynamicLinkQueryPairs.get("groupId").get(0);
-                                        //TBD: idea: reward referrer when the invited player acept nvite - motivate him to convince users to play
-                                        //String inviter = dynamicLinkQueryPairs.get("referrer").get(0);
-                                        OffsideApplication.signalRService.requestJoinPrivateGroup(playerId,groupId);
+                                        String groupIdFromInvitation = dynamicLinkQueryPairs.get("groupId").get(0);
+                                        String gameIdFromInvitation = dynamicLinkQueryPairs.get("gameId").get(0);
+                                        String privateGameIdFromInvitation = dynamicLinkQueryPairs.get("privateGameId").get(0);
 
+                                        //Add player to the group from which he was invited
+                                        if(groupIdFromInvitation!=null)
+
+                                            OffsideApplication.signalRService.requestJoinPrivateGroup(playerId,groupIdFromInvitation);
+
+                                        //Override userPreferences, as theses will be used when tryJoinSelectedAvailableGame will be executed (Lobby Activity)
+                                        if(gameIdFromInvitation!=null && privateGameIdFromInvitation != null)
+                                            OffsideApplication.setUserPreferences(groupIdFromInvitation, gameIdFromInvitation, privateGameIdFromInvitation);
 
                                     }
                                     catch (UnsupportedEncodingException e) {
@@ -410,22 +417,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                     e.printStackTrace();
                                 }
 
-
-
-
-
-
-
-                                // Handle the deep link. For example, open the linked
-                                // content, or apply promotional credit to the user's
-                                // account.
-                                // ...
-
-                                //apply promotional credit to referrer
-                                //tun accept invitation (Add player to group)
-                                //redirect to login activity
-
-                                // ...
                             }
 
                         }
@@ -468,12 +459,10 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlayerJoinedPrivateGroup(PlayerJoinPrivateGroupEvent playerJoinPrivateGroupEvent) {
-
-        startLobyActivity();
-
+        startLobbyActivity();
     }
 
-    public void startLobyActivity(){
+    public void startLobbyActivity(){
 
         Intent intent = new Intent(context, LobbyActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

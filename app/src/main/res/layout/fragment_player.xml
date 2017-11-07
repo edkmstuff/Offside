@@ -565,7 +565,7 @@
                         android:gravity="center"
 
                         android:text="20"
-                        android:textSize="@dimen/OffsideXtraLargeText" />
+                        android:textSize="@dimen/OffsideXXtraLargeText" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -595,7 +595,7 @@
                         android:gravity="center"
 
                         android:text="20"
-                        android:textSize="@dimen/OffsideXtraLargeText" />
+                        android:textSize="@dimen/OffsideXXtraLargeText" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -625,7 +625,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="950"
-                        android:textSize="@dimen/OffsideXtraLargeText" />
+                        android:textSize="@dimen/OffsideXXtraLargeText" />
 
                     <TextView
                         android:layout_width="wrap_content"

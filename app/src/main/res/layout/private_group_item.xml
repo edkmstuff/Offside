@@ -9,56 +9,65 @@
     tools:context="com.offsidegame.offside.activities.LobbyActivity">
 
 
-
-        <LinearLayout
-            android:id="@+id/pg_root"
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/pg_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:animateLayoutChanges="true"
+        android:background="@color/transparentBackground"
+        android:gravity="center"
+        android:layoutDirection="ltr"
+        android:minHeight="140dp"
+        android:orientation="vertical">
+        <!--group name-->
+        <TextView
+            android:id="@+id/pg_group_name_text_view"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
+            android:layout_marginTop="35dp"
             android:gravity="center"
-            android:layoutDirection="ltr"
-            android:orientation="vertical"
-            android:layout_gravity="center"
-            android:background="@color/transparentBackground"
-            android:minHeight="140dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="5dp"
-            >
+            android:text="the sharks"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/OffsideLargeText"
+            android:fontFamily="@font/open_sans_hebrew_light"
+            />
+        <!--action enter game-->
+        <TextView
+            android:id="@+id/pg_group_game_status_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@color/colorActive"
+            android:gravity="center"
+            android:minWidth="100dp"
+            android:padding="5dp"
+            android:text="משחק פעיל"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold" />
+        <!--group members-->
+        <LinearLayout
+            style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/pg_invite_friends_image_view"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@mipmap/ic_invite_freind_to_group"
 
-            <TextView
-                android:id="@+id/pg_group_name_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/OffsideMediumText"
-                android:textColor="@color/colorWhite"
-                android:text="the sharks"
-                android:layout_marginTop="20dp"
-                android:gravity="center"
                 />
-            <TextView
-                android:id="@+id/pg_group_game_status_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="משחק פעיל"
-                android:textColor="@color/colorWhite"
-                android:background="@color/colorActive"
-                android:padding="5dp"
-                android:textStyle="bold"
-                android:layout_marginTop="4dp"
-                android:minWidth="100dp"
-                android:gravity="center"
-                />
-
             <HorizontalScrollView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp">
 
                 <LinearLayout
                     android:id="@+id/pg_players_play_in_group_root"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:animateLayoutChanges="true"
                     android:gravity="center_vertical"
                     android:layoutDirection="ltr"
@@ -68,35 +77,42 @@
                 </LinearLayout>
 
             </HorizontalScrollView>
-
+            <TextView
+                android:id="@+id/pg_more_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:text=".."
+                android:textSize="@dimen/OffsideLargeText"/>
             <TextView
                 android:id="@+id/pg_total_playing_players_in_group_text_view"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/colorWhite"
-                android:text="12 חברים כבר משחקים"
-                android:layout_marginTop="4dp"
-                android:padding="5dp"
-                android:gravity="center"
+                android:gravity="left"
                 android:lines="1"
-                />
+                android:text="12 חברים"
+                android:textColor="@color/navigationMenuUnSelectedItem"
+                android:textSize="@dimen/OffsideExtraSmallText" />
 
-                <TextView
-                    android:id="@+id/pg_invite_friends_text_view"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="הזמן חברים"
-                    android:textColor="@color/colorWhite"
-                    android:background="@color/com_facebook_button_background_color"
-                    android:padding="5dp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
-                    android:minWidth="100dp"
-                    android:gravity="center"
-                    />
+
 
         </LinearLayout>
+
+
+        <!--<TextView-->
+            <!--android:id="@+id/pg_invite_friends_text_view"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="4dp"-->
+            <!--android:layout_marginTop="4dp"-->
+            <!--android:background="@color/com_facebook_button_background_color"-->
+            <!--android:gravity="center"-->
+            <!--android:minWidth="100dp"-->
+            <!--android:padding="5dp"-->
+            <!--android:text="הזמן חברים"-->
+            <!--android:textColor="@color/colorWhite"-->
+            <!--android:textStyle="bold" />-->
+
+    </LinearLayout>
 
 </LinearLayout>

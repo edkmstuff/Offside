@@ -1,4 +1,5 @@
 package com.offsidegame.offside.adapters;
+
 import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
@@ -26,6 +28,7 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     Context context;
     ViewPager viewPager;
     TabLayout tabLayout;
+    ArrayList<View> tabViews = new ArrayList<>();
 
     public ViewPagerAdapter(FragmentManager manager, Context context, ViewPager viewPager,
                             TabLayout tabLayout) {
@@ -46,18 +49,18 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void addFragment(Fragment fragment, String title) {
-        if(mFragmentList.contains(fragment) )
+        if (mFragmentList.contains(fragment))
             return;
-         if(isTabFragmentExist(title))
-             return;
+        if (isTabFragmentExist(title))
+            return;
         mFragmentList.add(fragment);
         mFragmentTitleList.add(title);
     }
 
-    public boolean isTabFragmentExist(String title){
+    public boolean isTabFragmentExist(String title) {
         boolean tabFragmentExist = false;
-        for(String tabTitle : mFragmentTitleList){
-            if(tabTitle.equals(title)){
+        for (String tabTitle : mFragmentTitleList) {
+            if (tabTitle.equals(title)) {
                 tabFragmentExist = true;
                 break;
             }
@@ -78,14 +81,17 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
     public View getTabView(final int position) {
         View view = LayoutInflater.from(context).inflate(R.layout.custom_tab_item, null);
+
         TextView tabItemName = (TextView) view.findViewById(R.id.textViewTabItemName);
 
         tabItemName.setText(mFragmentTitleList.get(position));
-        tabItemName.setTextColor(context.getResources().getColor(android.R.color.background_light));
 
+        tabItemName.setTextColor(context.getResources().getColor(R.color.navigationMenuSelectedItem));
 
         return view;
     }
+
+
 
     public void destroyFragmentView(ViewGroup container, int position, Object object) {
         FragmentManager manager = ((Fragment) object).getFragmentManager();
