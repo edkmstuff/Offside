@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="1" />
+        android:text="1"
+        android:fontFamily="@font/font_open_sans_hebrew"/>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -29,6 +30,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:scaleType="centerCrop"
+            android:fontFamily="@font/font_open_sans_hebrew"
             />
 
     </LinearLayout>
@@ -41,7 +43,8 @@
         android:layout_weight="2"
         android:gravity="left"
         android:text="1"
-        android:lines="1"/>
+        android:lines="1"
+        android:fontFamily="@font/font_open_sans_hebrew"/>
 
 
     <TextView
@@ -50,14 +53,16 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="1" />
+        android:text="1"
+        android:fontFamily="@font/font_open_sans_hebrew"/>
     <TextView
         android:id="@+id/lr_points_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="center"
-        android:text="1" />
+        android:text="1"
+        android:fontFamily="@font/font_open_sans_hebrew"/>
 
 
 

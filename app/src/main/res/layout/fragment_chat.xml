@@ -215,7 +215,8 @@
                     android:layout_height="wrap_content"
                     android:text="team A vs. team B"
                     android:textColor="@color/colorWhite"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    android:fontFamily="@font/font_open_sans_hebrew_light"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"

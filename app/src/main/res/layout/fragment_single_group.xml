@@ -314,6 +314,7 @@
                     android:background="@color/colorPrimary"
                     android:gravity="center"
                     android:layout_below="@+id/fsg_league_title_root"
+
                     >
                     <TextView
                         android:layout_width="0dp"

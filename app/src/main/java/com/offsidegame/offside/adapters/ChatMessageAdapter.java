@@ -1377,8 +1377,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         int answerNumber = getAnswerNumber(viewHolder.question, answerId);
         viewHolder.answerRoots[answerNumber].setBackgroundResource(R.drawable.shape_bg_rectangle_answer_selected);
-        viewHolder.answerTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextColor));
-        viewHolder.answerReturnTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextColor));
+        viewHolder.answerTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextSelectedColor));
+        viewHolder.answerReturnTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextSelectedColor));
 
 
     }
