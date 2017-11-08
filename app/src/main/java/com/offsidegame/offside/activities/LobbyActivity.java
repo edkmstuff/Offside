@@ -35,6 +35,7 @@ import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.AvailableGameEvent;
+import com.offsidegame.offside.events.CannotJoinPrivateGameEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
@@ -81,7 +82,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private final String activityName = "LobbyActivity";
     private final Context context = this;
     private final Activity thisActivity = this;
-    private String androidDeviceId ;
+    private String androidDeviceId;
     private BottomNavigationViewEx bottomNavigation;
 
     private ImageView settingsButtonImageView;
@@ -176,9 +177,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         bottomNavigation.setItemHeight(BottomNavigationViewEx.dp2px(this, iconSize + 16));
 
 
-
-
-
     }
 
     private void setEvents() {
@@ -253,6 +251,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                         case R.id.nav_action_play:
                             //bottomNavigation.setItemBackground(itemPosition, R.color.navigationMenuSelectedItem);
+                            PrivateGroup selectedGroup = OffsideApplication.getSelectedPrivateGroup();
+                            if(selectedGroup==null){
+                                EventBus.getDefault().post(new CannotJoinPrivateGameEvent(R.string.lbl_no_active_private_game));
+                                return true;
+                            }
                             if (qBadgeView != null)
                                 qBadgeView.hide(true);
                             chatNavigationItemNotificationCount = 0;
@@ -393,9 +396,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             int powerItems = playerAssets.getPowerItems();
             playerProfilePictureUrl = playerAssets.getImageUrl();
 
-            String formattedBalance = Formatter.formatNumber(balance,Formatter.intCommaSeparator);
+            String formattedBalance = Formatter.formatNumber(balance, Formatter.intCommaSeparator);
             balanceTextView.setText(formattedBalance);
-            String formattedPowerItems = Formatter.formatNumber(powerItems,Formatter.intCommaSeparator);
+            String formattedPowerItems = Formatter.formatNumber(powerItems, Formatter.intCommaSeparator);
             powerItemsTextView.setText(formattedPowerItems);
 
             ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName, true);
@@ -470,12 +473,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             String groupId = privateGroup.getId();
 
-            if(privateGroup == null || currentPrivateGameId == null) {
-                Toast.makeText(context, R.string.lbl_no_active_games, Toast.LENGTH_SHORT).show();
-                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
-            }
-            else if (currentGameId != null && currentPrivateGameId != null && groupId != null && androidDeviceId != null && playerId != null){
-                OffsideApplication.signalRService.requestJoinPrivateGame(playerId, currentGameId, groupId , currentPrivateGameId,  androidDeviceId);
+            if (privateGroup == null || currentPrivateGameId == null) {
+                EventBus.getDefault().post(new CannotJoinPrivateGameEvent(R.string.lbl_no_active_private_game));
+
+            } else if (currentGameId != null && currentPrivateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
+                OffsideApplication.signalRService.requestJoinPrivateGame(playerId, currentGameId, groupId, currentPrivateGameId, androidDeviceId);
             }
 
 
@@ -550,9 +552,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             String privateGameId = privateGameGeneratedEvent.getPrivateGameId();
             String gameId = OffsideApplication.getSelectedAvailableGame().getGameId();
             String groupId = OffsideApplication.getSelectedPrivateGroupId();
-            OffsideApplication.setUserPreferences(groupId,gameId,privateGameId);
+            OffsideApplication.setUserPreferences(groupId, gameId, privateGameId);
 
-            tryJoinSelectedAvailableGame(playerId,gameId,privateGameId);
+            tryJoinSelectedAvailableGame(playerId, gameId, privateGameId);
 
 
         } catch (Exception ex) {
@@ -593,17 +595,18 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     public void onGroupInvite(GroupInviteEvent groupInviteEvent) {
 
         String groupId = groupInviteEvent.getGroupId();
+        String groupName = groupInviteEvent.getGroupName();
         String gameId = groupInviteEvent.getGameId();
         String privateGameId = groupInviteEvent.getPrivateGamaId();
         String playerId = groupInviteEvent.getInviterPlayerId();
 
         //OffsideApplication.signalRService.requestInviteFriend(playerId, groupId, gameId, privateGameId);
-        startFirebaseInvite(groupId, gameId, privateGameId, playerId);
+        startFirebaseInvite(groupId, groupName, gameId, privateGameId, playerId);
         //shareShortDynamicLink();
 
     }
 
-    private void startFirebaseInvite(String groupId, String gameId, String privateGameId, String inviterId) {
+    private void startFirebaseInvite(String groupId, String groupName, String gameId, String privateGameId, String inviterId) {
 
         StringBuilder sb = new StringBuilder(500); // Using default 16 character size
         sb.append("https://tmg9s.app.goo.gl/?link=app://sidekickgame.com?");
@@ -619,9 +622,19 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         String deepLink = sb.toString();
 
+        String invitationMessage;
+        String playerName = OffsideApplication.getPlayerAssets().getPlayerName();
+        if (privateGameId != null) {
+            String gameTitle = OffsideApplication.getSelectedAvailableGame().getGameTitle();
+            invitationMessage = String.format("Hi it's me %s. Our group %s is watching %s. Come play Sidekick with us ", playerName, groupName, gameTitle);
+        } else if (groupId != null) {
+            invitationMessage = String.format("Hi it's me %s. Join my group %s and Let's play Sidekick", playerName, groupName);
+        } else
+            invitationMessage = String.format("Hi it's me %s. Lets' play Sidekick", playerName);
+
 
         Intent intent = new AppInviteInvitation.IntentBuilder("Invite friends")
-                .setMessage(String.format("Hi it's me %s. Lets' play Sidekick", OffsideApplication.getPlayerAssets().getPlayerName()))
+                .setMessage(invitationMessage)
                 //.setDeepLink(Uri.parse("https://tmg9s.app.goo.gl/?link=app://sidekickgame.com?groupId="+groupId+"&referrer="+inviterId+"&apn=com.offsidegame.offside&ibi=com.offsidegame.offside.ios&isi=12345"))
                 .setDeepLink(Uri.parse(deepLink))
                 .setCustomImage(Uri.parse(OffsideApplication.getAppLogoPictureUrl()))
@@ -784,7 +797,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCannotJoinPrivateGameReceived(CannotJoinPrivateGameEvent cannotJoinPrivateGameEvent) {
 
+        Integer reason = cannotJoinPrivateGameEvent.getReason();
+        Toast.makeText(context, reason, Toast.LENGTH_SHORT).show();
+        EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+    }
     //</editor-fold>
 
     @Override

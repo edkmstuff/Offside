@@ -144,7 +144,7 @@
         <item name="android:textColor">#ababab</item>
         <item name="android:textSize">@dimen/OffsideExtraSmallText</item>
         <item name="android:padding">4dp</item>
-        <item name="android:fontFamily">@font/font_open_sans_hebrew</item>
+        <item name="android:fontFamily">@font/font_open_sans_hebrew_light</item>
     </style>
 
     <!--<style name="BackgroundOdd">-->
@@ -157,6 +157,10 @@
         <!--<item name="android:alpha">0.05</item>-->
     <!--</style>-->
 
+<style name="ExperienceLevelImagePadding">
 
+    <item name="android:padding">2dp</item>
+
+</style>
 
 </resources>

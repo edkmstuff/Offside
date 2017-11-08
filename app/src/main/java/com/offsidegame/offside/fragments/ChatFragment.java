@@ -312,10 +312,11 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String groupId = OffsideApplication.getSelectedPrivateGroupId();
+                String groupName = OffsideApplication.getSelectedPrivateGroup().getName();
                 gameId = OffsideApplication.getSelectedGameId();
                 privateGameId = OffsideApplication.getSelectedPrivateGameId();
                 String playerId = OffsideApplication.getPlayerId();
-                EventBus.getDefault().post(new GroupInviteEvent(groupId, gameId, privateGameId, playerId));
+                EventBus.getDefault().post(new GroupInviteEvent(groupId, groupName, gameId, privateGameId, playerId));
             }
         });
 

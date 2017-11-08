@@ -189,8 +189,9 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 public void onClick(View view) {
 
                     String groupId = viewHolder.privateGroup.getId();
+                    String groupName = viewHolder.privateGroup.getName();
                     String playerId = OffsideApplication.getPlayerId();
-                    EventBus.getDefault().post(new GroupInviteEvent(groupId, null, null, playerId));
+                    EventBus.getDefault().post(new GroupInviteEvent(groupId, groupName, null, null, playerId));
 
                 }
             });

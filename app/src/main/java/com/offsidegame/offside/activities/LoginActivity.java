@@ -212,8 +212,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                 .createSignInIntentBuilder()
                                 .setAvailableProviders(
                                         Arrays.asList(facebookIdp,
-                                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build(),
                                                 new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build(),
                                                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()
                                         ))
                                 //.setTosUrl("https://superapp.example.com/terms-of-service.html")
@@ -271,8 +271,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     public void saveLoggedInUser() {
 
-        if (!isUserImageUrlValid)
-            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
+//        if (!isUserImageUrlValid)
+//            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -332,17 +332,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     }
 
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveSavedPlayerImage(PlayerImageSavedEvent playerImageSavedEvent) {
-        try {
-            saveLoggedInUser();
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayerAssets(PlayerAssets playerAssets) {
@@ -447,6 +436,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
             String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
 
+            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
             OffsideApplication.signalRService.requestSaveImageInDatabase(playerId, imageString);
 
 
@@ -455,6 +445,17 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         }
 
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSavedPlayerImage(PlayerImageSavedEvent playerImageSavedEvent) {
+        try {
+            saveLoggedInUser();
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
