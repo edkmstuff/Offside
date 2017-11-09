@@ -4,57 +4,71 @@
     android:layoutDirection="ltr"
     android:orientation="vertical"
     android:gravity="center"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp"
+
     >
-
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/OffsideMediumText"
-        android:padding="2dp"
-        android:text="הכבשים"
-        android:lines="1"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/OffsideSmallText"
-        android:text="1מתוך 10"
-        android:padding="2dp"
-        android:layout_marginBottom="10dp"
-        android:lines="1"
-        />
-
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginBottom="5dp"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:padding="2dp"
-        android:src="@drawable/trophy_gold_big" />
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/OffsideMediumText"
+            android:padding="2dp"
+            android:text="הכבשים"
+            android:lines="1"
+            android:fontFamily="@font/font_open_sans_hebrew_light"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/OffsideSmallText"
+            android:text="1מתוך 10"
+            android:padding="2dp"
+            android:layout_marginBottom="10dp"
+            android:lines="1"
+            android:fontFamily="@font/font_open_sans_hebrew_light"
+            />
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/OffsideMediumSmallText"
-        android:text="Real Madrid vs. Arsenal"
-        android:paddingRight="4dp"
-        android:paddingLeft="4dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:lines="1"
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:padding="2dp"
+            android:src="@drawable/trophy_gold_big"/>
 
-        />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/OffsideMediumSmallText"
-        android:text="2 months ago"
-        android:padding="2dp"
-        android:lines="1"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/OffsideMediumSmallText"
+            android:text="Real Madrid vs. Arsenal"
+            android:paddingRight="4dp"
+            android:paddingLeft="4dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:lines="1"
+            android:fontFamily="@font/font_open_sans_hebrew_light"
+
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/OffsideMediumSmallText"
+            android:text="2 months ago"
+            android:padding="2dp"
+            android:lines="1"
+            android:fontFamily="@font/font_open_sans_hebrew_light"/>
+
+
+    </LinearLayout>
+
 
 
 

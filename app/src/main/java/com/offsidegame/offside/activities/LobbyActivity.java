@@ -1,42 +1,49 @@
 package com.offsidegame.offside.activities;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
-import com.aurelhubert.ahbottomnavigation.notification.AHNotification;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.AvailableGameEvent;
+import com.offsidegame.offside.events.CannotJoinPrivateGameEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
+import com.offsidegame.offside.events.PlayerRewardedReceivedEvent;
+import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.PrivateGroupChangedEvent;
 import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
@@ -47,7 +54,8 @@ import com.offsidegame.offside.fragments.PlayerFragment;
 import com.offsidegame.offside.fragments.SettingsFragment;
 import com.offsidegame.offside.fragments.ShopFragment;
 import com.offsidegame.offside.fragments.SingleGroupFragment;
-import com.offsidegame.offside.helpers.BottomNavigationViewHelper;
+import com.offsidegame.offside.helpers.DynamicLinkHelper;
+import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
@@ -74,9 +82,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private final String activityName = "LobbyActivity";
     private final Context context = this;
     private final Activity thisActivity = this;
-
+    private String androidDeviceId;
     private BottomNavigationViewEx bottomNavigation;
-
 
     private ImageView settingsButtonImageView;
 
@@ -85,6 +92,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private LinearLayout balanceRoot;
     private TextView balanceTextView;
     private TextView powerItemsTextView;
+
+    //Recent state
+    private String currentGameId;
+    private String currentPrivateGameId;
 
 
     //profile
@@ -101,10 +112,20 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private ShopFragment shopFragment;
     private NewsFragment newsFragment;
     private SettingsFragment settingsFragment;
-    private int chatNavigationItemNotificationCount =0;
+    private int chatNavigationItemNotificationCount = 0;
 
     private Badge qBadgeView = null;
 
+    private int REQUEST_INVITE = 100;
+    private String TAG = "SIDEKICK";
+
+    //reward dialoge
+    private Dialog rewardDialog;
+    private TextView dialoguePlayerNameTextView;
+    private TextView dialogueRewardValueTextView;
+    private ImageView dialoguePlayerImageImageView;
+    private ImageView dialogueCoinImageView;
+    private Button dialogueCloseButton;
 
     //</editor-fold>
 
@@ -116,6 +137,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             setContentView(R.layout.activity_lobby);
 
             settings = getSharedPreferences(getString(R.string.preference_name), 0);
+            androidDeviceId = OffsideApplication.getAndroidDeviceId();
 
             FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -123,9 +145,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             getIDs();
             setEvents();
-            //createNavigationMenu();
-            togglePlayerAssetsVisibility(true);
 
+            togglePlayerAssetsVisibility(true);
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -144,8 +165,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         balanceTextView = (TextView) findViewById(R.id.l_balance_text_view);
         powerItemsTextView = (TextView) findViewById(R.id.l_power_items_text_view);
 
-        //createPrivateGroupButtonTextView = (TextView) findViewById(R.id.l_create_private_group_button_text_view);
-
         settingsButtonImageView = findViewById(R.id.l_settings_button_image_view);
         bottomNavigation = findViewById(R.id.l_bottom_navigation);
 
@@ -154,18 +173,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         bottomNavigation.enableItemShiftingMode(false);
         bottomNavigation.setTextVisibility(false);
         int iconSize = 36;
-        bottomNavigation.setIconSize(iconSize,iconSize);
+        bottomNavigation.setIconSize(iconSize, iconSize);
         bottomNavigation.setItemHeight(BottomNavigationViewEx.dp2px(this, iconSize + 16));
-
-
-
-        //bottomNavigation.setIconTintList();
-        //bottomNavigationItemBackgroundResourceId = bottomNavigation.getItemBackgroundResource();
-
-
-
-
-
 
 
     }
@@ -205,42 +214,31 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                 try {
 
-                    for(int i=0; i< bottomNavigation.getItemCount();i++){
+                    for (int i = 0; i < bottomNavigation.getItemCount(); i++) {
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                            bottomNavigation.setIconTintList(i,getResources().getColorStateList(R.color.colorWhiteSemiTransparent, context.getTheme()));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            bottomNavigation.setIconTintList(i, getResources().getColorStateList(R.color.colorWhiteSemiTransparent, context.getTheme()));
                         } else {
-                            bottomNavigation.setIconTintList(i,getResources().getColorStateList(R.color.colorWhiteSemiTransparent));
+                            bottomNavigation.setIconTintList(i, getResources().getColorStateList(R.color.colorWhiteSemiTransparent));
                         }
-
-
 
 
                     }
 
                     int itemPosition = bottomNavigation.getMenuItemPosition(item);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                        bottomNavigation.setIconTintList(itemPosition,getResources().getColorStateList(R.color.colorWhite, context.getTheme()));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        bottomNavigation.setIconTintList(itemPosition, getResources().getColorStateList(R.color.colorWhite, context.getTheme()));
                     } else {
-                        bottomNavigation.setIconTintList(itemPosition,getResources().getColorStateList(R.color.colorWhite));
+                        bottomNavigation.setIconTintList(itemPosition, getResources().getColorStateList(R.color.colorWhite));
                     }
 
-
-                    //int itemPosition = bottomNavigation.getMenuItemPosition(item);
-
-
-//                    for(MenuItem item: bottomNavigation.getItemCount())
-//                        bottomNavigation.setIconTintList();
-//                    bottomNavigation.setItemBackgroundResource(bottomNavigationItemBackgroundResourceId);
-
-
                     switch (item.getItemId()) {
-                        case R.id.nav_action_groups :
-
+                        case R.id.nav_action_groups:
 
                             groupsFragment = GroupsFragment.newInstance();
                             replaceFragment(groupsFragment);
                             togglePlayerAssetsVisibility(true);
+                            toggleNavigationMenuVisibility(true);
                             return true;
 
                         case R.id.nav_action_profile:
@@ -248,16 +246,23 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                             playerFragment = PlayerFragment.newInstance();
                             replaceFragment(playerFragment);
                             togglePlayerAssetsVisibility(true);
+                            toggleNavigationMenuVisibility(true);
                             return true;
 
                         case R.id.nav_action_play:
                             //bottomNavigation.setItemBackground(itemPosition, R.color.navigationMenuSelectedItem);
+                            PrivateGroup selectedGroup = OffsideApplication.getSelectedPrivateGroup();
+                            if(selectedGroup==null){
+                                EventBus.getDefault().post(new CannotJoinPrivateGameEvent(R.string.lbl_no_active_private_game));
+                                return true;
+                            }
                             if (qBadgeView != null)
                                 qBadgeView.hide(true);
                             chatNavigationItemNotificationCount = 0;
                             chatFragment = ChatFragment.newInstance();
                             replaceFragment(chatFragment);
                             togglePlayerAssetsVisibility(false);
+                            toggleNavigationMenuVisibility(false);
                             return true;
 
                         case R.id.nav_action_news:
@@ -265,6 +270,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                             newsFragment = NewsFragment.newInstance();
                             replaceFragment(newsFragment);
                             togglePlayerAssetsVisibility(false);
+                            toggleNavigationMenuVisibility(true);
                             return true;
 
                         case R.id.nav_action_shop:
@@ -272,6 +278,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                             shopFragment = ShopFragment.newInstance();
                             replaceFragment(shopFragment);
                             togglePlayerAssetsVisibility(true);
+                            toggleNavigationMenuVisibility(true);
                             return true;
 
                     }
@@ -282,152 +289,25 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     return false;
 
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
                 return true;
             }
         });
 
-//        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-//            @Override
-//            public boolean onTabSelected(int position, boolean wasSelected) {
-//
-//                try {
-//                    if (wasSelected){
-//                        return true;
-//                    }
-//
-//                    switch (position) {
-//                        case 0:
-//
-//                            groupsFragment = GroupsFragment.newInstance();
-//                            replaceFragment(groupsFragment);
-//                            togglePlayerAssetsVisibility(true);
-//                            return true;
-//
-//                        case 1:
-//                            playerFragment = PlayerFragment.newInstance();
-//                            replaceFragment(playerFragment);
-//                            togglePlayerAssetsVisibility(true);
-//                            return true;
-//
-//                        case 2:
-//                            chatFragment = ChatFragment.newInstance();
-//                            replaceFragment(chatFragment);
-//                            togglePlayerAssetsVisibility(false);
-//
-//                            // remove notification badge
-//                            bottomNavigation.setNotification(new AHNotification(), position);
-//                            chatNavigationItemNotificationCount =0;
-//
-//                            return true;
-//
-//                        case 3:
-//                            newsFragment = NewsFragment.newInstance();
-//                            replaceFragment(newsFragment);
-//                            togglePlayerAssetsVisibility(false);
-//                            return true;
-//
-//                        case 4:
-//                            shopFragment = ShopFragment.newInstance();
-//                            replaceFragment(shopFragment);
-//                            togglePlayerAssetsVisibility(true);
-//                            return true;
-//
-//
-//                    }
-//
-//
-//                } catch (Exception ex) {
-//                    ACRA.getErrorReporter().handleSilentException(ex);
-//                    return false;
-//
-//                }
-//                return true;
-//            }
-//        });
-//        bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
-//            @Override
-//            public void onPositionChange(int position) {
-//                Log.d("SIDEKICK_GAME", "onNavigationPositionListenre");
-//
-//
-//            }
-//        });
-    }
 
-//    private void createNavigationMenu() {
-//
-//        int[] navigationItemsIds = {R.id.nav_action_groups, R.id.nav_action_profile, R.id.nav_action_play, R.id.nav_action_news, R.id.nav_action_shop};
-//        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.bottom_navigation_menu_items);
-//        navigationAdapter.setupWithBottomNavigation(bottomNavigation, navigationItemsIds);
-//
-//        // Set current item programmatically
-//        bottomNavigation.setCurrentItem(1);
-//
-//        // Set background color
-//        bottomNavigation.setDefaultBackgroundColor(ContextCompat.getColor(context, R.color.navigationMenu));
-//
-//        // Change colors
-//        bottomNavigation.setAccentColor(ContextCompat.getColor(context, R.color.navigationMenuSelectedItem));
-//        bottomNavigation.setInactiveColor(ContextCompat.getColor(context, R.color.navigationMenuUnSelectedItem));
-//
-//        bottomNavigation.setBehaviorTranslationEnabled(true);
-//
-//
-//        // Force to tint the drawable (useful for font with icon for example)
-//        bottomNavigation.setForceTint(false);
-//
-//        // Display color under navigation bar (API 21+)
-//        // Don't forget these lines in your style-v21
-//        // <item name="android:windowTranslucentNavigation">true</item>
-//        // <item name="android:fitsSystemWindows">true</item>
-//        //bottomNavigation.setTranslucentNavigationEnabled(true);
-//
-//        // Manage titles
-//        //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
-//        //bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_SHOW);
-//        bottomNavigation.setTitleState(AHBottomNavigation.TitleState.ALWAYS_HIDE);
-//
-//        // Use colored navigation with circle reveal effect
-//        bottomNavigation.setColored(false);
-//
-//        // Customize notification (title, background, typeface)
-//        bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
-//
-//        // Add or remove notification for each item
-//        //bottomNavigation.setNotification("5", 2);
-//        // OR
-//        // AHNotification notification = new AHNotification.Builder()
-//        //.setText("1")
-//        //.setBackgroundColor(ContextCompat.getColor(DemoActivity.this, R.color.color_notification_back))
-//        //.setTextColor(ContextCompat.getColor(DemoActivity.this, R.color.color_notification_text))
-//        //.build();
-//        //bottomNavigation.setNotification(notification, 1);
-//
-//    // Enable / disable item & set disable color
-//    // bottomNavigation.enableItemAtPosition(2);
-//    // bottomNavigation.disableItemAtPosition(2);
-//    // bottomNavigation.setItemDisableColor(Color.parseColor("#3A000000"));
-//
-//    }
+    }
 
     private void togglePlayerAssetsVisibility(boolean isVisible) {
         if (isVisible)
             playerInfoRoot.setVisibility(View.VISIBLE);
         else
             playerInfoRoot.setVisibility(View.GONE);
+    }
+
+    private void toggleNavigationMenuVisibility(boolean isVisible) {
+        if (isVisible)
+            bottomNavigation.setVisibility(View.VISIBLE);
+        else
+            bottomNavigation.setVisibility(View.GONE);
     }
 
 
@@ -494,10 +374,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                 } else
                     throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");
-
-//                String[] emptyAvailableGames = new String[]{getString(R.string.lbl_no_available_games)};
-///;                setAvailableGamesSpinnerAdapter(emptyAvailableGames);
-
             }
 
         } catch (Exception ex) {
@@ -519,8 +395,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             int balance = playerAssets.getBalance();
             int powerItems = playerAssets.getPowerItems();
             playerProfilePictureUrl = playerAssets.getImageUrl();
-            balanceTextView.setText(Integer.toString(balance));
-            powerItemsTextView.setText(Integer.toString(powerItems));
+
+            String formattedBalance = Formatter.formatNumber(balance, Formatter.intCommaSeparator);
+            balanceTextView.setText(formattedBalance);
+            String formattedPowerItems = Formatter.formatNumber(powerItems, Formatter.intCommaSeparator);
+            powerItemsTextView.setText(formattedPowerItems);
 
             ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName, true);
 
@@ -529,12 +408,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             //check if player is already playing
             String lastKnownGameId = settings.getString(getString(R.string.game_id_key), null);
             String lastKnownPrivateGameId = settings.getString(getString(R.string.private_game_id_key), null);
-            String playerId = OffsideApplication.getPlayerId();
-            boolean userRequiresRejoin = (lastKnownGameId != null && lastKnownPrivateGameId!=null && playerId !=null);
+
+            boolean userRequiresRejoin = (lastKnownGameId != null && lastKnownPrivateGameId != null && playerId != null);
 
             Intent intent = getIntent();
             boolean showGroups = intent.getBooleanExtra("showGroups", false);
             boolean showNewsFeed = OffsideApplication.isBackFromNewsFeed();
+
             if (showGroups || !userRequiresRejoin) {
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -547,9 +427,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             } else if (showNewsFeed) {
                 OffsideApplication.setIsBackFromNewsFeed(false);
             } else {
-                tryRejoinGameForReturningPlayer(playerId, lastKnownGameId, lastKnownPrivateGameId);
+                tryJoinSelectedAvailableGame(playerId, lastKnownGameId, lastKnownPrivateGameId);
             }
-
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -558,12 +437,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    public void tryRejoinGameForReturningPlayer(String playerId, String lastKnownGameId, String lastKnownPrivateGameId) {
+    public void tryJoinSelectedAvailableGame(String playerId, String gameId, String privateGameId) {
 
-        OffsideApplication.setSelectedPrivateGameId(lastKnownPrivateGameId);
-
-        OffsideApplication.signalRService.requestAvailableGame(playerId, lastKnownGameId, lastKnownPrivateGameId);
-
+        currentGameId = gameId;
+        currentPrivateGameId = privateGameId;
+        OffsideApplication.signalRService.requestAvailableGame(playerId, gameId, privateGameId);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -571,14 +449,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         try {
             AvailableGame availableGame = availableGameEvent.getAvailableGame();
             if (availableGame != null) {
+                OffsideApplication.setSelectedAvailableGame(availableGame);
                 String groupId = availableGame.getGroupId();
                 OffsideApplication.signalRService.requestPrivateGroup(playerId, groupId);
-                OffsideApplication.setSelectedAvailableGame(availableGame);
+
             } else {
                 EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
-
             }
-
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -593,7 +470,16 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             PrivateGroup privateGroup = privateGroupEvent.getPrivateGroup();
             OffsideApplication.setSelectedPrivateGroup(privateGroup);
-            EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_play));
+
+            String groupId = privateGroup.getId();
+
+            if (privateGroup == null || currentPrivateGameId == null) {
+                EventBus.getDefault().post(new CannotJoinPrivateGameEvent(R.string.lbl_no_active_private_game));
+
+            } else if (currentGameId != null && currentPrivateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
+                OffsideApplication.signalRService.requestJoinPrivateGame(playerId, currentGameId, groupId, currentPrivateGameId, androidDeviceId);
+            }
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -601,6 +487,29 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         }
 
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlayerJoinedPrivateGame(JoinGameEvent joinGameEvent) {
+
+        GameInfo gameInfo = joinGameEvent.getGameInfo();
+
+        if (gameInfo == null) {
+            return;
+        }
+
+        OffsideApplication.setGameInfo(gameInfo);
+
+        String gameId = gameInfo.getGameId();
+        String privateGameId = gameInfo.getPrivateGameId();
+        String privateGroupId = OffsideApplication.getSelectedPrivateGroupId();
+
+        OffsideApplication.setSelectedPrivateGameId(privateGameId);
+
+        OffsideApplication.setUserPreferences(privateGroupId, gameId, privateGameId);
+
+        onReceiveNavigation(new NavigationEvent(R.id.nav_action_play));
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePrivateGroupChanged(PrivateGroupChangedEvent privateGroupChangedEvent) {
@@ -636,12 +545,29 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
+        try {
+
+            String privateGameId = privateGameGeneratedEvent.getPrivateGameId();
+            String gameId = OffsideApplication.getSelectedAvailableGame().getGameId();
+            String groupId = OffsideApplication.getSelectedPrivateGroupId();
+            OffsideApplication.setUserPreferences(groupId, gameId, privateGameId);
+
+            tryJoinSelectedAvailableGame(playerId, gameId, privateGameId);
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+
+    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveNavigation(NavigationEvent navigationEvent) {
         try {
 
-            //bottomNavigation.setCurrentItem(navigationEvent.getNavigationItemId());
             bottomNavigation.setSelectedItemId(navigationEvent.getNavigationItemId());
 
 
@@ -664,70 +590,157 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPlayerJoinedPrivateGame(JoinGameEvent joinGameEvent) {
-        GameInfo gameInfo = joinGameEvent.getGameInfo();
-        if (gameInfo != null) {
-            return;
-        }
-
-        onReceiveNavigation(new NavigationEvent(R.id.nav_action_play));
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGroupInvite(GroupInviteEvent groupInviteEvent) {
 
         String groupId = groupInviteEvent.getGroupId();
+        String groupName = groupInviteEvent.getGroupName();
         String gameId = groupInviteEvent.getGameId();
         String privateGameId = groupInviteEvent.getPrivateGamaId();
         String playerId = groupInviteEvent.getInviterPlayerId();
 
-        OffsideApplication.signalRService.requestInviteFriend(playerId, groupId, gameId, privateGameId);
+        //OffsideApplication.signalRService.requestInviteFriend(playerId, groupId, gameId, privateGameId);
+        startFirebaseInvite(groupId, groupName, gameId, privateGameId, playerId);
+        //shareShortDynamicLink();
 
     }
 
+    private void startFirebaseInvite(String groupId, String groupName, String gameId, String privateGameId, String inviterId) {
+
+        StringBuilder sb = new StringBuilder(500); // Using default 16 character size
+        sb.append("https://tmg9s.app.goo.gl/?link=app://sidekickgame.com?");
+        sb.append("groupId=");
+        sb.append(groupId);
+        sb.append("&gameId=");
+        sb.append(gameId);
+        sb.append("&privateGameId=");
+        sb.append(privateGameId);
+        sb.append("&referrer=");
+        sb.append(inviterId);
+        sb.append("&apn=com.offsidegame.offside&ibi=com.offsidegame.offside.ios&isi=12345");
+
+        String deepLink = sb.toString();
+
+        String invitationMessage;
+        String playerName = OffsideApplication.getPlayerAssets().getPlayerName();
+        if (privateGameId != null) {
+            String gameTitle = OffsideApplication.getSelectedAvailableGame().getGameTitle();
+            invitationMessage = String.format("Hi it's me %s. Our group %s is watching %s. Come play Sidekick with us ", playerName, groupName, gameTitle);
+        } else if (groupId != null) {
+            invitationMessage = String.format("Hi it's me %s. Join my group %s and Let's play Sidekick", playerName, groupName);
+        } else
+            invitationMessage = String.format("Hi it's me %s. Lets' play Sidekick", playerName);
+
+
+        Intent intent = new AppInviteInvitation.IntentBuilder("Invite friends")
+                .setMessage(invitationMessage)
+                //.setDeepLink(Uri.parse("https://tmg9s.app.goo.gl/?link=app://sidekickgame.com?groupId="+groupId+"&referrer="+inviterId+"&apn=com.offsidegame.offside&ibi=com.offsidegame.offside.ios&isi=12345"))
+                .setDeepLink(Uri.parse(deepLink))
+                .setCustomImage(Uri.parse(OffsideApplication.getAppLogoPictureUrl()))
+                .setCallToActionText("Join Now!")
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+    private void shareShortDynamicLink() {
+        String link = "http://www.sidekickgame.com";
+        String description = "LinkToAppOnGooglePlay";
+        String titleSocial = "Invite friends to play with you";
+        String source = "Sidekick Soccer";
+
+        Task<ShortDynamicLink> createLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
+                .setDynamicLinkDomain("tmg9s.app.goo.gl")
+                .setLink(Uri.parse(DynamicLinkHelper.buildDynamicLink(link, description, titleSocial, source)))
+                .buildShortDynamicLink()
+                .addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
+                    @Override
+                    public void onComplete(@NonNull Task<ShortDynamicLink> task) {
+                        if (task.isSuccessful()) {
+                            Uri shortLink = task.getResult().getShortLink();
+                            Uri flowchartLink = task.getResult().getPreviewLink();
+                            Log.d(TAG, "Short link: " + shortLink.toString());
+                            Log.d(TAG, "flowchartLink link: " + flowchartLink.toString());
+                            Intent intent = new Intent();
+                            String message = String.format("Invitation from %s to play Sidekick. /nWant to join ? follow this link /n %s ", OffsideApplication.getPlayerAssets().getPlayerName(), shortLink.toString());
+
+                            intent.setAction(Intent.ACTION_SEND);
+                            intent.putExtra(Intent.EXTRA_TEXT, message);
+                            intent.setType("text/plain");
+                            startActivity(intent);
+                        } else {
+                            Log.d(TAG, "Error building short link");
+                        }
+                    }
+                });
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                int numberOfInvitations = ids.length;
+                String rewardType = "COINS";
+                String rewardReason = "INVITE";
+                if (numberOfInvitations > 0)
+                    OffsideApplication.signalRService.requestToRewardPlayer(playerId, rewardType, rewardReason, numberOfInvitations);
+                for (String id : ids) {
+                    Log.d(TAG, "onActivityResult: sent invitation " + id);
+                }
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                Log.d(TAG, "invitation send failed");
+            }
+        }
+    }
+
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onFriendInviteReceived(FriendInviteReceivedEvent friendInviteReceivedEvent) {
-
-        String invitationUrl = friendInviteReceivedEvent.getInvitationUrl();
-        String inviterName = OffsideApplication.getPlayerAssets().getPlayerName();
-
-        String shareMessage = String.format("%s invited you to join a group in SideKick. Click to join %s", inviterName, invitationUrl);
-        Intent sendIntent = new Intent();
-        sendIntent.setAction(Intent.ACTION_SEND);
-        sendIntent.setType("text/plain");
-        sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-        sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        sendIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-
-        startActivity(Intent.createChooser(sendIntent, "Invite friendS"));
+        //old method
+//        String invitationUrl = friendInviteReceivedEvent.getInvitationUrl();
+//        String inviterName = OffsideApplication.getPlayerAssets().getPlayerName();
+//
+//        String shareMessage = String.format("%s invited you to join a group in SideKick. Click to join %s", inviterName, invitationUrl);
+//        Intent sendIntent = new Intent();
+//        sendIntent.setAction(Intent.ACTION_SEND);
+//        sendIntent.setType("text/plain");
+//        sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
+//        sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        sendIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//
+//
+//        startActivity(Intent.createChooser(sendIntent, "Invite friendS"));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNotificationBubbleReceived(NotificationBubbleEvent notificationBubbleEvent) {
-        if(bottomNavigation.getSelectedItemId() == R.id.nav_action_play)
+        if (bottomNavigation.getSelectedItemId() == R.id.nav_action_play)
             return;
         String notificationBubbleName = notificationBubbleEvent.getNavigationItemName();
-        if(notificationBubbleName.equalsIgnoreCase(NotificationBubbleEvent.navigationItemChat)){
-            chatNavigationItemNotificationCount +=1;
+        if (notificationBubbleName.equalsIgnoreCase(NotificationBubbleEvent.navigationItemChat)) {
+            chatNavigationItemNotificationCount += 1;
 
             MenuItem chatItem = bottomNavigation.getMenu().findItem(R.id.nav_action_play);
 
 
-            int position  = bottomNavigation.getMenuItemPosition(chatItem);
-            if (qBadgeView != null){
+            int position = bottomNavigation.getMenuItemPosition(chatItem);
+            if (qBadgeView != null) {
                 qBadgeView.hide(false);
                 qBadgeView = null;
             }
 
-            qBadgeView =  new QBadgeView(this)
+            qBadgeView = new QBadgeView(this)
                     .setBadgeNumber(chatNavigationItemNotificationCount)
                     .setGravityOffset(12, 2, true)
                     .bindTarget(bottomNavigation.getBottomNavigationItemView(position));
-
-
-
 
 
             //new QBadgeView(context).bindTarget(textview).setBadgeNumber(5);
@@ -736,8 +749,61 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlayerRewardedReceived(PlayerRewardedReceivedEvent playerRewardedReceivedEvent) {
+
+        if (playerRewardedReceivedEvent == null)
+            return;
+        final int rewardValue = playerRewardedReceivedEvent.getRewardValue();
+
+        rewardDialog = new Dialog(context);
+        rewardDialog.setContentView(R.layout.dialog_reward);
+
+        dialoguePlayerImageImageView = rewardDialog.findViewById(R.id.dr_player_image_image_view);
+        dialoguePlayerNameTextView = rewardDialog.findViewById(R.id.dr_player_name_text_view);
+        dialogueRewardValueTextView = rewardDialog.findViewById(R.id.dr_reward_value_text_view);
+        dialogueCoinImageView = rewardDialog.findViewById(R.id.dr_coin_image_view);
+        dialogueCloseButton = rewardDialog.findViewById(R.id.dr_close_button);
+
+        ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, dialoguePlayerImageImageView, activityName, true);
+        dialoguePlayerNameTextView.setText(OffsideApplication.getPlayerAssets().getPlayerName());
+        dialogueRewardValueTextView.setText(String.format("%d", rewardValue));
+        YoYo.with(Techniques.Bounce)
+                .repeat(YoYo.INFINITE)
+                .playOn(dialogueCoinImageView);
 
 
+        dialogueCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rewardDialog.cancel();
+            }
+        });
+
+        rewardDialog.show();
+
+
+//        Handler handler = new Handler();
+//        handler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Snackbar.make(playerInfoRoot,String.format("You got %d coins",rewardValue), Snackbar.LENGTH_SHORT).show();
+//            }
+//        }, 2000);
+
+        int currentBalance = OffsideApplication.getPlayerAssets().getBalance();
+        OffsideApplication.getPlayerAssets().setBalance(currentBalance + rewardValue);
+
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCannotJoinPrivateGameReceived(CannotJoinPrivateGameEvent cannotJoinPrivateGameEvent) {
+
+        Integer reason = cannotJoinPrivateGameEvent.getReason();
+        Toast.makeText(context, reason, Toast.LENGTH_SHORT).show();
+        EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+    }
     //</editor-fold>
 
     @Override

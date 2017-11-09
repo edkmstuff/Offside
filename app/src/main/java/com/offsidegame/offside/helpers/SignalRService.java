@@ -24,7 +24,9 @@ import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
+import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
+import com.offsidegame.offside.events.PlayerRewardedReceivedEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.PrivateGroupChangedEvent;
@@ -84,15 +86,14 @@ public class SignalRService extends Service {
     private final IBinder binder = new LocalBinder(); // Binder given to clients
     private Date startReconnecting = null;
 
-    public final String ip = new String("10.0.2.2:18313");
-
-    //public final String ip = new String("10.0.2.2:18313");
+    /***********************DEVELOPMENT****************************************************/
+//    public final String ip = new String("10.0.2.2:18313");
     //public final String ip = new String("192.168.1.140:18313");
-//    public final String ip = new String("10.0.0.17:18313");
+    public final String ip = new String("10.0.0.17:18313");
 
 
-
-    //public final String ip = new String("sidekicknode.azurewebsites.net");
+    /***********************PRODUCTION****************************************************/
+//    public final String ip = new String("sidekicknode.azurewebsites.net");
 
     public Boolean stoppedIntentionally = false;
     private int mId = -1;
@@ -120,6 +121,8 @@ public class SignalRService extends Service {
     private boolean playerImageSaved = false;
     private boolean privateGroupsReceived = false;
     private boolean privateGroupDeleted = false;
+    private boolean playerJoinPrivateGroupReceived = false;
+    private boolean playerRewardSaved = false;
 
 
 
@@ -333,6 +336,16 @@ public class SignalRService extends Service {
             }
         }, Integer.class);
 
+        hub.on("PlayerJoinedPrivateGroupReceived", new SubscriptionHandler1<Integer>() {
+            @Override
+            public void run(Integer numberOfPlayerAdded) {
+                playerJoinPrivateGroupReceived = true;
+                EventBus.getDefault().post(new PlayerJoinPrivateGroupEvent(numberOfPlayerAdded));
+            }
+        }, Integer.class);
+
+
+
         hub.on("PrivateGroupReceived", new SubscriptionHandler1<PrivateGroup>() {
             @Override
             public void run(PrivateGroup privateGroup) {
@@ -436,6 +449,16 @@ public class SignalRService extends Service {
                 EventBus.getDefault().post(new FriendInviteReceivedEvent(friendInviteCode));
             }
         }, String.class);
+
+        hub.on("PlayerRewardedReceived", new SubscriptionHandler1<Integer>() {
+            @Override
+            public void run(Integer rewardValue) {
+                playerRewardSaved = true;
+                EventBus.getDefault().post(new PlayerRewardedReceivedEvent(rewardValue));
+            }
+        }, Integer.class);
+
+
 
     }
 
@@ -563,7 +586,7 @@ public class SignalRService extends Service {
 //        });
 //    }
 
-    public void quitGame(String playerId, String gameId,  String androidDeviceId) {
+    public void quitGame(String playerId, String gameId, String androidDeviceId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
@@ -599,13 +622,13 @@ public class SignalRService extends Service {
         });
     }
 
-    public void requestCreatePrivateGame(String playerId,String gameId, String groupId, String selectedLanguage) {
+    public void requestCreatePrivateGame(String playerId, String gameId, String groupId, String selectedLanguage) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
         //String languageLocale = Locale.getDefault().getDisplayLanguage();
         privateGameCreated = false;
-        hub.invoke("RequestCreatePrivateGame", playerId, gameId, groupId,  selectedLanguage).done(new Action<Void>() {
+        hub.invoke("RequestCreatePrivateGame", playerId, gameId, groupId, selectedLanguage).done(new Action<Void>() {
 
             @Override
             public void run(Void obj) throws Exception {
@@ -626,12 +649,12 @@ public class SignalRService extends Service {
         });
     }
 
-    public void requestPostAnswer(final String playerId, final String gameId,  final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
+    public void requestPostAnswer(final String playerId, final String gameId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
 
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         answerAccepted = false;
-        hub.invoke("RequestPostAnswer", playerId, gameId,  questionId, answerId, isSkipped, betSize).done(new Action<Void>() {
+        hub.invoke("RequestPostAnswer", playerId, gameId, questionId, answerId, isSkipped, betSize).done(new Action<Void>() {
 
             @Override
             public void run(Void obj) throws Exception {
@@ -678,13 +701,13 @@ public class SignalRService extends Service {
         });
     }
 
-    public void requestGetChatMessages(String playerId, String gameId, String privateGameId,  String androidDeviceId) {
+    public void requestGetChatMessages(String playerId, String gameId, String privateGameId, String androidDeviceId) {
 
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
         chatMessagesReceived = false;
-        hub.invoke("requestGetChatMessages", playerId, gameId, privateGameId,  androidDeviceId).done(new Action<Void>() {
+        hub.invoke("RequestGetChatMessages", playerId, gameId, privateGameId, androidDeviceId).done(new Action<Void>() {
 
             @Override
             public void run(Void obj) throws Exception {
@@ -710,7 +733,7 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         chatMessageReceived = false;
-        hub.invoke("RequestSendChatMessage", playerId, gameId, privateGameId,  message).done(new Action<Void>() {
+        hub.invoke("RequestSendChatMessage", playerId, gameId, privateGameId, message).done(new Action<Void>() {
 
             @Override
             public void run(Void obj) throws Exception {
@@ -731,7 +754,6 @@ public class SignalRService extends Service {
         });
 
     }
-
 
 
     public boolean requestSaveLoggedInUser(User user) {
@@ -766,7 +788,7 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return false;
 
-        hub.invoke(Integer.class, "SetPowerItems", playerId, gameId,  powerItems, isDueToRewardVideo).done(new Action<Integer>() {
+        hub.invoke(Integer.class, "SetPowerItems", playerId, gameId, powerItems, isDueToRewardVideo).done(new Action<Integer>() {
             @Override
             public void run(Integer newPowerItemsValue) throws Exception {
                 EventBus.getDefault().post(newPowerItemsValue);
@@ -781,7 +803,6 @@ public class SignalRService extends Service {
 
         return true;
     }
-
 
 
     public void requestSaveImageInDatabase(String playerId, String imageString) {
@@ -858,11 +879,11 @@ public class SignalRService extends Service {
 
     }
 
-    public void requestCreatePrivateGroup(String playerId,String groupName, String groupType,  String selectedLanguage) {
+    public void requestCreatePrivateGroup(String playerId, String groupName, String groupType, String selectedLanguage) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         privateGroupCreated = false;
-        hub.invoke("RequestCreatePrivateGroup", playerId, groupName, groupType,  selectedLanguage).done(new Action<Void>() {
+        hub.invoke("RequestCreatePrivateGroup", playerId, groupName, groupType, selectedLanguage).done(new Action<Void>() {
             @Override
             public void run(Void obj) throws Exception {
                 new Handler().postDelayed(new Runnable() {
@@ -889,7 +910,7 @@ public class SignalRService extends Service {
             return;
 
         playerJoinedPrivateGame = false;
-        hub.invoke("RequestJoinPrivateGame", playerId, gameId, groupId, privateGameId,  androidDeviceId).done(new Action<Void>() {
+        hub.invoke("RequestJoinPrivateGame", playerId, gameId, groupId, privateGameId, androidDeviceId).done(new Action<Void>() {
             @Override
             public void run(Void obj) throws Exception {
                 new Handler().postDelayed(new Runnable() {
@@ -985,7 +1006,7 @@ public class SignalRService extends Service {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
         friendInviteReceived = false;
-        hub.invoke("RequestInviteFriend", inviterPlayerId, groupId, gameId, privateGameId ).done(new Action<Void>() {
+        hub.invoke("RequestInviteFriend", inviterPlayerId, groupId, gameId, privateGameId).done(new Action<Void>() {
             @Override
             public void run(Void obj) throws Exception {
                 new Handler().postDelayed(new Runnable() {
@@ -1051,7 +1072,54 @@ public class SignalRService extends Service {
         });
     }
 
+    public void requestJoinPrivateGroup(String playerId, String groupId) {
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        playerJoinPrivateGroupReceived = false;
+        hub.invoke("RequestJoinPrivateGroup", playerId, groupId).done(new Action<Void>() {
+            @Override
+            public void run(Void obj) throws Exception {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!playerJoinPrivateGroupReceived)
+                            EventBus.getDefault().post(new SignalRErrorEvent("RequestJoinPrivateGroup"));
+                    }
+                }, 15000);
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                EventBus.getDefault().post(new SignalRErrorEvent("RequestJoinPrivateGroup"));
+            }
+        });
+    }
 
+    public void requestToRewardPlayer(String playerId, String rewardType, String rewardReason, int quantity) {
+
+        if (!(hubConnection.getState() == ConnectionState.Connected))
+            return;
+        playerRewardSaved = false;
+        hub.invoke("RequestToRewardPlayer", playerId, rewardType, rewardReason, quantity).done(new Action<Void>() {
+
+            @Override
+            public void run(Void obj) throws Exception {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!playerRewardSaved)
+                            EventBus.getDefault().post(new SignalRErrorEvent("RequestToRewardPlayer"));
+                    }
+                }, 15000);
+
+            }
+        }).onError(new ErrorCallback() {
+            @Override
+            public void onError(Throwable error) {
+                EventBus.getDefault().post(new SignalRErrorEvent("RequestToRewardPlayer"));
+            }
+        });
+    }
 
 
     //</editor-fold>

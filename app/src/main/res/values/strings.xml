@@ -71,8 +71,8 @@
     <string name="lbl_seems_like_you_skipped_this_question">נראה שבחרת לא לענות על השאלה</string>
     <string name="lbl_you_are_out_of_coins">אין לך מספיק מטבעות , תוכל לחדש את המלאי במחצית</string>
     <string name="lbl_game_is_active">משחק פעיל</string>
-    <string name="lbl_no_playing_players">אין משחקים פעילים</string>
-    <string name="lbl_now_playing">חברים כבר משחקים</string>
+    <string name="lbl_no_playing_players">אין שחקנים פעילים</string>
+    <string name="lbl_now_playing">משחקים כרגע</string>
     <string name="lbl_private_groups">groups</string>
     <string name="lbl_my_profile">profile</string>
     <string name="lbl_shop">store</string>
@@ -100,12 +100,15 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="lbl_sign_out">התנתק</string>
     <string name="lbl_settings">הגדרות</string>
-    <string name="lbl_no_active_games">לא נמצא משחק פעיל</string>
+    <string name="lbl_no_active_private_game">לא נמצא משחק פעיל</string>
     <string name="lbl_news">news</string>
     <string name="lbl_your_position">מיקומך:</string>
     <string name="lbl_create_private_group_hint">בחר שם לקבוצה</string>
     <string name="lbl_delete_private_group">מחק קבוצה</string>
     <string name="lbl_error_user_profile_picture_not_saved">User Image was not saved</string>
+    <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"https://www.sidekickgame.com\",\n  }\n}]</string>
+    <string name="lbl_resume_game">חזרה למשחק</string>
+    <string name="lbl_player_experience">מה אני?</string>
 
 
 </resources>

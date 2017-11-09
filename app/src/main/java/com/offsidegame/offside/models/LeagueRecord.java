@@ -19,6 +19,9 @@ public class LeagueRecord {
     @com.google.gson.annotations.SerializedName("PO")
     private int points;
 
+    @com.google.gson.annotations.SerializedName("GC")
+    private int gamesCount;
+
     @com.google.gson.annotations.SerializedName("FP")
     private int factorizedPoints;
 
@@ -72,6 +75,14 @@ public class LeagueRecord {
 
     public void setPlayerId(String playerId) {
         this.playerId = playerId;
+    }
+
+    public int getGamesCount() {
+        return gamesCount;
+    }
+
+    public void setGamesCount(int gamesCount) {
+        this.gamesCount = gamesCount;
     }
 }
 

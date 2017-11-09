@@ -1,6 +1,7 @@
 package com.offsidegame.offside.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.OffsideApplication;
@@ -23,6 +25,8 @@ import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+
+import static android.view.View.GONE;
 
 /**
  * Created by user on 7/20/2017.
@@ -57,6 +61,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
 
     private class ViewHolder {
 
+        LinearLayout root;
         AvailableGame availableGame;
         ImageView homeTeamLogoImageView;
         ImageView awayTeamLogoImageView;
@@ -71,6 +76,9 @@ public class AvailableGamesAdapter extends BaseAdapter {
         TextView joinPrivateGameButtonTextView;
         LinearLayout createPrivateGameRoot;
         TextView createPrivateGameButtonTextView;
+        LinearLayout gameEnterFeeRoot;
+        TextView moreTextView;
+
 
 
     }
@@ -83,6 +91,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 convertView = LayoutInflater.from(context).inflate(R.layout.active_game_item, parent, false);
                 viewHolder = new AvailableGamesAdapter.ViewHolder();
 
+                viewHolder.root = convertView.findViewById(R.id.ag_root);
                 viewHolder.homeTeamNameTextView = (TextView) convertView.findViewById(R.id.ag_home_team_name_text_view);
                 viewHolder.awayTeamNameTextView = (TextView) convertView.findViewById(R.id.ag_away_team_name_text_view);
                 viewHolder.homeTeamLogoImageView = (ImageView) convertView.findViewById(R.id.ag_home_team_logo_image_view);
@@ -95,7 +104,8 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 viewHolder.joinPrivateGameButtonTextView = (TextView) convertView.findViewById(R.id.ag_join_private_game_button_text_view);
                 viewHolder.createPrivateGameRoot = (LinearLayout) convertView.findViewById(R.id.ag_create_private_game_root);
                 viewHolder.createPrivateGameButtonTextView = (TextView) convertView.findViewById(R.id.ag_create_private_game_button_text_view);
-
+                viewHolder.gameEnterFeeRoot =  convertView.findViewById(R.id.ag_game_enter_fee_root);
+                viewHolder.moreTextView = convertView.findViewById(R.id.ag_more_text_view);
 
 
                 convertView.setTag(viewHolder);
@@ -109,6 +119,22 @@ public class AvailableGamesAdapter extends BaseAdapter {
             if (viewHolder.availableGame == null)
                 return convertView;
 
+//            int lightBackGround = R.drawable.shape_bg_league_record_even;
+//            int darkBackground = R.drawable.shape_bg_league_record_odd;
+//            viewHolder.root.setBackgroundResource(position%2 == 0? lightBackGround : darkBackground);
+
+            if(position%2 == 0){
+                viewHolder.root.setBackgroundResource(R.color.leagueRecordEvenSolid);
+                //viewHolder.root.setAlpha(0.2f);
+
+            }
+            else
+            {
+                viewHolder.root.setBackgroundResource(R.color.leagueRecordOddSolid);
+                //viewHolder.root.setAlpha(0.05f);
+
+            }
+
 
             viewHolder.homeTeamNameTextView.setText(viewHolder.availableGame.getHomeTeam());
             viewHolder.awayTeamNameTextView.setText(viewHolder.availableGame.getAwayTeam());
@@ -117,47 +143,71 @@ public class AvailableGamesAdapter extends BaseAdapter {
             Uri awayTeamLogoUri = Uri.parse(viewHolder.availableGame.getAwayTeamLogoUrl());
             ImageHelper.loadImage(context, viewHolder.awayTeamLogoImageView, awayTeamLogoUri, false);
 
-
-
             viewHolder.startTimeTextView.setText(viewHolder.availableGame.getStartTimeString());
             viewHolder.startDateTextView.setText(viewHolder.availableGame.getStartDateString());
             if (viewHolder.availableGame.getPrivateGroupPlayers() == null)
                 viewHolder.availableGame.setPrivateGroupPlayers(new PrivateGroupPlayer[0]);
-            viewHolder.playersCountTextView.setText(Integer.toString(viewHolder.availableGame.getPrivateGroupPlayers().length) + " " + context.getString(R.string.lbl_now_playing));
 
+            viewHolder.playersCountTextView.setText(Integer.toString(viewHolder.availableGame.getPrivateGroupPlayers().length) + " " + context.getString(R.string.lbl_now_playing));
 
             viewHolder.playersPlayInGameRoot.removeAllViews();
 
-            for (PrivateGroupPlayer privateGroupPlayer : viewHolder.availableGame.getPrivateGroupPlayers()) {
+            boolean userIsAlreadyInGame =false;
 
-                ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, viewHolder.playersPlayInGameRoot, false);
-                FrameLayout playerItemRoot = (FrameLayout) playerLayout.getChildAt(0);
-                ImageView playerImageImageView = (ImageView) playerItemRoot.getChildAt(0);
-                playerImageImageView.getLayoutParams().height = 70;
-                playerImageImageView.getLayoutParams().width = 70;
-                playerImageImageView.requestLayout();
-                String imageUrl = privateGroupPlayer.getImageUrl() == null || privateGroupPlayer.getImageUrl().equals("") ? OffsideApplication.getDefaultProfilePictureUrl() : privateGroupPlayer.getImageUrl();
-                Uri imageUri = Uri.parse(imageUrl);
-                ImageHelper.loadImage(context, playerImageImageView, imageUri, true);
+            int maxPlayersToDisplay = 7;
+            int playersCount = 0;
+            PrivateGroupPlayer[] privateGroupPlayers  = viewHolder.availableGame.getPrivateGroupPlayers();
+            if(privateGroupPlayers!=null && privateGroupPlayers.length > 7)
+                viewHolder.moreTextView.setVisibility(View.VISIBLE);
+            else
+                viewHolder.moreTextView.setVisibility(View.GONE);
 
-                ImageView isActiveIndicator = (ImageView) playerItemRoot.getChildAt(1);
-                isActiveIndicator.getLayoutParams().height = 25;
-                isActiveIndicator.getLayoutParams().width = 25;
+            for (PrivateGroupPlayer privateGroupPlayer : privateGroupPlayers) {
 
-                viewHolder.playersPlayInGameRoot.addView(playerLayout);
+                if(privateGroupPlayer.getPlayerId().equals(OffsideApplication.getPlayerId()))
+                    userIsAlreadyInGame=true;
+
+                if (playersCount < maxPlayersToDisplay) {
+                    playersCount++;
+
+                    ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, viewHolder.playersPlayInGameRoot, false);
+                    FrameLayout playerItemRoot = (FrameLayout) playerLayout.getChildAt(0);
+                    ImageView playerImageImageView = (ImageView) playerItemRoot.getChildAt(0);
+                    playerImageImageView.getLayoutParams().height = 70;
+                    playerImageImageView.getLayoutParams().width = 70;
+                    playerImageImageView.requestLayout();
+                    String imageUrl = privateGroupPlayer.getImageUrl() == null || privateGroupPlayer.getImageUrl().equals("") ? OffsideApplication.getDefaultProfilePictureUrl() : privateGroupPlayer.getImageUrl();
+                    Uri imageUri = Uri.parse(imageUrl);
+                    ImageHelper.loadImage(context, playerImageImageView, imageUri, true);
+
+                    ImageView isActiveIndicator = (ImageView) playerItemRoot.getChildAt(1);
+                    isActiveIndicator.getLayoutParams().height = 25;
+                    isActiveIndicator.getLayoutParams().width = 25;
+
+                    viewHolder.playersPlayInGameRoot.addView(playerLayout);
+
+                }
+
             }
 
-            viewHolder.joinPrivateGameButtonTextView.setOnClickListener(new View.OnClickListener() {
+            viewHolder.joinPrivateGameRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
                     OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
-//                    if(viewHolder.availableGame.getPrivateGameId() != null)
-//                        OffsideApplication.setSelectedPrivateGameId(viewHolder.availableGame.getPrivateGameId());
-                    EventBus.getDefault().post(new JoinGameEvent(null));
+                    String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
+                    String gameId = viewHolder.availableGame.getGameId();
+                    String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
+                    String privateGameId = viewHolder.availableGame.getPrivateGameId();
+                    String androidDeviceId = OffsideApplication.getAndroidDeviceId();
+                    OffsideApplication.signalRService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
+
+
+
                 }
             });
 
-            viewHolder.createPrivateGameButtonTextView.setOnClickListener(new View.OnClickListener() {
+            viewHolder.createPrivateGameRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
@@ -172,13 +222,19 @@ public class AvailableGamesAdapter extends BaseAdapter {
 
             resetVisibility(viewHolder);
             if (viewHolder.availableGame.getPrivateGroupPlayers().length == 0) {
-                viewHolder.joinPrivateGameRoot.setVisibility(View.GONE);
+                viewHolder.joinPrivateGameRoot.setVisibility(GONE);
                 viewHolder.createPrivateGameRoot.setVisibility(View.VISIBLE);
             } else {
                 viewHolder.joinPrivateGameRoot.setVisibility(View.VISIBLE);
-                viewHolder.createPrivateGameRoot.setVisibility(View.GONE);
+                viewHolder.createPrivateGameRoot.setVisibility(GONE);
+                if(userIsAlreadyInGame){
+                    viewHolder.gameEnterFeeRoot.setVisibility(GONE);
+                    viewHolder.joinPrivateGameButtonTextView.setText(R.string.lbl_resume_game);
+                }
+
 
             }
+
 
 
             return convertView;
@@ -193,10 +249,10 @@ public class AvailableGamesAdapter extends BaseAdapter {
     }
 
     private void resetVisibility(ViewHolder viewHolder) {
-        viewHolder.joinPrivateGameRoot.setVisibility(View.GONE);
-        viewHolder.createPrivateGameRoot.setVisibility(View.GONE);
+        viewHolder.joinPrivateGameRoot.setVisibility(GONE);
+        viewHolder.createPrivateGameRoot.setVisibility(GONE);
+        viewHolder.gameEnterFeeRoot.setVisibility(View.VISIBLE);
 
     }
-
 
 }

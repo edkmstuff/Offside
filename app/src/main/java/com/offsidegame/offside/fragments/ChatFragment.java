@@ -3,12 +3,12 @@ package com.offsidegame.offside.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
+
 import android.os.Bundle;
-import android.os.Handler;
+
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -50,6 +50,7 @@ import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
 import com.offsidegame.offside.events.ScoreboardEvent;
+import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.AvailableGame;
@@ -97,6 +98,8 @@ public class ChatFragment extends Fragment {
     private LinearLayout root;
     private ListView chatListView;
 
+    private ImageView backNavigationButtonImageView;
+
     private String privateGroupName;
     private String homeTeam;
     private String awayTeam;
@@ -104,20 +107,20 @@ public class ChatFragment extends Fragment {
 
     private int powerItems;
 
-    private TextView privateGameNameTextView;
+    //private TextView privateGameNameTextView;
     private TextView gameTitleTextView;
     private TextView positionTextView;
 
-    private LinearLayout actionsMenuRoot;
+    //private LinearLayout actionsMenuRoot;
 
     private ImageView chatActionsButton;
 
     private boolean isActionMenuVisible = false;
 
-    private RewardedVideoAd rewardedVideoAd;
-    private LinearLayout rewardVideoLoadingRoot;
-    private TextView loadingVideoTextView;
-    private LinearLayout actionExitGameRoot;
+    //private RewardedVideoAd rewardedVideoAd;
+//    private LinearLayout rewardVideoLoadingRoot;
+//    private TextView loadingVideoTextView;
+//    private LinearLayout actionExitGameRoot;
 
     private LinearLayout scoreboardRoot;
 
@@ -128,13 +131,14 @@ public class ChatFragment extends Fragment {
     private ImageView playerPictureImageView;
     private ImageView offsideCoinsImageView;
     private ImageView powerItemImageView;
-    private FlowLayout actionsFlowLayout;
 
-    private LinearLayout actionReloadRoot;
+//    private FlowLayout actionsFlowLayout;
+//
+//    private LinearLayout actionReloadRoot;
+//
+//    private LinearLayout actionWatchVideoRoot;
 
-    private LinearLayout actionWatchVideoRoot;
-
-    private AvailableGame selectedAvailableGame = null;
+    //private AvailableGame selectedAvailableGame = null;
     private String gameId = null;
     private String privateGameId = null;
     private String groupId = null;
@@ -155,35 +159,77 @@ public class ChatFragment extends Fragment {
         {
             super.onResume();
             EventBus.getDefault().register(this);
+
+            init();
             OffsideApplication.setScoreboard(null);
 
+
             //chat data
-            gameId = OffsideApplication.getSelectedGameId();
-            privateGameId = OffsideApplication.getSelectedPrivateGameId();
-            groupId = OffsideApplication.getSelectedPrivateGroupId();
-            androidDeviceId = OffsideApplication.getAndroidDeviceId();
-            playerId = OffsideApplication.getPlayerId();
-            PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
-            if(selectedPrivateGroup == null || privateGameId == null) {
-                loadingRoot.setVisibility(View.GONE);
-                Toast.makeText(getActivity(), R.string.lbl_no_active_games, Toast.LENGTH_SHORT).show();
-                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
-
-
-            }
-            else {
-                privateGroupName = selectedPrivateGroup.getName();
-                if (gameId != null && privateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
-                    OffsideApplication.signalRService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
-                }
-            }
-
+//            gameId = OffsideApplication.getSelectedGameId();
+//            privateGameId = OffsideApplication.getSelectedPrivateGameId();
+//            groupId = OffsideApplication.getSelectedPrivateGroupId();
+//            androidDeviceId = OffsideApplication.getAndroidDeviceId();
+//            playerId = OffsideApplication.getPlayerId();
+//            PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
+//            if(selectedPrivateGroup == null || privateGameId == null) {
+//                loadingRoot.setVisibility(View.GONE);
+//                Toast.makeText(getActivity(), R.string.lbl_no_active_games, Toast.LENGTH_SHORT).show();
+//                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+//            }
+//            else {
+//                privateGroupName = selectedPrivateGroup.getName();
+//                OffsideApplication.signalRService.requestGetChatMessages(playerId, gameId, privateGameId,  androidDeviceId);
+////                if (gameId != null && privateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
+////                    OffsideApplication.signalRService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
+////                }
+//            }
 
 
         } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
 
         }
+    }
+
+    private void init() {
+
+        androidDeviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        privateGroupName = OffsideApplication.getSelectedPrivateGroup().getName();
+
+        gameId = OffsideApplication.getGameInfo().getGameId();
+
+        privateGameId = OffsideApplication.getGameInfo().getPrivateGameId();
+
+        playerId = OffsideApplication.getPlayerId();
+
+        homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
+        awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
+        PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
+        offsideCoins = player != null ? player.getOffsideCoins() : 0;
+        powerItems = player.getPowerItems();
+
+//        actionsMenuRoot.setScaleX(0f);
+//        actionsMenuRoot.setScaleY(0f);
+//        actionsMenuRoot.setAlpha(0.99f);
+
+//        actionsMenuRoot.setVisibility(View.GONE);
+
+        String chatTitle = String.format("%s", privateGroupName);
+//        privateGameNameTextView.setText(chatTitle);
+        String title = String.format("%s vs. %s", homeTeam, awayTeam);
+        gameTitleTextView.setText(title);
+
+        offsideCoinsTextView.setText(Integer.toString(offsideCoins));
+
+        powerItemsTextView.setText(Integer.toString(powerItems));
+
+        settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
+        ImageHelper.loadImage(getActivity(), player != null ? player.getImageUrl() : settings.getString(getString(R.string.player_profile_picture_url_key), null), playerPictureImageView, "ChatActivity", true);
+
+        OffsideApplication.signalRService.requestGetChatMessages(playerId, gameId, privateGameId,  androidDeviceId);
+
+
     }
 
     @Override
@@ -225,17 +271,17 @@ public class ChatFragment extends Fragment {
         chatListView = (ListView) view.findViewById(R.id.fc_chat_list_view);
         chatSendImageView = (ImageView) view.findViewById(R.id.fc_chat_send_image_view);
         chatMessageEditText = (EditText) view.findViewById(R.id.fc_chat_message_edit_text);
-        privateGameNameTextView = (TextView) view.findViewById(R.id.fc_private_game_name_text_view);
+       // privateGameNameTextView = (TextView) view.findViewById(R.id.fc_private_game_name_text_view);
         gameTitleTextView = (TextView) view.findViewById(R.id.fc_game_title_text_view);
         positionTextView = (TextView) view.findViewById(R.id.fc_position_text_view);
         scoreboardRoot = (LinearLayout) view.findViewById(R.id.fc_scoreboard_root);
         inviteFriendsImageView = (ImageView) view.findViewById(R.id.fc_invite_friends_image_view);
 
-        actionsMenuRoot = (LinearLayout) view.findViewById(R.id.fc_actions_menu_root);
+    //    actionsMenuRoot = (LinearLayout) view.findViewById(R.id.fc_actions_menu_root);
 
-        chatActionsButton = (ImageView) view.findViewById(R.id.fc_chatActionsButton);
-        actionsFlowLayout = (FlowLayout) view.findViewById(R.id.fc_actions_flow_layout);
-        loadingVideoTextView = (TextView) view.findViewById(R.id.fc_loading_video_text_view);
+        //chatActionsButton = (ImageView) view.findViewById(R.id.fc_chatActionsButton);
+        //actionsFlowLayout = (FlowLayout) view.findViewById(R.id.fc_actions_flow_layout);
+        //loadingVideoTextView = (TextView) view.findViewById(R.id.fc_loading_video_text_view);
         playerPictureImageView = (ImageView) view.findViewById(R.id.fc_player_picture_image_view);
         offsideCoinsTextView = (TextView) view.findViewById(R.id.fc_offside_coins_text_view);
         offsideCoinsImageView = (ImageView) view.findViewById(R.id.fc_offside_coins_image_view);
@@ -243,25 +289,34 @@ public class ChatFragment extends Fragment {
         powerItemImageView = (ImageView) view.findViewById(R.id.fc_power_item_image_view);
 
 
-        actionReloadRoot = (LinearLayout) view.findViewById(R.id.fc_action_reload_root);
-        actionWatchVideoRoot = (LinearLayout) view.findViewById(R.id.fc_action_watch_video_root);
-        rewardVideoLoadingRoot = (LinearLayout) view.findViewById(R.id.fc_reward_video_loading_root);
+        //actionReloadRoot = (LinearLayout) view.findViewById(R.id.fc_action_reload_root);
+       //actionWatchVideoRoot = (LinearLayout) view.findViewById(R.id.fc_action_watch_video_root);
+       //rewardVideoLoadingRoot = (LinearLayout) view.findViewById(R.id.fc_reward_video_loading_root);
         chatListView = (ListView) view.findViewById(R.id.fc_chat_list_view);
 
+        backNavigationButtonImageView = view.findViewById(R.id.fsg_back_navigation_button_image_view);
 
     }
 
 
     private void setEvents() {
 
+        backNavigationButtonImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+            }
+        });
+
         inviteFriendsImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String groupId = OffsideApplication.getSelectedPrivateGroupId();
+                String groupName = OffsideApplication.getSelectedPrivateGroup().getName();
                 gameId = OffsideApplication.getSelectedGameId();
                 privateGameId = OffsideApplication.getSelectedPrivateGameId();
                 String playerId = OffsideApplication.getPlayerId();
-                EventBus.getDefault().post(new GroupInviteEvent(groupId, gameId, privateGameId, playerId));
+                EventBus.getDefault().post(new GroupInviteEvent(groupId, groupName, gameId, privateGameId, playerId));
             }
         });
 
@@ -269,10 +324,10 @@ public class ChatFragment extends Fragment {
         chatMessageEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isActionMenuVisible) {
-                    actionsMenuRoot.animate().scaleX(0f).scaleY(0f);
-                    actionsMenuRoot.setVisibility(View.INVISIBLE);
-                }
+//                if (isActionMenuVisible) {
+//                    actionsMenuRoot.animate().scaleX(0f).scaleY(0f);
+//                    actionsMenuRoot.setVisibility(View.INVISIBLE);
+//                }
             }
         });
 
@@ -391,92 +446,92 @@ public class ChatFragment extends Fragment {
         //prepare watch video objects
 
         // Use an activity context to get the rewarded video instance.
-        rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(getContext());
-        rewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
-
-            //<editor-fold desc="RewardedVideoAdListener Methods">
-            @Override
-            public void onRewarded(RewardItem reward) {
-
-                int rewardAmount = reward.getAmount();
-                //Toast.makeText(context, "onRewarded! currency: " + reward.getType() + "  amount: " +  reward.getAmount(), Toast.LENGTH_SHORT).show();
-                resetElementsVisibility();
-                EventBus.getDefault().post(new RewardEvent(rewardAmount));
-            }
-
-            @Override
-            public void onRewardedVideoAdLeftApplication() {
-                resetElementsVisibility();
-            }
-
-            @Override
-            public void onRewardedVideoAdClosed() {
-                resetElementsVisibility();
-
-            }
-
-            @Override
-            public void onRewardedVideoAdFailedToLoad(int errorCode) {
-                resetElementsVisibility();
-                Toast.makeText(getContext(), R.string.lbl_failed_to_load_video, Toast.LENGTH_SHORT).show();
-
-
-            }
-
-            @Override
-            public void onRewardedVideoAdLoaded() {
-                try {
-                    if (rewardedVideoAd.isLoaded()) {
-                        rewardedVideoAd.show();
-                    }
-                    resetElementsVisibility();
-
-                } catch (Exception ex) {
-
-                    ACRA.getErrorReporter().handleException(ex);
-
-                }
-
-            }
-
-            @Override
-            public void onRewardedVideoAdOpened() {
-                resetElementsVisibility();
-            }
-
-            @Override
-            public void onRewardedVideoStarted() {
-                resetElementsVisibility();
-            }
-
-            public void resetElementsVisibility() {
-                actionsFlowLayout.setVisibility(View.VISIBLE);
-                rewardVideoLoadingRoot.setVisibility(View.GONE);
-            }
-            //</editor-fold>
-
-        });
-
-        actionWatchVideoRoot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
-                if (player == null)
-                    return;
-                if (player.getRewardVideoWatchCount() < OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame()) {
-                    loadingVideoTextView.setText("Loading " + Integer.toString(player.getRewardVideoWatchCount() + 1) + " of " + Integer.toString(OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame()) + " allowed videos");
-                    actionsFlowLayout.setVisibility(View.GONE);
-                    rewardVideoLoadingRoot.setVisibility(View.VISIBLE);
-
-                    loadRewardedVideoAd();
-                } else {
-                    Toast.makeText(getContext(), R.string.lbl_exceed_allowed_reward_video_watch_message, Toast.LENGTH_SHORT).show();
-                }
-
-
-            }
-        });
+//        rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(getContext());
+//        rewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
+//
+//            //<editor-fold desc="RewardedVideoAdListener Methods">
+//            @Override
+//            public void onRewarded(RewardItem reward) {
+//
+//                int rewardAmount = reward.getAmount();
+//                //Toast.makeText(context, "onRewarded! currency: " + reward.getType() + "  amount: " +  reward.getAmount(), Toast.LENGTH_SHORT).show();
+//                resetElementsVisibility();
+//                EventBus.getDefault().post(new RewardEvent(rewardAmount));
+//            }
+//
+//            @Override
+//            public void onRewardedVideoAdLeftApplication() {
+//                resetElementsVisibility();
+//            }
+//
+//            @Override
+//            public void onRewardedVideoAdClosed() {
+//                resetElementsVisibility();
+//
+//            }
+//
+//            @Override
+//            public void onRewardedVideoAdFailedToLoad(int errorCode) {
+//                resetElementsVisibility();
+//                Toast.makeText(getContext(), R.string.lbl_failed_to_load_video, Toast.LENGTH_SHORT).show();
+//
+//
+//            }
+//
+//            @Override
+//            public void onRewardedVideoAdLoaded() {
+//                try {
+//                    if (rewardedVideoAd.isLoaded()) {
+//                        rewardedVideoAd.show();
+//                    }
+//                    resetElementsVisibility();
+//
+//                } catch (Exception ex) {
+//
+//                    ACRA.getErrorReporter().handleException(ex);
+//
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onRewardedVideoAdOpened() {
+//                resetElementsVisibility();
+//            }
+//
+//            @Override
+//            public void onRewardedVideoStarted() {
+//                resetElementsVisibility();
+//            }
+//
+//            public void resetElementsVisibility() {
+//                actionsFlowLayout.setVisibility(View.VISIBLE);
+//                rewardVideoLoadingRoot.setVisibility(View.GONE);
+//            }
+//            //</editor-fold>
+//
+//        });
+//
+//        actionWatchVideoRoot.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
+//                if (player == null)
+//                    return;
+//                if (player.getRewardVideoWatchCount() < OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame()) {
+//                    loadingVideoTextView.setText("Loading " + Integer.toString(player.getRewardVideoWatchCount() + 1) + " of " + Integer.toString(OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame()) + " allowed videos");
+//                    actionsFlowLayout.setVisibility(View.GONE);
+//                    rewardVideoLoadingRoot.setVisibility(View.VISIBLE);
+//
+//                    loadRewardedVideoAd();
+//                } else {
+//                    Toast.makeText(getContext(), R.string.lbl_exceed_allowed_reward_video_watch_message, Toast.LENGTH_SHORT).show();
+//                }
+//
+//
+//            }
+//        });
         //</editor-fold>
 
         //<editor-fold desc="exit game">
@@ -513,8 +568,8 @@ public class ChatFragment extends Fragment {
 
         //loadRewardedVideoAd();
 
-        actionsFlowLayout.setVisibility(View.VISIBLE);
-        rewardVideoLoadingRoot.setVisibility(View.GONE);
+//        actionsFlowLayout.setVisibility(View.VISIBLE);
+//        rewardVideoLoadingRoot.setVisibility(View.GONE);
 
 
     }
@@ -546,11 +601,11 @@ public class ChatFragment extends Fragment {
             //Google Firebase Ad-Mob
             String rewardedVideoAdAppUnitId = getContext().getString(R.string.rewarded_video_ad_unit_id_key);
 
-            if (rewardedVideoAd == null)
-                return;
-
-            if (!rewardedVideoAd.isLoaded())
-                rewardedVideoAd.loadAd(rewardedVideoAdAppUnitId, new AdRequest.Builder().build());
+//            if (rewardedVideoAd == null)
+//                return;
+//
+//            if (!rewardedVideoAd.isLoaded())
+//                rewardedVideoAd.loadAd(rewardedVideoAdAppUnitId, new AdRequest.Builder().build());
 
 //IronSource
 //            boolean isIronSourceRewardVideoAvailable = IronSource.isRewardedVideoAvailable();
@@ -566,78 +621,35 @@ public class ChatFragment extends Fragment {
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPlayerJoinedPrivateGame(JoinGameEvent joinGameEvent) {
-        try {
-
-            GameInfo gameInfo = joinGameEvent.getGameInfo();
-
-
-            if (gameInfo == null) {
-                return;
-            }
-
-            String gameId = gameInfo.getGameId();
-            String privateGameId = gameInfo.getPrivateGameId();
-            String privateGroupId = OffsideApplication.getSelectedPrivateGroupId();
-
-            OffsideApplication.setGameInfo(gameInfo);
-
-            SharedPreferences settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
-            SharedPreferences.Editor editor = settings.edit();
-
-            editor.putString(getString(R.string.game_id_key), gameId);
-            editor.putString(getString(R.string.private_group_id_key), privateGroupId);
-            editor.putString(getString(R.string.private_game_id_key), privateGameId);
-
-            editor.commit();
-
-            init();
-
-            OffsideApplication.signalRService.requestGetChatMessages(playerId, gameId, privateGameId,  androidDeviceId);
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onPlayerJoinedPrivateGame(JoinGameEvent joinGameEvent) {
+//        try {
+//
+//            GameInfo gameInfo = joinGameEvent.getGameInfo();
+//
+//            if (gameInfo == null) {
+//                return;
+//            }
+//
+//            String gameId = gameInfo.getGameId();
+//            String privateGameId = gameInfo.getPrivateGameId();
+//            String privateGroupId = OffsideApplication.getSelectedPrivateGroupId();
+//
+//            OffsideApplication.setGameInfo(gameInfo);
+//
+//            OffsideApplication.setUserPreferences(privateGroupId,gameId,privateGameId);
+//
+//            init();
+//
+//            OffsideApplication.signalRService.requestGetChatMessages(playerId, gameId, privateGameId,  androidDeviceId);
+//
+//
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//        }
+//    }
 
 
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
-
-    private void init() {
-        androidDeviceId = Settings.Secure.getString(getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        gameId = OffsideApplication.getGameInfo().getGameId();
-        privateGameId = OffsideApplication.getGameInfo().getPrivateGameId();
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        playerId = user.getUid();
-        homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
-        awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
-        PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
-        offsideCoins = player != null ? player.getOffsideCoins() : 0;
-        powerItems = player.getPowerItems();
-
-
-        actionsMenuRoot.setScaleX(0f);
-        actionsMenuRoot.setScaleY(0f);
-        actionsMenuRoot.setAlpha(0.99f);
-
-
-        actionsMenuRoot.setVisibility(View.GONE);
-
-        String chatTitle = String.format("%s", privateGroupName);
-        privateGameNameTextView.setText(chatTitle);
-        String title = String.format("%s vs. %s", homeTeam, awayTeam);
-        gameTitleTextView.setText(title);
-
-        offsideCoinsTextView.setText(Integer.toString(offsideCoins));
-
-        powerItemsTextView.setText(Integer.toString(powerItems));
-
-        settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
-        ImageHelper.loadImage(getActivity(), player != null ? player.getImageUrl() : settings.getString(getString(R.string.player_profile_picture_url_key), null), playerPictureImageView, "ChatActivity", true);
-
-
-    }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -646,6 +658,9 @@ public class ChatFragment extends Fragment {
         try {
 
             chat = new Chat(chatEvent.getChat());
+            Scoreboard scoreboard = chat.getScoreboard();
+
+            EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
 
             EventBus.getDefault().post(new PositionEvent(chat.getPosition()));
 
@@ -795,21 +810,20 @@ public class ChatFragment extends Fragment {
             if (currentPlayer != null) {
                 int oldOffsideCoinsValue = currentPlayer.getOffsideCoins();
                 int newOffsideCoinsValue = updatedPlayer.getOffsideCoins();
-                offsideCoinsTextView.setText(Integer.toString(newOffsideCoinsValue));
+                String formattedCoinsValue = Formatter.formatNumber(newOffsideCoinsValue,Formatter.intCommaSeparator);
+                offsideCoinsTextView.setText(formattedCoinsValue);
                 if (newOffsideCoinsValue != oldOffsideCoinsValue) {
                     //offsideCoinsImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
                     YoYo.with(Techniques.BounceIn).playOn(offsideCoinsImageView);
-
                 }
-
 
 
                 int oldPowerItems = currentPlayer.getPowerItems();
                 int newPowerItems = updatedPlayer.getPowerItems();
-                powerItemsTextView.setText(Integer.toString(newPowerItems));
+                String formattedPowerItems = Formatter.formatNumber(newPowerItems,Formatter.intCommaSeparator);
+                powerItemsTextView.setText(formattedPowerItems);
                 if (newPowerItems != oldPowerItems) {
 
-                    //powerItemImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
                     Animation a = new RotateAnimation(0.0f, 360.0f,
                             Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
                             0.5f);
@@ -895,7 +909,8 @@ public class ChatFragment extends Fragment {
 
             rankTextView.setText(Integer.toString(score.getPosition()));
             ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), imageView, "LobbyActivity", true);
-            scoreTextView.setText(Integer.toString(score.getOffsideCoins()));
+            String formattedScoreValue = Formatter.formatNumber(score.getOffsideCoins(),Formatter.intCommaSeparator);
+            scoreTextView.setText(formattedScoreValue);
 
             scoreboardRoot.addView(layout);
         }

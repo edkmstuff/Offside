@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/colorPrimaryDark"
+
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Congratulations"
+        android:layout_gravity="center"
+        />
+    <TextView
+        android:id="@+id/dr_player_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/OffsideMediumText"
+        android:text="Eran"
+        android:layout_gravity="center"/>
+    <ImageView
+        android:id="@+id/dr_player_image_image_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@mipmap/ic_coin"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You have just got yourself"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/dr_reward_value_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="20"
+        android:layout_gravity="center"
+        android:textSize="@dimen/OffsideXXtraLargeText"/>
+    <ImageView
+        android:id="@+id/dr_coin_image_view"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@mipmap/ic_coin"
+        />
+    <Button
+        android:id="@+id/dr_close_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CLOSE"/>
+
+
+
+
+</LinearLayout>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.facebook.share.widget.ShareButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.ExperienceLevel;
 import com.offsidegame.offside.models.OffsideApplication;
@@ -39,6 +41,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.ocpsoft.prettytime.PrettyTime;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -367,15 +370,19 @@ public class PlayerFragment extends Fragment {
                 latestGameStartDateTextView.setText(p.format(mostRecentGamePlayed.getGameStartTime()));
 
 
-                //String latestGamePositionOutOfText = Integer.toString(mostRecentGamePlayed.getPosition()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(mostRecentGamePlayed.getTotalPlayers());
-                String latestGamePositionOutOfText = String.format("%d %s %d", mostRecentGamePlayed.getPosition(),getString(R.string.lbl_out_of),mostRecentGamePlayed.getTotalPlayers());
+                String formattedPosition = Formatter.formatNumber(mostRecentGamePlayed.getPosition(),Formatter.intCommaSeparator);
+                String formattedTotalPlayers = Formatter.formatNumber(mostRecentGamePlayed.getTotalPlayers(),Formatter.intCommaSeparator);
+
+                String latestGamePositionOutOfText = String.format("%s %s %s", formattedPosition,getString(R.string.lbl_out_of),formattedTotalPlayers);
                 latestGamePositionTextView.setText(latestGamePositionOutOfText);
 
                 //String latestGameAnswersSummaryOutOfText = Integer.toString(mostRecentGamePlayed.getCorrectAnswersCount()) + " " + getString(R.string.lbl_out_of) + " " + Integer.toString(mostRecentGamePlayed.getTotalQuestionsAsked());
-                String latestGameAnswersSummaryOutOfText = String.format("%d %s %d",mostRecentGamePlayed.getCorrectAnswersCount(), getString(R.string.lbl_out_of),mostRecentGamePlayed.getTotalQuestionsAsked());
+                String latestGameAnswersSummaryOutOfText = String.format("%s %s %s",mostRecentGamePlayed.getCorrectAnswersCount(), getString(R.string.lbl_out_of),mostRecentGamePlayed.getTotalQuestionsAsked());
                 latestGameAnswersSummaryTextView.setText(latestGameAnswersSummaryOutOfText);
 
-                latestGameBalanceSummaryTextView.setText(Integer.toString(mostRecentGamePlayed.getOffsideCoins()));
+                String formattedOffsideCoins = Formatter.formatNumber(mostRecentGamePlayed.getOffsideCoins(),Formatter.intCommaSeparator);
+
+                latestGameBalanceSummaryTextView.setText(formattedOffsideCoins);
 
                 List<Winner> winners = userProfileInfo.getMostRecentGamePlayed().getWinners();
 
@@ -385,7 +392,8 @@ public class PlayerFragment extends Fragment {
                     Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
                     ImageHelper.loadImage(getContext(), winnersImageViews[j], winnerProfilePictureUri, true);
                     winnersNamesTextViews[j].setText(winner.getPlayerName());
-                    winnersCoinsTextViews[j].setText(Integer.toString(winner.getOffsideCoins()));
+                    String formattedWinnerOffsideCoins = Formatter.formatNumber(winner.getOffsideCoins(),Formatter.intCommaSeparator);
+                    winnersCoinsTextViews[j].setText(formattedWinnerOffsideCoins);
                     winnersPodiumRoots[j].setVisibility(View.VISIBLE);
                     j++;
                 }
@@ -424,14 +432,19 @@ public class PlayerFragment extends Fragment {
                 if (!(reward.getRewardTypeName() == null || reward.getRewardTypeName().equals("NONE"))) {
 
                     hasReward = true;
-                    ViewGroup trophiesLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.trophy_item, trophiesClosetRoot, false);
+                    ViewGroup trophiesViewGroup = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.trophy_item, trophiesClosetRoot, false);
+
+                    LinearLayout trophiesLayout = (LinearLayout) trophiesViewGroup.getChildAt(0);
 
                     TextView groupNameTextView = (TextView) trophiesLayout.getChildAt(0);
                     groupNameTextView.setText(reward.getGroupName());
 
                     TextView positionOutOfTextView = (TextView) trophiesLayout.getChildAt(1);
 
-                    String positionOutOfText = String.format("%d %s %d",reward.getPosition(), getString(R.string.lbl_out_of),reward.getTotalPlayers());
+                    String formattedPosition = Formatter.formatNumber(reward.getPosition(),Formatter.intCommaSeparator);
+                    String formattedTotalPlayers = Formatter.formatNumber(reward.getTotalPlayers(),Formatter.intCommaSeparator);
+
+                    String positionOutOfText = String.format("%s %s %s",formattedPosition, getString(R.string.lbl_out_of),formattedTotalPlayers);
                     positionOutOfTextView.setText(positionOutOfText);
 
                     ImageView trophyImageImageView = (ImageView) trophiesLayout.getChildAt(2);
@@ -440,18 +453,18 @@ public class PlayerFragment extends Fragment {
                     trophyImageImageView.requestLayout();
 
                     int trophyResourceId = reward.getRewardImageResourceIdByRewardType();
-                    ImageHelper.loadImage(getContext(), trophyImageImageView, trophyResourceId, true);
+                    ImageHelper.loadImage(getContext(), trophyImageImageView, trophyResourceId, false);
 
                     TextView gameTitleTextView = (TextView) trophiesLayout.getChildAt(3);
                     gameTitleTextView.setText(reward.getGameTitle());
 
                     TextView gameDateTextView = (TextView) trophiesLayout.getChildAt(4);
-                    //gameDateTextView.setText(reward.getGameStartDate().toString());
+
                     Date gameStartDate = reward.getGameStartDate();
                     PrettyTime pt = new PrettyTime();
                     gameDateTextView.setText(pt.format(gameStartDate));
 
-                    trophiesClosetRoot.addView(trophiesLayout);
+                    trophiesClosetRoot.addView(trophiesViewGroup);
                 }
 
             }
@@ -476,9 +489,14 @@ public class PlayerFragment extends Fragment {
             int numberOfGames = userProfileInfo.getTotalGamesPlayed();
             int numberOfTrophies = userProfileInfo.getTotalTrophies();
             int averageProfitPerGame = (int) userProfileInfo.getAverageProfitPerGame();
-            playerRecordsNumberOfGamesTextView.setText(Integer.toString(numberOfGames));
-            playerRecordsNumberOfTrophiesTextView.setText(Integer.toString(numberOfTrophies));
-            playerRecordsAverageProfitPerGameTextView.setText(Integer.toString(averageProfitPerGame));
+
+            String formattedNumberOfGames = Formatter.formatNumber(numberOfGames, Formatter.intCommaSeparator);
+            String formattedNumberOfTrophies = Formatter.formatNumber(numberOfTrophies, Formatter.intCommaSeparator);
+            String formattedAverageProfitPerGame = Formatter.formatNumber(averageProfitPerGame, Formatter.intCommaSeparator);
+
+            playerRecordsNumberOfGamesTextView.setText(formattedNumberOfGames);
+            playerRecordsNumberOfTrophiesTextView.setText(formattedNumberOfTrophies);
+            playerRecordsAverageProfitPerGameTextView.setText(formattedAverageProfitPerGame);
 
             for (int i = 0; i < experienceLevelImageViews.length; i++) {
                 ExperienceLevel currentExpLevel = ExperienceLevel.findByIndex(i);

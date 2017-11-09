@@ -14,18 +14,24 @@
         android:orientation="horizontal"
         >
         <ImageView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:scaleType="centerCrop"
             android:src="@drawable/app_logo"
+            android:paddingLeft="4dp"
+            android:paddingTop="4dp"
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
-            android:background="@color/colorBlack"
-            android:textStyle="bold"
+            android:fontFamily="@font/font_open_sans_hebrew_extra_bold"
             android:textColor="@color/colorWhite"
+            android:shadowColor="@color/colorBlack"
+            android:shadowRadius="1"
+            android:shadowDx="-1"
+            android:shadowDy="-1"
+            android:gravity="center"
             android:text="1"/>
 
 
@@ -36,6 +42,8 @@
         android:layout_height="wrap_content"
         android:textSize="12sp"
         android:textColor="@color/colorWhite"
+        android:paddingLeft="4dp"
+
         android:text="1234"/>
 
 

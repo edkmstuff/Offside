@@ -7,12 +7,14 @@ package com.offsidegame.offside.events;
 public class GroupInviteEvent {
 
     private String groupId;
+    private String groupName;
     private String gameId;
     private String privateGamaId;
     private String inviterPlayerId;
 
-    public GroupInviteEvent(String groupId, String gameId, String privateGamaId, String inviterPlayerId) {
+    public GroupInviteEvent(String groupId, String groupName, String gameId,  String privateGamaId, String inviterPlayerId) {
         this.groupId = groupId;
+        this.groupName = groupName;
         this.gameId = gameId;
         this.privateGamaId = privateGamaId;
         this.inviterPlayerId = inviterPlayerId;
@@ -51,5 +53,11 @@ public class GroupInviteEvent {
     }
 
 
+    public String getGroupName() {
+        return groupName;
+    }
 
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
 }

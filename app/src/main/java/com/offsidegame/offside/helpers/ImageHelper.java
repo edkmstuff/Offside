@@ -25,6 +25,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Created by KFIR on 3/13/2017.
@@ -32,6 +34,16 @@ import java.net.URL;
 
 public class ImageHelper {
 
+    private static Integer [] backgroundDefaultImage = {
+            R.color.defaultImageBackgroundColor1,
+            R.color.defaultImageBackgroundColor2,
+            R.color.defaultImageBackgroundColor3,
+            R.color.defaultImageBackgroundColor4,
+            R.color.defaultImageBackgroundColor5,
+            R.color.defaultImageBackgroundColor6,
+
+
+    };
     public static void loadImage(final Activity activity, final String imageUrl, final ImageView imageView, final String callerName, final boolean isRoundedImage) {
 
 
@@ -127,10 +139,19 @@ public class ImageHelper {
     }
 
     public static Bitmap generateInitialsBasedProfileImage(String initials, Context context) {
+
+
+        int selectedColorId =0;
+        Random r = new Random();
+        int Low = 0;
+        int High = 6;
+        int result = r.nextInt(High-Low) + Low;
+        selectedColorId = backgroundDefaultImage[result];
+
         Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         Paint paint = new Paint(Paint.LINEAR_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-        int colorPrimary = Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(context, R.color.colorBlue)));
+        int colorPrimary = Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(context, selectedColorId)));
 
         paint.setColor(colorPrimary);
         paint.setStyle(Paint.Style.FILL);

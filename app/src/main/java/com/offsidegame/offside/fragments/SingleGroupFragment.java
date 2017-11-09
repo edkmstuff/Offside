@@ -1,6 +1,7 @@
 package com.offsidegame.offside.fragments;
 
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -60,10 +61,10 @@ public class SingleGroupFragment extends Fragment {
     private TextView singleGroupPositionOutOfTextView;
     private ListView singleGroupLeagueListView;
     private TextView groupNavigationGroupNameTextView;
-//    private TextView groupNavigationLeftButtonTextView;
-//    private TextView groupNavigationRightButtonTextView;
-    private ImageView groupNavigationLeftButtonImageView;
-    private ImageView groupNavigationRightButtonImageView;
+    private TextView groupNavigationLeftButtonTextView;
+    private TextView groupNavigationRightButtonTextView;
+//    private ImageView groupNavigationLeftButtonImageView;
+//    private ImageView groupNavigationRightButtonImageView;
     private TextView groupNavigationLastPlayedTextView;
     private TextView singleGroupGamesTabTextView;
     private TextView singleGroupLeagueTabTextView;
@@ -139,8 +140,8 @@ public class SingleGroupFragment extends Fragment {
         singleGroupLeagueListView = (ListView) view.findViewById(R.id.fsg_single_group_league_list_view);
         groupNavigationGroupNameTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_group_name_text_view);
 
-        groupNavigationLeftButtonImageView = (ImageView) view.findViewById(R.id.fsg_group_navigation_left_button_image_view);
-        groupNavigationRightButtonImageView = (ImageView) view.findViewById(R.id.fsg_group_navigation_right_button_image_view);
+        groupNavigationLeftButtonTextView =  view.findViewById(R.id.fsg_group_navigation_left_button_text_view);
+        groupNavigationRightButtonTextView = view.findViewById(R.id.fsg_group_navigation_right_button_text_view);
         groupNavigationLastPlayedTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_last_played_text_view);
         singleGroupPositionOutOfTextView = (TextView) view.findViewById(R.id.fsg_single_group_position_out_of_text_view);
         singleGroupDeletePrivateGroupButtonRoot = view.findViewById(R.id.fsg_single_group_delete_group_root);
@@ -195,14 +196,14 @@ public class SingleGroupFragment extends Fragment {
             }
         });
 
-        groupNavigationLeftButtonImageView.setOnClickListener(new View.OnClickListener() {
+        groupNavigationLeftButtonTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 navigateGroup(-1);
             }
         });
 
-        groupNavigationRightButtonImageView.setOnClickListener(new View.OnClickListener() {
+        groupNavigationRightButtonTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 navigateGroup(1);
@@ -374,15 +375,11 @@ public class SingleGroupFragment extends Fragment {
         }
     }
 
-    public boolean isTabsCreated() {
-        return viewPagerAdapter != null && viewPagerAdapter.getCount() > 0;
-    }
-
-    private void joinPrivateGame(String selectedPrivateGameId) {
-        OffsideApplication.setSelectedPrivateGameId(selectedPrivateGameId);
-        EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_play));
-
-    }
+//    private void joinPrivateGame(String selectedPrivateGameId) {
+//        OffsideApplication.setSelectedPrivateGameId(selectedPrivateGameId);
+//        EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_play));
+//
+//    }
 
     private List<String> getDistinctLeagues(AvailableGame[] availableGames) {
 
@@ -400,19 +397,7 @@ public class SingleGroupFragment extends Fragment {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
-        try {
 
-            String currentPrivateGameId = privateGameGeneratedEvent.getPrivateGameId();
-            joinPrivateGame(currentPrivateGameId);
-
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveLeagueRecords(LeagueRecord[] leagueRecords) {

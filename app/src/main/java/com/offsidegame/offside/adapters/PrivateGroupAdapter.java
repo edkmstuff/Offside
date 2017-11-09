@@ -2,6 +2,7 @@ package com.offsidegame.offside.adapters;
 
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -27,9 +28,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
-
-
 
 
 /**
@@ -71,8 +69,9 @@ public class PrivateGroupAdapter extends BaseAdapter {
 
         TextView totalPlayingPlayersInGroupTextView;
         LinearLayout playersPlayInGroupRoot;
-        TextView inviteFriendsTextView;
-
+        //TextView inviteFriendsTextView;
+        ImageView inviteFriendsToGroupImageView;
+        TextView moreTextView;
 
 
     }
@@ -90,7 +89,9 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 viewHolder.groupGameStatusTextView = (TextView) convertView.findViewById(R.id.pg_group_game_status_text_view);
                 viewHolder.totalPlayingPlayersInGroupTextView = (TextView) convertView.findViewById(R.id.pg_total_playing_players_in_group_text_view);
                 viewHolder.playersPlayInGroupRoot = (LinearLayout) convertView.findViewById(R.id.pg_players_play_in_group_root);
-                viewHolder.inviteFriendsTextView = (TextView) convertView.findViewById(R.id.pg_invite_friends_text_view);
+                //viewHolder.inviteFriendsTextView = (TextView) convertView.findViewById(R.id.pg_invite_friends_text_view);
+                viewHolder.inviteFriendsToGroupImageView = convertView.findViewById(R.id.pg_invite_friends_image_view);
+                viewHolder.moreTextView = convertView.findViewById(R.id.pg_more_text_view);
 
                 convertView.setTag(viewHolder);
 
@@ -102,6 +103,9 @@ public class PrivateGroupAdapter extends BaseAdapter {
             if (viewHolder.privateGroup == null)
                 return convertView;
 
+//            Typeface type = Typeface.createFromAsset(context.getAssets(),"fonts/OpenSansHebrewCondensed-Light.ttf");
+//            viewHolder.groupNameTextView.setTypeface(type);
+
             viewHolder.groupNameTextView.setText(viewHolder.privateGroup.getName());
 
             viewHolder.playersPlayInGroupRoot.removeAllViews();
@@ -110,9 +114,9 @@ public class PrivateGroupAdapter extends BaseAdapter {
 
             Collections.sort(players, new Comparator<PrivateGroupPlayer>() {
                 public int compare(PrivateGroupPlayer p1, PrivateGroupPlayer p2) {
-                    if(  p1.getDisplayPriority() > p2.getDisplayPriority())
+                    if (p1.getDisplayPriority() > p2.getDisplayPriority())
                         return -1;
-                    if(  p1.getDisplayPriority() < p2.getDisplayPriority())
+                    if (p1.getDisplayPriority() < p2.getDisplayPriority())
                         return 1;
 
                     return 0;
@@ -120,40 +124,44 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 }
             });
 
+            int maxPlayersToDisplay = 7;
+            int playersCount = 0;
+            if(players.size() > 7)
+                viewHolder.moreTextView.setVisibility(View.VISIBLE);
+            else
+                viewHolder.moreTextView.setVisibility(View.GONE);
+            for (PrivateGroupPlayer privateGroupPlayer : players) {
 
+                if (playersCount < maxPlayersToDisplay) {
+                    playersCount++;
+                    ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, viewHolder.playersPlayInGroupRoot, false);
+                    FrameLayout playerItemRoot = (FrameLayout) playerLayout.getChildAt(0);
+                    ImageView playerImageImageView = (ImageView) playerItemRoot.getChildAt(0);
+                    playerImageImageView.getLayoutParams().height = 70;
+                    playerImageImageView.getLayoutParams().width = 70;
+                    playerImageImageView.requestLayout();
+                    String imageUrl = privateGroupPlayer.getImageUrl() == null || privateGroupPlayer.getImageUrl().equals("") ? OffsideApplication.getDefaultProfilePictureUrl() : privateGroupPlayer.getImageUrl();
+                    Uri imageUri = Uri.parse(imageUrl);
+                    ImageHelper.loadImage(context, playerImageImageView, imageUri, true);
 
-            for(PrivateGroupPlayer privateGroupPlayer: players){
+                    ImageView isActiveIndicator = (ImageView) playerItemRoot.getChildAt(1);
+                    isActiveIndicator.getLayoutParams().height = 25;
+                    isActiveIndicator.getLayoutParams().width = 25;
 
-                ViewGroup playerLayout = (ViewGroup) LayoutInflater.from(context).inflate(R.layout.player_playing_in_private_group_item, viewHolder.playersPlayInGroupRoot,false);
-                FrameLayout playerItemRoot = (FrameLayout) playerLayout.getChildAt(0);
-                ImageView playerImageImageView = (ImageView) playerItemRoot.getChildAt(0);
-                playerImageImageView.getLayoutParams().height = 70;
-                playerImageImageView.getLayoutParams().width = 70;
-                playerImageImageView.requestLayout();
-                String imageUrl = privateGroupPlayer.getImageUrl() == null || privateGroupPlayer.getImageUrl().equals("")  ? OffsideApplication.getDefaultProfilePictureUrl(): privateGroupPlayer.getImageUrl();
-                Uri imageUri = Uri.parse(imageUrl);
-                ImageHelper.loadImage(context,playerImageImageView,imageUri, true);
+                    if (privateGroupPlayer.getActive())
+                        isActiveIndicator.setVisibility(View.VISIBLE);
+                    else
+                        isActiveIndicator.setVisibility(View.GONE);
 
-                ImageView isActiveIndicator = (ImageView) playerItemRoot.getChildAt(1);
-                isActiveIndicator.getLayoutParams().height = 25;
-                isActiveIndicator.getLayoutParams().width = 25;
+                    viewHolder.playersPlayInGroupRoot.addView(playerLayout);
+                }
 
-                if(privateGroupPlayer.getActive())
-                    isActiveIndicator.setVisibility(View.VISIBLE);
-                else
-                    isActiveIndicator.setVisibility(View.GONE);
-
-
-
-
-                viewHolder.playersPlayInGroupRoot.addView(playerLayout);
             }
-
 
             int countActivePlayersInPrivateGroup = viewHolder.privateGroup.getActivePlayersCount();
 
             if (viewHolder.privateGroup.isActive()) {
-                String title = String.format("%d %S",countActivePlayersInPrivateGroup,context.getString(R.string.lbl_now_playing));
+                String title = String.format("%d %S", countActivePlayersInPrivateGroup, context.getString(R.string.lbl_now_playing));
                 viewHolder.totalPlayingPlayersInGroupTextView.setText(title);
                 viewHolder.groupGameStatusTextView.setText(R.string.lbl_game_is_active);
                 viewHolder.groupGameStatusTextView.setBackgroundResource(R.color.colorActive);
@@ -166,7 +174,7 @@ public class PrivateGroupAdapter extends BaseAdapter {
 
             }
 
-            viewHolder.groupGameStatusTextView.setOnClickListener(new View.OnClickListener(){
+            viewHolder.groupGameStatusTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //Toast.makeText(context,"item clicked" ,Toast.LENGTH_SHORT).show();
@@ -176,13 +184,15 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 }
             });
 
-            viewHolder.inviteFriendsTextView.setOnClickListener(new View.OnClickListener(){
+            viewHolder.inviteFriendsToGroupImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    String groupId= viewHolder.privateGroup.getId();
+                    String groupId = viewHolder.privateGroup.getId();
+                    String groupName = viewHolder.privateGroup.getName();
                     String playerId = OffsideApplication.getPlayerId();
-                    EventBus.getDefault().post(new GroupInviteEvent(groupId, null, null, playerId));
+                    EventBus.getDefault().post(new GroupInviteEvent(groupId, groupName, null, null, playerId));
+
                 }
             });
 

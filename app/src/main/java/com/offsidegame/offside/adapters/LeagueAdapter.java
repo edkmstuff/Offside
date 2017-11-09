@@ -68,14 +68,14 @@ public class LeagueAdapter extends ArrayAdapter<LeagueRecord> {
             }
 
             viewHolder.leagueRecord = getItem(position);
-            int lightBackGround = R.color.colorBlue;
-            int darkBackground = R.color.colorPrimary;
+            int lightBackGround = R.drawable.shape_bg_league_record_even;
+            int darkBackground = R.drawable.shape_bg_league_record_odd;
 
             viewHolder.leagueRecordRoot.setBackgroundResource(position%2 == 0? lightBackGround : darkBackground);
             viewHolder.leagueRecordPositionTextView.setText(Integer.toString(viewHolder.leagueRecord.getPosition()));
             viewHolder.leagueRecordPlayerNameTextView.setText(viewHolder.leagueRecord.getPlayerName());
             viewHolder.leagueRecordPointsTextView.setText(Integer.toString(viewHolder.leagueRecord.getPoints()));
-            viewHolder.leagueRecordFactorizedPointsTextView.setText(Integer.toString(viewHolder.leagueRecord.getFactorizedPoints()));
+            viewHolder.leagueRecordFactorizedPointsTextView.setText(Integer.toString(viewHolder.leagueRecord.getGamesCount()));
 
             Uri uri = Uri.parse(viewHolder.leagueRecord.getImageUrl());
             loadFbImage(viewHolder.leagueRecordProfilePictureImageView, uri);

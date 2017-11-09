@@ -4,9 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -16,14 +20,21 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ResultCodes;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
+import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.offsidegame.offside.R;
 
 import com.offsidegame.offside.events.CompletedHttpRequestEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
+import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
 import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 
 import com.offsidegame.offside.helpers.HttpHelper;
@@ -38,10 +49,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import microsoft.aspnet.signalr.client.ConnectionState;
-
 
 
 public class LoginActivity extends AppCompatActivity implements Serializable {
@@ -61,8 +76,12 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private TextView versionTextView;
     private boolean isInLoginProcess = false;
 
+    private FirebaseAnalytics analytics;
+    private String TAG = "SIDEKICK";
 
-
+//    private String groupIdFromInvitation;
+//    private String gameIdFromInvitation;
+//    private String privateGameIdFromInvitation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,13 +93,13 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             getIds();
             loadingRoot.setVisibility(View.VISIBLE);
 
-            //defineDeepLinking();
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
+
     }
 
-    private void getIds(){
+    private void getIds() {
         loadingRoot = (FrameLayout) findViewById(R.id.shared_loading_root);
         versionTextView = (TextView) findViewById(R.id.shared_version_text_view);
         versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
@@ -92,25 +111,19 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     }
 
-
-
-
-
-   // String TAG = "DYNAMIC_LINK";
-
-//   6
-
     @Override
     public void onResume() {
 
         super.onResume();
         EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(context);
+
 
     }
 
@@ -199,8 +212,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                 .createSignInIntentBuilder()
                                 .setAvailableProviders(
                                         Arrays.asList(facebookIdp,
-                                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build(),
                                                 new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
+                                                new AuthUI.IdpConfig.Builder(AuthUI.PHONE_VERIFICATION_PROVIDER).build(),
                                                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build()
                                         ))
                                 //.setTosUrl("https://superapp.example.com/terms-of-service.html")
@@ -256,12 +269,10 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 //        }
     }
 
+    public void saveLoggedInUser() {
 
-
-    public void saveLoggedInUser(){
-
-        if(!isUserImageUrlValid)
-            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
+//        if (!isUserImageUrlValid)
+//            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
 
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -269,7 +280,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         editor.commit();
         User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl);
         OffsideApplication.signalRService.requestSaveLoggedInUser(user);
-   }
+    }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -321,34 +332,98 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveSavedPlayerImage(PlayerImageSavedEvent playerImageSavedEvent) {
-        try {
-            saveLoggedInUser();
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayerAssets(PlayerAssets playerAssets) {
 
-        
         isInLoginProcess = false;
 
         OffsideApplication.setPlayerAssets(playerAssets);
-        Intent intent = new Intent(context, LobbyActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-        startActivity(intent);
+        analyzeDynamicLink();
+
+
+    }
+
+    public void analyzeDynamicLink(){
+
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        Uri data = intent.getData();
+        if(data==null){
+            startLobbyActivity();
+            return;
+        }
+        Log.d(TAG, "------action-----: " + action);
+        Log.d(TAG, "------data-----: " + (data != null ? data.toString() : "empty"));
+
+
+        FirebaseDynamicLinks.getInstance()
+                .getDynamicLink(getIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                    @Override
+                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                        // Get deep link from result (may be null if no link is found)
+                        Uri deepLink = null;
+                        if (pendingDynamicLinkData != null) {
+                            analytics = FirebaseAnalytics.getInstance(context);
+                            deepLink = pendingDynamicLinkData.getLink();
+                            if(deepLink==null)
+                                Log.d(TAG, "*****deepLink***** = null");
+                            else
+                                Log.d(TAG, "*****deepLink*****"+deepLink.toString());
+                            FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(pendingDynamicLinkData);
+                            if(invite!=null){
+                                String inviteId = invite.getInvitationId();
+                                if(!TextUtils.isEmpty(inviteId))
+                                    Log.d(TAG, "ACCPET invitation Id" + inviteId);
+
+                                URL url = null;
+                                try {
+                                    url = new URL("http",Uri.parse(deepLink.getQuery()).getHost(),deepLink.getQuery().toString());
+                                    try {
+
+                                        Map<String, List<String>> dynamicLinkQueryPairs = HttpHelper.splitQuery(url);
+                                        String groupIdFromInvitation = dynamicLinkQueryPairs.get("groupId").get(0);
+                                        String gameIdFromInvitation = dynamicLinkQueryPairs.get("gameId").get(0);
+                                        String privateGameIdFromInvitation = dynamicLinkQueryPairs.get("privateGameId").get(0);
+
+                                        //Add player to the group from which he was invited
+                                        if(groupIdFromInvitation!=null)
+
+                                            OffsideApplication.signalRService.requestJoinPrivateGroup(playerId,groupIdFromInvitation);
+
+                                        //Override userPreferences, as theses will be used when tryJoinSelectedAvailableGame will be executed (Lobby Activity)
+                                        if(gameIdFromInvitation!=null && privateGameIdFromInvitation != null)
+                                            OffsideApplication.setUserPreferences(groupIdFromInvitation, gameIdFromInvitation, privateGameIdFromInvitation);
+
+                                    }
+                                    catch (UnsupportedEncodingException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+
+                        }
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "analyzeDynamicLink:onFailure", e);
+                    }
+                });
+
+
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public  void onImageValidationCompleted(CompletedHttpRequestEvent completedHttpRequestEvent){
+    public void onImageValidationCompleted(CompletedHttpRequestEvent completedHttpRequestEvent) {
 
         isUserImageUrlValid = completedHttpRequestEvent.isUrlValid();
         // in case user does not have profile picture, we generate image with Initials
@@ -361,20 +436,41 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
             String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
 
+            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
             OffsideApplication.signalRService.requestSaveImageInDatabase(playerId, imageString);
 
 
-        }
-        else {
+        } else {
             saveLoggedInUser();
         }
 
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSavedPlayerImage(PlayerImageSavedEvent playerImageSavedEvent) {
+        try {
+            saveLoggedInUser();
 
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
 
+        }
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlayerJoinedPrivateGroup(PlayerJoinPrivateGroupEvent playerJoinPrivateGroupEvent) {
+        startLobbyActivity();
+    }
+
+    public void startLobbyActivity(){
+
+        Intent intent = new Intent(context, LobbyActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        startActivity(intent);
+    }
 
 
 }
