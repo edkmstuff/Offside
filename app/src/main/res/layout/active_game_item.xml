@@ -40,7 +40,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:layout_marginTop="14dp">
+                    >
 
                     <ImageView
                         android:id="@+id/ag_home_team_logo_image_view"
@@ -197,7 +197,7 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:layout_marginTop="14dp">
+                    >
 
                     <ImageView
                         android:id="@+id/ag_away_team_logo_image_view"

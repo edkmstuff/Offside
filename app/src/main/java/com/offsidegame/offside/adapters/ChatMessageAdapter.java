@@ -215,7 +215,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             if (chatMessageType == null)
                 return convertView;
 
-            viewHolder.isMessageFromBot = viewHolder.chatMessage.getSentByUserName().equals("OFFSIDE BOT");
+            viewHolder.isMessageFromBot = viewHolder.chatMessage.getSentByUserName().equals("Sidekick");
 
 
             if (chatMessageType.equals(OffsideApplication.getMessageTypeText()))  //"TEXT"
@@ -651,6 +651,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             //open question but user already answered it
             if (isAskedQuestion) {
 
+                viewHolder.incomingQuestionTextView.setText(viewHolder.question.getQuestionText());
                 if (isPlayerAnsweredQuestion) {
                     removeClickListenerFromAnswers(viewHolder);
                     String userAnswerId = "";
@@ -664,6 +665,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     setStyleForSelectedAnswer(viewHolder, userAnswerId);
                     viewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
                     viewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
+                    viewHolder.incomingQuestionTextView.setVisibility(View.VISIBLE);
                     viewHolder.incomingAnswersRoot.setVisibility(View.VISIBLE);
 
 
@@ -1132,7 +1134,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 if (isSkipped) {
                     viewHolder.incomingCorrectWrongTitleTextView.setText(context.getString(R.string.lbl_seems_like_you_skipped_this_question));
                     viewHolder.incomingFeedbackPlayerTextView.setVisibility(View.GONE);
-                    viewHolder.incomingClosedQuestionRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_wrong);
+                    //viewHolder.incomingClosedQuestionRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_wrong);
                     viewHolder.incomingFeedbackPlayerTextView.setText(context.getString(R.string.lbl_wrong_answer_encourage_feedback));
                     viewHolder.incomingFeedbackPlayerTextView.setVisibility(View.VISIBLE);
                     viewHolder.incomingCorrectAnswerReturnTextView.setText(context.getString(R.string.lbl_you_didnt_earn_points));
@@ -1378,7 +1380,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         int answerNumber = getAnswerNumber(viewHolder.question, answerId);
         viewHolder.answerRoots[answerNumber].setBackgroundResource(R.drawable.shape_bg_rectangle_answer_selected);
         viewHolder.answerTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextSelectedColor));
-        viewHolder.answerReturnTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextSelectedColor));
+        viewHolder.answerReturnTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextColor));
 
 
     }
