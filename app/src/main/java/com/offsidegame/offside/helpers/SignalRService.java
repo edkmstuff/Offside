@@ -5,6 +5,10 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Handler;
@@ -90,7 +94,7 @@ public class SignalRService extends Service {
     //public final String ip = new String("10.0.2.2:18313");
     //public final String ip = new String("192.168.1.140:18313");
 //    public final String ip = new String("10.0.0.17:18313");
-
+//    public final String ip = new String("10.0.0.41:18313");
 
     /***********************PRODUCTION****************************************************/
     public final String ip = new String("sidekicknode.azurewebsites.net");
@@ -493,13 +497,19 @@ public class SignalRService extends Service {
                     textResource = R.string.lbl_click_to_view;
                 }
 
+                Bitmap largeNotificationIcon = BitmapFactory.decodeResource(getResources(), R.drawable.app_logo_25);
 
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_offside_logo)
+                        .setSmallIcon(R.mipmap.app_logo)
+                        .setLargeIcon(largeNotificationIcon)
                         .setContentTitle(getString(titleResource))
                         .setDefaults(NotificationCompat.DEFAULT_ALL)
                         .setContentText(getString(textResource))
-                        .setPriority(NotificationCompat.PRIORITY_HIGH);
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setOnlyAlertOnce(true)
+                        .setColor(Color.BLUE);
+
+
 
 // Creates an explicit intent for an Activity in your app
                 Intent chatIntent = new Intent(this, LobbyActivity.class);

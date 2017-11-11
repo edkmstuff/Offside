@@ -344,6 +344,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Override
     public void onPause() {
         super.onPause();
+        OffsideApplication.setIsLobbyActivityVisible(false);
 
     }
 

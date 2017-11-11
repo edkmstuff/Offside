@@ -426,6 +426,8 @@ public class SingleGroupFragment extends Fragment {
             if (availableGames == null || availableGames.length == 0)
                 return;
 
+
+
             OffsideApplication.setAvailableGames(availableGames);
 
             List<String> leagues = getDistinctLeagues(availableGames);
