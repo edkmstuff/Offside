@@ -373,6 +373,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             //visibility reset
             resetWidgetsVisibility(viewHolder);
+            if(!viewHolder.chatMessage.getSentByUserName().equals(OffsideApplication.getPlayerAssets().getPlayerName()))
+                viewHolder.chatMessage.setIncoming(true);
 
             if (viewHolder.chatMessage.isIncoming()) {
 

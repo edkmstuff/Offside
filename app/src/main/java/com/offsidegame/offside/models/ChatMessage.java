@@ -119,4 +119,8 @@ public class ChatMessage {
     public void setWinners(List<Winner> winners) {
         this.winners = winners;
     }
+
+    public void setIncoming(boolean incoming) {
+        isIncoming = incoming;
+    }
 }

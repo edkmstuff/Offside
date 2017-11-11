@@ -60,6 +60,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="left"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
                         android:layout_marginTop="5dp"
                         android:text="Shuli"
                         android:textColor="@color/colorPrimary"
@@ -74,9 +75,9 @@
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
-                        android:text="I am just a dummy text so you can see the bubble"
+                        android:text="I am"
                         android:textColor="@color/chatText"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
 
                     <!-- Get Coins message Root-->
                     <LinearLayout
@@ -253,7 +254,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
                         android:textColor="@color/chatText"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:id="@+id/cm_incoming_time_to_answer_root"
@@ -1132,7 +1133,7 @@
             android:orientation="horizontal"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/cm_outgoing_profile_picture_image_view"

@@ -91,13 +91,13 @@ public class SignalRService extends Service {
     private Date startReconnecting = null;
 
     /***********************DEVELOPMENT****************************************************/
-    //public final String ip = new String("10.0.2.2:18313");
+    public final String ip = new String("10.0.2.2:18313");
     //public final String ip = new String("192.168.1.140:18313");
 //    public final String ip = new String("10.0.0.17:18313");
 //    public final String ip = new String("10.0.0.41:18313");
 
     /***********************PRODUCTION****************************************************/
-    public final String ip = new String("sidekicknode.azurewebsites.net");
+//    public final String ip = new String("sidekicknode.azurewebsites.net");
 
     public Boolean stoppedIntentionally = false;
     private int mId = -1;
