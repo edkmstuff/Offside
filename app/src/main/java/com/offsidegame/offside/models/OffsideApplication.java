@@ -33,6 +33,8 @@ import java.util.Map;
 //        formUri = "http://192.168.1.140:8080/api/Offside/AcraCrashReport",
 //        formUri = "http://10.0.2.2:8080/api/Offside/AcraCrashReport",
 //       formUri = "http://10.0.0.17:8080/api/Offside/AcraCrashReport",
+
+/****************************PRODUCTION**************************/
         formUri = "http://offside.azurewebsites.net/api/Offside/AcraCrashReport",
 
         httpMethod = HttpSender.Method.POST,

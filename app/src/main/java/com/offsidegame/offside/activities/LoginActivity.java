@@ -347,15 +347,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     public void analyzeDynamicLink(){
 
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        Uri data = intent.getData();
-        if(data==null){
-            startLobbyActivity();
-            return;
-        }
-        Log.d(TAG, "------action-----: " + action);
-        Log.d(TAG, "------data-----: " + (data != null ? data.toString() : "empty"));
+//        Intent intent = getIntent();
+//        String action = intent.getAction();
+//        Uri data = intent.getData();
+//        if(data==null){
+//            startLobbyActivity();
+//            return;
+//        }
+//        Log.d(TAG, "------action-----: " + action);
+//        Log.d(TAG, "------data-----: " + (data != null ? data.toString() : "empty"));
 
 
         FirebaseDynamicLinks.getInstance()
@@ -408,6 +408,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
                             }
 
+                        }
+                        else {
+                            startLobbyActivity();
                         }
                     }
                 })
