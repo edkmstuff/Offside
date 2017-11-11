@@ -24,6 +24,48 @@
             android:layoutDirection="ltr"
             android:orientation="vertical">
 
+            <!--PLAYERS PLAYING THE GAME-->
+            <LinearLayout
+                style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
+                android:gravity="center">
+
+                <LinearLayout
+                    style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/ag_start_date_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="4dp"
+                        android:text="20/4/17"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/OffsideMediumSmallText" />
+
+                    <TextView
+                        android:id="@+id/ag_start_time_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="4dp"
+                        android:text="21:45"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="@dimen/OffsideMediumSmallText" />
+
+                </LinearLayout>
+
+
+
+
+
+
+
+
+
+
+            </LinearLayout>
+
             <!-- MATCH -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -57,6 +99,7 @@
                         android:layout_marginTop="2dp"
                         android:padding="2dp"
                         android:text="HOME TEAM"
+                        android:lines="1"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/OffsideSmallText"
 
@@ -74,31 +117,7 @@
                     android:orientation="vertical"
                     android:layout_marginTop="4dp">
 
-                    <LinearLayout
-                        style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
-                        android:gravity="center">
 
-                        <TextView
-                            android:id="@+id/ag_start_date_text_view"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_margin="4dp"
-                            android:text="20/4/17"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="@dimen/OffsideMediumSmallText" />
-
-                        <TextView
-                            android:id="@+id/ag_start_time_text_view"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:layout_margin="4dp"
-                            android:text="21:45"
-                            android:textColor="@color/colorWhite"
-                            android:textSize="@dimen/OffsideMediumSmallText" />
-
-                    </LinearLayout>
                     <!--JOIN GAME-->
                     <LinearLayout
                         android:id="@+id/ag_join_private_game_root"
@@ -214,6 +233,7 @@
                         android:layout_marginTop="2dp"
                         android:padding="2dp"
                         android:text="HOME TEAM"
+                        android:lines="1"
                         android:textColor="@color/colorWhite"
                         android:textSize="@dimen/OffsideSmallText"
 

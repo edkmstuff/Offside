@@ -142,7 +142,8 @@ public class GroupsFragment extends Fragment {
         privateGroupsFragment.setArguments(bundle);
         viewPagerAdapter.addFragment(privateGroupsFragment, getPageTitle(groupType));
         viewPagerAdapter.notifyDataSetChanged();
-        if (viewPagerAdapter.getCount() > 0) tabLayout.setupWithViewPager(viewPager);
+        if (viewPagerAdapter.getCount() > 0)
+            tabLayout.setupWithViewPager(viewPager);
 
 
         setupTabLayout();
