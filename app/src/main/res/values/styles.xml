@@ -104,6 +104,7 @@
     <style name="questionText">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/questionTextColor</item>
+        <item name="android:fontFamily">@font/font_open_sans_hebrew</item>
     </style>
 
     <style name="answerText">

@@ -391,7 +391,9 @@ public class PlayerFragment extends Fragment {
                 for (Winner winner : winners) {
                     Uri winnerProfilePictureUri = Uri.parse(winner.getImageUrl());
                     ImageHelper.loadImage(getContext(), winnersImageViews[j], winnerProfilePictureUri, true);
-                    winnersNamesTextViews[j].setText(winner.getPlayerName());
+                    String playerName = winner.getPlayerName().split(" ")[0];
+
+                    winnersNamesTextViews[j].setText(playerName);
                     String formattedWinnerOffsideCoins = Formatter.formatNumber(winner.getOffsideCoins(),Formatter.intCommaSeparator);
                     winnersCoinsTextViews[j].setText(formattedWinnerOffsideCoins);
                     winnersPodiumRoots[j].setVisibility(View.VISIBLE);

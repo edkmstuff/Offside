@@ -322,7 +322,6 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="1dp"
-
                                 android:paddingBottom="10dp"
                                 android:paddingTop="10dp"
                                 android:text="this is the stats message"
@@ -342,7 +341,7 @@
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
                             android:text="which team will offsideCoins next?"
-                            android:fontFamily="@font/font_open_sans_hebrew_light"/>
+                            android:fontFamily="@font/font_open_sans_hebrew"/>
 
                         <!--bet panel-->
                         <LinearLayout
@@ -548,7 +547,7 @@
                             android:text="@string/lbl_how_others_answered"
                             android:textColor="@color/chatText"
                             android:textSize="@dimen/OffsideMediumSmallText"
-                            android:fontFamily="@font/font_open_sans_hebrew_light"/>
+                            android:fontFamily="@font/font_open_sans_hebrew"/>
 
                         <!--answers-->
                         <LinearLayout

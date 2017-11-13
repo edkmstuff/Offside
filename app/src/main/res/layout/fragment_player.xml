@@ -155,7 +155,7 @@
                 android:layout_above="@+id/vp_actions_root"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/vp_latest_game_not_exist_text_view"
@@ -548,7 +548,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
-                        android:padding="5dp">
+                        android:padding="5dp"
+                        android:layout_gravity="center"
+                        >
                         <!--list of trophies is generated dynamicaly by inflating trophy_item.xml-->
 
                     </LinearLayout>
@@ -566,7 +568,7 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/vp_actions_root"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
 
                 <LinearLayout
