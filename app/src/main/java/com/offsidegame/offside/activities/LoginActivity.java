@@ -368,17 +368,17 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                         if (pendingDynamicLinkData != null) {
                             analytics = FirebaseAnalytics.getInstance(context);
                             deepLink = pendingDynamicLinkData.getLink();
-                            if(deepLink==null)
-                                Log.d(TAG, "*****deepLink***** = null");
-                            else
-                                Log.d(TAG, "*****deepLink*****"+deepLink.toString());
+//                            if(deepLink==null)
+//                                Log.d(TAG, "*****deepLink***** = null");
+//                            else
+//                                Log.d(TAG, "*****deepLink*****"+deepLink.toString());
                             FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(pendingDynamicLinkData);
                             if(invite!=null){
                                 String inviteId = invite.getInvitationId();
-                                if(!TextUtils.isEmpty(inviteId))
-                                    Log.d(TAG, "ACCPET invitation Id" + inviteId);
+//                                if(!TextUtils.isEmpty(inviteId))
+//                                    Log.d(TAG, "ACCPET invitation Id" + inviteId);
 
-                                URL url = null;
+                                URL url;
                                 try {
                                     url = new URL("http",Uri.parse(deepLink.getQuery()).getHost(),deepLink.getQuery().toString());
                                     try {
@@ -418,6 +418,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "analyzeDynamicLink:onFailure", e);
+                        startLobbyActivity();
                     }
                 });
 

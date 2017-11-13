@@ -7,7 +7,8 @@
             android:pivotY="0%"
             android:toDegrees="0" >
             <shape android:shape="rectangle" >
-                <solid android:color="@color/chatIncoming" />
+                <solid android:color="@color/chatIncoming"/>
+
             </shape>
         </rotate>
     </item>

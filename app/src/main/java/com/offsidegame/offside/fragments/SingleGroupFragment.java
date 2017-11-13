@@ -220,14 +220,8 @@ public class SingleGroupFragment extends Fragment {
     }
 
     private void resetVisibility(){
-        PrivateGroup currentGroup = OffsideApplication.getSelectedPrivateGroup();
-        String groupCreator = currentGroup.getCreatedByUserId();
-        if(currentGroup.getGroupType().equalsIgnoreCase(getString(R.string.key_private_group_name))
-                && groupCreator.equals(OffsideApplication.getPlayerId()))
-            singleGroupDeletePrivateGroupButtonRoot.setVisibility(View.VISIBLE);
-        else
-            singleGroupDeletePrivateGroupButtonRoot.setVisibility(View.GONE);
 
+        singleGroupDeletePrivateGroupButtonRoot.setVisibility(View.GONE);
 
     }
 
@@ -307,6 +301,16 @@ public class SingleGroupFragment extends Fragment {
         singleGroupLeagueRoot.setVisibility(View.VISIBLE);
         singleGroupLeagueTabTextView.setTextColor(selectedTabColor);
         //singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+
+        PrivateGroup currentGroup = OffsideApplication.getSelectedPrivateGroup();
+
+        String groupCreator = currentGroup.getCreatedByUserId();
+
+        if(currentGroup.getGroupType().equalsIgnoreCase(getString(R.string.key_private_group_name))
+                && groupCreator.equals(OffsideApplication.getPlayerId()))
+            singleGroupDeletePrivateGroupButtonRoot.setVisibility(View.VISIBLE);
+        else
+            singleGroupDeletePrivateGroupButtonRoot.setVisibility(View.GONE);
 
         //calc my position
         String myPlayerId = OffsideApplication.getPlayerId();

@@ -224,12 +224,15 @@ public class AvailableGamesAdapter extends BaseAdapter {
             if (viewHolder.availableGame.getPrivateGroupPlayers().length == 0) {
                 viewHolder.joinPrivateGameRoot.setVisibility(GONE);
                 viewHolder.createPrivateGameRoot.setVisibility(View.VISIBLE);
+                viewHolder.createPrivateGameButtonTextView.setVisibility(GONE);
             } else {
                 viewHolder.joinPrivateGameRoot.setVisibility(View.VISIBLE);
+                viewHolder.joinPrivateGameButtonTextView.setVisibility(GONE);
                 viewHolder.createPrivateGameRoot.setVisibility(GONE);
                 if(userIsAlreadyInGame){
                     viewHolder.gameEnterFeeRoot.setVisibility(GONE);
                     viewHolder.joinPrivateGameButtonTextView.setText(R.string.lbl_resume_game);
+                    viewHolder.joinPrivateGameButtonTextView.setVisibility(View.VISIBLE);
                 }
 
 

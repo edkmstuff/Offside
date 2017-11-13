@@ -627,12 +627,14 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         String playerName = OffsideApplication.getPlayerAssets().getPlayerName();
         if (privateGameId != null) {
             String gameTitle = OffsideApplication.getSelectedAvailableGame().getGameTitle();
-            invitationMessage = String.format("Hi it's me %s. Our group %s is watching %s. Come play Sidekick with us ", playerName, groupName, gameTitle);
+            invitationMessage = String.format("Our group %s is watching %s. Come play Sidekick with us ", groupName, gameTitle);
         } else if (groupId != null) {
-            invitationMessage = String.format("Hi it's me %s. Join my group %s and Let's play Sidekick", playerName, groupName);
+            invitationMessage = String.format("Join my group %s and Let's play Sidekick", groupName);
         } else
-            invitationMessage = String.format("Hi it's me %s. Lets' play Sidekick", playerName);
+            invitationMessage = String.format("Lets' play Sidekick", playerName);
 
+        if(invitationMessage.length()>90)
+            invitationMessage = invitationMessage.substring(0,90);
 
         Intent intent = new AppInviteInvitation.IntentBuilder("Invite friends")
                 .setMessage(invitationMessage)

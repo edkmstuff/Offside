@@ -594,7 +594,7 @@
                             android:id="@+id/vp_player_records_number_of_games_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
+                            android:layout_gravity="center"
                             android:text="20"
                             android:textSize="@dimen/OffsideXXtraLargeText"
                             android:fontFamily="@font/font_open_sans_hebrew_light"/>
@@ -627,7 +627,7 @@
                             android:id="@+id/vp_player_records_number_of_trophies_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
+                            android:layout_gravity="center"
                             android:text="20"
                             android:textSize="@dimen/OffsideXXtraLargeText"
                             android:fontFamily="@font/font_open_sans_hebrew_light"/>
@@ -659,8 +659,8 @@
                             android:id="@+id/vp_player_records_average_profit_per_game_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="950"
+                            android:layout_gravity="center"
+                            android:text="0"
                             android:textSize="@dimen/OffsideXXtraLargeText"
                             android:fontFamily="@font/font_open_sans_hebrew_light"/>
 
@@ -697,7 +697,8 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        >
 
                         <ImageView
                             android:id="@+id/vp_records_details_level_1_image_view"
@@ -712,14 +713,19 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="מתחיל" />
+                            android:paddingBottom="0dp"
+                            android:text="מתחיל"
+                            style="@style/ExperienceLevelText"
+
+                            />
 
                         <TextView
                             android:id="@+id/vp_records_details_level_1_min_value_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="2000" />
+                            android:text="2000"
+                            style="@style/ExperienceLevelText"/>
 
 
                     </LinearLayout>
@@ -743,14 +749,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="מתחיל" />
+                            android:text="מתחיל"
+                            style="@style/ExperienceLevelText"/>
 
                         <TextView
                             android:id="@+id/vp_records_details_level_2_min_value_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="2000" />
+                            android:text="2000"
+                            style="@style/ExperienceLevelText"/>
 
 
                     </LinearLayout>
@@ -773,14 +781,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="מתחיל" />
+                            android:text="מתחיל"
+                            style="@style/ExperienceLevelText"/>
 
                         <TextView
                             android:id="@+id/vp_records_details_level_3_min_value_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="2000" />
+                            android:text="2000"
+                            style="@style/ExperienceLevelText"/>
 
 
                     </LinearLayout>
@@ -804,14 +814,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="מתחיל" />
+                            android:text="מתחיל"
+                            style="@style/ExperienceLevelText"/>
 
                         <TextView
                             android:id="@+id/vp_records_details_level_4_min_value_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="2000" />
+                            android:text="2000"
+                            style="@style/ExperienceLevelText"/>
 
 
                     </LinearLayout>
@@ -834,14 +846,16 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="מתחיל" />
+                            android:text="מתחיל"
+                            style="@style/ExperienceLevelText"/>
 
                         <TextView
                             android:id="@+id/vp_records_details_level_5_min_value_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="2000" />
+                            android:text="2000"
+                            style="@style/ExperienceLevelText"/>
 
 
                     </LinearLayout>

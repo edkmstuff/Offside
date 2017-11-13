@@ -502,7 +502,8 @@ public class PlayerFragment extends Fragment {
                 ExperienceLevel currentExpLevel = ExperienceLevel.findByIndex(i);
 
                 experienceLevelNameTextViews[i].setText(currentExpLevel.getName());
-                experienceLevelMinValueTextViews[i].setText(Integer.toString(currentExpLevel.getMinValue()));
+                String formattedMinValue = Formatter.formatNumber(currentExpLevel.getMinValue(),Formatter.intCommaSeparator);
+                experienceLevelMinValueTextViews[i].setText(formattedMinValue);
 
                 if (playerCurrentExpLevel.getName().equals(currentExpLevel.getName()))
                     //ImageHelper.loadImage(context, experienceLevelImageViews[i], currentExpLevel.getImageViewResourceIdCurrent());

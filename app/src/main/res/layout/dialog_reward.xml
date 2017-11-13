@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:background="@color/colorPrimaryDark"
+    android:padding="15dp"
 
     >
 
@@ -12,6 +13,8 @@
         android:layout_height="wrap_content"
         android:text="Congratulations"
         android:layout_gravity="center"
+        android:fontFamily="@font/font_open_sans_hebrew"
+        android:layout_marginTop="15dp"
         />
     <TextView
         android:id="@+id/dr_player_name_text_view"
@@ -19,18 +22,23 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/OffsideMediumText"
         android:text="Eran"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:fontFamily="@font/font_open_sans_hebrew"
+        android:layout_marginTop="5dp"/>
     <ImageView
+        android:layout_marginTop="5dp"
         android:id="@+id/dr_player_image_image_view"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:src="@mipmap/ic_coin"
         />
     <TextView
+        android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="You have just got yourself"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:fontFamily="@font/font_open_sans_hebrew"/>
 
     <TextView
         android:id="@+id/dr_reward_value_text_view"
@@ -38,7 +46,9 @@
         android:layout_height="wrap_content"
         android:text="20"
         android:layout_gravity="center"
-        android:textSize="@dimen/OffsideXXtraLargeText"/>
+        android:textSize="@dimen/OffsideXXtraLargeText"
+        android:fontFamily="@font/font_open_sans_hebrew"
+        android:layout_marginTop="5dp"/>
     <ImageView
         android:id="@+id/dr_coin_image_view"
         android:layout_width="40dp"
@@ -49,7 +59,10 @@
         android:id="@+id/dr_close_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="CLOSE"/>
+        style="@style/Button"
+        android:fontFamily="@font/font_open_sans_hebrew"
+        android:text="CLOSE"
+        android:layout_marginTop="10dp"/>
 
 
 

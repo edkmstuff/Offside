@@ -31,7 +31,8 @@
 
                 <LinearLayout
                     style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:padding="4dp">
 
                     <TextView
                         android:id="@+id/ag_start_date_text_view"

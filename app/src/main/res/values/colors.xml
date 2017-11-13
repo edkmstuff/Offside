@@ -83,10 +83,12 @@
 
     <color name="defaultImageBackgroundColor1">#BA68C8</color>
     <color name="defaultImageBackgroundColor2">#009688</color>
-    <color name="defaultImageBackgroundColor3">#43A047</color>
+    <color name="defaultImageBackgroundColor3">#616161</color>
     <color name="defaultImageBackgroundColor4">#E65100</color>
     <color name="defaultImageBackgroundColor5">#78909C</color>
-    <color name="defaultImageBackgroundColor6">#E64A19</color>
+    <color name="defaultImageBackgroundColor6">#004D40</color>
+
+    <color name="senderNameColor">#E57373</color>
 
 
 

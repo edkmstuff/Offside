@@ -20,14 +20,13 @@
 
         <!--INCOMING MESSAGES-->
 
-
         <LinearLayout
             android:id="@+id/cm_incoming_messages_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:background="@drawable/shape_bg_incoming_bubble"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="visible">
 
             <!--sender name-->
             <!--<TextView-->
@@ -63,7 +62,7 @@
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="5dp"
                         android:text="Shuli"
-                        android:textColor="@color/colorPrimary"
+                        android:textColor="@color/senderNameColor"
                         android:textSize="12dp" />
 
                     <!-- Text messages-->
@@ -77,7 +76,7 @@
                         android:paddingTop="5dp"
                         android:text="I am"
                         android:textColor="@color/chatText"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                     <!-- Get Coins message Root-->
                     <LinearLayout
@@ -91,7 +90,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
                         android:textColor="@color/chatText"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <!--player options to obtain coins-->
                         <LinearLayout
@@ -99,7 +98,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <TextView
                                 android:id="@+id/cm_incoming_get_coins_not_enough_coins_message_text_view"
@@ -174,7 +173,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:orientation="vertical"
-                            android:visibility="visible">
+                            android:visibility="gone">
 
                             <ProgressBar
                                 style="?android:attr/progressBarStyleLarge"
@@ -1127,13 +1126,16 @@
         <!-- OUTGOING -->
         <LinearLayout
             android:id="@+id/cm_outgoing_messages_root"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layoutDirection="rtl"
             android:orientation="horizontal"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
-            android:visibility="visible">
+            android:background="@drawable/shape_bg_outgoing_bubble"
+            android:layout_gravity="right"
+            android:visibility="visible"
+            >
 
             <ImageView
                 android:id="@+id/cm_outgoing_profile_picture_image_view"
@@ -1169,7 +1171,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shape_bg_outgoing_bubble"
                         android:orientation="vertical">
 
                         <TextView

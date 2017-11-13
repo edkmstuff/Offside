@@ -107,7 +107,7 @@ public class ChatFragment extends Fragment {
 
     private int powerItems;
 
-    //private TextView privateGameNameTextView;
+    private TextView privateGameNameTextView;
     private TextView gameTitleTextView;
     private TextView positionTextView;
 
@@ -216,7 +216,7 @@ public class ChatFragment extends Fragment {
 //        actionsMenuRoot.setVisibility(View.GONE);
 
         String chatTitle = String.format("%s", privateGroupName);
-//        privateGameNameTextView.setText(chatTitle);
+        privateGameNameTextView.setText(chatTitle);
         String title = String.format("%s vs. %s", homeTeam, awayTeam);
         gameTitleTextView.setText(title);
 
@@ -271,7 +271,7 @@ public class ChatFragment extends Fragment {
         chatListView = (ListView) view.findViewById(R.id.fc_chat_list_view);
         chatSendImageView = (ImageView) view.findViewById(R.id.fc_chat_send_image_view);
         chatMessageEditText = (EditText) view.findViewById(R.id.fc_chat_message_edit_text);
-       // privateGameNameTextView = (TextView) view.findViewById(R.id.fc_private_game_name_text_view);
+        privateGameNameTextView = (TextView) view.findViewById(R.id.fc_private_game_name_text_view);
         gameTitleTextView = (TextView) view.findViewById(R.id.fc_game_title_text_view);
         positionTextView = (TextView) view.findViewById(R.id.fc_position_text_view);
         scoreboardRoot = (LinearLayout) view.findViewById(R.id.fc_scoreboard_root);
