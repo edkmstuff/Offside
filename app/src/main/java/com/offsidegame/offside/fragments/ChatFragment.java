@@ -73,6 +73,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
+import dagger.multibindings.ElementsIntoSet;
+
 
 /**
  * Created by user on 8/22/2017.
@@ -898,6 +900,8 @@ public class ChatFragment extends Fragment {
     private void generateScoreboard() {
         scoreboardRoot.removeAllViewsInLayout();
 
+        int numberOfPlayers = OffsideApplication.getScoreboard().getScores().length;
+
         for (Score score : OffsideApplication.getScoreboard().getScores()) {
 
             ViewGroup layout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.scoreboard_item, scoreboardRoot, false);
@@ -905,11 +909,20 @@ public class ChatFragment extends Fragment {
             FrameLayout frameLayout = (FrameLayout) layout.getChildAt(0);
             ImageView imageView = (ImageView) frameLayout.getChildAt(0);
             TextView rankTextView = (TextView) frameLayout.getChildAt(1);
-
+            ImageView awardImageView = (ImageView) frameLayout.getChildAt(2);
             TextView scoreTextView = (TextView) layout.getChildAt(1);
 
-            rankTextView.setText(Integer.toString(score.getPosition()));
+            int position =score.getPosition();
+            rankTextView.setText(String.format("%s",position));
             ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), imageView, "LobbyActivity", true);
+            int awardResId = position==1? R.mipmap.trophy_gold: position==2? R.mipmap.trophy_silver: position ==3 ? R.mipmap.trophy_bronze: 0;
+            if(awardResId>0 && position<4 && position < numberOfPlayers){
+                ImageHelper.loadImage(getContext(), awardImageView,awardResId, false);
+                awardImageView.setVisibility(View.VISIBLE);
+            }
+            else
+                awardImageView.setVisibility(View.GONE);
+
             String formattedScoreValue = Formatter.formatNumber(score.getOffsideCoins(),Formatter.intCommaSeparator);
             scoreTextView.setText(formattedScoreValue);
 

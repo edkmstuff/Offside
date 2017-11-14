@@ -9,7 +9,7 @@ android {
         applicationId "com.offsidegame.offside"
         minSdkVersion 19
         targetSdkVersion rootProject.ext.compileSdkVersion
-        versionCode 39
+        versionCode 40
         versionName "6.1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

@@ -55,10 +55,10 @@
 
     <color name="questionTextColor">#000000</color>
     <color name="answerTextColor">#FFFFFF</color>
-    <color name="answerTextUnSelectedColor">#FFFFFF</color>
-    <color name="answerTextSelectedColor">#000000</color>
-    <color name="answerBackgroundColor">#1A237E</color>
-    <color name="answerBackgroundColorUnSelected">#E8EBF7</color>
+    <color name="answerTextUnSelectedColor">#000000</color>
+    <color name="answerTextSelectedColor">#FFFFFF</color>
+    <!--<color name="answerBackgroundColor">#1A237E</color>-->
+    <!--<color name="answerBackgroundColorUnSelected">#E8EBF7</color>-->
     <!--<color name="colorGold">#F2D398</color>-->
     <color name="colorGold">#FFD740</color>
 

@@ -33,6 +33,14 @@
             android:shadowDy="-1"
             android:gravity="center"
             android:text="1"/>
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:src="@mipmap/trophy_gold"
+            android:shadowRadius="1"
+            android:shadowDx="-1"
+            android:shadowDy="-1"
+            android:layout_marginLeft="25dp"/>
 
 
 
@@ -43,7 +51,7 @@
         android:textSize="12sp"
         android:textColor="@color/colorWhite"
         android:paddingLeft="4dp"
-
+        android:fontFamily="@font/font_open_sans_hebrew"
         android:text="1234"/>
 
 

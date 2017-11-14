@@ -12,10 +12,14 @@
                 <!--android:startColor="#1A237E"-->
                 <!--android:endColor="#263238"-->
                 <!--/>-->
+            <!--<gradient android:angle="180"-->
+            <!--android:startColor="#E0E0E0"-->
+            <!--android:endColor="#9E9E9E"-->
+            <!--/>-->
             <gradient android:angle="180"
-            android:startColor="#E0E0E0"
-            android:endColor="#9E9E9E"
-            />
+                android:startColor="#1A237E"
+                android:endColor="#263238"
+                />
 
         </shape>
     </item>

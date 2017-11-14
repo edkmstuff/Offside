@@ -109,6 +109,7 @@
     <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"https://www.sidekickgame.com\",\n  }\n}]</string>
     <string name="lbl_resume_game">חזרה למשחק</string>
     <string name="lbl_player_experience">מה אני?</string>
+    <string name="lbl_no_group_selected">לא נבחרה קבוצה</string>
 
 
 </resources>

@@ -11,7 +11,7 @@
     </item>
     <item>
         <bitmap
-            android:src="@drawable/app_logo_and_slogan_50"
+            android:src="@drawable/app_logo_and_slogan_10"
             android:tileMode="disabled"
             android:gravity="center"/>
     </item>
