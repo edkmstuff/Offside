@@ -3,12 +3,9 @@ package com.offsidegame.offside.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-
 import android.os.Bundle;
-
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -25,26 +22,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardItem;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
-
 import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
-import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NavigationEvent;
-
 import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
@@ -53,27 +39,22 @@ import com.offsidegame.offside.events.ScoreboardEvent;
 import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AnswerIdentifier;
-import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
-import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
-import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.Score;
 import com.offsidegame.offside.models.Scoreboard;
 
 import org.acra.ACRA;
-import org.apmem.tools.layouts.FlowLayout;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 
-import dagger.multibindings.ElementsIntoSet;
 
 
 /**
