@@ -69,6 +69,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -149,6 +150,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             setEvents();
 
             togglePlayerAssetsVisibility(true);
+
+            //Log.d(TAG,getResources().getConfiguration().locale.toString());
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);

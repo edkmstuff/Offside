@@ -214,8 +214,13 @@ public class AvailableGamesAdapter extends BaseAdapter {
                     String gameId = viewHolder.availableGame.getGameId();
                     String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
                     String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
-                    String selectedLanguage = "עברית";
-                    OffsideApplication.signalRService.requestCreatePrivateGame(playerId, gameId, groupId,  selectedLanguage);
+                    String privateGameContentLanguage;
+                    //create the private game in hebrew if user's device locale set to hebrew, otherwise english
+                    if(context.getResources().getConfiguration().locale.getDisplayLanguage().toString().equalsIgnoreCase("עברית"))
+                       privateGameContentLanguage = "עברית";
+                    else
+                        privateGameContentLanguage = "English";
+                    OffsideApplication.signalRService.requestCreatePrivateGame(playerId, gameId, groupId,  privateGameContentLanguage);
 
                 }
             });

@@ -140,7 +140,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/lbl_enter_game"
                             android:textColor="@color/colorWhite"
-                            android:textSize="16dp"
+                            android:textSize="@dimen/OffsideMediumSmallText"
                             android:layout_gravity="center"
                             />
 
