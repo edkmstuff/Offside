@@ -62,8 +62,8 @@
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="5dp"
                         android:text="Shuli"
-                        android:textColor="@color/senderNameColor"
-                        android:textSize="12dp" />
+                        style="@style/SenderNameText"
+                        />
 
                     <!-- Text messages-->
                     <TextView
@@ -379,7 +379,7 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="הכפל"
+                                        android:text="@string/lbl_doubleup"
                                         android:textColor="@color/colorBlack"
                                         android:textSize="@dimen/OffsideMediumText"
                                         android:fontFamily="@font/font_open_sans_hebrew_bold" />
@@ -1109,8 +1109,8 @@
                         android:layout_marginBottom="5dp"
                         android:layout_marginLeft="10dp"
                         android:text="10:23"
-                        android:textColor="@color/chatActions"
-                        android:textSize="12dp"
+
+                        style="@style/TimeSentText"
 
                         />
                 </LinearLayout>
@@ -1180,8 +1180,7 @@
                             android:layout_marginBottom="2dp"
                             android:layout_marginRight="5dp"
                             android:text="10:23"
-                            android:textColor="@color/chatActions"
-                            android:textSize="12dp"
+                            style="@style/TimeSentText"
                             android:visibility="gone" />
 
                         <TextView
@@ -1206,9 +1205,7 @@
                             android:layout_marginBottom="5dp"
                             android:layout_marginRight="10dp"
                             android:text="10:23"
-                            android:textColor="@color/chatActions"
-                            android:textSize="12dp"
-
+                            style="@style/TimeSentText"
                             />
 
                     </LinearLayout>

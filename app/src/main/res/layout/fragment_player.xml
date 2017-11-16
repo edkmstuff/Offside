@@ -97,7 +97,7 @@
                         android:id="@+id/vp_latest_game_tab_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="משחק אחרון"
+                        android:text="@string/lbl_latest_game"
                         style="@style/SimpleNavigationTabSelected"
                         android:fontFamily="@font/font_open_sans_hebrew"/>
 
@@ -117,7 +117,7 @@
                         android:id="@+id/vp_trophies_tab_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="ארון גביעים"
+                        android:text="@string/lbl_hounors"
                         style="@style/SimpleNavigationTabUnSelected"
                         android:fontFamily="@font/font_open_sans_hebrew"/>
 
@@ -137,7 +137,7 @@
                         android:id="@+id/vp_records_tab_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="נתונים"
+                        android:text="@string/lbl_Stats"
                         style="@style/SimpleNavigationTabUnSelected"
                         android:fontFamily="@font/font_open_sans_hebrew"/>
 
@@ -606,7 +606,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:text="משחקים"
+                            android:text="@string/lbl_matches"
                             android:textSize="@dimen/OffsideExtraSmallText"
                             android:lines="1"
                             android:fontFamily="@font/font_open_sans_hebrew"/>
@@ -640,7 +640,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="גביעים"
+                            android:text="@string/lbl_awards"
                             android:textSize="@dimen/OffsideExtraSmallText"
                             android:lines="1"
                             android:fontFamily="@font/font_open_sans_hebrew"/>
@@ -672,7 +672,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:gravity="center"
-                            android:text="ממוצע למשחק"
+                            android:text="@string/lbl_avg_per_game"
                             android:textSize="@dimen/OffsideExtraSmallText"
                             android:lines="1"
                             android:fontFamily="@font/font_open_sans_hebrew"/>

@@ -2,12 +2,12 @@
 
 
     <string name="app_name">SideKick</string>
-    <!--<string name="facebook_application_id" translatable="false">523024471208542</string>-->
-    <!--<string name="facebook_login_protocol_scheme" translatable="false">fb523024471208542</string>-->
+    <string name="facebook_application_id" translatable="false">523024471208542</string>
+    <string name="facebook_login_protocol_scheme" translatable="false">fb523024471208542</string>
     <!-- was "Signing up..." -->
-    <string name="fui_progress_dialog_signing_up">מחברים אותך...</string>
+    <string name="fui_progress_dialog_signing_up">מתחבר...</string>
 
-    <string name="preference_name">OffsidePlayerPreferences</string>
+    <string name="preference_name" >OffsidePlayerPreferences</string>
     <string name="date_format">EEEE, dd/MM/yyyy/hh:mm:ss</string>
     <string name="log_tag">OffsideLog</string>
     <string name="game_id_key">gameId</string>
@@ -51,7 +51,7 @@
     <string name="lbl_click_to_view">לחץ כדי לראות</string>
     <string name="lbl_get_offside_coins">השג כדור</string>
     <string name="lbl_watch_short_video">צפה בוידאו קצר (1000 מטבעות)</string>
-    <string name="lbl_buy_offside_coins">רכוש כדורים</string>
+    <string name="lbl_buy_offside_coins">רכוש מטבעות</string>
     <string name="lbl_loading_video">טוען וידאו...</string>
     <string name="lbl_leave_game">צא מהמשחק</string>
     <string name="lbl_start_slot">לחץ כאן כדי להגריל</string>
@@ -109,6 +109,20 @@
     <string name="lbl_resume_game">חזרה למשחק</string>
     <string name="lbl_player_experience">מה אני?</string>
     <string name="lbl_no_group_selected">לא נבחרה קבוצה</string>
+    <string name="lbl_doubleup">הכפל</string>
+    <string name="lbl_congratulations">אולה!</string>
+    <string name="lbl_pre_bonus_reward_message">נוספו לך</string>
+    <string name="lbl_close">סגור</string>
+    <string name="lbl_latest_game">משחק אחרון</string>
+    <string name="lbl_hounors">ארון גביעים</string>
+    <string name="lbl_Stats">נתונים</string>
+    <string name="lbl_matches">משחקים</string>
+    <string name="lbl_awards">תארים</string>
+    <string name="lbl_leaderboard">הטבלה</string>
+    <string name="lbl_pos">מיקום</string>
+    <string name="lbl_player">שחקן</string>
+    <string name="lbl_games">משחקים</string>
+    <string name="lbl_coins_earned">נקודות</string>
 
 
 </resources>

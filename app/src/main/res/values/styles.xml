@@ -71,7 +71,7 @@
     </style>
 
     <style name="OffsideActionButton">
-        <item name="android:textSize">12dp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:textColor">@color/colorWhite</item>
 
     </style>
@@ -154,6 +154,17 @@
         <item name="android:fontFamily">@font/font_open_sans_hebrew</item>
     </style>
 
+    <style name="SenderNameText">
+        <item name="android:textColor">@color/senderNameColor</item>
+        <item name="android:textSize">@dimen/OffsideSmallText</item>
+        <item name="android:fontFamily">@font/font_open_sans_hebrew_bold</item>
+    </style>
+
+    <style name="TimeSentText">
+        <item name="android:textColor">@color/chatActions</item>
+        <item name="android:textSize">@dimen/OffsideSmallText</item>
+        <item name="android:fontFamily">@font/font_open_sans_hebrew</item>
+    </style>
 
 
     <!--<style name="BackgroundOdd">-->

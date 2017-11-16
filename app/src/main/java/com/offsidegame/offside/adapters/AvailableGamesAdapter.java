@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.NotEnoughCoinsEvent;
+import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.OffsideApplication;
@@ -78,6 +80,9 @@ public class AvailableGamesAdapter extends BaseAdapter {
         TextView createPrivateGameButtonTextView;
         LinearLayout gameEnterFeeRoot;
         TextView moreTextView;
+        TextView createPrivateGameButtonEntranceFeeTextView;
+        TextView joinPrivateGameButtonEntranceFeeTextView;
+
 
 
 
@@ -106,6 +111,8 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 viewHolder.createPrivateGameButtonTextView = (TextView) convertView.findViewById(R.id.ag_create_private_game_button_text_view);
                 viewHolder.gameEnterFeeRoot =  convertView.findViewById(R.id.ag_game_enter_fee_root);
                 viewHolder.moreTextView = convertView.findViewById(R.id.ag_more_text_view);
+                viewHolder.createPrivateGameButtonEntranceFeeTextView = convertView.findViewById(R.id.ag_create_private_game_button_entrance_fee_text_view);
+                viewHolder.joinPrivateGameButtonEntranceFeeTextView = convertView.findViewById(R.id.ag_join_private_game_button_entrance_fee_text_view);
 
 
                 convertView.setTag(viewHolder);
@@ -145,8 +152,12 @@ public class AvailableGamesAdapter extends BaseAdapter {
 
             viewHolder.startTimeTextView.setText(viewHolder.availableGame.getStartTimeString());
             viewHolder.startDateTextView.setText(viewHolder.availableGame.getStartDateString());
+            String formattedEntranceFee = Formatter.formatNumber(viewHolder.availableGame.getEntranceFee(),Formatter.intCommaSeparator);
+            viewHolder.createPrivateGameButtonEntranceFeeTextView.setText(formattedEntranceFee);
+            viewHolder.joinPrivateGameButtonEntranceFeeTextView.setText(formattedEntranceFee);
             if (viewHolder.availableGame.getPrivateGroupPlayers() == null)
                 viewHolder.availableGame.setPrivateGroupPlayers(new PrivateGroupPlayer[0]);
+
 
             viewHolder.playersCountTextView.setText(Integer.toString(viewHolder.availableGame.getPrivateGroupPlayers().length) + " " + context.getString(R.string.lbl_now_playing));
 
@@ -210,17 +221,29 @@ public class AvailableGamesAdapter extends BaseAdapter {
             viewHolder.createPrivateGameRoot.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
-                    String gameId = viewHolder.availableGame.getGameId();
-                    String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
-                    String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
-                    String privateGameContentLanguage;
-                    //create the private game in hebrew if user's device locale set to hebrew, otherwise english
-                    if(context.getResources().getConfiguration().locale.getDisplayLanguage().toString().equalsIgnoreCase("עברית"))
-                       privateGameContentLanguage = "עברית";
+
+                    int balance = OffsideApplication.getPlayerAssets().getBalance();
+                    if(balance<=viewHolder.availableGame.getEntranceFee()){
+                        OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
+                        String gameId = viewHolder.availableGame.getGameId();
+                        String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
+                        String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
+                        String privateGameContentLanguage;
+                        //create the private game in hebrew if user's device locale set to hebrew, otherwise english
+                        if(context.getResources().getConfiguration().locale.getDisplayLanguage().toString().equalsIgnoreCase(OffsideApplication.availableLanguages.get("he")))
+                            privateGameContentLanguage = OffsideApplication.availableLanguages.get("he");
+                        else
+                            privateGameContentLanguage = OffsideApplication.availableLanguages.get("en");
+                        OffsideApplication.signalRService.requestCreatePrivateGame(playerId, gameId, groupId,  privateGameContentLanguage);
+
+                    }
                     else
-                        privateGameContentLanguage = "English";
-                    OffsideApplication.signalRService.requestCreatePrivateGame(playerId, gameId, groupId,  privateGameContentLanguage);
+                    {
+                        EventBus.getDefault().post(new NotEnoughCoinsEvent());
+
+                    }
+
+
 
                 }
             });

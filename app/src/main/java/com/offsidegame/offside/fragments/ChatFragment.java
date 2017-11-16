@@ -56,7 +56,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 
 
-
 /**
  * Created by user on 8/22/2017.
  */
@@ -138,8 +137,7 @@ public class ChatFragment extends Fragment {
     @Override
     public void onResume() {
 
-        try
-        {
+        try {
             super.onResume();
             EventBus.getDefault().register(this);
 
@@ -169,7 +167,7 @@ public class ChatFragment extends Fragment {
 
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
     }
@@ -210,7 +208,7 @@ public class ChatFragment extends Fragment {
         settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
         ImageHelper.loadImage(getActivity(), player != null ? player.getImageUrl() : settings.getString(getString(R.string.player_profile_picture_url_key), null), playerPictureImageView, "ChatActivity", true);
 
-        OffsideApplication.signalRService.requestGetChatMessages(playerId, gameId, privateGameId,  androidDeviceId);
+        OffsideApplication.signalRService.requestGetChatMessages(playerId, gameId, privateGameId, androidDeviceId);
 
 
     }
@@ -227,8 +225,7 @@ public class ChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        try
-        {
+        try {
             View view = inflater.inflate(R.layout.fragment_chat, container, false);
 
             getIDs(view);
@@ -240,8 +237,8 @@ public class ChatFragment extends Fragment {
 
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
-                    return null;
+            ACRA.getErrorReporter().handleSilentException(ex);
+            return null;
         }
 
     }
@@ -260,7 +257,7 @@ public class ChatFragment extends Fragment {
         scoreboardRoot = (LinearLayout) view.findViewById(R.id.fc_scoreboard_root);
         inviteFriendsImageView = (ImageView) view.findViewById(R.id.fc_invite_friends_image_view);
 
-    //    actionsMenuRoot = (LinearLayout) view.findViewById(R.id.fc_actions_menu_root);
+        //    actionsMenuRoot = (LinearLayout) view.findViewById(R.id.fc_actions_menu_root);
 
         //chatActionsButton = (ImageView) view.findViewById(R.id.fc_chatActionsButton);
         //actionsFlowLayout = (FlowLayout) view.findViewById(R.id.fc_actions_flow_layout);
@@ -273,8 +270,8 @@ public class ChatFragment extends Fragment {
 
 
         //actionReloadRoot = (LinearLayout) view.findViewById(R.id.fc_action_reload_root);
-       //actionWatchVideoRoot = (LinearLayout) view.findViewById(R.id.fc_action_watch_video_root);
-       //rewardVideoLoadingRoot = (LinearLayout) view.findViewById(R.id.fc_reward_video_loading_root);
+        //actionWatchVideoRoot = (LinearLayout) view.findViewById(R.id.fc_action_watch_video_root);
+        //rewardVideoLoadingRoot = (LinearLayout) view.findViewById(R.id.fc_reward_video_loading_root);
         chatListView = (ListView) view.findViewById(R.id.fc_chat_list_view);
 
         backNavigationButtonImageView = view.findViewById(R.id.fsg_back_navigation_button_image_view);
@@ -320,7 +317,7 @@ public class ChatFragment extends Fragment {
             public void onClick(View view) {
                 String message = chatMessageEditText.getText().toString();
                 if (message != null && message.length() > 0) {
-                    OffsideApplication.signalRService.requestSendChatMessage(playerId, gameId, privateGameId, message );
+                    OffsideApplication.signalRService.requestSendChatMessage(playerId, gameId, privateGameId, message);
                     //clear text
                     chatMessageEditText.setText("");
                     //hide keypad
@@ -633,8 +630,6 @@ public class ChatFragment extends Fragment {
 //    }
 
 
-
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveChat(ChatEvent chatEvent) {
 
@@ -718,7 +713,7 @@ public class ChatFragment extends Fragment {
 
             // this parameter will be null if the user does not answer
             String answerId = questionAnsweredEvent.getAnswerId();
-            OffsideApplication.signalRService.requestPostAnswer(playerId,gameId,  questionId, answerId, isSkipped, betSize);
+            OffsideApplication.signalRService.requestPostAnswer(playerId, gameId, questionId, answerId, isSkipped, betSize);
             if (!OffsideApplication.playerAnswers.containsKey(questionId))
                 OffsideApplication.playerAnswers.put(questionId, new AnswerIdentifier(answerId, isSkipped, betSize, true));
 
@@ -769,7 +764,7 @@ public class ChatFragment extends Fragment {
                 return;
 
             player.incrementRewardVideoWatchCount();
-            OffsideApplication.signalRService.setPowerItems(playerId, gameId,  rewardAmount, true);
+            OffsideApplication.signalRService.setPowerItems(playerId, gameId, rewardAmount, true);
 
 
         } catch (Exception ex) {
@@ -780,7 +775,7 @@ public class ChatFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceivePlayer(PlayerModelEvent playerModelEvent ) {
+    public void onReceivePlayer(PlayerModelEvent playerModelEvent) {
         try {
             PlayerModel updatedPlayer = playerModelEvent.getPlayerModel();
             if (updatedPlayer == null)
@@ -794,7 +789,7 @@ public class ChatFragment extends Fragment {
             if (currentPlayer != null) {
                 int oldOffsideCoinsValue = currentPlayer.getOffsideCoins();
                 int newOffsideCoinsValue = updatedPlayer.getOffsideCoins();
-                String formattedCoinsValue = Formatter.formatNumber(newOffsideCoinsValue,Formatter.intCommaSeparator);
+                String formattedCoinsValue = Formatter.formatNumber(newOffsideCoinsValue, Formatter.intCommaSeparator);
                 offsideCoinsTextView.setText(formattedCoinsValue);
                 if (newOffsideCoinsValue != oldOffsideCoinsValue) {
                     //offsideCoinsImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
@@ -804,7 +799,7 @@ public class ChatFragment extends Fragment {
 
                 int oldPowerItems = currentPlayer.getPowerItems();
                 int newPowerItems = updatedPlayer.getPowerItems();
-                String formattedPowerItems = Formatter.formatNumber(newPowerItems,Formatter.intCommaSeparator);
+                String formattedPowerItems = Formatter.formatNumber(newPowerItems, Formatter.intCommaSeparator);
                 powerItemsTextView.setText(formattedPowerItems);
                 if (newPowerItems != oldPowerItems) {
 
@@ -841,7 +836,6 @@ public class ChatFragment extends Fragment {
 
             if (scores == null || scores.length == 0)
                 return;
-
 
 
             //check if scoreboard was changed
@@ -882,6 +876,8 @@ public class ChatFragment extends Fragment {
         scoreboardRoot.removeAllViewsInLayout();
 
         int numberOfPlayers = OffsideApplication.getScoreboard().getScores().length;
+        int previousRankCoins=0;
+        int awardResId=0;
 
         for (Score score : OffsideApplication.getScoreboard().getScores()) {
 
@@ -893,18 +889,40 @@ public class ChatFragment extends Fragment {
             ImageView awardImageView = (ImageView) frameLayout.getChildAt(2);
             TextView scoreTextView = (TextView) layout.getChildAt(1);
 
-            int position =score.getPosition();
-            rankTextView.setText(String.format("%s",position));
+            int position = score.getPosition();
+            int coins = score.getOffsideCoins();
+
+            rankTextView.setText(String.format("%s", position));
             ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), imageView, "LobbyActivity", true);
-            int awardResId = position==1? R.mipmap.trophy_gold: position==2? R.mipmap.trophy_silver: position ==3 ? R.mipmap.trophy_bronze: 0;
-            if(awardResId>0 && position<4 && position < numberOfPlayers){
-                ImageHelper.loadImage(getContext(), awardImageView,awardResId, false);
-                awardImageView.setVisibility(View.VISIBLE);
+
+            if( position < 4 && position < numberOfPlayers) {
+
+                switch(position){
+                    case 1:
+                        awardResId = R.mipmap.trophy_gold;
+                        break;
+                    case 2:
+                        if(coins != previousRankCoins)
+                            awardResId = R.mipmap.trophy_silver;
+                        break;
+                    case 3:
+                        if(coins != previousRankCoins)
+                            awardResId = R.mipmap.trophy_bronze;
+                        break;
+                        default:
+                            awardResId=0;
+
+                }
+                previousRankCoins = coins;
+
             }
-            else
+            if (awardResId > 0 && position < numberOfPlayers ) {
+                ImageHelper.loadImage(getContext(), awardImageView, awardResId, false);
+                awardImageView.setVisibility(View.VISIBLE);
+            } else
                 awardImageView.setVisibility(View.GONE);
 
-            String formattedScoreValue = Formatter.formatNumber(score.getOffsideCoins(),Formatter.intCommaSeparator);
+            String formattedScoreValue = Formatter.formatNumber(score.getOffsideCoins(), Formatter.intCommaSeparator);
             scoreTextView.setText(formattedScoreValue);
 
             scoreboardRoot.addView(layout);

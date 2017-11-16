@@ -1,25 +1,25 @@
 <resources>
 
 
-    <string name="app_name">SideKick</string>
+    <string name="app_name" translatable="false">SideKick</string>
 
     <string name="facebook_application_id" translatable="false">523024471208542</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb523024471208542</string>
     <!-- was "Signing up..." -->
     <string name="fui_progress_dialog_signing_up">Connecting...</string>
 
-    <string name="preference_name">OffsidePlayerPreferences</string>
-    <string name="date_format">EEEE, dd/MM/yyyy/hh:mm:ss</string>
-    <string name="log_tag">OffsideLog</string>
-    <string name="game_id_key">gameId</string>
-    <string name="player_profile_picture_url_key">userProfilePictureUrl</string>
-    <string name="recent_token_key">recentToken</string>
+    <string name="preference_name" translatable="false">OffsidePlayerPreferences</string>
+    <string name="date_format" translatable="false">EEEE, dd/MM/yyyy/hh:mm:ss</string>
+    <string name="log_tag" translatable="false">OffsideLog</string>
+    <string name="game_id_key" translatable="false">gameId</string>
+    <string name="player_profile_picture_url_key" translatable="false">userProfilePictureUrl</string>
+    <string name="recent_token_key" translatable="false">recentToken</string>
     <string name="lbl_you_are_connected">Connected</string>
     <string name="lbl_you_are_disconnected">Disconnected. Trying to reconnect...</string>
-    <string name="private_game_id_key">privateGameId</string>
-    <string name="private_game_title_key">privateGameTitle</string>
-    <string name="home_team_key">homeTeam</string>
-    <string name="away_team_key">awayTeam</string>
+    <string name="private_game_id_key" translatable="false">privateGameId</string>
+    <string name="private_game_title_key" translatable="false">privateGameTitle</string>
+    <string name="home_team_key" translatable="false">homeTeam</string>
+    <string name="away_team_key" translatable="false">awayTeam</string>
     <string name="crash_toast_text">Something went wrong... we are sending the info to the developers...</string>
     <string name="lbl_you_can_earn">Potential earning</string>
     <string name="lbl_correct_answer_feedback">Well Done!</string>
@@ -43,7 +43,7 @@
     <string name="lbl_command_reload">Get power items</string>
     <string name="lbl_command_game_code">Game code</string>
     <string name="lbl_command_share_code">Share code</string>
-    <string name="rewarded_video_ad_unit_id_key">ca-app-pub-3734756240615742/4334945313</string>
+    <string name="rewarded_video_ad_unit_id_key" translatable="false">ca-app-pub-3734756240615742/4334945313</string>
     <!--googles test aduinitid-->
 
     <string name="lbl_you_can_get_coins_doing_one_of_the_following">Get coins</string>
@@ -51,8 +51,8 @@
     <string name="lbl_click_to_answer">Click to answer</string>
     <string name="lbl_click_to_view">Click to see</string>
     <string name="lbl_get_offside_coins">Get power item</string>
-    <string name="lbl_watch_short_video">Watch short Video (10 coins)</string>
-    <string name="lbl_buy_offside_coins">Buy power items</string>
+    <string name="lbl_watch_short_video">WATCH VIDEO(10 coins)</string>
+    <string name="lbl_buy_offside_coins">BUY COINS</string>
     <string name="lbl_loading_video">Loading video...</string>
     <string name="lbl_leave_game">Exit game</string>
     <string name="lbl_start_slot">Click to roll</string>
@@ -77,12 +77,12 @@
     <string name="lbl_my_profile">profile</string>
     <string name="lbl_shop">store</string>
     <string name="lbl_play">play</string>
-    <string name="key_group_type">groupType</string>
-    <string name="key_private_group_name">PRIVATE_GROUP</string>
-    <string name="key_public_group_name">PUBLIC_GROUP</string>
+    <string name="key_group_type" translatable="false">groupType</string>
+    <string name="key_private_group_name" translatable="false">PRIVATE_GROUP</string>
+    <string name="key_public_group_name" translatable="false">PUBLIC_GROUP</string>
     <string name="lbl_my_private_groups">My Groups</string>
     <string name="lbl_public_groups">Public Groups</string>
-    <string name="key_league_type">leagueType</string>
+    <string name="key_league_type" translatable="false">leagueType</string>
     <string name="lbl_no_trophies">No Titles</string>
     <string name="lbl_out_of">out of</string>
     <string name="lbl_recent_game_position_title">Rank</string>
@@ -93,7 +93,7 @@
     <string name="lbl_la_liga">La Liga</string>
     <string name="lbl_champions_league">UEFA CL</string>
     <string name="lbl_play_here">PLAY HERE</string>
-    <string name="private_group_id_key">privateGroupId</string>
+    <string name="private_group_id_key" translatable="false">privateGroupId</string>
     <string name="lbl_enter_game">ENTER GAME</string>
     <string name="lbl_open_game">OPEN GAME</string>
 
@@ -104,12 +104,27 @@
     <string name="lbl_news">NEWS</string>
     <string name="lbl_your_position">POSITION:</string>
     <string name="lbl_create_private_group_hint">Give cool name</string>
-    <string name="lbl_delete_private_group">DELETE GROUP</string>
+    <string name="lbl_delete_private_group">Delete Group</string>
     <string name="lbl_error_user_profile_picture_not_saved">User Image was not saved</string>
     <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"https://www.sidekickgame.com\",\n  }\n}]</string>
     <string name="lbl_resume_game">RESUME</string>
     <string name="lbl_player_experience">My Level</string>
     <string name="lbl_no_group_selected">You did not select group</string>
+    <string name="lbl_doubleup">DOUBLE UP</string>
+    <string name="lbl_congratulations">Congratulations</string>
+    <string name="lbl_pre_bonus_reward_message">You have just got yourself</string>
+    <string name="lbl_close">CLOSE</string>
+    <string name="lbl_latest_game">Latest Game</string>
+    <string name="lbl_hounors">Honours</string>
+    <string name="lbl_Stats">Stats</string>
+    <string name="lbl_matches">Matches</string>
+    <string name="lbl_awards">Awards</string>
+    <string name="lbl_avg_per_game">Score/Game</string>
+    <string name="lbl_leaderboard">Leaderboard</string>
+    <string name="lbl_pos">POS</string>
+    <string name="lbl_player">PLAYER</string>
+    <string name="lbl_games">GAMES</string>
+    <string name="lbl_coins_earned">POINTS</string>
 
 
 </resources>

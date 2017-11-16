@@ -1,6 +1,7 @@
 package com.offsidegame.offside.fragments;
 
 
+import android.app.Dialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -68,6 +70,10 @@ public class SingleGroupFragment extends Fragment {
     private TextView groupNavigationLastPlayedTextView;
     private TextView singleGroupGamesTabTextView;
     private TextView singleGroupLeagueTabTextView;
+
+    private Dialog dialogApproveDelete;
+    private Button dialogOkButton;
+    private Button dialogCancelButton;
 
 
     private int currentGroupSelectedIndex = -1;
@@ -148,6 +154,7 @@ public class SingleGroupFragment extends Fragment {
 
         singleGroupGamesTabTextView = view.findViewById(R.id.fsg_single_group_games_text_view);
         singleGroupLeagueTabTextView = view.findViewById(R.id.fsg_single_group_league_text_view);
+
     }
 
     int selectedTabPosition;
@@ -213,10 +220,44 @@ public class SingleGroupFragment extends Fragment {
         singleGroupDeletePrivateGroupButtonRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OffsideApplication.signalRService.requestDeletePrivateGroup(OffsideApplication.getPlayerId(), OffsideApplication.getSelectedPrivateGroupId());
+                createDialogApproveDelete();
+                dialogApproveDelete.show();
 
             }
         });
+
+
+    }
+
+    private void createDialogApproveDelete() {
+        try
+        {
+            dialogApproveDelete = new Dialog(getContext());
+            dialogApproveDelete.setContentView(R.layout.dialog_approve_delete);
+            dialogOkButton = dialogApproveDelete.findViewById(R.id.dad_ok_button);
+            dialogCancelButton = dialogApproveDelete.findViewById(R.id.dad_cancel_button);
+
+            dialogOkButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    OffsideApplication.signalRService.requestDeletePrivateGroup(OffsideApplication.getPlayerId(), OffsideApplication.getSelectedPrivateGroupId());
+                    dialogApproveDelete.cancel();
+                }
+            });
+
+            dialogCancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dialogApproveDelete.cancel();
+                }
+            });
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     private void resetVisibility(){

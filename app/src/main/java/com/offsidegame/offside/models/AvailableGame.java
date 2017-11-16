@@ -48,6 +48,10 @@ public class AvailableGame {
     @com.google.gson.annotations.SerializedName("GRI")
     private String groupId;
 
+    @com.google.gson.annotations.SerializedName("EF")
+    private int entranceFee;
+
+
 
     public String getGameId() {
         return gameId;
@@ -165,5 +169,13 @@ public class AvailableGame {
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    public int getEntranceFee() {
+        return entranceFee;
+    }
+
+    public void setEntranceFee(int entranceFee) {
+        this.entranceFee = entranceFee;
     }
 }

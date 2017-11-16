@@ -111,9 +111,11 @@ public class OffsideApplication extends Application {
 
     private static PlayerAssets playerAssets;
 
-    private static HashMap<String, LeagueRecord[]> leaguesRecords;
+    public static HashMap<String, String> availableLanguages = new HashMap<>();
 
     private static boolean isBackFromNewsFeed = false;
+
+    private static HashMap<String, LeagueRecord[]> leaguesRecords;
 
 
     public static String getMessageTypeText() {
@@ -334,6 +336,10 @@ public class OffsideApplication extends Application {
                     ACRA.getErrorReporter().handleSilentException(e);
                 }
             });
+
+            availableLanguages.put("en","English");
+            availableLanguages.put("he","עברית");
+
 
             //signal r
             Intent intent = new Intent();

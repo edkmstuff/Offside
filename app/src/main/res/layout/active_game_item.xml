@@ -155,6 +155,7 @@
                                 android:src="@mipmap/ic_coin" />
 
                             <TextView
+                                android:id="@+id/ag_join_private_game_button_entrance_fee_text_view"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="200" />
@@ -185,7 +186,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/lbl_open_game"
                             android:textColor="@color/colorWhite"
-                            android:textSize="16dp"
+                            android:textSize="@dimen/OffsideSmallText"
                             android:layout_gravity="center"/>
 
                         <LinearLayout
@@ -199,6 +200,7 @@
                                 android:src="@mipmap/ic_coin" />
 
                             <TextView
+                                android:id="@+id/ag_create_private_game_button_entrance_fee_text_view"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="200" />

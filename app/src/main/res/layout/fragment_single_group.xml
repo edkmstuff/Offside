@@ -187,7 +187,7 @@
                         android:id="@+id/fsg_single_group_games_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="משחקים"
+                        android:text="@string/lbl_matches"
                         android:textColor="@color/colorWhite"
                         android:fontFamily="@font/font_open_sans_hebrew"/>
 
@@ -214,7 +214,7 @@
                         android:id="@+id/fsg_single_group_league_text_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="הטבלה"
+                        android:text="@string/lbl_leaderboard"
                         android:textColor="@color/colorWhite"
                         android:fontFamily="@font/font_open_sans_hebrew"/>
 
@@ -280,15 +280,15 @@
                 android:visibility="visible"
                 >
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
                     <!-- your position  -->
                     <LinearLayout
                         android:id="@+id/fsg_league_title_root"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-
                         android:gravity="center_horizontal"
                         android:layoutDirection="rtl"
                         android:orientation="horizontal"
@@ -330,7 +330,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             style="@style/LeagueHeader"
-                            android:text="POS"
+                            android:text="@string/lbl_pos"
                             />
 
                         <TextView
@@ -338,7 +338,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="3"
                             style="@style/LeagueHeader"
-                            android:text="PLAYER"
+                            android:text="@string/lbl_player"
                             >
 
                         </TextView>
@@ -349,14 +349,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             style="@style/LeagueHeader"
-                            android:text="GAMES" />
+                            android:text="@string/lbl_games" />
 
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             style="@style/LeagueHeader"
-                            android:text="POINTS" />
+                            android:text="@string/lbl_coins_earned" />
 
 
 
@@ -370,38 +370,83 @@
                         android:divider="@null"
                         android:dividerHeight="0dp"
                         android:listSelector="@android:color/transparent"
-                        android:transcriptMode="alwaysScroll">
+                        android:transcriptMode="alwaysScroll"
+                        android:visibility="visible">
 
                     </ListView>
 
                     <!--delete button-->
                     <LinearLayout
-                        android:id="@+id/fsg_single_group_delete_group_root"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_centerHorizontal="true"
-                        android:padding="10dp"
-                        android:layout_below="@+id/fsg_single_group_league_list_view">
 
-                        <TextView
-                            android:id="@+id/fsg_single_group_delete_group_text_view"
-                            style="@style/Button"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                       >
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="8dp"
+                            android:background="@color/colorWhite"
+                            android:alpha="0.5"
+                            />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:background="@color/colorWhite"
+                            android:alpha="0.5"
+                            />
+
+                        <LinearLayout
+                            android:id="@+id/fsg_single_group_delete_group_root"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:minHeight="50dp"
-                            android:minWidth="100dp"
-                            android:padding="5dp"
-                            android:text="@string/lbl_delete_private_group"
-                            android:textDirection="rtl"
+                            android:orientation="horizontal"
+                            android:gravity="center|start">
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/lbl_delete_private_group"
+                                android:fontFamily="@font/font_open_sans_hebrew"
+                                android:textSize="@dimen/OffsideMediumSmallText"
+                                android:textColor="@color/grayText"
+                                android:layout_marginStart="8dp"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp"
+
+                                />
+
+                        </LinearLayout>
+
+                        <!-- separator line-->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:background="@color/colorWhite"
+                            android:alpha="0.5"
                             />
+
+
+
+                        <!--<TextView-->
+                            <!--android:id="@+id/fsg_single_group_delete_group_text_view"-->
+                            <!--style="@style/Button"-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:gravity="center"-->
+                            <!--android:minHeight="50dp"-->
+                            <!--android:minWidth="100dp"-->
+                            <!--android:padding="5dp"-->
+                            <!--android:text="@string/lbl_delete_private_group"-->
+                            <!--android:textDirection="rtl"-->
+
+                            <!--/>-->
 
                     </LinearLayout>
 
 
-                </RelativeLayout>
+
+
+                </LinearLayout>
 
 
             </LinearLayout>

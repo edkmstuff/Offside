@@ -47,7 +47,8 @@
             android:padding="5dp"
             android:text="משחק פעיל"
             android:textColor="@color/colorWhite"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="HardcodedText" />
         <!--group members-->
         <LinearLayout
             style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
@@ -92,7 +93,8 @@
                 android:lines="1"
                 android:text="12 חברים"
                 android:textColor="@color/navigationMenuUnSelectedItem"
-                android:textSize="@dimen/OffsideExtraSmallText" />
+                android:textSize="@dimen/OffsideExtraSmallText"
+                tools:ignore="HardcodedText" />
 
 
 

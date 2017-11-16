@@ -41,6 +41,7 @@ import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.NotEnoughCoinsEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
 import com.offsidegame.offside.events.PlayerRewardedReceivedEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
@@ -69,7 +70,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -128,7 +128,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private ImageView dialogueCoinImageView;
     private Button dialogueCloseButton;
 
-    private boolean isPlayerCanJoinPrivateGame= false;
+    //short in assets dialogue
+    private Dialog shortInAssetsDialog;
+    private TextView getCoinsSlotMachineActionTextView;
+    private TextView getCoinsWatchRewardVideoActionTextView;
+    private TextView getCoinsBuyCoinsActionTextView;
+    private Button notEnoughCoinsDialogueCloseButton;
+    private boolean isPlayerCanJoinPrivateGame = false;
 
     //</editor-fold>
 
@@ -257,13 +263,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                         case R.id.nav_action_play:
                             //bottomNavigation.setItemBackground(itemPosition, R.color.navigationMenuSelectedItem);
                             PrivateGroup selectedGroup = OffsideApplication.getSelectedPrivateGroup();
-                            if(selectedGroup==null){
+                            if (selectedGroup == null) {
                                 EventBus.getDefault().post(new CannotJoinPrivateGameEvent(R.string.lbl_no_group_selected));
                                 return true;
                             }
 
-                            if(isPlayerCanJoinPrivateGame){
-                                isPlayerCanJoinPrivateGame=false;
+                            if (isPlayerCanJoinPrivateGame) {
+                                isPlayerCanJoinPrivateGame = false;
                                 if (qBadgeView != null)
                                     qBadgeView.hide(true);
                                 chatNavigationItemNotificationCount = 0;
@@ -273,14 +279,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                                 toggleNavigationMenuVisibility(false);
                                 return true;
 
-                            }
-
-                            else{
+                            } else {
                                 whereToGoNext();
                                 //EventBus.getDefault().post(new CannotJoinPrivateGameEvent(R.string.lbl_no_active_private_game));
                                 return true;
                             }
-
 
 
                         case R.id.nav_action_news:
@@ -427,8 +430,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             whereToGoNext();
 
 
-
-
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 
@@ -436,9 +437,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    public void whereToGoNext(){
-        try
-        {
+    public void whereToGoNext() {
+        try {
             //check if player is already playing
             String lastKnownGameId = settings.getString(getString(R.string.game_id_key), null);
             String lastKnownPrivateGameId = settings.getString(getString(R.string.private_game_id_key), null);
@@ -466,7 +466,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
     }
@@ -662,15 +662,15 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         String invitationMessage;
         String playerName = OffsideApplication.getPlayerAssets().getPlayerName();
         if (privateGameId != null) {
-            String gameTitle = String.format("%s vs. %s",OffsideApplication.getGameInfo().getHomeTeam(),OffsideApplication.getGameInfo().getAwayTeam());
+            String gameTitle = String.format("%s vs. %s", OffsideApplication.getGameInfo().getHomeTeam(), OffsideApplication.getGameInfo().getAwayTeam());
             invitationMessage = String.format("Our group %s is watching %s. Come play Sidekick with us ", groupName, gameTitle);
         } else if (groupId != null) {
             invitationMessage = String.format("Join my group %s and Let's play Sidekick", groupName);
         } else
             invitationMessage = String.format("Lets' play Sidekick", playerName);
 
-        if(invitationMessage.length()>90)
-            invitationMessage = invitationMessage.substring(0,90);
+        if (invitationMessage.length() > 90)
+            invitationMessage = invitationMessage.substring(0, 90);
 
         Intent intent = new AppInviteInvitation.IntentBuilder("Invite friends")
                 .setMessage(invitationMessage)
@@ -798,6 +798,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         rewardDialog = new Dialog(context);
         rewardDialog.setContentView(R.layout.dialog_reward);
 
+
         dialoguePlayerImageImageView = rewardDialog.findViewById(R.id.dr_player_image_image_view);
         dialoguePlayerNameTextView = rewardDialog.findViewById(R.id.dr_player_name_text_view);
         dialogueRewardValueTextView = rewardDialog.findViewById(R.id.dr_reward_value_text_view);
@@ -836,6 +837,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCannotJoinPrivateGameReceived(CannotJoinPrivateGameEvent cannotJoinPrivateGameEvent) {
 
@@ -844,6 +846,31 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
     }
     //</editor-fold>
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNotEnoughCoinsEventReceived(NotEnoughCoinsEvent notEnoughCoinsEvent) {
+
+        shortInAssetsDialog = new Dialog(context);
+        shortInAssetsDialog.setContentView(R.layout.dialog_short_in_assets);
+
+
+        getCoinsWatchRewardVideoActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_watch_reward_video_action_text_view);
+        getCoinsBuyCoinsActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_buy_coins_action_text_view);
+        getCoinsSlotMachineActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_slot_machine_action_text_view);
+        notEnoughCoinsDialogueCloseButton = rewardDialog.findViewById(R.id.dsia_close_button);
+
+        //todo: Add clickListener to buttons in dialogue
+
+        notEnoughCoinsDialogueCloseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shortInAssetsDialog.cancel();
+            }
+        });
+
+        shortInAssetsDialog.show();
+
+    }
 
     @Override
     public void onBackPressed() {
