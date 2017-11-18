@@ -205,13 +205,25 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
 
-                    OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
-                    String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
-                    String gameId = viewHolder.availableGame.getGameId();
-                    String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
-                    String privateGameId = viewHolder.availableGame.getPrivateGameId();
-                    String androidDeviceId = OffsideApplication.getAndroidDeviceId();
-                    OffsideApplication.signalRService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
+                    int balance = OffsideApplication.getPlayerAssets().getBalance();
+                    int entranceFee = viewHolder.availableGame.getEntranceFee();
+                    if(entranceFee<=balance){
+                        OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
+                        String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
+                        String gameId = viewHolder.availableGame.getGameId();
+                        String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
+                        String privateGameId = viewHolder.availableGame.getPrivateGameId();
+                        String androidDeviceId = OffsideApplication.getAndroidDeviceId();
+                        OffsideApplication.signalRService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
+
+                    }
+                    else
+                    {
+                        EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
+
+                    }
+
+
 
 
 
@@ -223,7 +235,8 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 public void onClick(View view) {
 
                     int balance = OffsideApplication.getPlayerAssets().getBalance();
-                    if(balance<=viewHolder.availableGame.getEntranceFee()){
+                    int entranceFee = viewHolder.availableGame.getEntranceFee();
+                    if(entranceFee<=balance){
                         OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
                         String gameId = viewHolder.availableGame.getGameId();
                         String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
@@ -239,7 +252,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                     }
                     else
                     {
-                        EventBus.getDefault().post(new NotEnoughCoinsEvent());
+                        EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
 
                     }
 

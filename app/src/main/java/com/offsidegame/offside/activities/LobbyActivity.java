@@ -850,25 +850,35 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNotEnoughCoinsEventReceived(NotEnoughCoinsEvent notEnoughCoinsEvent) {
 
-        shortInAssetsDialog = new Dialog(context);
-        shortInAssetsDialog.setContentView(R.layout.dialog_short_in_assets);
+        if(notEnoughCoinsEvent== null)
+            return;
+
+        boolean isEligble = notEnoughCoinsEvent.iseligble();
+
+        if(!isEligble){
+            shortInAssetsDialog = new Dialog(context);
+            shortInAssetsDialog.setContentView(R.layout.dialog_short_in_assets);
 
 
-        getCoinsWatchRewardVideoActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_watch_reward_video_action_text_view);
-        getCoinsBuyCoinsActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_buy_coins_action_text_view);
-        getCoinsSlotMachineActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_slot_machine_action_text_view);
-        notEnoughCoinsDialogueCloseButton = rewardDialog.findViewById(R.id.dsia_close_button);
+            getCoinsWatchRewardVideoActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_watch_reward_video_action_text_view);
+            getCoinsBuyCoinsActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_buy_coins_action_text_view);
+            getCoinsSlotMachineActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_slot_machine_action_text_view);
+            notEnoughCoinsDialogueCloseButton = shortInAssetsDialog.findViewById(R.id.dsia_close_button);
 
-        //todo: Add clickListener to buttons in dialogue
+            //todo: Add clickListener to buttons in dialogue
 
-        notEnoughCoinsDialogueCloseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                shortInAssetsDialog.cancel();
-            }
-        });
+            notEnoughCoinsDialogueCloseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    shortInAssetsDialog.cancel();
+                }
+            });
 
-        shortInAssetsDialog.show();
+            shortInAssetsDialog.show();
+
+        }
+
+
 
     }
 

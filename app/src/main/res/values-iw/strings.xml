@@ -123,6 +123,10 @@
     <string name="lbl_player">שחקן</string>
     <string name="lbl_games">משחקים</string>
     <string name="lbl_coins_earned">נקודות</string>
+    <string name="lbl_are_you_sure_you_want_to_delete">בטוח שברצונך למחוק את הקבוצה?</string>
+    <string name="lbl_all_data_will_be_lost_forever">כל נתוני הקבוצה יימחקו לעד.</string>
+    <string name="lbl_yes">כן</string>
+    <string name="lbl_noooo">בטל</string>
 
 
 </resources>
