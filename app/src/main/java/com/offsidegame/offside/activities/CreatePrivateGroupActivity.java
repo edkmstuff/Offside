@@ -1,12 +1,9 @@
 package com.offsidegame.offside.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -18,11 +15,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
-import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 import com.offsidegame.offside.events.PrivateGroupCreatedEvent;
-import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.PrivateGroup;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -99,7 +94,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
                 String groupType= getResources().getString(R.string.key_private_group_name);
 
                 if (OffsideApplication.isBoundToSignalRService)
-                    OffsideApplication.signalRService.requestCreatePrivateGroup(playerId, groupName, groupType, selectedLanguage);
+                    OffsideApplication.networkingService.requestCreatePrivateGroup(playerId, groupName, groupType, selectedLanguage);
                 else
                     throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
 
@@ -119,7 +114,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
     public void onResume() {
 
         super.onResume();
-        EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
+        EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
 
 
     }
@@ -162,12 +157,12 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+    public void onSignalRServiceBinding(NetworkingServiceBoundEvent networkingServiceBoundEvent) {
         try {
-            if (OffsideApplication.signalRService == null)
+            if (OffsideApplication.networkingService == null)
                 return;
 
-            Context eventContext = signalRServiceBoundEvent.getContext();
+            Context eventContext = networkingServiceBoundEvent.getContext();
             if (eventContext == context || eventContext == getApplicationContext()) {
 
                 if (OffsideApplication.isPlayerQuitGame()) {

@@ -5,9 +5,9 @@ import android.content.Context;
 /**
  * Created by KFIR on 11/18/2016.
  */
-public class SignalRServiceBoundEvent {
+public class NetworkingServiceBoundEvent {
     private Context context;
-    public SignalRServiceBoundEvent(Context context) {
+    public NetworkingServiceBoundEvent(Context context) {
         this.context = context;
     }
 

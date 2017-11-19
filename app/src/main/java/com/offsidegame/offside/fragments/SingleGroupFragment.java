@@ -2,20 +2,17 @@ package com.offsidegame.offside.fragments;
 
 
 import android.app.Dialog;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,7 +21,6 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.LeagueAdapter;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
 import com.offsidegame.offside.events.NavigationEvent;
-import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.PrivateGroupDeletedEvent;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.LeagueRecord;
@@ -239,7 +235,7 @@ public class SingleGroupFragment extends Fragment {
             dialogOkButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    OffsideApplication.signalRService.requestDeletePrivateGroup(OffsideApplication.getPlayerId(), OffsideApplication.getSelectedPrivateGroupId());
+                    OffsideApplication.networkingService.requestDeletePrivateGroup(OffsideApplication.getPlayerId(), OffsideApplication.getSelectedPrivateGroupId());
                     dialogApproveDelete.cancel();
                 }
             });
@@ -282,7 +278,7 @@ public class SingleGroupFragment extends Fragment {
             groupNavigationGroupNameTextView.setText(OffsideApplication.getSelectedPrivateGroup().getName());
             groupNavigationLastPlayedTextView.setText(OffsideApplication.getSelectedPrivateGroup().getPrettyLastPlayed());
 
-            OffsideApplication.signalRService.requestAvailableGames(OffsideApplication.getPlayerId(), OffsideApplication.getSelectedPrivateGroupId());
+            OffsideApplication.networkingService.requestAvailableGames(OffsideApplication.getPlayerId(), OffsideApplication.getSelectedPrivateGroupId());
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -372,7 +368,7 @@ public class SingleGroupFragment extends Fragment {
     private void getLeagueRecords(String groupId) {
 
         String playerId = OffsideApplication.getPlayerId();
-        OffsideApplication.signalRService.requestLeagueRecords(playerId, groupId);
+        OffsideApplication.networkingService.requestLeagueRecords(playerId, groupId);
     }
 
     public void addLeaguePageToSingleGroupFragment(String leagueType) {

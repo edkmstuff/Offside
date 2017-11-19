@@ -4,10 +4,10 @@ package com.offsidegame.offside.events;
  * Created by KFIR on 9/26/2017.
  */
 
-public class SignalRErrorEvent {
+public class NetworkingErrorEvent {
     private String error = "";
 
-    public SignalRErrorEvent(String error) {
+    public NetworkingErrorEvent(String error) {
         this.error = error;
     }
 

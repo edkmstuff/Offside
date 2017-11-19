@@ -1,7 +1,6 @@
 package com.offsidegame.offside.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.events.JoinGameEvent;
-import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.NotEnoughCoinsEvent;
 import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.ImageHelper;
@@ -214,7 +211,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                         String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
                         String privateGameId = viewHolder.availableGame.getPrivateGameId();
                         String androidDeviceId = OffsideApplication.getAndroidDeviceId();
-                        OffsideApplication.signalRService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
+                        OffsideApplication.networkingService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
 
                     }
                     else
@@ -247,7 +244,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                             privateGameContentLanguage = OffsideApplication.availableLanguages.get("he");
                         else
                             privateGameContentLanguage = OffsideApplication.availableLanguages.get("en");
-                        OffsideApplication.signalRService.requestCreatePrivateGame(playerId, gameId, groupId,  privateGameContentLanguage);
+                        OffsideApplication.networkingService.requestCreatePrivateGame(playerId, gameId, groupId,  privateGameContentLanguage);
 
                     }
                     else

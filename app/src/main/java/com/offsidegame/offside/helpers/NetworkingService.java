@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Handler;
@@ -43,7 +42,7 @@ import com.offsidegame.offside.models.PostAnswerRequestInfo;
 
 import com.offsidegame.offside.events.ChatEvent;
 
-import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
@@ -57,7 +56,7 @@ import com.offsidegame.offside.models.PrivateGroupsInfo;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.Scoreboard;
 import com.offsidegame.offside.events.ScoreboardEvent;
-import com.offsidegame.offside.events.SignalRErrorEvent;
+import com.offsidegame.offside.events.NetworkingErrorEvent;
 import com.offsidegame.offside.models.User;
 import com.offsidegame.offside.models.UserProfileInfo;
 
@@ -84,7 +83,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
  * Created by KFIR on 11/15/2016.
  */
 
-public class SignalRService extends Service {
+public class NetworkingService extends Service {
     public HubConnection hubConnection;
     private HubProxy hub;
     private final IBinder binder = new LocalBinder(); // Binder given to clients
@@ -93,11 +92,11 @@ public class SignalRService extends Service {
     /***********************DEVELOPMENT****************************************************/
 //    public final String ip = new String("10.0.2.2:18313");
     //public final String ip = new String("192.168.1.140:18313");
-    public final String ip = new String("10.0.0.17:18313");
+//    public final String ip = new String("10.0.0.17:18313");
 //    public final String ip = new String("10.0.0.61:18313");
 
     /***********************PRODUCTION****************************************************/
-//    public final String ip = new String("sidekicknode.azurewebsites.net");
+    public final String ip = new String("sidekicknode.azurewebsites.net");
 
     public Boolean stoppedIntentionally = false;
     private int mId = -1;
@@ -131,7 +130,7 @@ public class SignalRService extends Service {
 
 
     //<editor-fold desc="constructors">
-    public SignalRService() {
+    public NetworkingService() {
     }
 
     //</editor-fold>
@@ -152,7 +151,7 @@ public class SignalRService extends Service {
 
     @Override
     public void onDestroy() {
-        if (OffsideApplication.signalRService != null)
+        if (OffsideApplication.networkingService != null)
             return;
         hubConnection.stop();
         super.onDestroy();
@@ -160,19 +159,19 @@ public class SignalRService extends Service {
     }
 
     private void deleteSignalRServiceReferenceFromApplication() {
-        if (OffsideApplication.signalRService != null && OffsideApplication.signalRService.hubConnection != null) {
-            OffsideApplication.signalRService.hubConnection.stop();
-            OffsideApplication.signalRService.stoppedIntentionally = true;
+        if (OffsideApplication.networkingService != null && OffsideApplication.networkingService.hubConnection != null) {
+            OffsideApplication.networkingService.hubConnection.stop();
+            OffsideApplication.networkingService.stoppedIntentionally = true;
 
         }
 
-        OffsideApplication.signalRService = null;
+        OffsideApplication.networkingService = null;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
         // Return the communication channel to the service.
-        if (OffsideApplication.signalRService != null) {
+        if (OffsideApplication.networkingService != null) {
             deleteSignalRServiceReferenceFromApplication();
         }
         startSignalR(false);
@@ -238,7 +237,7 @@ public class SignalRService extends Service {
 //            }
 
             if (notifyWhenConnected && hubConnection.getState() == ConnectionState.Connected) {
-                EventBus.getDefault().post(new SignalRServiceBoundEvent(null));
+                EventBus.getDefault().post(new NetworkingServiceBoundEvent(null));
                 startReconnecting = null;
             }
 
@@ -619,7 +618,7 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!availableGameReceived)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestAvailableGame"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGame"));
                     }
                 }, 15000);
 
@@ -627,7 +626,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestAvailableGame"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGame"));
             }
         });
     }
@@ -646,7 +645,7 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!privateGameCreated)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestCreatePrivateGame"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestCreatePrivateGame"));
                     }
                 }, 15000);
 
@@ -654,7 +653,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestCreatePrivateGame"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestCreatePrivateGame"));
             }
         });
     }
@@ -672,7 +671,7 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!answerAccepted)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestPostAnswer"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestPostAnswer"));
                     }
                 }, 15000);
 
@@ -680,7 +679,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestPostAnswer"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestPostAnswer"));
             }
         });
 
@@ -698,7 +697,7 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!scoreboardReceived)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestGetScoreboard"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestGetScoreboard"));
                     }
                 }, 15000);
 
@@ -706,7 +705,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestGetScoreboard"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestGetScoreboard"));
             }
         });
     }
@@ -725,7 +724,7 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!chatMessagesReceived)
-                            EventBus.getDefault().post(new SignalRErrorEvent("requestGetChatMessages"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("requestGetChatMessages"));
                     }
                 }, 15000);
 
@@ -733,7 +732,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("requestGetChatMessages"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("requestGetChatMessages"));
             }
         });
 
@@ -751,7 +750,7 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!chatMessageReceived)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestSendChatMessage"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestSendChatMessage"));
                     }
                 }, 15000);
 
@@ -759,7 +758,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestSendChatMessage"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestSendChatMessage"));
             }
         });
 
@@ -779,7 +778,7 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!loggedInUserReceived)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestSaveLoggedInUser"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestSaveLoggedInUser"));
                     }
                 }, 15000);
 
@@ -787,7 +786,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestSaveLoggedInUser"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestSaveLoggedInUser"));
             }
         });
 
@@ -827,7 +826,7 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!playerImageSaved)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestSaveImageInDatabase"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestSaveImageInDatabase"));
                     }
                 }, 15000);
 
@@ -835,7 +834,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestSaveImageInDatabase"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestSaveImageInDatabase"));
             }
         });
     }
@@ -851,7 +850,7 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!privateGroupsReceived)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestPrivateGroupsInfo"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestPrivateGroupsInfo"));
                     }
                 }, 15000);
 
@@ -859,7 +858,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestPrivateGroupsInfo"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestPrivateGroupsInfo"));
             }
         });
     }
@@ -875,7 +874,7 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!availableGamesReceived)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestAvailableGames"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGames"));
                     }
                 }, 15000);
 
@@ -883,7 +882,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestAvailableGames"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGames"));
             }
         });
 
@@ -900,7 +899,7 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!privateGroupCreated)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestCreatePrivateGroup"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestCreatePrivateGroup"));
                     }
                 }, 15000);
 
@@ -908,7 +907,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestCreatePrivateGroup"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestCreatePrivateGroup"));
             }
         });
 
@@ -927,7 +926,7 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!playerJoinedPrivateGame)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestJoinPrivateGame"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestJoinPrivateGame"));
                     }
                 }, 15000);
 
@@ -935,7 +934,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestJoinPrivateGame"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestJoinPrivateGame"));
             }
         });
 
@@ -953,14 +952,14 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!userProfileInfoReceived)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestUserProfile"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestUserProfile"));
                     }
                 }, 15000);
             }
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestUserProfile"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestUserProfile"));
             }
         });
     }
@@ -976,14 +975,14 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!leagueRecordsReceived)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestLeagueRecords"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestLeagueRecords"));
                     }
                 }, 15000);
             }
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestLeagueRecords"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestLeagueRecords"));
             }
         });
     }
@@ -1000,14 +999,14 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!playerAssetsReceived)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestPlayerAssets"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestPlayerAssets"));
                     }
                 }, 15000);
             }
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestPlayerAssets"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestPlayerAssets"));
             }
         });
     }
@@ -1023,14 +1022,14 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!friendInviteReceived)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestInviteFriend"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestInviteFriend"));
                     }
                 }, 15000);
             }
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestInviteFriend"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestInviteFriend"));
             }
         });
     }
@@ -1046,14 +1045,14 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!privateGroupReceived)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestPrivateGroup"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestPrivateGroup"));
                     }
                 }, 15000);
             }
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestPrivateGroup"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestPrivateGroup"));
             }
         });
     }
@@ -1070,14 +1069,14 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!privateGroupDeleted)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestDeletePrivateGroup"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestDeletePrivateGroup"));
                     }
                 }, 15000);
             }
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestDeletePrivateGroup"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestDeletePrivateGroup"));
             }
         });
     }
@@ -1093,14 +1092,14 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!playerJoinPrivateGroupReceived)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestJoinPrivateGroup"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestJoinPrivateGroup"));
                     }
                 }, 15000);
             }
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestJoinPrivateGroup"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestJoinPrivateGroup"));
             }
         });
     }
@@ -1118,7 +1117,7 @@ public class SignalRService extends Service {
                     @Override
                     public void run() {
                         if (!playerRewardSaved)
-                            EventBus.getDefault().post(new SignalRErrorEvent("RequestToRewardPlayer"));
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestToRewardPlayer"));
                     }
                 }, 15000);
 
@@ -1126,7 +1125,7 @@ public class SignalRService extends Service {
         }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                EventBus.getDefault().post(new SignalRErrorEvent("RequestToRewardPlayer"));
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestToRewardPlayer"));
             }
         });
     }
@@ -1141,9 +1140,9 @@ public class SignalRService extends Service {
      * runs in the same process as its clients, we don't need to deal with IPC.
      */
     public class LocalBinder extends Binder {
-        public SignalRService getService() {
-            // Return this instance of SignalRService so clients can call public methods
-            return SignalRService.this;
+        public NetworkingService getService() {
+            // Return this instance of NetworkingService so clients can call public methods
+            return NetworkingService.this;
         }
     }
 

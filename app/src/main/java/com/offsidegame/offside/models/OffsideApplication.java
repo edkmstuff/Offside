@@ -11,9 +11,9 @@ import android.provider.Settings;
 
 import com.offsidegame.offside.BuildConfig;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 import com.offsidegame.offside.helpers.FontsOverride;
-import com.offsidegame.offside.helpers.SignalRService;
+import com.offsidegame.offside.helpers.NetworkingService;
 
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
@@ -343,7 +343,7 @@ public class OffsideApplication extends Application {
 
             //signal r
             Intent intent = new Intent();
-            intent.setClass(getApplicationContext(), SignalRService.class);
+            intent.setClass(getApplicationContext(), NetworkingService.class);
             bindService(intent, signalRServiceConnection, Context.BIND_AUTO_CREATE);
             EventBus.getDefault().register(getApplicationContext());
 
@@ -377,17 +377,17 @@ public class OffsideApplication extends Application {
 
 
     //signal r
-    public static SignalRService signalRService;
+    public static NetworkingService networkingService;
     public static boolean isBoundToSignalRService = false;
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
-            // We've bound to SignalRService, cast the IBinder and get SignalRService instance
+            // We've bound to NetworkingService, cast the IBinder and get NetworkingService instance
 
-            SignalRService.LocalBinder binder = (SignalRService.LocalBinder) service;
-            signalRService = binder.getService();
+            NetworkingService.LocalBinder binder = (NetworkingService.LocalBinder) service;
+            networkingService = binder.getService();
             isBoundToSignalRService = true;
-            EventBus.getDefault().post(new SignalRServiceBoundEvent(getApplicationContext()));
+            EventBus.getDefault().post(new NetworkingServiceBoundEvent(getApplicationContext()));
 
         }
 

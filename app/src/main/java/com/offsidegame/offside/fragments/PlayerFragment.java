@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.ocpsoft.prettytime.PrettyTime;
 
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -124,7 +122,7 @@ public class PlayerFragment extends Fragment {
         super.onResume();
         EventBus.getDefault().register(this);
         playerId = OffsideApplication.getPlayerId();
-        OffsideApplication.signalRService.requestUserProfileData(playerId);
+        OffsideApplication.networkingService.requestUserProfileData(playerId);
     }
 
     @Override

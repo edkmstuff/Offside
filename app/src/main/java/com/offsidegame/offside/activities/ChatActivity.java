@@ -33,7 +33,7 @@
 //import com.offsidegame.offside.events.QuestionAnsweredEvent;
 //import com.offsidegame.offside.events.RewardEvent;
 //import com.offsidegame.offside.events.ScoreboardEvent;
-//import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+//import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 //import com.offsidegame.offside.helpers.ImageHelper;
 //import com.offsidegame.offside.models.AnswerIdentifier;
 //import com.offsidegame.offside.models.Chat;
@@ -215,7 +215,7 @@
 //////
 //////                    String message = chatMessageEditText.getText().toString();
 //////                    if (message != null && message.length() > 0) {
-//////                        OffsideApplication.signalRService.requestSendChatMessage(gameId, gameCode, message, playerId);
+//////                        OffsideApplication.networkingService.requestSendChatMessage(gameId, gameCode, message, playerId);
 //////                        //clear text
 //////                        chatMessageEditText.setText("");
 //////                        //hide keypad
@@ -332,7 +332,7 @@
 //////            offsideCoins = player != null? player.getOffsideCoins() : 0;
 //////            offsideCoinsTextView.setText(Integer.toString(offsideCoins));
 //////
-//////            EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
+//////            EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
 //////
 //////
 //////            // updating scoreboard in ui
@@ -388,7 +388,7 @@
 ////            chatSendTextView.setAlpha(1f);
 ////            chatActionsButton.setAlpha(1f);
 ////            if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
-////                OffsideApplication.signalRService.requestGetChatMessages(gameId, gameCode, playerId, androidDeviceId);
+////                OffsideApplication.networkingService.requestGetChatMessages(gameId, gameCode, playerId, androidDeviceId);
 ////            }
 ////
 ////
@@ -401,8 +401,8 @@
 ////    }
 ////
 ////    @Subscribe(threadMode = ThreadMode.MAIN)
-////    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
-////        if (OffsideApplication.signalRService == null)
+////    public void onSignalRServiceBinding(NetworkingServiceBoundEvent signalRServiceBoundEvent) {
+////        if (OffsideApplication.networkingService == null)
 ////            return;
 ////
 ////        Context eventContext = signalRServiceBoundEvent.getContext();
@@ -410,7 +410,7 @@
 ////        if (eventContext == context || eventContext == getApplicationContext()) {
 ////
 ////            if (gameId != null && !gameId.isEmpty() && gameCode != null && !gameCode.isEmpty() && playerId != null && !playerId.isEmpty()) {
-////                OffsideApplication.signalRService.requestGetChatMessages(gameId, gameCode, playerId, androidDeviceId);
+////                OffsideApplication.networkingService.requestGetChatMessages(gameId, gameCode, playerId, androidDeviceId);
 ////
 ////            } else {
 ////                Intent intent = new Intent(context, JoinGameActivity.class);
@@ -514,7 +514,7 @@
 ////
 ////            // this parameter will be null if the user does not answer
 ////            String answerId = questionAnsweredEvent.getAnswerId();
-////            OffsideApplication.signalRService.requestPostAnswer(gameId, playerId, questionId, answerId, isSkipped, betSize);
+////            OffsideApplication.networkingService.requestPostAnswer(gameId, playerId, questionId, answerId, isSkipped, betSize);
 ////            if (!OffsideApplication.playerAnswers.containsKey(questionId))
 ////                OffsideApplication.playerAnswers.put(questionId, new AnswerIdentifier(answerId, isSkipped, betSize, true));
 ////
@@ -565,7 +565,7 @@
 //////                return;
 //////
 //////            player.incrementRewardVideoWatchCount();
-//////            OffsideApplication.signalRService.setPowerItems(gameId, playerId, rewardAmount, true);
+//////            OffsideApplication.networkingService.setPowerItems(gameId, playerId, rewardAmount, true);
 ////
 ////
 ////        } catch (Exception ex) {
