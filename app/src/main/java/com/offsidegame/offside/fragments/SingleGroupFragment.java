@@ -149,7 +149,6 @@ public class SingleGroupFragment extends Fragment {
         groupNavigationLeftButtonTextView =  view.findViewById(R.id.fsg_group_navigation_left_button_text_view);
         groupNavigationRightButtonTextView = view.findViewById(R.id.fsg_group_navigation_right_button_text_view);
         groupNavigationLastPlayedTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_last_played_text_view);
-        singleGroupPositionOutOfTextView = (TextView) view.findViewById(R.id.fsg_single_group_position_out_of_text_view);
         singleGroupDeletePrivateGroupButtonRoot = view.findViewById(R.id.fsg_single_group_delete_group_root);
 
         singleGroupGamesTabTextView = view.findViewById(R.id.fsg_single_group_games_text_view);
@@ -262,7 +261,7 @@ public class SingleGroupFragment extends Fragment {
 
     private void resetVisibility(){
 
-        singleGroupDeletePrivateGroupButtonRoot.setVisibility(View.GONE);
+        singleGroupLeagueRoot.setVisibility(View.GONE);
 
     }
 
@@ -362,7 +361,7 @@ public class SingleGroupFragment extends Fragment {
                 myPosition = i+1;
         }
 
-        String myPositionOutOf = String.format("%d/%d", myPosition,leagueRecords.length );
+        String myPositionOutOf = String.format("%s %d/%d",getString(R.string.lbl_your_position) , myPosition,leagueRecords.length );
         singleGroupPositionOutOfTextView.setText(myPositionOutOf);
 
 

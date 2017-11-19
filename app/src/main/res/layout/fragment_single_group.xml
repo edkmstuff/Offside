@@ -290,23 +290,24 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
-                        android:layoutDirection="rtl"
+                        android:layoutDirection="locale"
+
                         android:orientation="horizontal"
                         android:padding="10dp">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/lbl_your_position"
-                            android:textColor="@color/grayText"
-                            android:fontFamily="@font/font_open_sans_hebrew_light"/>
+                        <!--<TextView-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="@string/lbl_your_position"-->
+                            <!--android:textColor="@color/grayText"-->
+                            <!--android:fontFamily="@font/font_open_sans_hebrew_light"/>-->
 
                         <TextView
                             android:id="@+id/fsg_single_group_position_out_of_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textColor="@color/grayText"
-                            android:text="3/8"
+                            android:text="your position 3/8"
                             android:fontFamily="@font/font_open_sans_hebrew_light"/>
 
 
@@ -400,7 +401,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:gravity="center|start">
+                            android:gravity="center|start"
+                            android:layoutDirection="locale">
 
                             <TextView
                                 android:layout_width="wrap_content"
