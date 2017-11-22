@@ -305,7 +305,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="7"
-                        android:layoutDirection="rtl">
+                        android:layoutDirection="locale"
+                        android:paddingStart="6dp">
 
                         <EditText
                             android:id="@+id/fc_chat_message_edit_text"
@@ -314,7 +315,8 @@
                             android:layout_toLeftOf="@+id/chatSendButton"
                             android:background="@android:color/transparent"
                             android:hint="@string/lbl_type_message"
-                            android:inputType="textMultiLine" />
+                            android:inputType="textMultiLine"
+                            />
 
                     </LinearLayout>
 

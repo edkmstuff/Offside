@@ -345,7 +345,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    public void analyzeDynamicLink(){
+    public void analyzeDynamicLink() {
 
 //        Intent intent = getIntent();
 //        String action = intent.getAction();
@@ -373,14 +373,14 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 //                            else
 //                                Log.d(TAG, "*****deepLink*****"+deepLink.toString());
                             FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(pendingDynamicLinkData);
-                            if(invite!=null){
+                            if (invite != null) {
                                 String inviteId = invite.getInvitationId();
 //                                if(!TextUtils.isEmpty(inviteId))
 //                                    Log.d(TAG, "ACCPET invitation Id" + inviteId);
 
                                 URL url;
                                 try {
-                                    url = new URL("http",Uri.parse(deepLink.getQuery()).getHost(),deepLink.getQuery().toString());
+                                    url = new URL("http", Uri.parse(deepLink.getQuery()).getHost(), deepLink.getQuery().toString());
                                     try {
 
                                         Map<String, List<String>> dynamicLinkQueryPairs = HttpHelper.splitQuery(url);
@@ -389,16 +389,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                         String privateGameIdFromInvitation = dynamicLinkQueryPairs.get("privateGameId").get(0);
 
                                         //Add player to the group from which he was invited
-                                        if(groupIdFromInvitation!=null)
+                                        if (groupIdFromInvitation != null)
 
-                                            OffsideApplication.signalRService.requestJoinPrivateGroup(playerId,groupIdFromInvitation);
+                                            OffsideApplication.signalRService.requestJoinPrivateGroup(playerId, groupIdFromInvitation);
 
                                         //Override userPreferences, as theses will be used when tryJoinSelectedAvailableGame will be executed (Lobby Activity)
-                                        if(gameIdFromInvitation!=null && privateGameIdFromInvitation != null)
+                                        if (gameIdFromInvitation != null && privateGameIdFromInvitation != null)
                                             OffsideApplication.setUserPreferences(groupIdFromInvitation, gameIdFromInvitation, privateGameIdFromInvitation);
 
-                                    }
-                                    catch (UnsupportedEncodingException e) {
+                                    } catch (UnsupportedEncodingException e) {
                                         e.printStackTrace();
                                     }
 
@@ -408,8 +407,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
                             }
 
-                        }
-                        else {
+                        } else {
                             startLobbyActivity();
                         }
                     }
@@ -421,7 +419,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                         startLobbyActivity();
                     }
                 });
-
 
 
     }
@@ -464,10 +461,11 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlayerJoinedPrivateGroup(PlayerJoinPrivateGroupEvent playerJoinPrivateGroupEvent) {
-        startLobbyActivity();
+        if (!OffsideApplication.isLobbyActivityVisible())
+            startLobbyActivity();
     }
 
-    public void startLobbyActivity(){
+    public void startLobbyActivity() {
 
         Intent intent = new Intent(context, LobbyActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

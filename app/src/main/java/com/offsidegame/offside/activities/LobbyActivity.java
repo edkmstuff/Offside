@@ -136,6 +136,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private Button notEnoughCoinsDialogueCloseButton;
     private boolean isPlayerCanJoinPrivateGame = false;
 
+    private boolean isGroupInviteExecuted ;
     //</editor-fold>
 
 
@@ -389,7 +390,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                 if (OffsideApplication.isBoundToSignalRService) {
                     PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
-                    if (playerAssets == null)
+                    if (playerAssets == null || isGroupInviteExecuted)
                         OffsideApplication.signalRService.requestPlayerAssets(playerId);
                     else
                         onReceivePlayerAssets(playerAssets);
@@ -411,29 +412,39 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             if (playerAssets == null)
                 return;
 
-            OffsideApplication.setPlayerAssets(playerAssets);
+            updatePlayerAssets(playerAssets);
 
-            //update player stuff
-            int balance = playerAssets.getBalance();
-            int powerItems = playerAssets.getPowerItems();
-            playerProfilePictureUrl = playerAssets.getImageUrl();
+            if (!isGroupInviteExecuted)
+                whereToGoNext();
 
-            String formattedBalance = Formatter.formatNumber(balance, Formatter.intCommaSeparator);
-            balanceTextView.setText(formattedBalance);
-            String formattedPowerItems = Formatter.formatNumber(powerItems, Formatter.intCommaSeparator);
-            powerItemsTextView.setText(formattedPowerItems);
 
-            ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName, true);
-
-            playerInfoRoot.setVisibility(View.VISIBLE);
-
-            whereToGoNext();
 
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 
         }
+
+    }
+
+    public void updatePlayerAssets(PlayerAssets playerAssets) {
+
+        OffsideApplication.setPlayerAssets(playerAssets);
+
+        //update player stuff
+        int balance = playerAssets.getBalance();
+        int powerItems = playerAssets.getPowerItems();
+        playerProfilePictureUrl = playerAssets.getImageUrl();
+
+        String formattedBalance = Formatter.formatNumber(balance, Formatter.intCommaSeparator);
+        balanceTextView.setText(formattedBalance);
+        String formattedPowerItems = Formatter.formatNumber(powerItems, Formatter.intCommaSeparator);
+        powerItemsTextView.setText(formattedPowerItems);
+
+        ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName, true);
+
+        playerInfoRoot.setVisibility(View.VISIBLE);
+
 
     }
 
@@ -540,9 +551,16 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         OffsideApplication.setSelectedPrivateGameId(privateGameId);
 
+
         OffsideApplication.setUserPreferences(privateGroupId, gameId, privateGameId);
 
         isPlayerCanJoinPrivateGame = true;
+
+        PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
+        playerAssets.setBalance(gameInfo.getPlayer().getBalance());
+        playerAssets.setPowerItems(gameInfo.getPlayer().getPowerItems());
+        updatePlayerAssets(playerAssets);
+
 
         onReceiveNavigation(new NavigationEvent(R.id.nav_action_play));
     }
@@ -569,6 +587,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSelectedPrivateGroup(PrivateGroup privateGroup) {
         try {
+            toggleNavigationMenuVisibility(true);
+            bottomNavigation.setCurrentItem(0);
+
             if (privateGroup == null || privateGroup.getId() == null)
                 return;
 
@@ -631,6 +652,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGroupInvite(GroupInviteEvent groupInviteEvent) {
 
+        isGroupInviteExecuted = true;
         String groupId = groupInviteEvent.getGroupId();
         String groupName = groupInviteEvent.getGroupName();
         String gameId = groupInviteEvent.getGameId();
@@ -831,8 +853,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 //            }
 //        }, 2000);
 
-        int currentBalance = OffsideApplication.getPlayerAssets().getBalance();
-        OffsideApplication.getPlayerAssets().setBalance(currentBalance + rewardValue);
+        //not needed since when we are back form the invite screen the onresume is executed hence getPlayerAssets happen
+//        int currentBalance = OffsideApplication.getPlayerAssets().getBalance();
+//        OffsideApplication.getPlayerAssets().setBalance(currentBalance + rewardValue);
 
 
     }
@@ -850,12 +873,12 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNotEnoughCoinsEventReceived(NotEnoughCoinsEvent notEnoughCoinsEvent) {
 
-        if(notEnoughCoinsEvent== null)
+        if (notEnoughCoinsEvent == null)
             return;
 
         boolean isEligble = notEnoughCoinsEvent.iseligble();
 
-        if(!isEligble){
+        if (!isEligble) {
             shortInAssetsDialog = new Dialog(context);
             shortInAssetsDialog.setContentView(R.layout.dialog_short_in_assets);
 
@@ -877,7 +900,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             shortInAssetsDialog.show();
 
         }
-
 
 
     }

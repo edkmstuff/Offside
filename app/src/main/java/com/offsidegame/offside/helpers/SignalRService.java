@@ -488,7 +488,7 @@ public class SignalRService extends Service {
             player = MediaPlayer.create(getApplicationContext(), soundResource);
             player.start();
 
-            if (!OffsideApplication.isChatActivityVisible()) {
+            if (!OffsideApplication.isLobbyActivityVisible()) {
 
                 int titleResource = R.string.lbl_new_question_is_waiting_for_you;
                 int textResource = R.string.lbl_click_to_answer;

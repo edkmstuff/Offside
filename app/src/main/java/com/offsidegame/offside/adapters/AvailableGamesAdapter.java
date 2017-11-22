@@ -82,6 +82,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
         TextView moreTextView;
         TextView createPrivateGameButtonEntranceFeeTextView;
         TextView joinPrivateGameButtonEntranceFeeTextView;
+        boolean userIsAlreadyInGame;
 
 
 
@@ -163,7 +164,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
 
             viewHolder.playersPlayInGameRoot.removeAllViews();
 
-            boolean userIsAlreadyInGame =false;
+            viewHolder.userIsAlreadyInGame =false;
 
             int maxPlayersToDisplay = 7;
             int playersCount = 0;
@@ -176,7 +177,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
             for (PrivateGroupPlayer privateGroupPlayer : privateGroupPlayers) {
 
                 if(privateGroupPlayer.getPlayerId().equals(OffsideApplication.getPlayerId()))
-                    userIsAlreadyInGame=true;
+                    viewHolder.userIsAlreadyInGame=true;
 
                 if (playersCount < maxPlayersToDisplay) {
                     playersCount++;
@@ -207,7 +208,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
 
                     int balance = OffsideApplication.getPlayerAssets().getBalance();
                     int entranceFee = viewHolder.availableGame.getEntranceFee();
-                    if(entranceFee<=balance){
+                    if(entranceFee<=balance || viewHolder.userIsAlreadyInGame ){
                         OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
                         String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
                         String gameId = viewHolder.availableGame.getGameId();
@@ -270,7 +271,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 viewHolder.joinPrivateGameRoot.setVisibility(View.VISIBLE);
                 viewHolder.joinPrivateGameButtonTextView.setVisibility(GONE);
                 viewHolder.createPrivateGameRoot.setVisibility(GONE);
-                if(userIsAlreadyInGame){
+                if(viewHolder.userIsAlreadyInGame){
                     viewHolder.gameEnterFeeRoot.setVisibility(GONE);
                     viewHolder.joinPrivateGameButtonTextView.setText(R.string.lbl_resume_game);
                     viewHolder.joinPrivateGameButtonTextView.setVisibility(View.VISIBLE);

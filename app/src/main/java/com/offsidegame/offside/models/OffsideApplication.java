@@ -174,7 +174,7 @@ public class OffsideApplication extends Application {
         return questionTypeDebate;
     }
 
-    public static boolean isChatActivityVisible() {
+    public static boolean isLobbyActivityVisible() {
         return isLobbyActivityVisible;
     }
 

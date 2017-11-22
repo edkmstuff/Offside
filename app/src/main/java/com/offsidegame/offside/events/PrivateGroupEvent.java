@@ -7,6 +7,14 @@ import com.offsidegame.offside.models.PrivateGroup;
  */
 
 public class PrivateGroupEvent {
+    private PrivateGroup privateGroup;
+
+    public PrivateGroupEvent(PrivateGroup privateGroup) {
+
+        this.privateGroup = privateGroup;
+
+    }
+
     public PrivateGroup getPrivateGroup() {
         return privateGroup;
     }
@@ -15,10 +23,5 @@ public class PrivateGroupEvent {
         this.privateGroup = privateGroup;
     }
 
-    public PrivateGroupEvent(PrivateGroup privateGroup) {
 
-        this.privateGroup = privateGroup;
-    }
-
-    private PrivateGroup privateGroup;
 }
