@@ -390,13 +390,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                 if (OffsideApplication.isBoundToSignalRService) {
                     PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
-<<<<<<< HEAD
-                    if (playerAssets == null || isGroupInviteExecuted)
-                        OffsideApplication.signalRService.requestPlayerAssets(playerId);
-=======
+
                     if (playerAssets == null)
                         OffsideApplication.networkingService.requestPlayerAssets(playerId);
->>>>>>> origin/master
+
                     else
                         onReceivePlayerAssets(playerAssets);
 
