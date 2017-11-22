@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -35,7 +34,7 @@ import com.offsidegame.offside.events.ConnectionEvent;
 
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
-import com.offsidegame.offside.events.SignalRServiceBoundEvent;
+import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 
 import com.offsidegame.offside.helpers.HttpHelper;
 import com.offsidegame.offside.helpers.ImageHelper;
@@ -115,7 +114,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     public void onResume() {
 
         super.onResume();
-        EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
+        EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
 
     }
 
@@ -160,12 +159,12 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+    public void onSignalRServiceBinding(NetworkingServiceBoundEvent networkingServiceBoundEvent) {
         try {
-            if (OffsideApplication.signalRService == null)
+            if (OffsideApplication.networkingService == null)
                 return;
 
-            Context eventContext = signalRServiceBoundEvent.getContext();
+            Context eventContext = networkingServiceBoundEvent.getContext();
             if (eventContext == context || eventContext == getApplicationContext()) {
                 loadingRoot.setVisibility(View.GONE);
                 if (isSignalRConnected() && !isInLoginProcess) {
@@ -180,9 +179,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     public boolean isSignalRConnected() {
         return (OffsideApplication.isBoundToSignalRService &&
-                OffsideApplication.signalRService != null &&
-                OffsideApplication.signalRService.hubConnection != null &&
-                OffsideApplication.signalRService.hubConnection.getState() == ConnectionState.Connected
+                OffsideApplication.networkingService != null &&
+                OffsideApplication.networkingService.hubConnection != null &&
+                OffsideApplication.networkingService.hubConnection.getState() == ConnectionState.Connected
         );
 
     }
@@ -235,7 +234,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private void handleSuccessfulLogin() {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser == null || OffsideApplication.signalRService == null)
+        if (firebaseUser == null || OffsideApplication.networkingService == null)
             return;
 
 
@@ -260,7 +259,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 //            byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
 //            String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
 //
-//            OffsideApplication.signalRService.requestSaveImageInDatabase(playerId, imageString);
+//            OffsideApplication.networkingService.requestSaveImageInDatabase(playerId, imageString);
 //
 //
 //        }
@@ -279,7 +278,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl);
         editor.commit();
         User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl);
-        OffsideApplication.signalRService.requestSaveLoggedInUser(user);
+        OffsideApplication.networkingService.requestSaveLoggedInUser(user);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -391,7 +390,11 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                         //Add player to the group from which he was invited
                                         if (groupIdFromInvitation != null)
 
+<<<<<<< HEAD
                                             OffsideApplication.signalRService.requestJoinPrivateGroup(playerId, groupIdFromInvitation);
+=======
+                                            OffsideApplication.networkingService.requestJoinPrivateGroup(playerId,groupIdFromInvitation);
+>>>>>>> origin/master
 
                                         //Override userPreferences, as theses will be used when tryJoinSelectedAvailableGame will be executed (Lobby Activity)
                                         if (gameIdFromInvitation != null && privateGameIdFromInvitation != null)
@@ -438,7 +441,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
 
             playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
-            OffsideApplication.signalRService.requestSaveImageInDatabase(playerId, imageString);
+            OffsideApplication.networkingService.requestSaveImageInDatabase(playerId, imageString);
 
 
         } else {

@@ -41,13 +41,13 @@ import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 import com.offsidegame.offside.events.NotEnoughCoinsEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
 import com.offsidegame.offside.events.PlayerRewardedReceivedEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.PrivateGroupChangedEvent;
 import com.offsidegame.offside.events.PrivateGroupEvent;
-import com.offsidegame.offside.events.SignalRServiceBoundEvent;
 import com.offsidegame.offside.fragments.ChatFragment;
 import com.offsidegame.offside.fragments.GroupsFragment;
 import com.offsidegame.offside.fragments.NewsFragment;
@@ -353,7 +353,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         super.onResume();
         OffsideApplication.setIsLobbyActivityVisible(true);
 
-        EventBus.getDefault().post(new SignalRServiceBoundEvent(context));
+        EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
     }
 
     @Override
@@ -380,18 +380,23 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     //<editor-fold desc="Eventbus subscriptions">
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSignalRServiceBinding(SignalRServiceBoundEvent signalRServiceBoundEvent) {
+    public void onSignalRServiceBinding(NetworkingServiceBoundEvent networkingServiceBoundEvent) {
         try {
-            if (OffsideApplication.signalRService == null)
+            if (OffsideApplication.networkingService == null)
                 return;
 
-            Context eventContext = signalRServiceBoundEvent.getContext();
+            Context eventContext = networkingServiceBoundEvent.getContext();
             if (eventContext == context) {
 
                 if (OffsideApplication.isBoundToSignalRService) {
                     PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
+<<<<<<< HEAD
                     if (playerAssets == null || isGroupInviteExecuted)
                         OffsideApplication.signalRService.requestPlayerAssets(playerId);
+=======
+                    if (playerAssets == null)
+                        OffsideApplication.networkingService.requestPlayerAssets(playerId);
+>>>>>>> origin/master
                     else
                         onReceivePlayerAssets(playerAssets);
 
@@ -486,7 +491,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         currentGameId = gameId;
         currentPrivateGameId = privateGameId;
-        OffsideApplication.signalRService.requestAvailableGame(playerId, gameId, privateGameId);
+        OffsideApplication.networkingService.requestAvailableGame(playerId, gameId, privateGameId);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -496,7 +501,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             if (availableGame != null) {
                 OffsideApplication.setSelectedAvailableGame(availableGame);
                 String groupId = availableGame.getGroupId();
-                OffsideApplication.signalRService.requestPrivateGroup(playerId, groupId);
+                OffsideApplication.networkingService.requestPrivateGroup(playerId, groupId);
 
             } else {
                 EventBus.getDefault().post(new CannotJoinPrivateGameEvent(R.string.lbl_no_active_private_game));
@@ -523,7 +528,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 EventBus.getDefault().post(new CannotJoinPrivateGameEvent(R.string.lbl_no_active_private_game));
 
             } else if (currentGameId != null && currentPrivateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
-                OffsideApplication.signalRService.requestJoinPrivateGame(playerId, currentGameId, groupId, currentPrivateGameId, androidDeviceId);
+                OffsideApplication.networkingService.requestJoinPrivateGame(playerId, currentGameId, groupId, currentPrivateGameId, androidDeviceId);
             }
 
 
@@ -659,7 +664,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         String privateGameId = groupInviteEvent.getPrivateGamaId();
         String playerId = groupInviteEvent.getInviterPlayerId();
 
-        //OffsideApplication.signalRService.requestInviteFriend(playerId, groupId, gameId, privateGameId);
+        //OffsideApplication.networkingService.requestInviteFriend(playerId, groupId, gameId, privateGameId);
         startFirebaseInvite(groupId, groupName, gameId, privateGameId, playerId);
         //shareShortDynamicLink();
 
@@ -751,7 +756,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 String rewardType = "COINS";
                 String rewardReason = "INVITE";
                 if (numberOfInvitations > 0)
-                    OffsideApplication.signalRService.requestToRewardPlayer(playerId, rewardType, rewardReason, numberOfInvitations);
+                    OffsideApplication.networkingService.requestToRewardPlayer(playerId, rewardType, rewardReason, numberOfInvitations);
                 for (String id : ids) {
                     Log.d(TAG, "onActivityResult: sent invitation " + id);
                 }

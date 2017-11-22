@@ -1,13 +1,11 @@
 package com.offsidegame.offside.fragments;
 
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +49,7 @@ public class GroupsFragment extends Fragment {
         super.onResume();
         EventBus.getDefault().register(this);
         playerId = OffsideApplication.getPlayerId();
-        OffsideApplication.signalRService.requestPrivateGroupsInfo(playerId);
+        OffsideApplication.networkingService.requestPrivateGroupsInfo(playerId);
     }
 
     @Override

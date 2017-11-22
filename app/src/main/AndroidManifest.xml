@@ -97,7 +97,7 @@
         <activity android:name=".activities.NewsDetailsActivity" />
 
         <service
-            android:name=".helpers.SignalRService"
+            android:name=".helpers.NetworkingService"
             android:exported="false" />
 
         <meta-data

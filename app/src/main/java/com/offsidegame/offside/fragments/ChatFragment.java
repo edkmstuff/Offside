@@ -162,9 +162,9 @@ public class ChatFragment extends Fragment {
 //            }
 //            else {
 //                privateGroupName = selectedPrivateGroup.getName();
-//                OffsideApplication.signalRService.requestGetChatMessages(playerId, gameId, privateGameId,  androidDeviceId);
+//                OffsideApplication.networkingService.requestGetChatMessages(playerId, gameId, privateGameId,  androidDeviceId);
 ////                if (gameId != null && privateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
-////                    OffsideApplication.signalRService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
+////                    OffsideApplication.networkingService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
 ////                }
 //            }
 
@@ -211,7 +211,7 @@ public class ChatFragment extends Fragment {
         settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
         ImageHelper.loadImage(getActivity(), player != null ? player.getImageUrl() : settings.getString(getString(R.string.player_profile_picture_url_key), null), playerPictureImageView, "ChatActivity", true);
 
-        OffsideApplication.signalRService.requestGetChatMessages(playerId, gameId, privateGameId, androidDeviceId);
+        OffsideApplication.networkingService.requestGetChatMessages(playerId, gameId, privateGameId, androidDeviceId);
 
 
     }
@@ -324,7 +324,7 @@ public class ChatFragment extends Fragment {
             public void onClick(View view) {
                 String message = chatMessageEditText.getText().toString();
                 if (message != null && message.length() > 0) {
-                    OffsideApplication.signalRService.requestSendChatMessage(playerId, gameId, privateGameId, message);
+                    OffsideApplication.networkingService.requestSendChatMessage(playerId, gameId, privateGameId, message);
                     //clear text
                     chatMessageEditText.setText("");
                     //hide keypad
@@ -411,7 +411,7 @@ public class ChatFragment extends Fragment {
 //
 //
 //                        } else {
-//                            OffsideApplication.signalRService.requestSendChatMessage(selectedAvailableGame.getGameId(), OffsideApplication.getSelectedPrivateGameId(), command, OffsideApplication.getPlayerAssets().getPlayerId());
+//                            OffsideApplication.networkingService.requestSendChatMessage(selectedAvailableGame.getGameId(), OffsideApplication.getSelectedPrivateGameId(), command, OffsideApplication.getPlayerAssets().getPlayerId());
 //                        }
 //
 //                        chatActionsButton.performClick();
@@ -526,7 +526,7 @@ public class ChatFragment extends Fragment {
 //            @Override
 //            public void onClick(View v) {
 //                String androidDeviceId = OffsideApplication.getAndroidDeviceId();
-//                OffsideApplication.signalRService.quitGame(gameId, playerId, androidDeviceId);
+//                OffsideApplication.networkingService.quitGame(gameId, playerId, androidDeviceId);
 //                chatActionsButton.performClick();
 //                SharedPreferences settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
 //                SharedPreferences.Editor editor = settings.edit();
@@ -628,7 +628,7 @@ public class ChatFragment extends Fragment {
 //
 //            init();
 //
-//            OffsideApplication.signalRService.requestGetChatMessages(playerId, gameId, privateGameId,  androidDeviceId);
+//            OffsideApplication.networkingService.requestGetChatMessages(playerId, gameId, privateGameId,  androidDeviceId);
 //
 //
 //        } catch (Exception ex) {
@@ -720,7 +720,7 @@ public class ChatFragment extends Fragment {
 
             // this parameter will be null if the user does not answer
             String answerId = questionAnsweredEvent.getAnswerId();
-            OffsideApplication.signalRService.requestPostAnswer(playerId, gameId, questionId, answerId, isSkipped, betSize);
+            OffsideApplication.networkingService.requestPostAnswer(playerId, gameId, questionId, answerId, isSkipped, betSize);
             if (!OffsideApplication.playerAnswers.containsKey(questionId))
                 OffsideApplication.playerAnswers.put(questionId, new AnswerIdentifier(answerId, isSkipped, betSize, true));
 
@@ -771,7 +771,7 @@ public class ChatFragment extends Fragment {
                 return;
 
             player.incrementRewardVideoWatchCount();
-            OffsideApplication.signalRService.setPowerItems(playerId, gameId, rewardAmount, true);
+            OffsideApplication.networkingService.setPowerItems(playerId, gameId, rewardAmount, true);
 
 
         } catch (Exception ex) {

@@ -199,7 +199,7 @@ public class SlotActivity extends AppCompatActivity {
                     String gameCode = OffsideApplication.getGameInfo().getPrivateGameId();
                     FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
                     String playerId = player.getUid();
-                    OffsideApplication.signalRService.requestSendChatMessage(playerId, gameId, gameCode, command );
+                    OffsideApplication.networkingService.requestSendChatMessage(playerId, gameId, gameCode, command );
                 }
 
             }
