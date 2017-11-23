@@ -463,10 +463,8 @@ public class SingleGroupFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveAvailableGames(AvailableGame[] availableGames) {
         try {
-            if (availableGames == null || availableGames.length == 0)
+            if (availableGames == null)
                 return;
-
-
 
             OffsideApplication.setAvailableGames(availableGames);
 

@@ -401,7 +401,7 @@
 ////    }
 ////
 ////    @Subscribe(threadMode = ThreadMode.MAIN)
-////    public void onSignalRServiceBinding(NetworkingServiceBoundEvent signalRServiceBoundEvent) {
+////    public void onNetworkingServiceBinding(NetworkingServiceBoundEvent signalRServiceBoundEvent) {
 ////        if (OffsideApplication.networkingService == null)
 ////            return;
 ////

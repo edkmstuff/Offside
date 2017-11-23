@@ -1,5 +1,7 @@
 package com.offsidegame.offside.models;
 
+import org.acra.ACRA;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -61,18 +63,21 @@ public class PrivateGroupsInfo {
     }
 
     public void replace(PrivateGroup newPrivateGroup) {
-        for (PrivateGroup privateGroup:privateGroups) {
-            if(privateGroup.getId().equals(newPrivateGroup.getId())){
-                //privateGroups.remove(privateGroup);
-                //privateGroups.add(newPrivateGroup);
-                privateGroup.setPrivateGroupPlayers(newPrivateGroup.getPrivateGroupPlayers());
-                if(OffsideApplication.getSelectedPrivateGroup().getId() == newPrivateGroup.getId())
-                    OffsideApplication.setSelectedPrivateGroup(privateGroup);
+        try {
+            for (PrivateGroup privateGroup:privateGroups) {
+                if(privateGroup.getId().equals(newPrivateGroup.getId())){
+                    //privateGroups.remove(privateGroup);
+                    //privateGroups.add(newPrivateGroup);
+                    privateGroup.setPrivateGroupPlayers(newPrivateGroup.getPrivateGroupPlayers());
+                    if(OffsideApplication.getSelectedPrivateGroup().getId() == newPrivateGroup.getId())
+                        OffsideApplication.setSelectedPrivateGroup(privateGroup);
+
+                }
 
             }
-
+        } catch (InterruptedException ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
-
 
 
     }

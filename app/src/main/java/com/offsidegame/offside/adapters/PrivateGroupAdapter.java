@@ -177,9 +177,13 @@ public class PrivateGroupAdapter extends BaseAdapter {
             viewHolder.groupGameStatusTextView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //Toast.makeText(context,"item clicked" ,Toast.LENGTH_SHORT).show();
-                    OffsideApplication.setSelectedPrivateGroup(viewHolder.privateGroup);
-                    EventBus.getDefault().post(OffsideApplication.getSelectedPrivateGroup());
+                    try {
+                        //Toast.makeText(context,"item clicked" ,Toast.LENGTH_SHORT).show();
+                        OffsideApplication.setSelectedPrivateGroup(viewHolder.privateGroup);
+                        EventBus.getDefault().post(OffsideApplication.getSelectedPrivateGroup());
+                    } catch (InterruptedException ex) {
+                        ACRA.getErrorReporter().handleSilentException(ex);
+                    }
 
                 }
             });

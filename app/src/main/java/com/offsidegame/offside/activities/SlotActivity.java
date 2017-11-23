@@ -193,7 +193,7 @@ public class SlotActivity extends AppCompatActivity {
                 goBackToChatButton.setVisibility(View.VISIBLE);
                 isStarted = false;
 
-                if(OffsideApplication.isBoundToSignalRService && command != null)
+                if(OffsideApplication.isBoundToNetworkingService && command != null)
                 {
                     String gameId = OffsideApplication.getGameInfo().getGameId();
                     String gameCode = OffsideApplication.getGameInfo().getPrivateGameId();

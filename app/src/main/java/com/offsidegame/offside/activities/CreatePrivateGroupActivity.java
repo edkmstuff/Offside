@@ -26,24 +26,15 @@ import org.greenrobot.eventbus.ThreadMode;
 
 
 public class CreatePrivateGroupActivity extends AppCompatActivity {
-
-
-    //activity
     private final String activityName = "LobbyActivity";
     private final Context context = this;
     private FrameLayout loadingRoot;
     private TextView versionTextView;
-
-    //create private group form
-
     private LinearLayout createPrivateGroupRoot;
     private EditText privateGroupNameEditText;
     private TextView savePrivateGroupButtonTextView;
-
-
     private String playerDisplayName;
     private String playerId;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +44,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         playerId = firebaseUser.getUid();
 
-        if(OffsideApplication.getUserProfileInfo() == null)
+        if (OffsideApplication.getUserProfileInfo() == null)
             playerDisplayName = firebaseUser.getDisplayName();
         else
             playerDisplayName = OffsideApplication.getUserProfileInfo().getPlayerName();
@@ -63,24 +54,18 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
         versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
 
-        //privateGroupNameEditText.setText(playerDisplayName.split(" ")[0] + "'s" + " friends");
-
-
-
     }
 
-    private void getIds(){
+    private void getIds() {
 
-        savePrivateGroupButtonTextView =  findViewById(R.id.cpg_save_private_group_button_text_view);
-        loadingRoot =  findViewById(R.id.shared_loading_root);
-        versionTextView =  findViewById(R.id.shared_version_text_view);
-        createPrivateGroupRoot =  findViewById(R.id.cpg_create_private_group_root);
-
-        privateGroupNameEditText =  findViewById(R.id.cpg_private_group_name_edit_text);
-
+        savePrivateGroupButtonTextView = findViewById(R.id.cpg_save_private_group_button_text_view);
+        loadingRoot = findViewById(R.id.shared_loading_root);
+        versionTextView = findViewById(R.id.shared_version_text_view);
+        createPrivateGroupRoot = findViewById(R.id.cpg_create_private_group_root);
+        privateGroupNameEditText = findViewById(R.id.cpg_private_group_name_edit_text);
     }
 
-    private void setEvents(){
+    private void setEvents() {
 
         savePrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,9 +76,9 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
                 String groupName = privateGroupNameEditText.getText().toString();
                 groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;
 
-                String groupType= getResources().getString(R.string.key_private_group_name);
+                String groupType = getResources().getString(R.string.key_private_group_name);
 
-                if (OffsideApplication.isBoundToSignalRService)
+                if (OffsideApplication.isBoundToNetworkingService)
                     OffsideApplication.networkingService.requestCreatePrivateGroup(playerId, groupName, groupType, selectedLanguage);
                 else
                     throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
@@ -101,10 +86,8 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
                 createPrivateGroupRoot.setVisibility(View.GONE);
                 loadingRoot.setVisibility(View.VISIBLE);
 
-
             }
         });
-
 
 
     }
@@ -112,52 +95,36 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-
         super.onResume();
         EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
-
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(context);
-
     }
 
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(context);
         super.onStop();
-
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPrivateGroupCreated(PrivateGroupCreatedEvent privateGroupCreatedEvent) {
         try {
-
-//            PrivateGroup privateGroup = privateGroupCreatedEvent.getPrivateGroup();
-//            EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
-            Intent intent = new Intent(context,LobbyActivity.class);
-            intent.putExtra("showGroups",true);
+            Intent intent = new Intent(context, LobbyActivity.class);
+            intent.putExtra("showGroups", true);
             startActivity(intent);
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
-
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSignalRServiceBinding(NetworkingServiceBoundEvent networkingServiceBoundEvent) {
+    public void onNetworkingServiceBinding(NetworkingServiceBoundEvent networkingServiceBoundEvent) {
         try {
             if (OffsideApplication.networkingService == null)
                 return;
@@ -167,18 +134,12 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
                 if (OffsideApplication.isPlayerQuitGame()) {
                     loadingRoot.setVisibility(View.GONE);
-
                     return;
                 }
-
-
-                if (OffsideApplication.isBoundToSignalRService) {
+                if (OffsideApplication.isBoundToNetworkingService) {
                     loadingRoot.setVisibility(View.GONE);
-
                 } else
-                    throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");
-
-
+                    throw new RuntimeException(activityName + " - onNetworkingServiceBinding - Error: SignalRIsNotBound");
             }
 
         } catch (Exception ex) {

@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Created by KFIR on 1/15/2017.
@@ -240,8 +241,14 @@ public class OffsideApplication extends Application {
         return selectedPrivateGroup;
     }
 
-    public static void setSelectedPrivateGroup(PrivateGroup selectedPrivateGroup) {
+    public static void setSelectedPrivateGroup(PrivateGroup selectedPrivateGroup) throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+        String oldGroupId = OffsideApplication.getSelectedPrivateGroupId();
         OffsideApplication.selectedPrivateGroup = selectedPrivateGroup;
+        String newGroupId = OffsideApplication.getSelectedPrivateGroupId();
+        OffsideApplication.networkingService.listenToQueue(newGroupId, oldGroupId, latch);
+        latch.await();
+
 
     }
 
@@ -264,16 +271,26 @@ public class OffsideApplication extends Application {
         return playerAssets;
     }
 
-    public static void setPlayerAssets(PlayerAssets playerAssets) {
+    public static void setPlayerAssets(PlayerAssets playerAssets) throws InterruptedException {
+        CountDownLatch  latch = new CountDownLatch(1);
+        String oldPlayerId = OffsideApplication.getPlayerId();
         OffsideApplication.playerAssets = playerAssets;
+        String newPlayerId = OffsideApplication.getPlayerId();
+        OffsideApplication.networkingService.listenToQueue(newPlayerId, oldPlayerId, latch);
+        latch.await();
     }
 
     public static AvailableGame getSelectedAvailableGame() {
         return selectedAvailableGame;
     }
 
-    public static void setSelectedAvailableGame(AvailableGame selectedAvailableGame) {
+    public static void setSelectedAvailableGame(AvailableGame selectedAvailableGame) throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+        String oldGameId = OffsideApplication.getSelectedGameId();
         OffsideApplication.selectedAvailableGame = selectedAvailableGame;
+        String newGameId = OffsideApplication.getSelectedGameId();
+        OffsideApplication.networkingService.listenToQueue(newGameId, oldGameId, latch);
+        latch.await();
     }
 
     public static String getSelectedPrivateGameId() {
@@ -286,8 +303,13 @@ public class OffsideApplication extends Application {
         return null;
     }
 
-    public static void setSelectedPrivateGameId(String selectedPrivateGameId) {
+    public static void setSelectedPrivateGameId(String selectedPrivateGameId) throws InterruptedException {
+        CountDownLatch latch = new CountDownLatch(1);
+        String oldPrivateGameId = OffsideApplication.getSelectedPrivateGameId();
         OffsideApplication.selectedPrivateGameId = selectedPrivateGameId;
+        String newPrivateGameId = OffsideApplication.getSelectedPrivateGameId();
+        OffsideApplication.networkingService.listenToQueue(newPrivateGameId, oldPrivateGameId, latch);
+        latch.await();
     }
 
     public static String getSelectedGameId() {
@@ -378,7 +400,7 @@ public class OffsideApplication extends Application {
 
     //signal r
     public static NetworkingService networkingService;
-    public static boolean isBoundToSignalRService = false;
+    public static boolean isBoundToNetworkingService = false;
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
@@ -386,14 +408,14 @@ public class OffsideApplication extends Application {
 
             NetworkingService.LocalBinder binder = (NetworkingService.LocalBinder) service;
             networkingService = binder.getService();
-            isBoundToSignalRService = true;
+            isBoundToNetworkingService = true;
             EventBus.getDefault().post(new NetworkingServiceBoundEvent(getApplicationContext()));
 
         }
 
         @Override
         public void onServiceDisconnected(ComponentName className) {
-            isBoundToSignalRService = false;
+            isBoundToNetworkingService = false;
         }
 
 

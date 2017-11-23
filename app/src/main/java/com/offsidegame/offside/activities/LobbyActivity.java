@@ -379,7 +379,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     //<editor-fold desc="Eventbus subscriptions">
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSignalRServiceBinding(NetworkingServiceBoundEvent networkingServiceBoundEvent) {
+    public void onNetworkingServiceBinding(NetworkingServiceBoundEvent networkingServiceBoundEvent) {
         try {
             if (OffsideApplication.networkingService == null)
                 return;
@@ -387,7 +387,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             Context eventContext = networkingServiceBoundEvent.getContext();
             if (eventContext == context) {
 
-                if (OffsideApplication.isBoundToSignalRService) {
+                if (OffsideApplication.isBoundToNetworkingService) {
                     PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
                     if (playerAssets == null)
                         OffsideApplication.networkingService.requestPlayerAssets(playerId);
@@ -395,7 +395,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                         onReceivePlayerAssets(playerAssets);
 
                 } else
-                    throw new RuntimeException(activityName + " - onSignalRServiceBinding - Error: SignalRIsNotBound");
+                    throw new RuntimeException(activityName + " - onNetworkingServiceBinding - Error: SignalRIsNotBound");
             }
 
         } catch (Exception ex) {
@@ -526,25 +526,30 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlayerJoinedPrivateGame(JoinGameEvent joinGameEvent) {
 
-        GameInfo gameInfo = joinGameEvent.getGameInfo();
+        try {
+            GameInfo gameInfo = joinGameEvent.getGameInfo();
 
-        if (gameInfo == null) {
-            return;
+            if (gameInfo == null) {
+                return;
+            }
+
+            OffsideApplication.setGameInfo(gameInfo);
+
+            String gameId = gameInfo.getGameId();
+            String privateGameId = gameInfo.getPrivateGameId();
+            String privateGroupId = OffsideApplication.getSelectedPrivateGroupId();
+
+            OffsideApplication.setSelectedPrivateGameId(privateGameId);
+
+            OffsideApplication.setUserPreferences(privateGroupId, gameId, privateGameId);
+
+            isPlayerCanJoinPrivateGame = true;
+
+            onReceiveNavigation(new NavigationEvent(R.id.nav_action_play));
+
+        } catch (InterruptedException ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
-
-        OffsideApplication.setGameInfo(gameInfo);
-
-        String gameId = gameInfo.getGameId();
-        String privateGameId = gameInfo.getPrivateGameId();
-        String privateGroupId = OffsideApplication.getSelectedPrivateGroupId();
-
-        OffsideApplication.setSelectedPrivateGameId(privateGameId);
-
-        OffsideApplication.setUserPreferences(privateGroupId, gameId, privateGameId);
-
-        isPlayerCanJoinPrivateGame = true;
-
-        onReceiveNavigation(new NavigationEvent(R.id.nav_action_play));
     }
 
 
@@ -850,12 +855,12 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNotEnoughCoinsEventReceived(NotEnoughCoinsEvent notEnoughCoinsEvent) {
 
-        if(notEnoughCoinsEvent== null)
+        if (notEnoughCoinsEvent == null)
             return;
 
         boolean isEligble = notEnoughCoinsEvent.iseligble();
 
-        if(!isEligble){
+        if (!isEligble) {
             shortInAssetsDialog = new Dialog(context);
             shortInAssetsDialog.setContentView(R.layout.dialog_short_in_assets);
 
@@ -877,9 +882,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             shortInAssetsDialog.show();
 
         }
-
-
-
     }
 
     @Override

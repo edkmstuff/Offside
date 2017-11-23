@@ -12,19 +12,20 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.offsidegame.offside.R;
-
 import com.offsidegame.offside.activities.LobbyActivity;
 import com.offsidegame.offside.events.AvailableGameEvent;
+import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
-import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.NetworkingErrorEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
@@ -36,47 +37,39 @@ import com.offsidegame.offside.events.PrivateGroupChangedEvent;
 import com.offsidegame.offside.events.PrivateGroupCreatedEvent;
 import com.offsidegame.offside.events.PrivateGroupDeletedEvent;
 import com.offsidegame.offside.events.PrivateGroupEvent;
-import com.offsidegame.offside.models.LeagueRecord;
-import com.offsidegame.offside.models.PlayerModel;
-import com.offsidegame.offside.models.PostAnswerRequestInfo;
-
-import com.offsidegame.offside.events.ChatEvent;
-
-import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
+import com.offsidegame.offside.events.ScoreboardEvent;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.GameInfo;
+import com.offsidegame.offside.models.KeyValue;
+import com.offsidegame.offside.models.LeagueRecord;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
+import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
+import com.offsidegame.offside.models.PostAnswerRequestInfo;
 import com.offsidegame.offside.models.PrivateGroup;
-
 import com.offsidegame.offside.models.PrivateGroupsInfo;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.Scoreboard;
-import com.offsidegame.offside.events.ScoreboardEvent;
-import com.offsidegame.offside.events.NetworkingErrorEvent;
-import com.offsidegame.offside.models.User;
 import com.offsidegame.offside.models.UserProfileInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.Date;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
 
-import microsoft.aspnet.signalr.client.Action;
-import microsoft.aspnet.signalr.client.ConnectionState;
-import microsoft.aspnet.signalr.client.ErrorCallback;
-import microsoft.aspnet.signalr.client.Platform;
-import microsoft.aspnet.signalr.client.SignalRFuture;
-import microsoft.aspnet.signalr.client.StateChangedCallback;
-import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
-import microsoft.aspnet.signalr.client.hubs.HubConnection;
-import microsoft.aspnet.signalr.client.hubs.HubProxy;
-import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
-import microsoft.aspnet.signalr.client.transport.ClientTransport;
-import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DefaultConsumer;
+import com.rabbitmq.client.Envelope;
 
 
 /**
@@ -84,24 +77,19 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
  */
 
 public class NetworkingService extends Service {
-    public HubConnection hubConnection;
-    private HubProxy hub;
-    private final IBinder binder = new LocalBinder(); // Binder given to clients
-    private Date startReconnecting = null;
-
-    /***********************DEVELOPMENT****************************************************/
-//    public final String ip = new String("10.0.2.2:18313");
-    //public final String ip = new String("192.168.1.140:18313");
-//    public final String ip = new String("10.0.0.17:18313");
-//    public final String ip = new String("10.0.0.61:18313");
-
-    /***********************PRODUCTION****************************************************/
-    public final String ip = new String("sidekicknode.azurewebsites.net");
-
-    public Boolean stoppedIntentionally = false;
+    public final static String TEMP_QUEUE_NAME = UUID.randomUUID().toString();
+    private Connection connection;
+    private Channel channel;
+    //private String hostName = "sktestvm.westeurope.cloudapp.azure.com";
+    private String hostName = "10.0.2.2";
+    private String password = "kfir";
+    private String userName = "kfir";
+    private final IBinder binder = new LocalBinder();
+    private String fromClientsQueueName = "FROM_CLIENTS";
+    private int sendToServerErrorDelay = 15000;
     private int mId = -1;
+    private Map<String, String> listenToQueues = new HashMap<>();
 
-    //request response flags
 
     private boolean chatMessagesReceived = false;
     private boolean chatMessageReceived = false;
@@ -128,339 +116,225 @@ public class NetworkingService extends Service {
     private boolean playerRewardSaved = false;
 
 
-
-    //<editor-fold desc="constructors">
     public NetworkingService() {
     }
 
-    //</editor-fold>
-
-    //<editor-fold desc="startup">
     @Override
     public void onCreate() {
         super.onCreate();
-        //handler = new Handler(Looper.getMainLooper());
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int result = super.onStartCommand(intent, flags, startId);
-        startSignalR(false);
+        try {
+            startRabbitMq();
+        } catch (InterruptedException ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
         return result;
     }
 
     @Override
     public void onDestroy() {
-        if (OffsideApplication.networkingService != null)
-            return;
-        hubConnection.stop();
+        stopRabbitMq();
         super.onDestroy();
-
-    }
-
-    private void deleteSignalRServiceReferenceFromApplication() {
-        if (OffsideApplication.networkingService != null && OffsideApplication.networkingService.hubConnection != null) {
-            OffsideApplication.networkingService.hubConnection.stop();
-            OffsideApplication.networkingService.stoppedIntentionally = true;
-
-        }
-
-        OffsideApplication.networkingService = null;
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        // Return the communication channel to the service.
-        if (OffsideApplication.networkingService != null) {
-            deleteSignalRServiceReferenceFromApplication();
+
+        try {
+            startRabbitMq();
+        } catch (InterruptedException ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
-        startSignalR(false);
+
         return binder;
     }
 
-    private void startSignalR(Boolean notifyWhenConnected) {
-        try {
-            Platform.loadPlatformComponent(new AndroidPlatformComponent());
-            final String serverUrl = "http://" + ip;
-            hubConnection = new HubConnection(serverUrl);
-            //final String SERVER_HUB = "OffsideHub";
-            final String SERVER_HUB = "SidekickNodeHub";
-            hub = hubConnection.createHubProxy(SERVER_HUB);
-            ClientTransport clientTransport = new ServerSentEventsTransport(hubConnection.getLogger());
+    private void startRabbitMq() throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(1);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    stopRabbitMq();
+                    ConnectionFactory factory = new ConnectionFactory();
+                    factory.setHost(hostName);
+                    factory.setUsername(userName);
+                    factory.setPassword(password);
+                    factory.setAutomaticRecoveryEnabled(true);
+                    connection = factory.newConnection();
+                    channel = connection.createChannel();
 
-            hubConnection.stateChanged(new StateChangedCallback() {
+                    if (latch != null)
+                        latch.countDown();
 
-                @Override
-                public void stateChanged(ConnectionState oldState, ConnectionState newState) {
-                    try {
-                        if (newState == ConnectionState.Disconnected && !stoppedIntentionally) {
-                            ACRA.getErrorReporter().handleSilentException(new Throwable("SignalR disconnected"));
 
-                            EventBus.getDefault().post(new ConnectionEvent(false, "disconnected"));
-                            //try reconnection for 10 min
-                            if (startReconnecting == null) {
-                                startReconnecting = new Date();
-                            } else
-                                return; // we are already trying to reconnect
-                            Date now = new Date();
-                            while (startReconnecting != null && now.getTime() - startReconnecting.getTime() < 10 * 60 * 1000
-                                    && hubConnection.getState() == ConnectionState.Disconnected) {
-
-                                startSignalR(true);  //sending true to identify a reconnection event
-                                now = new Date();
-                                Thread.sleep(5000);
-
-                            }
-                            if (hubConnection.getState() == ConnectionState.Connected) {
-                                startReconnecting = null;
-                                //just for putting message that we are connected
-                                EventBus.getDefault().post(new ConnectionEvent(true, "connected"));
-                            }
-                        }
-                    } catch (Exception ex) {
-                        ACRA.getErrorReporter().handleSilentException(ex);
-                        EventBus.getDefault().post(new ConnectionEvent(false, ex.getMessage()));
-                    }
-
+                } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
                 }
-            });
-
-
-            SignalRFuture<Void> signalRFuture = hubConnection.start(clientTransport);
-
-            signalRFuture.get();
-//            try {
-//                signalRFuture.get();
-//            } catch (InterruptedException | ExecutionException e) {
-//                Log.e("SimpleSignalR", e.getMessage());
-//                //return;
-//            }
-
-            if (notifyWhenConnected && hubConnection.getState() == ConnectionState.Connected) {
-                EventBus.getDefault().post(new NetworkingServiceBoundEvent(null));
-                startReconnecting = null;
             }
+        }).start();
+        latch.await();
+    }
 
-            if (hubConnection.getState() == ConnectionState.Connected) {
-                subscribeToServer();
-                EventBus.getDefault().post(new ConnectionEvent(true, "connected"));
-            }
+    private void stopRabbitMq() {
+        try {
+            if (channel != null && channel.isOpen())
+                channel.close();
+            if (connection != null && connection.isOpen())
+                connection.close();
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
 
-    //</editor-fold>
-
-    //<editor-fold desc="subscribeToServer">
-    public void subscribeToServer() {
-
-        //chat
-
-        hub.on("ChatMessagesReceived", new SubscriptionHandler1<String>() {
+    public void listenToQueue(final String queueName, final String oldQueueName, final CountDownLatch latch) {
+        new Thread(new Runnable() {
             @Override
-            public void run(String chatJson) {
-                chatMessagesReceived = true;
-                final Gson gson = new GsonBuilder().create();
-                Chat chat = gson.fromJson(chatJson, Chat.class);
-                EventBus.getDefault().post(new ChatEvent(chat));
+            public void run() {
+                try {
+
+                    //remove old queue if valid
+                    if (oldQueueName != null && !oldQueueName.equals(queueName) && listenToQueues.containsKey(oldQueueName)) {
+                        channel.basicCancel(listenToQueues.get(oldQueueName));
+                        listenToQueues.remove(oldQueueName);
+                    }
+
+                    //listen to queue
+                    if (queueName != null && !listenToQueues.containsKey(queueName)) {
+                        channel.queueDeclare(queueName, false, false, false, null);
+                        listenToQueues.put(queueName, channel.basicConsume(queueName, true, new DefaultConsumer(channel) {
+                                    @Override
+                                    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+                                        String json = new String(body, "UTF-8");
+                                        final Gson gson = new GsonBuilder().create();
+                                        KeyValue wrapper = gson.fromJson(json, KeyValue.class);
+                                        onServerMessage(wrapper.getKey(), wrapper.getValue());
+                                    }
+                                }
+                        ));
+                    }
+
+                    //finally we release the waiting thread
+                    if (latch != null)
+                        latch.countDown();
+
+                } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                }
             }
-        }, String.class);
-
-        hub.on("ChatMessageReceived", new SubscriptionHandler1<ChatMessage>() {
-            @Override
-            public void run(ChatMessage chatMessage) {
-                chatMessageReceived = true;
-                fireNotification(chatMessage.getMessageType(), chatMessage.getMessageText());
-                EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
-                EventBus.getDefault().post(new NotificationBubbleEvent(NotificationBubbleEvent.navigationItemChat));
-            }
-        }, ChatMessage.class);
-
-        hub.on("ScoreboardReceived", new SubscriptionHandler1<Scoreboard>() {
-            @Override
-            public void run(Scoreboard scoreboard) {
-                scoreboardReceived = true;
-                EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
-            }
-        }, Scoreboard.class);
-
-        hub.on("PlayerDataReceived", new SubscriptionHandler1<String>() {
-            @Override
-            public void run(String playerJson) {
-                playerDataReceived = true;
-                final Gson gson = new GsonBuilder().create();
-                PlayerModel playerModel = gson.fromJson(playerJson, PlayerModel.class);
-
-                EventBus.getDefault().post(new PlayerModelEvent(playerModel));
-            }
-
-        }, String.class);
-
-        hub.on("PositionReceived", new SubscriptionHandler1<Position>() {
-            @Override
-            public void run(Position position) {
-                positionReceived = true;
-                EventBus.getDefault().post(new PositionEvent(position));
-            }
-        }, Position.class);
-
-        hub.on("AnswerAccepted", new SubscriptionHandler1<PostAnswerRequestInfo>() {
-            @Override
-            public void run(PostAnswerRequestInfo postAnswerRequestInfo) {
-                answerAccepted = true;
-                EventBus.getDefault().post(postAnswerRequestInfo);
-            }
-        }, PostAnswerRequestInfo.class);
-
-        //groups
-
-        hub.on("PrivateGroupsReceived", new SubscriptionHandler1<PrivateGroupsInfo>() {
-            @Override
-            public void run(PrivateGroupsInfo privateGroupsInfo) {
-                privateGroupsReceived = true;
-                EventBus.getDefault().post(privateGroupsInfo);
-            }
-        }, PrivateGroupsInfo.class);
-
-        hub.on("PrivateGroupCreated", new SubscriptionHandler1<PrivateGroup>() {
-            @Override
-            public void run(PrivateGroup privateGroup) {
-                privateGroupCreated = true;
-                EventBus.getDefault().post(new PrivateGroupCreatedEvent(privateGroup));
-            }
-        }, PrivateGroup.class);
-
-        hub.on("PrivateGroupDeletedReceived", new SubscriptionHandler1<Integer>() {
-            @Override
-            public void run(Integer numberOfDeletedGroups) {
-                privateGroupDeleted = true;
-                EventBus.getDefault().post(new PrivateGroupDeletedEvent(numberOfDeletedGroups));
-            }
-        }, Integer.class);
-
-        hub.on("PlayerJoinedPrivateGroupReceived", new SubscriptionHandler1<Integer>() {
-            @Override
-            public void run(Integer numberOfPlayerAdded) {
-                playerJoinPrivateGroupReceived = true;
-                EventBus.getDefault().post(new PlayerJoinPrivateGroupEvent(numberOfPlayerAdded));
-            }
-        }, Integer.class);
+        }).start();
 
 
+    }
 
-        hub.on("PrivateGroupReceived", new SubscriptionHandler1<PrivateGroup>() {
-            @Override
-            public void run(PrivateGroup privateGroup) {
-                privateGroupReceived = true;
-                EventBus.getDefault().post(new PrivateGroupEvent(privateGroup));
-            }
-        }, PrivateGroup.class);
+    public void onServerMessage(String message, String model) {
+        final Gson gson = new GsonBuilder().create();
 
-        hub.on("PrivateGroupChangedReceived", new SubscriptionHandler1<PrivateGroup>() {
-            @Override
-            public void run(PrivateGroup privateGroup) {
-                privateGroupChangedReceived = true;
-                EventBus.getDefault().post(new PrivateGroupChangedEvent(privateGroup));
-            }
-        }, PrivateGroup.class);
-
-        hub.on("AvailableGamesReceived", new SubscriptionHandler1<AvailableGame[]>() {
-            @Override
-            public void run(AvailableGame[] availableGames) {
-                availableGamesReceived = true;
-                EventBus.getDefault().post(availableGames);
-            }
-        }, AvailableGame[].class);
-
-        hub.on("LeagueRecordsReceived", new SubscriptionHandler1<LeagueRecord[]>() {
-            @Override
-            public void run(LeagueRecord[] leagueRecords) {
-                leagueRecordsReceived = true;
-                EventBus.getDefault().post(leagueRecords);
-            }
-        }, LeagueRecord[].class);
-
-        //privateGame
-
-        hub.on("PrivateGameCreated", new SubscriptionHandler1<String>() {
-            @Override
-            public void run(String privateGameId) {
-                privateGameCreated = true;
-                EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameId));
-            }
-        }, String.class);
-
-        hub.on("PlayerJoinedPrivateGame", new SubscriptionHandler1<String>() {
-            @Override
-            public void run(String gameInfoJson) {
-                playerJoinedPrivateGame = true;
-                final Gson gson = new GsonBuilder().create();
-                GameInfo gameInfo = gson.fromJson(gameInfoJson, GameInfo.class);
-                EventBus.getDefault().post(new JoinGameEvent(gameInfo));
-            }
-        }, String.class);
-
-
-        //user
-
-        hub.on("LoggedInUserReceived", new SubscriptionHandler1<PlayerAssets>() {
-            @Override
-            public void run(PlayerAssets playerAssets) {
-                loggedInUserReceived = true;
-                EventBus.getDefault().post(playerAssets);
-            }
-        }, PlayerAssets.class);
-
-        hub.on("PlayerImageSaved", new SubscriptionHandler1<Boolean>() {
-            @Override
-            public void run(Boolean playerImageSaved) {
-                playerImageSaved = true;
-                EventBus.getDefault().post(new PlayerImageSavedEvent(playerImageSaved));
-            }
-        }, Boolean.class);
-
-
-        hub.on("UserProfileInfoReceived", new SubscriptionHandler1<UserProfileInfo>() {
-            @Override
-            public void run(UserProfileInfo userProfileInfo) {
-                userProfileInfoReceived = true;
-                EventBus.getDefault().post(userProfileInfo);
-            }
-        }, UserProfileInfo.class);
-
-        hub.on("PlayerAssetsReceived", new SubscriptionHandler1<PlayerAssets>() {
-            @Override
-            public void run(PlayerAssets playerAssets) {
-                playerAssetsReceived = true;
-                EventBus.getDefault().post(playerAssets);
-            }
-        }, PlayerAssets.class);
-
-        hub.on("AvailableGameReceived", new SubscriptionHandler1<AvailableGame>() {
-            @Override
-            public void run(AvailableGame availableGame) {
-                availableGameReceived = true;
-                EventBus.getDefault().post(new AvailableGameEvent(availableGame));
-            }
-        }, AvailableGame.class);
-
-        hub.on("FriendInviteReceived", new SubscriptionHandler1<String>() {
-            @Override
-            public void run(String friendInviteCode) {
-                friendInviteReceived = true;
-                EventBus.getDefault().post(new FriendInviteReceivedEvent(friendInviteCode));
-            }
-        }, String.class);
-
-        hub.on("PlayerRewardedReceived", new SubscriptionHandler1<Integer>() {
-            @Override
-            public void run(Integer rewardValue) {
-                playerRewardSaved = true;
-                EventBus.getDefault().post(new PlayerRewardedReceivedEvent(rewardValue));
-            }
-        }, Integer.class);
-
+        if (message.equals("ChatMessagesReceived")) {
+            Chat chat = gson.fromJson(model, Chat.class);
+            chatMessagesReceived = true;
+            EventBus.getDefault().post(new ChatEvent(chat));
+        } else if (message.equals("ChatMessageReceived")) {
+            ChatMessage chatMessage = gson.fromJson(model, ChatMessage.class);
+            chatMessageReceived = true;
+            fireNotification(chatMessage.getMessageType(), chatMessage.getMessageText());
+            EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
+            EventBus.getDefault().post(new NotificationBubbleEvent(NotificationBubbleEvent.navigationItemChat));
+        } else if (message.equals("ScoreboardReceived")) {
+            Scoreboard scoreboard = gson.fromJson(model, Scoreboard.class);
+            scoreboardReceived = true;
+            EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
+        } else if (message.equals("PlayerDataReceived")) {
+            PlayerModel playerModel = gson.fromJson(model, PlayerModel.class);
+            playerDataReceived = true;
+            EventBus.getDefault().post(new PlayerModelEvent(playerModel));
+        } else if (message.equals("PositionReceived")) {
+            Position position = gson.fromJson(model, Position.class);
+            positionReceived = true;
+            EventBus.getDefault().post(new PositionEvent(position));
+        } else if (message.equals("AnswerAccepted")) {
+            PostAnswerRequestInfo postAnswerRequestInfo = gson.fromJson(model, PostAnswerRequestInfo.class);
+            answerAccepted = true;
+            EventBus.getDefault().post(postAnswerRequestInfo);
+        } else if (message.equals("PrivateGroupsReceived")) {
+            PrivateGroupsInfo privateGroupsInfo = gson.fromJson(model, PrivateGroupsInfo.class);
+            privateGroupsReceived = true;
+            EventBus.getDefault().post(privateGroupsInfo);
+        } else if (message.equals("PrivateGroupCreated")) {
+            PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
+            privateGroupCreated = true;
+            EventBus.getDefault().post(new PrivateGroupCreatedEvent(privateGroup));
+        } else if (message.equals("PrivateGroupDeletedReceived")) {
+            KeyValue numberOfDeletedGroupsKeyValue = gson.fromJson(model, KeyValue.class);
+            Integer numberOfDeletedGroups = Integer.parseInt(numberOfDeletedGroupsKeyValue.getValue());
+            privateGroupDeleted = true;
+            EventBus.getDefault().post(new PrivateGroupDeletedEvent(numberOfDeletedGroups));
+        } else if (message.equals("PlayerJoinedPrivateGroupReceived")) {
+            KeyValue numberOfPlayerAddedKeyValue = gson.fromJson(model, KeyValue.class);
+            Integer numberOfPlayerAdded = Integer.parseInt(numberOfPlayerAddedKeyValue.getValue());
+            playerJoinPrivateGroupReceived = true;
+            EventBus.getDefault().post(new PlayerJoinPrivateGroupEvent(numberOfPlayerAdded));
+        } else if (message.equals("PrivateGroupReceived")) {
+            PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
+            privateGroupReceived = true;
+            EventBus.getDefault().post(new PrivateGroupEvent(privateGroup));
+        } else if (message.equals("PrivateGroupChangedReceived")) {
+            PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
+            privateGroupChangedReceived = true;
+            EventBus.getDefault().post(new PrivateGroupChangedEvent(privateGroup));
+        } else if (message.equals("AvailableGamesReceived")) {
+            AvailableGame[] availableGames = gson.fromJson(model, AvailableGame[].class);
+            availableGamesReceived = true;
+            EventBus.getDefault().post(availableGames);
+        } else if (message.equals("LeagueRecordsReceived")) {
+            LeagueRecord[] leagueRecords = gson.fromJson(model, LeagueRecord[].class);
+            leagueRecordsReceived = true;
+            EventBus.getDefault().post(leagueRecords);
+        } else if (message.equals("PrivateGameCreated")) {
+            KeyValue privateGameIdKeyValue = gson.fromJson(model, KeyValue.class);
+            String privateGameId = privateGameIdKeyValue.getValue();
+            privateGameCreated = true;
+            EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameId));
+        } else if (message.equals("PlayerJoinedPrivateGame")) {
+            GameInfo gameInfo = gson.fromJson(model, GameInfo.class);
+            playerJoinedPrivateGame = true;
+            EventBus.getDefault().post(new JoinGameEvent(gameInfo));
+        } else if (message.equals("LoggedInUserReceived")) {
+            PlayerAssets playerAssets = gson.fromJson(model, PlayerAssets.class);
+            loggedInUserReceived = true;
+            EventBus.getDefault().post(playerAssets);
+        } else if (message.equals("PlayerImageSaved")) {
+            KeyValue isPlayerImageSavedKeyValue = gson.fromJson(model, KeyValue.class);
+            Boolean isPlayerImageSaved = Boolean.parseBoolean(isPlayerImageSavedKeyValue.getValue());
+            playerImageSaved = true;
+            EventBus.getDefault().post(new PlayerImageSavedEvent(isPlayerImageSaved));
+        } else if (message.equals("UserProfileInfoReceived")) {
+            UserProfileInfo userProfileInfo = gson.fromJson(model, UserProfileInfo.class);
+            userProfileInfoReceived = true;
+            EventBus.getDefault().post(userProfileInfo);
+        } else if (message.equals("PlayerAssetsReceived")) {
+            PlayerAssets playerAssets = gson.fromJson(model, PlayerAssets.class);
+            playerAssetsReceived = true;
+            EventBus.getDefault().post(playerAssets);
+        } else if (message.equals("AvailableGameReceived")) {
+            AvailableGame availableGame = gson.fromJson(model, AvailableGame.class);
+            availableGameReceived = true;
+            EventBus.getDefault().post(new AvailableGameEvent(availableGame));
+        } else if (message.equals("FriendInviteReceived")) {
+            KeyValue friendInviteCodeKeyValue = gson.fromJson(model, KeyValue.class);
+            String friendInviteCode = friendInviteCodeKeyValue.getValue();
+            friendInviteReceived = true;
+            EventBus.getDefault().post(new FriendInviteReceivedEvent(friendInviteCode));
+        } else if (message.equals("FriendInviteReceived")) {
+            KeyValue rewardValueKeyValue = gson.fromJson(model, KeyValue.class);
+            Integer rewardValue = Integer.parseInt(rewardValueKeyValue.getValue());
+            playerRewardSaved = true;
+            EventBus.getDefault().post(new PlayerRewardedReceivedEvent(rewardValue));
+        }
 
 
     }
@@ -509,7 +383,6 @@ public class NetworkingService extends Service {
                         .setColor(Color.BLUE);
 
 
-
 // Creates an explicit intent for an Activity in your app
                 Intent chatIntent = new Intent(this, LobbyActivity.class);
 
@@ -536,598 +409,328 @@ public class NetworkingService extends Service {
 
     }
 
-//    private void notifyOnNewQuestion() {
-//
-//        MediaPlayer player;
-//        player = MediaPlayer.create(getApplicationContext(), R.raw.human_whisle);
-//        player.start();
-//
-//
-//        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-//                .setSmallIcon(R.mipmap.ic_offside_logo)
-//                .setContentTitle(getString(R.string.lbl_new_question_is_waiting_for_you))
-//                .setDefaults(NotificationCompat.DEFAULT_ALL)
-//                .setContentText(getString(R.string.lbl_click_to_answer))
-//                .setPriority(NotificationCompat.PRIORITY_HIGH);
-//
-//// Creates an explicit intent for an Activity in your app
-//        Intent chatIntent = new Intent(this, ChatActivity.class);
-//
-//// The stack builder object will contain an artificial back stack for the
-//// started Activity.
-//// This ensures that navigating backward from the Activity leads out of
-//// your application to the Home screen.
-//        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-//// Adds the back stack for the Intent (but not the Intent itself)
-//        stackBuilder.addParentStack(ChatActivity.class);
-//// Adds the Intent that starts the Activity to the top of the stack
-//        stackBuilder.addNextIntent(chatIntent);
-//        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-//        mBuilder.setContentIntent(resultPendingIntent);
-//        NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//// mId allows you to update the notification later on.
-//        mNotificationManager.notify(mId, mBuilder.build());
-//
-//    }
-
-    //</editor-fold>
-
-    //<editor-fold desc="methods for client activities">
-
-
-//    public void joinGame(String privateGameCode, String playerId, String playerDisplayName, String playerProfilePictureUrl, boolean isPrivateGameCreator, String androidDeviceId) {
-//        PlayerInfo playerInfo = new PlayerInfo(playerId, privateGameCode, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId, null);
-//        if (!(hubConnection.getState() == ConnectionState.Connected))
-//            return;
-//
-//        //hub.invoke(GameInfo.class, "JoinPrivateGame", privateGameCode, playerId, playerDisplayName, playerProfilePictureUrl, isPrivateGameCreator, androidDeviceId).done(new Action<GameInfo>() {
-//        hub.invoke(GameInfo.class, "requestJoinPrivateGame", playerInfo).done(new Action<GameInfo>() {
-//
-//            @Override
-//            public void run(GameInfo gameInfo) throws Exception {
-//                //EventBus.getDefault().post(new JoinGameEvent(gameInfo));
-//            }
-//        }).onError(new ErrorCallback() {
-//            @Override
-//            public void onError(Throwable error) {
-//                ACRA.getErrorReporter().handleSilentException(error);
-//            }
-//        });
-//    }
-
-    public void quitGame(String playerId, String gameId, String androidDeviceId) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
+    private void sendToServer(final String json, final String method) {
+        if (connection == null || !connection.isOpen() || channel == null || !channel.isOpen())
             return;
 
-        hub.invoke(Boolean.class, "QuitGame", playerId, gameId, androidDeviceId).onError(new ErrorCallback() {
+        new Thread(new Runnable() {
             @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
+            public void run() {
+
+                try {
+                    channel.queueDeclare(fromClientsQueueName, false, false, false, null);
+                    channel.basicPublish("", fromClientsQueueName, null, json.getBytes("UTF-8"));
+                    if (method != null) {
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!availableGameReceived)
+                                    EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGame"));
+                            }
+                        }, sendToServerErrorDelay);
+                    }
+
+
+                } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                }
+
             }
-        });
+        }).start();
+
+
+    }
+
+    public void quitGame(String playerId, String gameId, String androidDeviceId) {
+
+        //TODO: NOT IN USE - do we need it?
+
+        Map<String, String> params = new HashMap<>();
+        params.put("method", "QuitGame");
+        params.put("playerId", playerId);
+        params.put("gameId", gameId);
+        params.put("androidDeviceId", androidDeviceId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, null);
     }
 
     public void requestAvailableGame(String playerId, String gameId, String privateGameId) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         availableGameReceived = false;
-        hub.invoke("RequestAvailableGame", playerId, gameId, privateGameId).done(new Action<Void>() {
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!availableGameReceived)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGame"));
-                    }
-                }, 15000);
-
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGame"));
-            }
-        });
+        String method = "RequestAvailableGame";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("gameId", gameId);
+        params.put("privateGameId", privateGameId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestCreatePrivateGame(String playerId, String gameId, String groupId, String selectedLanguage) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
-
-        //String languageLocale = Locale.getDefault().getDisplayLanguage();
         privateGameCreated = false;
-        hub.invoke("RequestCreatePrivateGame", playerId, gameId, groupId, selectedLanguage).done(new Action<Void>() {
-
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!privateGameCreated)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestCreatePrivateGame"));
-                    }
-                }, 15000);
-
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestCreatePrivateGame"));
-            }
-        });
+        String method = "RequestCreatePrivateGame";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("gameId", gameId);
+        params.put("groupId", groupId);
+        params.put("selectedLanguage", selectedLanguage);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestPostAnswer(final String playerId, final String gameId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
-
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         answerAccepted = false;
-        hub.invoke("RequestPostAnswer", playerId, gameId, questionId, answerId, isSkipped, betSize).done(new Action<Void>() {
-
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!answerAccepted)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestPostAnswer"));
-                    }
-                }, 15000);
-
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestPostAnswer"));
-            }
-        });
-
+        String method = "RequestPostAnswer";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("gameId", gameId);
+        params.put("questionId", questionId);
+        params.put("answerId", answerId);
+        params.put("isSkipped", Boolean.toString(isSkipped));
+        params.put("betSize", Integer.toString(betSize));
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
-    public void requestGetScoreboard(String gameId) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
+    public void requestGetScoreboard(String playerId, String gameId) {
         scoreboardReceived = false;
-        hub.invoke("RequestGetScoreboard", gameId).done(new Action<Void>() {
-
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!scoreboardReceived)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestGetScoreboard"));
-                    }
-                }, 15000);
-
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestGetScoreboard"));
-            }
-        });
+        String method = "RequestGetScoreboard";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("gameId", gameId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestGetChatMessages(String playerId, String gameId, String privateGameId, String androidDeviceId) {
-
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
-
         chatMessagesReceived = false;
-        hub.invoke("RequestGetChatMessages", playerId, gameId, privateGameId, androidDeviceId).done(new Action<Void>() {
-
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!chatMessagesReceived)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("requestGetChatMessages"));
-                    }
-                }, 15000);
-
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("requestGetChatMessages"));
-            }
-        });
-
+        String method = "RequestGetChatMessages";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("gameId", gameId);
+        params.put("privateGameId", privateGameId);
+        params.put("androidDeviceId", androidDeviceId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestSendChatMessage(String playerId, String gameId, String privateGameId, String message) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         chatMessageReceived = false;
-        hub.invoke("RequestSendChatMessage", playerId, gameId, privateGameId, message).done(new Action<Void>() {
-
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!chatMessageReceived)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestSendChatMessage"));
-                    }
-                }, 15000);
-
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestSendChatMessage"));
-            }
-        });
-
+        String method = "RequestSendChatMessage";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("gameId", gameId);
+        params.put("privateGameId", privateGameId);
+        params.put("message", message);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
-
-    public boolean requestSaveLoggedInUser(User user) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return false;
-
+    public void requestSaveLoggedInUser(String playerId, String name, String email, String imageUrl) {
         loggedInUserReceived = false;
-        hub.invoke("RequestSaveLoggedInUser", user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri()).done(new Action<Void>() {
+        String method = "RequestSaveLoggedInUser";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("name", name);
+        params.put("email", email);
+        params.put("imageUrl", imageUrl);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
 
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!loggedInUserReceived)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestSaveLoggedInUser"));
-                    }
-                }, 15000);
-
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestSaveLoggedInUser"));
-            }
-        });
-
-        return true;
     }
 
-    public boolean setPowerItems(String playerId, String gameId, int powerItems, boolean isDueToRewardVideo) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return false;
+    public void setPowerItems(String playerId, String gameId, int powerItems, boolean isDueToRewardVideo) {
 
-        hub.invoke(Integer.class, "SetPowerItems", playerId, gameId, powerItems, isDueToRewardVideo).done(new Action<Integer>() {
-            @Override
-            public void run(Integer newPowerItemsValue) throws Exception {
-                EventBus.getDefault().post(newPowerItemsValue);
-            }
+        //TODO: NOT IN USE - do we need it?
 
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
-            }
-        });
-
-        return true;
+        //loggedInUserReceived = false;
+        String method = "RequestSetPowerItems";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("gameId", gameId);
+        params.put("powerItems", Integer.toString(powerItems));
+        params.put("isDueToRewardVideo", Boolean.toString(isDueToRewardVideo));
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
-
 
     public void requestSaveImageInDatabase(String playerId, String imageString) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         playerImageSaved = false;
-        hub.invoke("RequestSaveImageInDatabase", playerId, imageString).done(new Action<Void>() {
-
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!playerImageSaved)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestSaveImageInDatabase"));
-                    }
-                }, 15000);
-
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestSaveImageInDatabase"));
-            }
-        });
+        String method = "RequestSaveImageInDatabase";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("imageString", imageString);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestPrivateGroupsInfo(String playerId) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         privateGroupsReceived = false;
-        hub.invoke("RequestPrivateGroupsInfo", playerId).done(new Action<Void>() {
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!privateGroupsReceived)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestPrivateGroupsInfo"));
-                    }
-                }, 15000);
-
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestPrivateGroupsInfo"));
-            }
-        });
+        String method = "RequestPrivateGroupsInfo";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestAvailableGames(String playerId, String groupId) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         availableGamesReceived = false;
-        hub.invoke("RequestAvailableGames", playerId, groupId).done(new Action<Void>() {
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!availableGamesReceived)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGames"));
-                    }
-                }, 15000);
-
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGames"));
-            }
-        });
-
+        String method = "RequestAvailableGames";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("groupId", groupId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestCreatePrivateGroup(String playerId, String groupName, String groupType, String selectedLanguage) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         privateGroupCreated = false;
-        hub.invoke("RequestCreatePrivateGroup", playerId, groupName, groupType, selectedLanguage).done(new Action<Void>() {
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!privateGroupCreated)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestCreatePrivateGroup"));
-                    }
-                }, 15000);
-
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestCreatePrivateGroup"));
-            }
-        });
-
+        String method = "RequestCreatePrivateGroup";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("groupName", groupName);
+        params.put("groupType", groupType);
+        params.put("selectedLanguage", selectedLanguage);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestJoinPrivateGame(String playerId, String gameId, String groupId, String privateGameId, String androidDeviceId) {
-
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
-
         playerJoinedPrivateGame = false;
-        hub.invoke("RequestJoinPrivateGame", playerId, gameId, groupId, privateGameId, androidDeviceId).done(new Action<Void>() {
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!playerJoinedPrivateGame)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestJoinPrivateGame"));
-                    }
-                }, 15000);
-
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestJoinPrivateGame"));
-            }
-        });
-
-
+        String method = "RequestJoinPrivateGame";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("gameId", gameId);
+        params.put("groupId", groupId);
+        params.put("privateGameId", privateGameId);
+        params.put("androidDeviceId", androidDeviceId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestUserProfileData(String playerId) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         userProfileInfoReceived = false;
-        hub.invoke("RequestUserProfile", playerId).done(new Action<Void>() {
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!userProfileInfoReceived)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestUserProfile"));
-                    }
-                }, 15000);
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestUserProfile"));
-            }
-        });
+        String method = "RequestUserProfile";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestLeagueRecords(String playerId, String groupId) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         leagueRecordsReceived = false;
-        hub.invoke("RequestLeagueRecords", playerId, groupId).done(new Action<Void>() {
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!leagueRecordsReceived)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestLeagueRecords"));
-                    }
-                }, 15000);
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestLeagueRecords"));
-            }
-        });
+        String method = "RequestLeagueRecords";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("groupId", groupId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestPlayerAssets(String playerId) {
-
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         playerAssetsReceived = false;
-        hub.invoke("RequestPlayerAssets", playerId).done(new Action<Void>() {
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!playerAssetsReceived)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestPlayerAssets"));
-                    }
-                }, 15000);
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestPlayerAssets"));
-            }
-        });
+        String method = "RequestPlayerAssets";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestInviteFriend(String inviterPlayerId, String groupId, String gameId, String privateGameId) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         friendInviteReceived = false;
-        hub.invoke("RequestInviteFriend", inviterPlayerId, groupId, gameId, privateGameId).done(new Action<Void>() {
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!friendInviteReceived)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestInviteFriend"));
-                    }
-                }, 15000);
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestInviteFriend"));
-            }
-        });
+        String method = "RequestInviteFriend";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("inviterPlayerId", inviterPlayerId);
+        params.put("groupId", groupId);
+        params.put("gameId", gameId);
+        params.put("privateGameId", privateGameId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestPrivateGroup(String playerId, String groupId) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         privateGroupReceived = false;
-        hub.invoke("RequestPrivateGroup", playerId, groupId).done(new Action<Void>() {
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!privateGroupReceived)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestPrivateGroup"));
-                    }
-                }, 15000);
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestPrivateGroup"));
-            }
-        });
+        String method = "RequestPrivateGroup";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("groupId", groupId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
-
     public void requestDeletePrivateGroup(String playerId, String groupId) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         privateGroupDeleted = false;
-        hub.invoke("RequestDeletePrivateGroup", playerId, groupId).done(new Action<Void>() {
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!privateGroupDeleted)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestDeletePrivateGroup"));
-                    }
-                }, 15000);
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestDeletePrivateGroup"));
-            }
-        });
+        String method = "RequestDeletePrivateGroup";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("groupId", groupId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestJoinPrivateGroup(String playerId, String groupId) {
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         playerJoinPrivateGroupReceived = false;
-        hub.invoke("RequestJoinPrivateGroup", playerId, groupId).done(new Action<Void>() {
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!playerJoinPrivateGroupReceived)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestJoinPrivateGroup"));
-                    }
-                }, 15000);
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestJoinPrivateGroup"));
-            }
-        });
+        String method = "RequestJoinPrivateGroup";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("groupId", groupId);
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
     public void requestToRewardPlayer(String playerId, String rewardType, String rewardReason, int quantity) {
 
-        if (!(hubConnection.getState() == ConnectionState.Connected))
-            return;
         playerRewardSaved = false;
-        hub.invoke("RequestToRewardPlayer", playerId, rewardType, rewardReason, quantity).done(new Action<Void>() {
-
-            @Override
-            public void run(Void obj) throws Exception {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!playerRewardSaved)
-                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestToRewardPlayer"));
-                    }
-                }, 15000);
-
-            }
-        }).onError(new ErrorCallback() {
-            @Override
-            public void onError(Throwable error) {
-                EventBus.getDefault().post(new NetworkingErrorEvent("RequestToRewardPlayer"));
-            }
-        });
+        String method = "RequestToRewardPlayer";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("rewardType", rewardType);
+        params.put("rewardReason", rewardReason);
+        params.put("quantity", Integer.toString(quantity));
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
     }
 
 
@@ -1141,7 +744,7 @@ public class NetworkingService extends Service {
      */
     public class LocalBinder extends Binder {
         public NetworkingService getService() {
-            // Return this instance of NetworkingService so clients can call public methods
+            // Return this instance of SignalRService so clients can call public methods
             return NetworkingService.this;
         }
     }

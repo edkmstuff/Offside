@@ -28,14 +28,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.offsidegame.offside.R;
-
 import com.offsidegame.offside.events.CompletedHttpRequestEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
-
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
 import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
-
 import com.offsidegame.offside.helpers.HttpHelper;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.OffsideApplication;
@@ -54,33 +51,23 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-
-import microsoft.aspnet.signalr.client.ConnectionState;
-
+import java.util.concurrent.CountDownLatch;
 
 public class LoginActivity extends AppCompatActivity implements Serializable {
 
     private final Context context = this;
     private static final int RC_SIGN_IN = 123;
     private FirebaseUser firebaseUser;
-
     private String playerId;
     private String playerDisplayName;
     private String playerProfilePictureUrl;
     private boolean isUserImageUrlValid = false;
     private String playerEmail;
-
-
     private FrameLayout loadingRoot;
     private TextView versionTextView;
     private boolean isInLoginProcess = false;
-
     private FirebaseAnalytics analytics;
     private String TAG = "SIDEKICK";
-
-//    private String groupIdFromInvitation;
-//    private String gameIdFromInvitation;
-//    private String privateGameIdFromInvitation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +75,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_login);
-
             getIds();
             loadingRoot.setVisibility(View.VISIBLE);
 
@@ -99,50 +85,38 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     }
 
     private void getIds() {
-        loadingRoot = (FrameLayout) findViewById(R.id.shared_loading_root);
-        versionTextView = (TextView) findViewById(R.id.shared_version_text_view);
+        loadingRoot = findViewById(R.id.shared_loading_root);
+        versionTextView = findViewById(R.id.shared_version_text_view);
         versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
     }
 
     @Override
     public void onBackPressed() {
         finish(); // close the application
-
     }
 
     @Override
     public void onResume() {
-
         super.onResume();
         EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(context);
-
-
     }
 
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(context);
         super.onStop();
-
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         finish();
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -159,7 +133,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSignalRServiceBinding(NetworkingServiceBoundEvent networkingServiceBoundEvent) {
+    public void onNetworkingServiceBinding(NetworkingServiceBoundEvent networkingServiceBoundEvent) {
         try {
             if (OffsideApplication.networkingService == null)
                 return;
@@ -167,7 +141,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             Context eventContext = networkingServiceBoundEvent.getContext();
             if (eventContext == context || eventContext == getApplicationContext()) {
                 loadingRoot.setVisibility(View.GONE);
-                if (isSignalRConnected() && !isInLoginProcess) {
+                if (isNetworkingServiceConnected() && !isInLoginProcess) {
                     login();
                 }
             }
@@ -177,12 +151,13 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         }
     }
 
-    public boolean isSignalRConnected() {
-        return (OffsideApplication.isBoundToSignalRService &&
-                OffsideApplication.networkingService != null &&
-                OffsideApplication.networkingService.hubConnection != null &&
-                OffsideApplication.networkingService.hubConnection.getState() == ConnectionState.Connected
-        );
+    public boolean isNetworkingServiceConnected() {
+        return true;
+//        return (OffsideApplication.isBoundToNetworkingService &&
+//                OffsideApplication.networkingService != null &&
+//                OffsideApplication.networkingService.hubConnection != null &&
+//                OffsideApplication.networkingService.hubConnection.getState() == ConnectionState.Connected
+//        );
 
     }
 
@@ -231,14 +206,20 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         }
     }
 
-    private void handleSuccessfulLogin() {
+    private void handleSuccessfulLogin() throws InterruptedException {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null || OffsideApplication.networkingService == null)
             return;
 
-
         playerId = firebaseUser.getUid();
+
+        if (playerId != null && OffsideApplication.networkingService != null) {
+            CountDownLatch latch = new CountDownLatch(1);
+            OffsideApplication.networkingService.listenToQueue(playerId, null, latch);
+            latch.await();
+        }
+
         playerDisplayName = (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) ? "NO NAME" : firebaseUser.getDisplayName();
         playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
         playerEmail = firebaseUser.getEmail();
@@ -246,39 +227,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         HttpHelper httpHelper = new HttpHelper(playerProfilePictureUrl);
         httpHelper.execute();
 
-        //String imageUrlResponse = validateImageUrl(playerProfilePictureUrl);
-//        isUserImageUrlValid = (imageUrlResponse!= null || imageUrlResponse=="200");
-
-//        // in case user does not have profile picture, we generate image with Initials
-//        if (!isUserImageUrlValid) {
-//
-//            String displayName = playerDisplayName.toUpperCase();
-//            String[] displayNameParts = displayName.trim().split(" ");
-//            String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
-//            Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context);
-//            byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
-//            String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
-//
-//            OffsideApplication.networkingService.requestSaveImageInDatabase(playerId, imageString);
-//
-//
-//        }
-//        else {
-//            saveLoggedInUser();
-//        }
     }
 
     public void saveLoggedInUser() {
-
-//        if (!isUserImageUrlValid)
-//            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
-
         SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl);
         editor.commit();
         User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl);
-        OffsideApplication.networkingService.requestSaveLoggedInUser(user);
+        OffsideApplication.networkingService.requestSaveLoggedInUser(user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri());
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -334,17 +291,16 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayerAssets(PlayerAssets playerAssets) {
-
-        isInLoginProcess = false;
-
-        OffsideApplication.setPlayerAssets(playerAssets);
-
-        analyzeDynamicLink();
-
-
+        try {
+            isInLoginProcess = false;
+            OffsideApplication.setPlayerAssets(playerAssets);
+            analyzeDynamicLink();
+        } catch (InterruptedException ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
     }
 
-    public void analyzeDynamicLink(){
+    public void analyzeDynamicLink() {
 
 //        Intent intent = getIntent();
 //        String action = intent.getAction();
@@ -372,14 +328,14 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 //                            else
 //                                Log.d(TAG, "*****deepLink*****"+deepLink.toString());
                             FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(pendingDynamicLinkData);
-                            if(invite!=null){
+                            if (invite != null) {
                                 String inviteId = invite.getInvitationId();
 //                                if(!TextUtils.isEmpty(inviteId))
 //                                    Log.d(TAG, "ACCPET invitation Id" + inviteId);
 
                                 URL url;
                                 try {
-                                    url = new URL("http",Uri.parse(deepLink.getQuery()).getHost(),deepLink.getQuery().toString());
+                                    url = new URL("http", Uri.parse(deepLink.getQuery()).getHost(), deepLink.getQuery().toString());
                                     try {
 
                                         Map<String, List<String>> dynamicLinkQueryPairs = HttpHelper.splitQuery(url);
@@ -388,16 +344,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                         String privateGameIdFromInvitation = dynamicLinkQueryPairs.get("privateGameId").get(0);
 
                                         //Add player to the group from which he was invited
-                                        if(groupIdFromInvitation!=null)
+                                        if (groupIdFromInvitation != null)
 
-                                            OffsideApplication.networkingService.requestJoinPrivateGroup(playerId,groupIdFromInvitation);
+                                            OffsideApplication.networkingService.requestJoinPrivateGroup(playerId, groupIdFromInvitation);
 
                                         //Override userPreferences, as theses will be used when tryJoinSelectedAvailableGame will be executed (Lobby Activity)
-                                        if(gameIdFromInvitation!=null && privateGameIdFromInvitation != null)
+                                        if (gameIdFromInvitation != null && privateGameIdFromInvitation != null)
                                             OffsideApplication.setUserPreferences(groupIdFromInvitation, gameIdFromInvitation, privateGameIdFromInvitation);
 
-                                    }
-                                    catch (UnsupportedEncodingException e) {
+                                    } catch (UnsupportedEncodingException e) {
                                         e.printStackTrace();
                                     }
 
@@ -407,8 +362,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
                             }
 
-                        }
-                        else {
+                        } else {
                             startLobbyActivity();
                         }
                     }
@@ -420,7 +374,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                         startLobbyActivity();
                     }
                 });
-
 
 
     }
@@ -466,7 +419,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         startLobbyActivity();
     }
 
-    public void startLobbyActivity(){
+    public void startLobbyActivity() {
 
         Intent intent = new Intent(context, LobbyActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -202,26 +202,27 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
 
-                    int balance = OffsideApplication.getPlayerAssets().getBalance();
-                    int entranceFee = viewHolder.availableGame.getEntranceFee();
-                    if(entranceFee<=balance){
-                        OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
-                        String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
-                        String gameId = viewHolder.availableGame.getGameId();
-                        String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
-                        String privateGameId = viewHolder.availableGame.getPrivateGameId();
-                        String androidDeviceId = OffsideApplication.getAndroidDeviceId();
-                        OffsideApplication.networkingService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
+                    try {
+                        int balance = OffsideApplication.getPlayerAssets().getBalance();
+                        int entranceFee = viewHolder.availableGame.getEntranceFee();
+                        if(entranceFee<=balance){
+                            OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
+                            String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
+                            String gameId = viewHolder.availableGame.getGameId();
+                            String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
+                            String privateGameId = viewHolder.availableGame.getPrivateGameId();
+                            String androidDeviceId = OffsideApplication.getAndroidDeviceId();
+                            OffsideApplication.networkingService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
 
+                        }
+                        else
+                        {
+                            EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
+
+                        }
+                    } catch (InterruptedException ex) {
+                        ACRA.getErrorReporter().handleSilentException(ex);
                     }
-                    else
-                    {
-                        EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
-
-                    }
-
-
-
 
 
                 }
@@ -231,28 +232,31 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
 
-                    int balance = OffsideApplication.getPlayerAssets().getBalance();
-                    int entranceFee = viewHolder.availableGame.getEntranceFee();
-                    if(entranceFee<=balance){
-                        OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
-                        String gameId = viewHolder.availableGame.getGameId();
-                        String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
-                        String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
-                        String privateGameContentLanguage;
-                        //create the private game in hebrew if user's device locale set to hebrew, otherwise english
-                        if(context.getResources().getConfiguration().locale.getDisplayLanguage().toString().equalsIgnoreCase(OffsideApplication.availableLanguages.get("he")))
-                            privateGameContentLanguage = OffsideApplication.availableLanguages.get("he");
+                    try {
+                        int balance = OffsideApplication.getPlayerAssets().getBalance();
+                        int entranceFee = viewHolder.availableGame.getEntranceFee();
+                        if(entranceFee<=balance){
+                            OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
+                            String gameId = viewHolder.availableGame.getGameId();
+                            String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
+                            String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
+                            String privateGameContentLanguage;
+                            //create the private game in hebrew if user's device locale set to hebrew, otherwise english
+                            if(context.getResources().getConfiguration().locale.getDisplayLanguage().toString().equalsIgnoreCase(OffsideApplication.availableLanguages.get("he")))
+                                privateGameContentLanguage = OffsideApplication.availableLanguages.get("he");
+                            else
+                                privateGameContentLanguage = OffsideApplication.availableLanguages.get("en");
+                            OffsideApplication.networkingService.requestCreatePrivateGame(playerId, gameId, groupId,  privateGameContentLanguage);
+
+                        }
                         else
-                            privateGameContentLanguage = OffsideApplication.availableLanguages.get("en");
-                        OffsideApplication.networkingService.requestCreatePrivateGame(playerId, gameId, groupId,  privateGameContentLanguage);
+                        {
+                            EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
 
+                        }
+                    } catch (InterruptedException ex) {
+                        ACRA.getErrorReporter().handleSilentException(ex);
                     }
-                    else
-                    {
-                        EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
-
-                    }
-
 
 
                 }
