@@ -30,6 +30,7 @@ import com.offsidegame.offside.events.NotificationBubbleEvent;
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
+import com.offsidegame.offside.events.PlayerQuitFromPrivateGameEvent;
 import com.offsidegame.offside.events.PlayerRewardedReceivedEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
@@ -77,15 +78,17 @@ import com.rabbitmq.client.Envelope;
  */
 
 public class NetworkingService extends Service {
-    public final static String TEMP_QUEUE_NAME = UUID.randomUUID().toString();
+
     private Connection connection;
     private Channel channel;
-    //private String hostName = "sktestvm.westeurope.cloudapp.azure.com";
-    private String hostName = "10.0.2.2";
+    private String listenerQueueName;
+    private String hostName = "sktestvm.westeurope.cloudapp.azure.com";
+    //private String hostName = "10.0.2.2";
+    //private String hostName = "192.168.1.140";
     private String password = "kfir";
     private String userName = "kfir";
     private final IBinder binder = new LocalBinder();
-    private String fromClientsQueueName = "FROM_CLIENTS";
+    private String CLIENT_REQUESTS_EXCHANGE_NAME = "FROM_CLIENTS";
     private int sendToServerErrorDelay = 15000;
     private int mId = -1;
     private Map<String, String> listenToQueues = new HashMap<>();
@@ -114,6 +117,7 @@ public class NetworkingService extends Service {
     private boolean privateGroupDeleted = false;
     private boolean playerJoinPrivateGroupReceived = false;
     private boolean playerRewardSaved = false;
+    private boolean playerQuitPrivateGame = false;
 
 
     public NetworkingService() {
@@ -191,32 +195,27 @@ public class NetworkingService extends Service {
         }
     }
 
-    public void listenToQueue(final String queueName, final String oldQueueName, final CountDownLatch latch) {
+    public void createListenerQueue(final String queueName, final CountDownLatch latch) {
+        if (listenerQueueName != null)
+            return;
+        if (queueName == null)
+            return;
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    listenerQueueName = channel.queueDeclare(queueName, false, false, false, null).getQueue();
+//                    channel.basicConsume(queueName, true, new DefaultConsumer(channel) {
+//                        @Override
+//                        public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+//                            String json = new String(body, "UTF-8");
+//                            final Gson gson = new GsonBuilder().create();
+//                            KeyValue wrapper = gson.fromJson(json, KeyValue.class);
+//                            onServerMessage(wrapper.getKey(), wrapper.getValue());
+//                        }
+//                    });
 
-                    //remove old queue if valid
-                    if (oldQueueName != null && !oldQueueName.equals(queueName) && listenToQueues.containsKey(oldQueueName)) {
-                        channel.basicCancel(listenToQueues.get(oldQueueName));
-                        listenToQueues.remove(oldQueueName);
-                    }
-
-                    //listen to queue
-                    if (queueName != null && !listenToQueues.containsKey(queueName)) {
-                        channel.queueDeclare(queueName, false, false, false, null);
-                        listenToQueues.put(queueName, channel.basicConsume(queueName, true, new DefaultConsumer(channel) {
-                                    @Override
-                                    public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-                                        String json = new String(body, "UTF-8");
-                                        final Gson gson = new GsonBuilder().create();
-                                        KeyValue wrapper = gson.fromJson(json, KeyValue.class);
-                                        onServerMessage(wrapper.getKey(), wrapper.getValue());
-                                    }
-                                }
-                        ));
-                    }
 
                     //finally we release the waiting thread
                     if (latch != null)
@@ -230,6 +229,44 @@ public class NetworkingService extends Service {
 
 
     }
+
+    public void listenToExchange(final String exchangeName ,final CountDownLatch latch) {
+        if (exchangeName == null)
+            return;
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    channel.exchangeDeclare(exchangeName, "fanout");
+                    channel.queueBind(listenerQueueName, exchangeName, "");
+                    channel.basicConsume(listenerQueueName, true, new DefaultConsumer(channel) {
+                        @Override
+                        public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
+                            String json = new String(body, "UTF-8");
+                            final Gson gson = new GsonBuilder().create();
+                            KeyValue wrapper = gson.fromJson(json, KeyValue.class);
+                            onServerMessage(wrapper.getKey(), wrapper.getValue());
+                        }
+                    });
+
+
+                    //finally we release the waiting thread
+                    if (latch != null)
+                        latch.countDown();
+
+                } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                }
+            }
+        }).start();
+
+
+    }
+
+
 
     public void onServerMessage(String message, String model) {
         final Gson gson = new GsonBuilder().create();
@@ -334,6 +371,11 @@ public class NetworkingService extends Service {
             Integer rewardValue = Integer.parseInt(rewardValueKeyValue.getValue());
             playerRewardSaved = true;
             EventBus.getDefault().post(new PlayerRewardedReceivedEvent(rewardValue));
+        } else if (message.equals("PlayerQuitPrivateGameReceived")) {
+            KeyValue playerWasRemovedFromPrivateGameKeyValue = gson.fromJson(model, KeyValue.class);
+            boolean playerWasRemovedFromPrivateGame = Boolean.parseBoolean(playerWasRemovedFromPrivateGameKeyValue.getValue());
+            playerQuitPrivateGame = true;
+            EventBus.getDefault().post(new PlayerQuitFromPrivateGameEvent(playerWasRemovedFromPrivateGame));
         }
 
 
@@ -361,7 +403,7 @@ public class NetworkingService extends Service {
             player = MediaPlayer.create(getApplicationContext(), soundResource);
             player.start();
 
-            if (!OffsideApplication.isChatActivityVisible()) {
+            if (!OffsideApplication.isLobbyActivityVisible()) {
 
                 int titleResource = R.string.lbl_new_question_is_waiting_for_you;
                 int textResource = R.string.lbl_click_to_answer;
@@ -418,8 +460,9 @@ public class NetworkingService extends Service {
             public void run() {
 
                 try {
-                    channel.queueDeclare(fromClientsQueueName, false, false, false, null);
-                    channel.basicPublish("", fromClientsQueueName, null, json.getBytes("UTF-8"));
+                    channel.exchangeDeclare(CLIENT_REQUESTS_EXCHANGE_NAME, "fanout");
+                    //channel.queueDeclare(CLIENT_REQUESTS_EXCHANGE_NAME, false, false, false, null);
+                    channel.basicPublish(CLIENT_REQUESTS_EXCHANGE_NAME, "", null, json.getBytes("UTF-8"));
                     if (method != null) {
                         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                             @Override
@@ -441,14 +484,15 @@ public class NetworkingService extends Service {
 
     }
 
-    public void quitGame(String playerId, String gameId, String androidDeviceId) {
+    public void requestQuitFromPrivateGame(String playerId, String gameId, String privateGameId, String androidDeviceId) {
 
         //TODO: NOT IN USE - do we need it?
 
         Map<String, String> params = new HashMap<>();
-        params.put("method", "QuitGame");
+        params.put("method", "RequestQuitFromPrivateGame");
         params.put("playerId", playerId);
         params.put("gameId", gameId);
+        params.put("privateGameId", privateGameId);
         params.put("androidDeviceId", androidDeviceId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);

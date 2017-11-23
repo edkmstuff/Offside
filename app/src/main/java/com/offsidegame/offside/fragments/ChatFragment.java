@@ -33,7 +33,6 @@ import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PositionEvent;
-import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
 import com.offsidegame.offside.events.ScoreboardEvent;
@@ -43,7 +42,6 @@ import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
@@ -300,7 +298,7 @@ public class ChatFragment extends Fragment {
         exitButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OffsideApplication.networkingService.requestToQuitFromPrivateGame(playerId,gameId,privateGameId,androidDeviceId);
+                OffsideApplication.networkingService.requestQuitFromPrivateGame(playerId,gameId,privateGameId,androidDeviceId);
             }
         });
 

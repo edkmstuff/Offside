@@ -75,7 +75,7 @@ public class PrivateGroupsInfo {
                 }
 
             }
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
 

@@ -241,13 +241,19 @@ public class OffsideApplication extends Application {
         return selectedPrivateGroup;
     }
 
-    public static void setSelectedPrivateGroup(PrivateGroup selectedPrivateGroup) throws InterruptedException {
+    public static void setSelectedPrivateGroup(PrivateGroup selectedPrivateGroup)  {
         CountDownLatch latch = new CountDownLatch(1);
         String oldGroupId = OffsideApplication.getSelectedPrivateGroupId();
         OffsideApplication.selectedPrivateGroup = selectedPrivateGroup;
         String newGroupId = OffsideApplication.getSelectedPrivateGroupId();
-        OffsideApplication.networkingService.listenToQueue(newGroupId, oldGroupId, latch);
-        latch.await();
+        OffsideApplication.networkingService.listenToExchange(newGroupId, latch);
+        try{
+            latch.await();
+        }
+        catch (Exception ex){
+
+        }
+
 
 
     }
@@ -271,26 +277,38 @@ public class OffsideApplication extends Application {
         return playerAssets;
     }
 
-    public static void setPlayerAssets(PlayerAssets playerAssets) throws InterruptedException {
+    public static void setPlayerAssets(PlayerAssets playerAssets)  {
         CountDownLatch  latch = new CountDownLatch(1);
         String oldPlayerId = OffsideApplication.getPlayerId();
         OffsideApplication.playerAssets = playerAssets;
         String newPlayerId = OffsideApplication.getPlayerId();
-        OffsideApplication.networkingService.listenToQueue(newPlayerId, oldPlayerId, latch);
-        latch.await();
+        OffsideApplication.networkingService.listenToExchange(newPlayerId, latch);
+        try{
+            latch.await();
+        }
+        catch (Exception ex){
+
+        }
+
     }
 
     public static AvailableGame getSelectedAvailableGame() {
         return selectedAvailableGame;
     }
 
-    public static void setSelectedAvailableGame(AvailableGame selectedAvailableGame) throws InterruptedException {
+    public static void setSelectedAvailableGame(AvailableGame selectedAvailableGame)  {
         CountDownLatch latch = new CountDownLatch(1);
         String oldGameId = OffsideApplication.getSelectedGameId();
         OffsideApplication.selectedAvailableGame = selectedAvailableGame;
         String newGameId = OffsideApplication.getSelectedGameId();
-        OffsideApplication.networkingService.listenToQueue(newGameId, oldGameId, latch);
-        latch.await();
+        OffsideApplication.networkingService.listenToExchange(newGameId, latch);
+        try{
+            latch.await();
+        }
+        catch (Exception ex){
+
+        }
+
     }
 
     public static String getSelectedPrivateGameId() {
@@ -303,13 +321,19 @@ public class OffsideApplication extends Application {
         return null;
     }
 
-    public static void setSelectedPrivateGameId(String selectedPrivateGameId) throws InterruptedException {
+    public static void setSelectedPrivateGameId(String selectedPrivateGameId)  {
         CountDownLatch latch = new CountDownLatch(1);
         String oldPrivateGameId = OffsideApplication.getSelectedPrivateGameId();
         OffsideApplication.selectedPrivateGameId = selectedPrivateGameId;
         String newPrivateGameId = OffsideApplication.getSelectedPrivateGameId();
-        OffsideApplication.networkingService.listenToQueue(newPrivateGameId, oldPrivateGameId, latch);
-        latch.await();
+        OffsideApplication.networkingService.listenToExchange(newPrivateGameId, latch);
+        try{
+            latch.await();
+        }
+        catch (Exception ex){
+
+        }
+
     }
 
     public static String getSelectedGameId() {

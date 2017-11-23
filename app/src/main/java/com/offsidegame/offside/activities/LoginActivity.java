@@ -216,9 +216,24 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         if (playerId != null && OffsideApplication.networkingService != null) {
             CountDownLatch latch = new CountDownLatch(1);
-            OffsideApplication.networkingService.listenToQueue(playerId, null, latch);
+            OffsideApplication.networkingService.createListenerQueue(playerId, latch);
             latch.await();
+
+
         }
+        if (playerId != null && OffsideApplication.networkingService != null) {
+            CountDownLatch latch = new CountDownLatch(1);
+            OffsideApplication.networkingService.listenToExchange(playerId, latch);
+            latch.await();
+
+
+        }
+
+
+
+
+
+
 
         playerDisplayName = (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) ? "NO NAME" : firebaseUser.getDisplayName();
         playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
@@ -295,7 +310,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             isInLoginProcess = false;
             OffsideApplication.setPlayerAssets(playerAssets);
             analyzeDynamicLink();
-        } catch (InterruptedException ex) {
+        } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }

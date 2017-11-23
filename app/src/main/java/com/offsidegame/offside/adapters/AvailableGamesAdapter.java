@@ -254,7 +254,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                             EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
 
                         }
-                    } catch (InterruptedException ex) {
+                    } catch (Exception ex) {
                         ACRA.getErrorReporter().handleSilentException(ex);
                     }
 

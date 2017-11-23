@@ -181,7 +181,7 @@ public class PrivateGroupAdapter extends BaseAdapter {
                         //Toast.makeText(context,"item clicked" ,Toast.LENGTH_SHORT).show();
                         OffsideApplication.setSelectedPrivateGroup(viewHolder.privateGroup);
                         EventBus.getDefault().post(OffsideApplication.getSelectedPrivateGroup());
-                    } catch (InterruptedException ex) {
+                    } catch (Exception ex) {
                         ACRA.getErrorReporter().handleSilentException(ex);
                     }
 

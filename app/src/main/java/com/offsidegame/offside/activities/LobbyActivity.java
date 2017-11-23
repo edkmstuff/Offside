@@ -556,17 +556,21 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             OffsideApplication.setSelectedPrivateGameId(privateGameId);
 
 
-        OffsideApplication.setUserPreferences(privateGroupId, gameId, privateGameId);
+            OffsideApplication.setUserPreferences(privateGroupId, gameId, privateGameId);
 
             isPlayerCanJoinPrivateGame = true;
 
-        PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
-        playerAssets.setBalance(gameInfo.getPlayer().getBalance());
-        playerAssets.setPowerItems(gameInfo.getPlayer().getPowerItems());
-        updatePlayerAssets(playerAssets);
+            PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
+            playerAssets.setBalance(gameInfo.getPlayer().getBalance());
+            playerAssets.setPowerItems(gameInfo.getPlayer().getPowerItems());
+            updatePlayerAssets(playerAssets);
 
 
-        onReceiveNavigation(new NavigationEvent(R.id.nav_action_play));
+            onReceiveNavigation(new NavigationEvent(R.id.nav_action_play));
+        }
+        catch (Exception ex){
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
     }
 
 
