@@ -44,6 +44,7 @@ import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 import com.offsidegame.offside.events.NotEnoughCoinsEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
+import com.offsidegame.offside.events.PlayerQuitFromPrivateGameEvent;
 import com.offsidegame.offside.events.PlayerRewardedReceivedEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.PrivateGroupChangedEvent;
@@ -904,6 +905,19 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         }
 
 
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlayerQuitFromPrivateGameEventReceived(PlayerQuitFromPrivateGameEvent playerQuitFromPrivateGameEvent){
+        if(playerQuitFromPrivateGameEvent==null)
+            return;
+        boolean isPlayerWasRemovedFromPrivateGame = playerQuitFromPrivateGameEvent.isPlayerWasRemovedFromPrivateGame();
+        OffsideApplication.setUserPreferences(null,null,null);
+        OffsideApplication.setSelectedPrivateGroup(null);
+        OffsideApplication.setSelectedAvailableGame(null);
+        OffsideApplication.setSelectedPrivateGameId(null);
+        if(isPlayerWasRemovedFromPrivateGame)
+            EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
     }
 
     @Override

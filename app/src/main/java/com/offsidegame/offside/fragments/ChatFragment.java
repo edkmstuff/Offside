@@ -84,6 +84,7 @@ public class ChatFragment extends Fragment {
     private ListView chatListView;
 
     private ImageView backNavigationButtonImageView;
+    private ImageView exitButtonImageView;
 
     private String privateGroupName;
     private String homeTeam;
@@ -278,6 +279,7 @@ public class ChatFragment extends Fragment {
         chatListView = (ListView) view.findViewById(R.id.fc_chat_list_view);
 
         backNavigationButtonImageView = view.findViewById(R.id.fsg_back_navigation_button_image_view);
+        exitButtonImageView = view.findViewById(R.id.fc_exit_button_image_view);
 
     }
 
@@ -292,6 +294,13 @@ public class ChatFragment extends Fragment {
                     EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
                 else
                     EventBus.getDefault().post(selectedPrivateGroup);
+            }
+        });
+
+        exitButtonImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OffsideApplication.networkingService.requestToQuitFromPrivateGame(playerId,gameId,privateGameId,androidDeviceId);
             }
         });
 

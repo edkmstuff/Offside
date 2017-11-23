@@ -29,6 +29,7 @@ import com.offsidegame.offside.events.NotificationBubbleEvent;
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
+import com.offsidegame.offside.events.PlayerQuitFromPrivateGameEvent;
 import com.offsidegame.offside.events.PlayerRewardedReceivedEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
@@ -92,11 +93,11 @@ public class NetworkingService extends Service {
     /***********************DEVELOPMENT****************************************************/
 //    public final String ip = new String("10.0.2.2:18313");
     //public final String ip = new String("192.168.1.140:18313");
-//    public final String ip = new String("10.0.0.17:18313");
+    public final String ip = new String("10.0.0.17:18313");
 //    public final String ip = new String("10.0.0.61:18313");
 
     /***********************PRODUCTION****************************************************/
-    public final String ip = new String("sidekicknode.azurewebsites.net");
+//    public final String ip = new String("sidekicknode.azurewebsites.net");
 
     public Boolean stoppedIntentionally = false;
     private int mId = -1;
@@ -126,6 +127,7 @@ public class NetworkingService extends Service {
     private boolean privateGroupDeleted = false;
     private boolean playerJoinPrivateGroupReceived = false;
     private boolean playerRewardSaved = false;
+    private boolean playerQuitPrivateGame = false;
 
 
 
@@ -461,6 +463,14 @@ public class NetworkingService extends Service {
             }
         }, Integer.class);
 
+        hub.on("PlayerQuitPrivateGameReceived", new SubscriptionHandler1<Boolean>() {
+            @Override
+            public void run(Boolean playerWasRemovedFromPrivateGame) {
+                playerQuitPrivateGame = true;
+                EventBus.getDefault().post(new PlayerQuitFromPrivateGameEvent(playerWasRemovedFromPrivateGame));
+            }
+        }, Boolean.class);
+
 
 
     }
@@ -595,14 +605,27 @@ public class NetworkingService extends Service {
 //        });
 //    }
 
-    public void quitGame(String playerId, String gameId, String androidDeviceId) {
+    public void requestToQuitFromPrivateGame(String playerId, String gameId, String privateGameId, String androidDeviceId) {
         if (!(hubConnection.getState() == ConnectionState.Connected))
             return;
 
-        hub.invoke(Boolean.class, "QuitGame", playerId, gameId, androidDeviceId).onError(new ErrorCallback() {
+        playerQuitPrivateGame = false;
+        hub.invoke("RequestToQuitFromPrivateGame", playerId, gameId, privateGameId, androidDeviceId).done(new Action<Void>() {
+            @Override
+            public void run(Void obj) throws Exception {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!playerQuitPrivateGame)
+                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestToQuitFromPrivateGame"));
+                    }
+                }, 15000);
+
+            }
+        }).onError(new ErrorCallback() {
             @Override
             public void onError(Throwable error) {
-                ACRA.getErrorReporter().handleSilentException(error);
+                EventBus.getDefault().post(new NetworkingErrorEvent("RequestToQuitFromPrivateGame"));
             }
         });
     }
