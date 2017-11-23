@@ -33,6 +33,7 @@ import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PositionEvent;
+import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
 import com.offsidegame.offside.events.ScoreboardEvent;
@@ -42,9 +43,11 @@ import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
+import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.Score;
 import com.offsidegame.offside.models.Scoreboard;
 
@@ -81,6 +84,7 @@ public class ChatFragment extends Fragment {
     private ListView chatListView;
 
     private ImageView backNavigationButtonImageView;
+    private ImageView exitButtonImageView;
 
     private String privateGroupName;
     private String homeTeam;
@@ -275,6 +279,7 @@ public class ChatFragment extends Fragment {
         chatListView = (ListView) view.findViewById(R.id.fc_chat_list_view);
 
         backNavigationButtonImageView = view.findViewById(R.id.fsg_back_navigation_button_image_view);
+        exitButtonImageView = view.findViewById(R.id.fc_exit_button_image_view);
 
     }
 
@@ -284,7 +289,18 @@ public class ChatFragment extends Fragment {
         backNavigationButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+                PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
+                if(selectedPrivateGroup==null || OffsideApplication.getPrivateGroupsInfo()==null)
+                    EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+                else
+                    EventBus.getDefault().post(selectedPrivateGroup);
+            }
+        });
+
+        exitButtonImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OffsideApplication.networkingService.requestToQuitFromPrivateGame(playerId,gameId,privateGameId,androidDeviceId);
             }
         });
 
@@ -796,7 +812,6 @@ public class ChatFragment extends Fragment {
                     YoYo.with(Techniques.BounceIn).playOn(offsideCoinsImageView);
                 }
 
-
                 int oldPowerItems = currentPlayer.getPowerItems();
                 int newPowerItems = updatedPlayer.getPowerItems();
                 String formattedPowerItems = Formatter.formatNumber(newPowerItems, Formatter.intCommaSeparator);
@@ -812,8 +827,6 @@ public class ChatFragment extends Fragment {
 
                 }
             }
-
-            OffsideApplication.getGameInfo().setPlayer(updatedPlayer);
 
 
         } catch (Exception ex) {

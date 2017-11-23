@@ -346,7 +346,12 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                         //Add player to the group from which he was invited
                                         if (groupIdFromInvitation != null)
 
+
+                                            //OffsideApplication.signalRService.requestJoinPrivateGroup(playerId, groupIdFromInvitation);
+
+                                            OffsideApplication.networkingService.requestJoinPrivateGroup(playerId,groupIdFromInvitation);
                                             OffsideApplication.networkingService.requestJoinPrivateGroup(playerId, groupIdFromInvitation);
+
 
                                         //Override userPreferences, as theses will be used when tryJoinSelectedAvailableGame will be executed (Lobby Activity)
                                         if (gameIdFromInvitation != null && privateGameIdFromInvitation != null)
@@ -416,7 +421,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlayerJoinedPrivateGroup(PlayerJoinPrivateGroupEvent playerJoinPrivateGroupEvent) {
-        startLobbyActivity();
+        if (!OffsideApplication.isLobbyActivityVisible())
+            startLobbyActivity();
     }
 
     public void startLobbyActivity() {

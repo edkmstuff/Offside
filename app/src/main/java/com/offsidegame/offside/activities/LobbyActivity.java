@@ -44,6 +44,7 @@ import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 import com.offsidegame.offside.events.NotEnoughCoinsEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
+import com.offsidegame.offside.events.PlayerQuitFromPrivateGameEvent;
 import com.offsidegame.offside.events.PlayerRewardedReceivedEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.PrivateGroupChangedEvent;
@@ -136,6 +137,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private Button notEnoughCoinsDialogueCloseButton;
     private boolean isPlayerCanJoinPrivateGame = false;
 
+    private boolean isGroupInviteExecuted ;
     //</editor-fold>
 
 
@@ -389,8 +391,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                 if (OffsideApplication.isBoundToNetworkingService) {
                     PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
+
                     if (playerAssets == null)
                         OffsideApplication.networkingService.requestPlayerAssets(playerId);
+
                     else
                         onReceivePlayerAssets(playerAssets);
 
@@ -411,29 +415,39 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             if (playerAssets == null)
                 return;
 
-            OffsideApplication.setPlayerAssets(playerAssets);
+            updatePlayerAssets(playerAssets);
 
-            //update player stuff
-            int balance = playerAssets.getBalance();
-            int powerItems = playerAssets.getPowerItems();
-            playerProfilePictureUrl = playerAssets.getImageUrl();
+            if (!isGroupInviteExecuted)
+                whereToGoNext();
 
-            String formattedBalance = Formatter.formatNumber(balance, Formatter.intCommaSeparator);
-            balanceTextView.setText(formattedBalance);
-            String formattedPowerItems = Formatter.formatNumber(powerItems, Formatter.intCommaSeparator);
-            powerItemsTextView.setText(formattedPowerItems);
 
-            ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName, true);
-
-            playerInfoRoot.setVisibility(View.VISIBLE);
-
-            whereToGoNext();
 
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 
         }
+
+    }
+
+    public void updatePlayerAssets(PlayerAssets playerAssets) {
+
+        OffsideApplication.setPlayerAssets(playerAssets);
+
+        //update player stuff
+        int balance = playerAssets.getBalance();
+        int powerItems = playerAssets.getPowerItems();
+        playerProfilePictureUrl = playerAssets.getImageUrl();
+
+        String formattedBalance = Formatter.formatNumber(balance, Formatter.intCommaSeparator);
+        balanceTextView.setText(formattedBalance);
+        String formattedPowerItems = Formatter.formatNumber(powerItems, Formatter.intCommaSeparator);
+        powerItemsTextView.setText(formattedPowerItems);
+
+        ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName, true);
+
+        playerInfoRoot.setVisibility(View.VISIBLE);
+
 
     }
 
@@ -541,15 +555,18 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             OffsideApplication.setSelectedPrivateGameId(privateGameId);
 
-            OffsideApplication.setUserPreferences(privateGroupId, gameId, privateGameId);
+
+        OffsideApplication.setUserPreferences(privateGroupId, gameId, privateGameId);
 
             isPlayerCanJoinPrivateGame = true;
 
-            onReceiveNavigation(new NavigationEvent(R.id.nav_action_play));
+        PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
+        playerAssets.setBalance(gameInfo.getPlayer().getBalance());
+        playerAssets.setPowerItems(gameInfo.getPlayer().getPowerItems());
+        updatePlayerAssets(playerAssets);
 
-        } catch (InterruptedException ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
+
+        onReceiveNavigation(new NavigationEvent(R.id.nav_action_play));
     }
 
 
@@ -574,6 +591,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSelectedPrivateGroup(PrivateGroup privateGroup) {
         try {
+            toggleNavigationMenuVisibility(true);
+            bottomNavigation.setCurrentItem(0);
+
             if (privateGroup == null || privateGroup.getId() == null)
                 return;
 
@@ -636,6 +656,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGroupInvite(GroupInviteEvent groupInviteEvent) {
 
+        isGroupInviteExecuted = true;
         String groupId = groupInviteEvent.getGroupId();
         String groupName = groupInviteEvent.getGroupName();
         String gameId = groupInviteEvent.getGameId();
@@ -836,8 +857,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 //            }
 //        }, 2000);
 
-        int currentBalance = OffsideApplication.getPlayerAssets().getBalance();
-        OffsideApplication.getPlayerAssets().setBalance(currentBalance + rewardValue);
+        //not needed since when we are back form the invite screen the onresume is executed hence getPlayerAssets happen
+//        int currentBalance = OffsideApplication.getPlayerAssets().getBalance();
+//        OffsideApplication.getPlayerAssets().setBalance(currentBalance + rewardValue);
 
 
     }
@@ -882,6 +904,21 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             shortInAssetsDialog.show();
 
         }
+
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlayerQuitFromPrivateGameEventReceived(PlayerQuitFromPrivateGameEvent playerQuitFromPrivateGameEvent){
+        if(playerQuitFromPrivateGameEvent==null)
+            return;
+        boolean isPlayerWasRemovedFromPrivateGame = playerQuitFromPrivateGameEvent.isPlayerWasRemovedFromPrivateGame();
+        OffsideApplication.setUserPreferences(null,null,null);
+        OffsideApplication.setSelectedPrivateGroup(null);
+        OffsideApplication.setSelectedAvailableGame(null);
+        OffsideApplication.setSelectedPrivateGameId(null);
+        if(isPlayerWasRemovedFromPrivateGame)
+            EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
     }
 
     @Override

@@ -22,7 +22,7 @@
     <string name="away_team_key" translatable="false">awayTeam</string>
     <string name="crash_toast_text">Something went wrong... we are sending the info to the developers...</string>
     <string name="lbl_you_can_earn">Potential earning</string>
-    <string name="lbl_correct_answer_feedback">Well Done!</string>
+    <string name="lbl_correct_answer_feedback">Fantastic!</string>
     <string name="lbl_wrong_answer_feedback">Oops...</string>
     <string name="lbl_you_earned">You earned</string>
     <string name="lbl_points">coins</string>

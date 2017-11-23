@@ -79,6 +79,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
         TextView moreTextView;
         TextView createPrivateGameButtonEntranceFeeTextView;
         TextView joinPrivateGameButtonEntranceFeeTextView;
+        boolean userIsAlreadyInGame;
 
 
 
@@ -160,7 +161,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
 
             viewHolder.playersPlayInGameRoot.removeAllViews();
 
-            boolean userIsAlreadyInGame =false;
+            viewHolder.userIsAlreadyInGame =false;
 
             int maxPlayersToDisplay = 7;
             int playersCount = 0;
@@ -173,7 +174,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
             for (PrivateGroupPlayer privateGroupPlayer : privateGroupPlayers) {
 
                 if(privateGroupPlayer.getPlayerId().equals(OffsideApplication.getPlayerId()))
-                    userIsAlreadyInGame=true;
+                    viewHolder.userIsAlreadyInGame=true;
 
                 if (playersCount < maxPlayersToDisplay) {
                     playersCount++;
@@ -202,27 +203,26 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
 
-                    try {
-                        int balance = OffsideApplication.getPlayerAssets().getBalance();
-                        int entranceFee = viewHolder.availableGame.getEntranceFee();
-                        if(entranceFee<=balance){
-                            OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
-                            String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
-                            String gameId = viewHolder.availableGame.getGameId();
-                            String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
-                            String privateGameId = viewHolder.availableGame.getPrivateGameId();
-                            String androidDeviceId = OffsideApplication.getAndroidDeviceId();
-                            OffsideApplication.networkingService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
+                    int balance = OffsideApplication.getPlayerAssets().getBalance();
+                    int entranceFee = viewHolder.availableGame.getEntranceFee();
+                    if(entranceFee<=balance || viewHolder.userIsAlreadyInGame ){
+                        OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
+                        String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
+                        String gameId = viewHolder.availableGame.getGameId();
+                        String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
+                        String privateGameId = viewHolder.availableGame.getPrivateGameId();
+                        String androidDeviceId = OffsideApplication.getAndroidDeviceId();
+                        OffsideApplication.networkingService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
 
-                        }
-                        else
-                        {
-                            EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
-
-                        }
-                    } catch (InterruptedException ex) {
-                        ACRA.getErrorReporter().handleSilentException(ex);
                     }
+                    else
+                    {
+                        EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
+
+                    }
+
+
+
 
 
                 }
@@ -271,7 +271,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 viewHolder.joinPrivateGameRoot.setVisibility(View.VISIBLE);
                 viewHolder.joinPrivateGameButtonTextView.setVisibility(GONE);
                 viewHolder.createPrivateGameRoot.setVisibility(GONE);
-                if(userIsAlreadyInGame){
+                if(viewHolder.userIsAlreadyInGame){
                     viewHolder.gameEnterFeeRoot.setVisibility(GONE);
                     viewHolder.joinPrivateGameButtonTextView.setText(R.string.lbl_resume_game);
                     viewHolder.joinPrivateGameButtonTextView.setVisibility(View.VISIBLE);

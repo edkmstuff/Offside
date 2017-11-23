@@ -105,6 +105,7 @@ public class GameInfo {
 
     public void setPlayer(PlayerModel player) {
         this.player = player;
+
     }
 }
 
