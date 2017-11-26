@@ -21,6 +21,9 @@ public class PlayerAssets {
     @com.google.gson.annotations.SerializedName("PN")
     private String playerName;
 
+    @com.google.gson.annotations.SerializedName("PC")
+    private String playerColor;
+
 
     public int getBalance() {
         return balance;
@@ -60,5 +63,13 @@ public class PlayerAssets {
 
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
+    }
+
+    public String getPlayerColor() {
+        return playerColor;
+    }
+
+    public void setPlayerColor(String playerColor) {
+        this.playerColor = playerColor;
     }
 }

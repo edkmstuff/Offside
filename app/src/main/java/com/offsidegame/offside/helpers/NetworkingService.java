@@ -585,7 +585,7 @@ public class NetworkingService extends Service {
         sendToServer(json, method);
     }
 
-    public void requestSaveLoggedInUser(String playerId, String name, String email, String imageUrl) {
+    public void requestSaveLoggedInUser(String playerId, String name, String email, String imageUrl, String playerColor) {
         loggedInUserReceived = false;
         String method = "RequestSaveLoggedInUser";
         Map<String, String> params = new HashMap<>();
@@ -594,6 +594,7 @@ public class NetworkingService extends Service {
         params.put("name", name);
         params.put("email", email);
         params.put("imageUrl", imageUrl);
+        params.put("playerColor", playerColor);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
         sendToServer(json, method);

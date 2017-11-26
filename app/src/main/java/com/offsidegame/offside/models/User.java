@@ -17,17 +17,20 @@ public class User {
     private GameFeature[] premiumFeatures;
     @com.google.gson.annotations.SerializedName("OC")
     private int offsideCoins;
+    @com.google.gson.annotations.SerializedName("UC")
+    private String userColor;
 
 
     public User(){}
 
-    public User(String id,String name, String email, String profilePictureUri){
+    public User(String id,String name, String email, String profilePictureUri, String userColor){
         this.id=id;
         this.name=name;
         this.email= email;
         this.profilePictureUri=profilePictureUri;
         this.premiumFeatures = null;
         this.offsideCoins = 0;
+        this.userColor =userColor;
     }
 
     public String getId() {
@@ -76,5 +79,13 @@ public class User {
 
     public void setOffsideCoins(int offsideCoins) {
         this.offsideCoins = offsideCoins;
+    }
+
+    public String getUserColor() {
+        return userColor;
+    }
+
+    public void setUserColor(String userColor) {
+        this.userColor = userColor;
     }
 }

@@ -27,12 +27,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+import com.google.zxing.common.StringUtils;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.CompletedHttpRequestEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
 import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
+import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.HttpHelper;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.OffsideApplication;
@@ -43,13 +45,14 @@ import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jsoup.helper.StringUtil;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Arrays;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -62,6 +65,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private String playerId;
     private String playerDisplayName;
     private String playerProfilePictureUrl;
+    private int playerColorId = 0;
     private boolean isUserImageUrlValid = false;
     private String playerEmail;
     private FrameLayout loadingRoot;
@@ -162,7 +166,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     }
 
-
     private void login() {
         //taken from: https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md
         try {
@@ -205,53 +208,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
-    }
-
-    private void handleSuccessfulLogin() throws InterruptedException {
-
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser == null || OffsideApplication.networkingService == null)
-            return;
-
-        playerId = firebaseUser.getUid();
-
-        if (playerId != null && OffsideApplication.networkingService != null) {
-            CountDownLatch latch = new CountDownLatch(1);
-            OffsideApplication.networkingService.createListenerQueue(playerId, latch);
-            latch.await();
-
-
-        }
-        if (playerId != null && OffsideApplication.networkingService != null) {
-            CountDownLatch latch = new CountDownLatch(1);
-            OffsideApplication.networkingService.listenToExchange(playerId, latch);
-            latch.await();
-
-
-        }
-
-        playerDisplayName = (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) ? "NO NAME" : firebaseUser.getDisplayName();
-        playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
-        playerEmail = firebaseUser.getEmail();
-
-        if(playerProfilePictureUrl==null){
-            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
-        }
-
-        HttpHelper httpHelper = new HttpHelper(playerProfilePictureUrl);
-        httpHelper.execute();
-
-
-
-    }
-
-    public void saveLoggedInUser() {
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl);
-        editor.commit();
-        User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl);
-        OffsideApplication.networkingService.requestSaveLoggedInUser(user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri());
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -304,17 +260,120 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     }
 
+    private void handleSuccessfulLogin() throws InterruptedException {
+
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser == null || OffsideApplication.networkingService == null)
+            return;
+
+        playerId = firebaseUser.getUid();
+
+        if (playerId != null && OffsideApplication.networkingService != null) {
+            CountDownLatch latch = new CountDownLatch(1);
+            OffsideApplication.networkingService.createListenerQueue(playerId, latch);
+            latch.await();
+
+
+        }
+        if (playerId != null && OffsideApplication.networkingService != null) {
+            CountDownLatch latch = new CountDownLatch(1);
+            OffsideApplication.networkingService.listenToExchange(playerId, latch);
+            latch.await();
+
+
+        }
+
+        playerDisplayName = (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) ? "NO NAME" : firebaseUser.getDisplayName();
+        playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
+        playerEmail = firebaseUser.getEmail();
+
+        if(playerProfilePictureUrl==null){
+            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
+        }
+
+        HttpHelper httpHelper = new HttpHelper(playerProfilePictureUrl);
+        httpHelper.execute();
+
+
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onImageValidationCompleted(CompletedHttpRequestEvent completedHttpRequestEvent) {
+
+        //pick a color for player to be used in his messages on the chat bubble.
+        playerColorId = ImageHelper.getRandomColor();
+
+        isUserImageUrlValid = completedHttpRequestEvent.isUrlValid();
+
+        if (!isUserImageUrlValid ) {
+
+            String displayName = playerDisplayName.toUpperCase();
+            String[] displayNameParts = displayName.trim().split(" ");
+            String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
+            Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context, playerColorId);
+            byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
+            String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
+
+            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
+            OffsideApplication.networkingService.requestSaveImageInDatabase(playerId, imageString);
+
+
+        } else {
+
+            saveLoggedInUser();
+        }
+
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveSavedPlayerImage(PlayerImageSavedEvent playerImageSavedEvent) {
+        try {
+            saveLoggedInUser();
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+    }
+
+    public void saveLoggedInUser() {
+        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl);
+        editor.commit();
+        String playerColor=null;
+        if(playerColorId==0){
+            playerColorId = ImageHelper.getRandomColor();
+
+        }
+        playerColor = Formatter.colorNumberToHexaValue(context,playerColorId);
+        User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl, playerColor);
+        OffsideApplication.networkingService.requestSaveLoggedInUser(user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri(), user.getUserColor());
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayerAssets(PlayerAssets playerAssets) {
         try {
             isInLoginProcess = false;
+            if(playerAssets.getPlayerColor() == null|| StringUtil.isBlank(playerAssets.getPlayerColor())){
+                playerColorId = ImageHelper.getRandomColor();
+                String playerColor = Formatter.colorNumberToHexaValue(context,playerColorId);
+                playerAssets.setPlayerColor(playerColor);
+
+            }
+
+
             OffsideApplication.setPlayerAssets(playerAssets);
+
             analyzeDynamicLink();
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
+
+
 
     public void analyzeDynamicLink() {
 
@@ -366,7 +425,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                             //OffsideApplication.signalRService.requestJoinPrivateGroup(playerId, groupIdFromInvitation);
 
                                             OffsideApplication.networkingService.requestJoinPrivateGroup(playerId,groupIdFromInvitation);
-                                            OffsideApplication.networkingService.requestJoinPrivateGroup(playerId, groupIdFromInvitation);
+                                        OffsideApplication.networkingService.requestJoinPrivateGroup(playerId, groupIdFromInvitation);
 
 
                                         //Override userPreferences, as theses will be used when tryJoinSelectedAvailableGame will be executed (Lobby Activity)
@@ -397,45 +456,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                 });
 
 
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onImageValidationCompleted(CompletedHttpRequestEvent completedHttpRequestEvent) {
-
-        //image from firebase is not a valid image
-        isUserImageUrlValid = completedHttpRequestEvent.isUrlValid();
-        //check if we have an image for this user already stored
-
-        // in case user does not have profile picture, we generate image with Initials
-        if (!isUserImageUrlValid ) {
-
-            String displayName = playerDisplayName.toUpperCase();
-            String[] displayNameParts = displayName.trim().split(" ");
-            String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
-            Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context);
-            byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
-            String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
-
-            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
-            OffsideApplication.networkingService.requestSaveImageInDatabase(playerId, imageString);
-
-
-        } else {
-            saveLoggedInUser();
-        }
-
-
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReceiveSavedPlayerImage(PlayerImageSavedEvent playerImageSavedEvent) {
-        try {
-            saveLoggedInUser();
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

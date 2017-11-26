@@ -380,6 +380,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                 viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
                 viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
+
+                if(!viewHolder.isMessageFromBot){
+                    String playerColor = OffsideApplication.getPlayerAssets().getPlayerColor();
+                    int playerColorId = Color.parseColor(playerColor);
+                    viewHolder.incomingUserSentTextView.setTextColor(playerColorId);
+                }
+
+
                 viewHolder.incomingTextMessageTextView.setText(viewHolder.chatMessage.getMessageText());
 
                 //background set

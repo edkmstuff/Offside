@@ -138,15 +138,7 @@ public class ImageHelper {
 
     }
 
-    public static Bitmap generateInitialsBasedProfileImage(String initials, Context context) {
-
-
-        int selectedColorId =0;
-        Random r = new Random();
-        int Low = 0;
-        int High = 6;
-        int result = r.nextInt(High-Low) + Low;
-        selectedColorId = backgroundDefaultImage[result];
+    public static Bitmap generateInitialsBasedProfileImage(String initials, Context context, int selectedColorId) {
 
         Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
@@ -174,6 +166,19 @@ public class ImageHelper {
 
         canvas.drawText(initials, xPos, yPos, textPaint);
         return bitmap;
+    }
+
+    public static int getRandomColor(){
+
+        int selectedColorId =0;
+        Random r = new Random();
+        int Low = 0;
+        int High = 6;
+        int result = r.nextInt(High-Low) + Low;
+        selectedColorId = backgroundDefaultImage[result];
+
+        return selectedColorId;
+
     }
 
     // convert from bitmap to byte array
