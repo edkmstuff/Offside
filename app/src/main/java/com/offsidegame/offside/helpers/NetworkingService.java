@@ -178,13 +178,16 @@ public class NetworkingService extends Service {
                     connection = factory.newConnection();
                     channel = connection.createChannel();
 
-                    if (latch != null)
-                        latch.countDown();
-
-
                 } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
                 }
+                finally {
+
+                    if (latch != null)
+                        latch.countDown();
+
+                }
+
             }
         }).start();
         latch.await();
@@ -202,33 +205,28 @@ public class NetworkingService extends Service {
     }
 
     public void createListenerQueue(final String queueName, final CountDownLatch latch) {
-        if (listenerQueueName != null)
-            return;
-        if (queueName == null)
-            return;
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+                    if (listenerQueueName != null)
+                        return;
+                    if (queueName == null)
+                        return;
                     listenerQueueName = channel.queueDeclare(queueName, false, false, false, null).getQueue();
-//                    channel.basicConsume(queueName, true, new DefaultConsumer(channel) {
-//                        @Override
-//                        public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
-//                            String json = new String(body, "UTF-8");
-//                            final Gson gson = new GsonBuilder().create();
-//                            KeyValue wrapper = gson.fromJson(json, KeyValue.class);
-//                            onServerMessage(wrapper.getKey(), wrapper.getValue());
-//                        }
-//                    });
 
+
+                } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+                } finally {
 
                     //finally we release the waiting thread
                     if (latch != null)
                         latch.countDown();
 
-                } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+
                 }
             }
         }).start();
@@ -237,14 +235,16 @@ public class NetworkingService extends Service {
     }
 
     public void listenToExchange(final String exchangeName ,final CountDownLatch latch) {
-        if (exchangeName == null)
-            return;
+
 
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+
+                    if (exchangeName == null)
+                        return;
 
                     channel.exchangeDeclare(exchangeName, "fanout");
                     channel.queueBind(listenerQueueName, exchangeName, "");
@@ -258,13 +258,14 @@ public class NetworkingService extends Service {
                         }
                     });
 
+                } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                } finally {
 
                     //finally we release the waiting thread
                     if (latch != null)
                         latch.countDown();
 
-                } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
                 }
             }
         }).start();
@@ -455,14 +456,16 @@ public class NetworkingService extends Service {
     }
 
     private void sendToServer(final String json, final String method) {
-        if (connection == null || !connection.isOpen() || channel == null || !channel.isOpen())
-            return;
+
 
         new Thread(new Runnable() {
             @Override
             public void run() {
 
                 try {
+
+                    if (connection == null || !connection.isOpen() || channel == null || !channel.isOpen())
+                        return;
                     channel.exchangeDeclare(CLIENT_REQUESTS_EXCHANGE_NAME, "fanout");
                     //channel.queueDeclare(CLIENT_REQUESTS_EXCHANGE_NAME, false, false, false, null);
                     channel.basicPublish(CLIENT_REQUESTS_EXCHANGE_NAME, "", null, json.getBytes("UTF-8"));
