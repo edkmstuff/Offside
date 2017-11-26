@@ -25,10 +25,7 @@
             android:orientation="vertical"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
-            android:paddingTop="10dp"
-
-
-            >
+            android:paddingTop="10dp">
 
             <!-- FIRST ROW, group nav -->
             <LinearLayout
@@ -157,16 +154,16 @@
 
         <!-- GAMES / LEAGUE-->
         <LinearLayout
-            android:id="@+id/vp_player_details_root"
+            android:id="@+id/fsg_group_league_games_root"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="10"
-            android:layout_above="@+id/vp_actions_root"
             android:orientation="vertical"
             android:visibility="visible"
             >
 
             <LinearLayout
+                android:id="@+id/fsg_single_group_tabs_root"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"

@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.LeagueAdapter;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
@@ -56,6 +58,7 @@ public class SingleGroupFragment extends Fragment {
     private LinearLayout singleGroupLeagueTabRoot;
     private LinearLayout singleGroupGamesRoot;
     private LinearLayout singleGroupLeagueRoot;
+    private LinearLayout singleGroupTabsRoot;
     private TextView singleGroupPositionOutOfTextView;
     private ListView singleGroupLeagueListView;
     private TextView groupNavigationGroupNameTextView;
@@ -76,6 +79,7 @@ public class SingleGroupFragment extends Fragment {
     private int groupsCount = -1;
 
     private LinearLayout singleGroupDeletePrivateGroupButtonRoot;
+    private LinearLayout groupLeagueGamesRoot;
 
 
     public static SingleGroupFragment newInstance() {
@@ -134,6 +138,8 @@ public class SingleGroupFragment extends Fragment {
         viewPager.setAdapter(viewPagerAdapter);
 
         singlePrivateGroupRoot = (LinearLayout) view.findViewById(R.id.fsg_single_group_root);
+        singleGroupTabsRoot = view.findViewById(R.id.fsg_single_group_tabs_root);
+
         singleGroupGamesTabRoot = (LinearLayout) view.findViewById(R.id.fsg_single_group_games_tab_root);
         singleGroupLeagueTabRoot = (LinearLayout) view.findViewById(R.id.fsg_single_group_league_tab_root);
         singleGroupGamesRoot = (LinearLayout) view.findViewById(R.id.fsg_single_group_games_root);
@@ -149,6 +155,7 @@ public class SingleGroupFragment extends Fragment {
 
         singleGroupGamesTabTextView = view.findViewById(R.id.fsg_single_group_games_text_view);
         singleGroupLeagueTabTextView = view.findViewById(R.id.fsg_single_group_league_text_view);
+        groupLeagueGamesRoot = view.findViewById(R.id.fsg_group_league_games_root);
 
     }
 
@@ -256,14 +263,17 @@ public class SingleGroupFragment extends Fragment {
     }
 
     private void resetVisibility(){
-
         singleGroupLeagueRoot.setVisibility(View.GONE);
+        singleGroupGamesRoot.setVisibility(View.GONE);
+        singleGroupTabsRoot.setVisibility(View.GONE);
+
 
     }
 
     private void navigateGroup(int step) {
 
         try {
+            YoYo.with(Techniques.FadeOut).playOn(groupLeagueGamesRoot);
             resetVisibility();
             currentGroupSelectedIndex = currentGroupSelectedIndex + step;
             int newSelectedGroupIndex = currentGroupSelectedIndex % groupsCount;
@@ -288,6 +298,7 @@ public class SingleGroupFragment extends Fragment {
     }
 
     private void singleGroupTabSwitched(View view) {
+        YoYo.with(Techniques.FadeIn).playOn(singleGroupTabsRoot);
         if (singleGroupGamesTabRoot == view) {
             showAvailableGames();
         } else if (singleGroupLeagueTabRoot == view) {
@@ -297,22 +308,32 @@ public class SingleGroupFragment extends Fragment {
 
     public void showAvailableGames() {
 
+        loadingRoot.setVisibility(View.VISIBLE);
+        singleGroupLeagueRoot.setVisibility(View.GONE);
+        singleGroupTabsRoot.setVisibility(View.GONE);
+
         final int selectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuSelectedItem);
         final int unSelectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuUnSelectedItem);
-        singleGroupLeagueRoot.setVisibility(View.GONE);
+
         //singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenu);
         singleGroupLeagueTabTextView.setTextColor(unSelectedTabColor);
-        singleGroupGamesRoot.setVisibility(View.VISIBLE);
+
         //singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
         singleGroupGamesTabTextView.setTextColor(selectedTabColor);
 
         loadingRoot.setVisibility(View.GONE);
-        singleGroupLeagueRoot.setVisibility(View.GONE);
+        YoYo.with(Techniques.FadeIn).playOn(groupLeagueGamesRoot);
+        singleGroupGamesRoot.setVisibility(View.VISIBLE);
+        singleGroupTabsRoot.setVisibility(View.VISIBLE);
 
 
     }
 
     private void showLeague() {
+
+        loadingRoot.setVisibility(View.VISIBLE);
+        singleGroupTabsRoot.setVisibility(View.GONE);
+        singleGroupGamesRoot.setVisibility(View.GONE);
 
         HashMap<String, LeagueRecord[]> leaguesRecords = OffsideApplication.getLeaguesRecords();
         PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
@@ -331,10 +352,9 @@ public class SingleGroupFragment extends Fragment {
         final int selectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuSelectedItem);
         final int unSelectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuUnSelectedItem);
 
-        singleGroupGamesRoot.setVisibility(View.GONE);
         //singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenu);
         singleGroupGamesTabTextView.setTextColor(unSelectedTabColor);
-        singleGroupLeagueRoot.setVisibility(View.VISIBLE);
+
         singleGroupLeagueTabTextView.setTextColor(selectedTabColor);
         //singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
 
@@ -360,8 +380,10 @@ public class SingleGroupFragment extends Fragment {
         String myPositionOutOf = String.format("%s %d/%d",getString(R.string.lbl_your_position) , myPosition,leagueRecords.length );
         singleGroupPositionOutOfTextView.setText(myPositionOutOf);
 
-
-
+        loadingRoot.setVisibility(View.GONE);
+        YoYo.with(Techniques.FadeIn).playOn(groupLeagueGamesRoot);
+        singleGroupLeagueRoot.setVisibility(View.VISIBLE);
+        singleGroupTabsRoot.setVisibility(View.VISIBLE);
 
     }
 

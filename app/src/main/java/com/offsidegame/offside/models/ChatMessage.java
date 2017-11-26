@@ -34,6 +34,9 @@ public class ChatMessage {
     @com.google.gson.annotations.SerializedName("SBUN")
     private String sentByUserName;
 
+    @com.google.gson.annotations.SerializedName("SBUI")
+    private String sentByUserId;
+
     @com.google.gson.annotations.SerializedName("W")
     private List<Winner> winners;
 
@@ -122,5 +125,13 @@ public class ChatMessage {
 
     public void setIncoming(boolean incoming) {
         isIncoming = incoming;
+    }
+
+    public String getSentByUserId() {
+        return sentByUserId;
+    }
+
+    public void setSentByUserId(String sentByUserId) {
+        this.sentByUserId = sentByUserId;
     }
 }

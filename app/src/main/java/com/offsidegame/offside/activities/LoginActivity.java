@@ -48,6 +48,7 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -230,11 +231,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         }
 
 
-
-
-
-
-
         playerDisplayName = (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) ? "NO NAME" : firebaseUser.getDisplayName();
         playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
         playerEmail = firebaseUser.getEmail();
@@ -401,9 +397,12 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onImageValidationCompleted(CompletedHttpRequestEvent completedHttpRequestEvent) {
 
+        //image from firebase is not a valid image
         isUserImageUrlValid = completedHttpRequestEvent.isUrlValid();
+        //check if we have an image for this user already stored
+
         // in case user does not have profile picture, we generate image with Initials
-        if (!isUserImageUrlValid) {
+        if (!isUserImageUrlValid ) {
 
             String displayName = playerDisplayName.toUpperCase();
             String[] displayNameParts = displayName.trim().split(" ");
