@@ -230,13 +230,18 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         }
 
-
         playerDisplayName = (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) ? "NO NAME" : firebaseUser.getDisplayName();
         playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
         playerEmail = firebaseUser.getEmail();
 
+        if(playerProfilePictureUrl==null){
+            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
+        }
+
         HttpHelper httpHelper = new HttpHelper(playerProfilePictureUrl);
         httpHelper.execute();
+
+
 
     }
 
