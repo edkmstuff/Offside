@@ -88,11 +88,11 @@ public class NetworkingService1 extends Service {
     /***********************DEVELOPMENT****************************************************/
 //    public final String ip = new String("10.0.2.2:18313");
     //public final String ip = new String("192.168.1.140:18313");
-//    public final String ip = new String("10.0.0.17:18313");
-//    public final String ip = new String("10.0.0.61:18313");
+    public final String ip = new String("10.0.0.17:18313");
+
 
     /***********************PRODUCTION****************************************************/
-    public final String ip = new String("sidekicknode.azurewebsites.net");
+//    public final String ip = new String("sidekicknode.azurewebsites.net");
 
     public Boolean stoppedIntentionally = false;
     private int mId = -1;
@@ -492,7 +492,7 @@ public class NetworkingService1 extends Service {
                     textResource = R.string.lbl_click_to_view;
                 }
 
-                Bitmap largeNotificationIcon = BitmapFactory.decodeResource(getResources(), R.drawable.app_logo_25);
+                Bitmap largeNotificationIcon = BitmapFactory.decodeResource(getResources(), R.drawable.app_logo_10);
 
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
                         .setSmallIcon(R.mipmap.app_logo)

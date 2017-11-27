@@ -8,10 +8,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -77,9 +80,13 @@ public class SingleGroupFragment extends Fragment {
 
     private int currentGroupSelectedIndex = -1;
     private int groupsCount = -1;
-
-    private LinearLayout singleGroupDeletePrivateGroupButtonRoot;
     private LinearLayout groupLeagueGamesRoot;
+
+    //group options
+    private LinearLayout singleGroupOptionsRoot;
+    private LinearLayout singleGroupChangePrivateGroupNameRoot;
+    private LinearLayout singleGroupDeletePrivateGroupButtonRoot;
+    private EditText singleGroupChangeGroupNameEditText;
 
 
     public static SingleGroupFragment newInstance() {
@@ -151,11 +158,16 @@ public class SingleGroupFragment extends Fragment {
         groupNavigationLeftButtonTextView =  view.findViewById(R.id.fsg_group_navigation_left_button_text_view);
         groupNavigationRightButtonTextView = view.findViewById(R.id.fsg_group_navigation_right_button_text_view);
         groupNavigationLastPlayedTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_last_played_text_view);
-        singleGroupDeletePrivateGroupButtonRoot = view.findViewById(R.id.fsg_single_group_delete_group_root);
 
         singleGroupGamesTabTextView = view.findViewById(R.id.fsg_single_group_games_text_view);
         singleGroupLeagueTabTextView = view.findViewById(R.id.fsg_single_group_league_text_view);
         groupLeagueGamesRoot = view.findViewById(R.id.fsg_group_league_games_root);
+
+        //group options
+        singleGroupOptionsRoot = view.findViewById(R.id.fsg_group_options_root);
+        singleGroupChangePrivateGroupNameRoot = view.findViewById(R.id.fsg_single_group_change_group_name_root);
+        singleGroupDeletePrivateGroupButtonRoot = view.findViewById(R.id.fsg_single_group_delete_group_root);
+
 
     }
 
@@ -219,6 +231,37 @@ public class SingleGroupFragment extends Fragment {
             }
         });
 
+//        singleGroupChangePrivateGroupNameRoot.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //Todo: open dialogue for group name change
+//            }
+//        });
+
+//        singleGroupChangeGroupNameEditText.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                if(s.toString().trim().length()>0){
+//                    singleGroupChangeGroupNameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.ic_clear, 0);
+//                }
+//                else{
+//                    singleGroupChangeGroupNameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+//                }
+//            }
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//                singleGroupChangeGroupNameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.ic_clear, 0);
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//
+//                singleGroupChangeGroupNameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.ic_clear, 0);
+//            }
+//        });
+//
         singleGroupDeletePrivateGroupButtonRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -364,9 +407,9 @@ public class SingleGroupFragment extends Fragment {
 
         if(currentGroup.getGroupType().equalsIgnoreCase(getString(R.string.key_private_group_name))
                 && groupCreator.equals(OffsideApplication.getPlayerId()))
-            singleGroupDeletePrivateGroupButtonRoot.setVisibility(View.VISIBLE);
+            singleGroupOptionsRoot.setVisibility(View.VISIBLE);
         else
-            singleGroupDeletePrivateGroupButtonRoot.setVisibility(View.GONE);
+            singleGroupOptionsRoot.setVisibility(View.GONE);
 
         //calc my position
         String myPlayerId = OffsideApplication.getPlayerId();

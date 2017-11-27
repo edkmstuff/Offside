@@ -381,7 +381,11 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.incomingTimeSentTextView.setText(timeFormat.format(viewHolder.chatMessage.getSentTime()));
                 viewHolder.incomingUserSentTextView.setText(viewHolder.chatMessage.getSentByUserName());
 
-                if(!viewHolder.isMessageFromBot){
+                if(viewHolder.isMessageFromBot){
+                    int playerColorId = getContext().getResources().getColor(R.color.senderNameColor);
+                    viewHolder.incomingUserSentTextView.setTextColor(playerColorId);
+                }
+                else {
                     String playerColor = OffsideApplication.getPlayerAssets().getPlayerColor();
                     int playerColorId = Color.parseColor(playerColor);
                     viewHolder.incomingUserSentTextView.setTextColor(playerColorId);
@@ -1228,7 +1232,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             String messageText = viewHolder.chatMessage.getMessageText();
             viewHolder.incomingSocialFeedTextMessageTextView.setText(messageText);
 
-            Bitmap bitmapImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.app_logo_25);
+            Bitmap bitmapImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.app_logo_10);
             shareOnFacebook(viewHolder.facebookShareButton, bitmapImage, messageText);
 
             //background set

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -67,11 +69,45 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
     private void setEvents() {
 
+        privateGroupNameEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if(s.toString().trim().length()==0){
+                    savePrivateGroupButtonTextView.setEnabled(false);
+                } else {
+                    savePrivateGroupButtonTextView.setEnabled(true);
+                }
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                if(s.toString().trim().length()==0){
+                    savePrivateGroupButtonTextView.setEnabled(false);
+                } else {
+                    savePrivateGroupButtonTextView.setEnabled(true);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().trim().length()==0){
+                    savePrivateGroupButtonTextView.setEnabled(false);
+                } else {
+                    savePrivateGroupButtonTextView.setEnabled(true);
+                }
+
+            }
+        });
+
+
         savePrivateGroupButtonTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //get language
-                String selectedLanguage = "Hebrew";
 
                 String groupName = privateGroupNameEditText.getText().toString();
                 groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;
@@ -79,7 +115,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
                 String groupType = getResources().getString(R.string.key_private_group_name);
 
                 if (OffsideApplication.isBoundToNetworkingService)
-                    OffsideApplication.networkingService.requestCreatePrivateGroup(playerId, groupName, groupType, selectedLanguage);
+                    OffsideApplication.networkingService.requestCreatePrivateGroup(playerId, groupName, groupType);
                 else
                     throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
 
@@ -96,6 +132,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        savePrivateGroupButtonTextView.setEnabled(false);
         EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
     }
 

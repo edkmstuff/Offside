@@ -61,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/app_logo_25"
+            android:src="@drawable/app_logo_10"
             android:layout_below="@id/nri_news_item_info_root"
 
             />

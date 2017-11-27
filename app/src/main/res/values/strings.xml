@@ -1,25 +1,27 @@
 <resources>
-
-
     <string name="app_name" translatable="false">SideKick</string>
-
     <string name="facebook_application_id" translatable="false">523024471208542</string>
     <string name="facebook_login_protocol_scheme" translatable="false">fb523024471208542</string>
     <!-- was "Signing up..." -->
     <string name="fui_progress_dialog_signing_up">Connecting...</string>
-
     <string name="preference_name" translatable="false">OffsidePlayerPreferences</string>
     <string name="date_format" translatable="false">EEEE, dd/MM/yyyy/hh:mm:ss</string>
     <string name="log_tag" translatable="false">OffsideLog</string>
     <string name="game_id_key" translatable="false">gameId</string>
     <string name="player_profile_picture_url_key" translatable="false">userProfilePictureUrl</string>
     <string name="recent_token_key" translatable="false">recentToken</string>
-    <string name="lbl_you_are_connected">Connected</string>
-    <string name="lbl_you_are_disconnected">Disconnected. Trying to reconnect...</string>
     <string name="private_game_id_key" translatable="false">privateGameId</string>
     <string name="private_game_title_key" translatable="false">privateGameTitle</string>
     <string name="home_team_key" translatable="false">homeTeam</string>
     <string name="away_team_key" translatable="false">awayTeam</string>
+    <string name="rewarded_video_ad_unit_id_key" translatable="false">ca-app-pub-3734756240615742/4334945313</string>
+    <string name="key_group_type" translatable="false">groupType</string>
+    <string name="key_private_group_name" translatable="false">PRIVATE_GROUP</string>
+    <string name="key_public_group_name" translatable="false">PUBLIC_GROUP</string>
+
+    <string name="lbl_you_are_connected">Connected</string>
+    <string name="lbl_you_are_disconnected">Disconnected. Trying to reconnect...</string>
+
     <string name="crash_toast_text">Something went wrong... we are sending the info to the developers...</string>
     <string name="lbl_you_can_earn">Potential earning</string>
     <string name="lbl_correct_answer_feedback">Fantastic!</string>
@@ -30,7 +32,7 @@
     <string name="lbl_balance">Balance</string>
     <string name="lbl_wrong_answer_encourage_feedback">Maybe next time...</string>
     <string name="lbl_select_name_for_club">Name your group</string>
-    <string name="lbl_create_private_group">Create group</string>
+    <string name="lbl_create_private_group">CREATE GROUP</string>
     <string name="lbl_type_message">Message group</string>
     <string name="lbl_how_others_answered">Players answers</string>
     <string name="lbl_not_enough_coins_to_play">You need coins in order to play</string>
@@ -43,7 +45,8 @@
     <string name="lbl_command_reload">Get power items</string>
     <string name="lbl_command_game_code">Game code</string>
     <string name="lbl_command_share_code">Share code</string>
-    <string name="rewarded_video_ad_unit_id_key" translatable="false">ca-app-pub-3734756240615742/4334945313</string>
+
+
     <!--googles test aduinitid-->
 
     <string name="lbl_you_can_get_coins_doing_one_of_the_following">Get coins</string>
@@ -56,7 +59,7 @@
     <string name="lbl_loading_video">Loading video...</string>
     <string name="lbl_leave_game">Exit game</string>
     <string name="lbl_start_slot">Click to roll</string>
-    <string name="lbl_back_to_game">Back to game</string>
+    <string name="lbl_back_to_game">BACK TO GAME</string>
     <string name="lbl_well_done_you_earned_1_power_items">Congrats! You won 1 power item</string>
     <string name="lbl_well_done_you_earned_2_power_items">Congrats! You won 2 power items</string>
     <string name="lbl_you_didnt_earn_balls">You did not win any power items, no worries - you can try again</string>
@@ -77,9 +80,7 @@
     <string name="lbl_my_profile">profile</string>
     <string name="lbl_shop">store</string>
     <string name="lbl_play">play</string>
-    <string name="key_group_type" translatable="false">groupType</string>
-    <string name="key_private_group_name" translatable="false">PRIVATE_GROUP</string>
-    <string name="key_public_group_name" translatable="false">PUBLIC_GROUP</string>
+
     <string name="lbl_my_private_groups">My Groups</string>
     <string name="lbl_public_groups">Public Groups</string>
     <string name="key_league_type" translatable="false">leagueType</string>
@@ -129,6 +130,7 @@
     <string name="lbl_all_data_will_be_lost_forever">All data of this group will be lost forever!!!</string>
     <string name="lbl_yes">YES</string>
     <string name="lbl_noooo">NOOOO!!!!</string>
+    <string name="lbl_change_private_group_name">Change Group Name</string>
 
 
 </resources>

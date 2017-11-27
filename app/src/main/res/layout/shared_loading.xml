@@ -13,7 +13,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:src="@drawable/app_logo_25" />
+        android:src="@drawable/app_logo_10" />
 
     <!--<ProgressBar-->
         <!--style="?android:attr/progressBarStyleLarge"-->

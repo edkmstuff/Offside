@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -693,11 +694,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         String playerName = OffsideApplication.getPlayerAssets().getPlayerName();
         if (privateGameId != null) {
             String gameTitle = String.format("%s vs. %s", OffsideApplication.getGameInfo().getHomeTeam(), OffsideApplication.getGameInfo().getAwayTeam());
-            invitationMessage = String.format("Our group %s is watching %s. Come play Sidekick with us ", groupName, gameTitle);
+            invitationMessage = String.format("\nOur group %s is watching\n %s. \nCome play Sidekick with us ", groupName, gameTitle);
         } else if (groupId != null) {
-            invitationMessage = String.format("Join my group %s and Let's play Sidekick", groupName);
+            invitationMessage = String.format("\nJoin my group %s \nand Let's play Sidekick", groupName);
         } else
-            invitationMessage = String.format("Lets' play Sidekick", playerName);
+            invitationMessage = String.format("\nLets' play Sidekick", playerName);
 
         if (invitationMessage.length() > 90)
             invitationMessage = invitationMessage.substring(0, 90);
@@ -710,6 +711,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 .setCallToActionText("Join Now!")
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
+
+
     }
 
     private void shareShortDynamicLink() {
@@ -921,7 +924,30 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         OffsideApplication.setSelectedPrivateGroup(null);
         OffsideApplication.setSelectedAvailableGame(null);
         OffsideApplication.setSelectedPrivateGameId(null);
+
+        final String message;
         if(isPlayerWasRemovedFromPrivateGame)
+            message= "Player successfully removed";
+        else
+            message = "Player or Game not found";
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Snackbar.make(playerInfoRoot,message, Snackbar.LENGTH_SHORT).show();
+            }
+        }, 2000);
+
+
+
+
+
+
+
+
+
+
             EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
     }
 

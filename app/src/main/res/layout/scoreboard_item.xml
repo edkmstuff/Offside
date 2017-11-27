@@ -17,7 +17,7 @@
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/app_logo"
+            android:src="@drawable/app_logo_10"
             android:paddingLeft="4dp"
             android:paddingTop="4dp"
             />

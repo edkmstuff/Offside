@@ -13,7 +13,7 @@
     <LinearLayout
         android:id="@+id/fsg_single_group_root"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:weightSum="12"
         android:orientation="vertical">
 
@@ -120,7 +120,7 @@
                 <!--empty , just for layout reasons-->
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="3"></LinearLayout>
 
                 <LinearLayout
@@ -133,7 +133,7 @@
                     <TextView
                         android:id="@+id/fsg_group_navigation_last_played_text_view"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:text="שיחקו לפני 99 ימים"
                         android:textColor="@color/grayText"
                         android:textSize="@dimen/OffsideSmallText" />
@@ -144,7 +144,7 @@
                 <!--empty , just for layout reasons-->
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="3"></LinearLayout>
 
             </LinearLayout>
@@ -161,7 +161,7 @@
             android:orientation="vertical"
             android:visibility="visible"
             >
-
+            <!--NAVIGATION TABS-->
             <LinearLayout
                 android:id="@+id/fsg_single_group_tabs_root"
                 android:layout_width="match_parent"
@@ -288,7 +288,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:layoutDirection="locale"
-
                         android:orientation="horizontal"
                         android:padding="10dp">
 
@@ -373,10 +372,10 @@
 
                     </ListView>
 
-                    <!--delete button-->
+                    <!--group options-->
                     <LinearLayout
-
-                        android:layout_height="match_parent"
+                        android:id="@+id/fsg_group_options_root"
+                        android:layout_height="wrap_content"
                         android:layout_width="match_parent"
                         android:orientation="vertical"
                        >
@@ -392,7 +391,38 @@
                             android:background="@color/colorWhite"
                             android:alpha="0.5"
                             />
+                        <!--change name button-->
+                        <LinearLayout
+                            android:id="@+id/fsg_single_group_change_group_name_root"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center|start"
+                            android:layoutDirection="locale"
+                            android:visibility="gone">
 
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/lbl_change_private_group_name"
+                                android:fontFamily="@font/font_open_sans_hebrew"
+                                android:textSize="@dimen/OffsideMediumSmallText"
+                                android:textColor="@color/grayText"
+                                android:layout_marginStart="8dp"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp"
+
+                                />
+
+                        </LinearLayout>
+                        <!-- separator line-->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2dp"
+                            android:background="@color/colorWhite"
+                            android:alpha="0.5"
+                            />
+                        <!--delete button-->
                         <LinearLayout
                             android:id="@+id/fsg_single_group_delete_group_root"
                             android:layout_width="match_parent"
@@ -415,7 +445,6 @@
                                 />
 
                         </LinearLayout>
-
                         <!-- separator line-->
                         <View
                             android:layout_width="match_parent"
@@ -423,22 +452,6 @@
                             android:background="@color/colorWhite"
                             android:alpha="0.5"
                             />
-
-
-
-                        <!--<TextView-->
-                            <!--android:id="@+id/fsg_single_group_delete_group_text_view"-->
-                            <!--style="@style/Button"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:gravity="center"-->
-                            <!--android:minHeight="50dp"-->
-                            <!--android:minWidth="100dp"-->
-                            <!--android:padding="5dp"-->
-                            <!--android:text="@string/lbl_delete_private_group"-->
-                            <!--android:textDirection="rtl"-->
-
-                            <!--/>-->
 
                     </LinearLayout>
 
