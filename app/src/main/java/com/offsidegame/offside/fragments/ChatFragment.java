@@ -656,7 +656,6 @@ public class ChatFragment extends Fragment {
             if (player == null)
                 return;
 
-
             OffsideApplication.getGameInfo().setPlayer(player);
             OffsideApplication.playerAnswers = player.getPlayerAnswers();
 

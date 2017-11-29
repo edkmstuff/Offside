@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -83,6 +84,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             setContentView(R.layout.activity_login);
             getIds();
             loadingRoot.setVisibility(View.VISIBLE);
+            versionTextView.setVisibility(View.VISIBLE);
+
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -141,12 +145,30 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNetworkingServiceBinding(NetworkingServiceBoundEvent networkingServiceBoundEvent) {
         try {
+
+
             if (OffsideApplication.networkingService == null)
                 return;
 
             Context eventContext = networkingServiceBoundEvent.getContext();
             if (eventContext == context || eventContext == getApplicationContext()) {
-                loadingRoot.setVisibility(View.GONE);
+
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadingRoot.setVisibility(View.GONE);
+                        versionTextView.setVisibility(View.GONE);
+
+                    }
+                }, 1000);
+
+
+
+
+
+
                 if (isNetworkingServiceConnected() && !isInLoginProcess) {
                     login();
                 }

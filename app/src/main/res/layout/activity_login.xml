@@ -8,43 +8,20 @@
     android:layoutDirection="ltr"
     android:orientation="vertical"
     tools:context="com.offsidegame.offside.activities.LoginActivity"
-
     >
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!-- Progress bar -->
+        <include layout="@layout/shared_loading"
+            android:id="@+id/shared_loading_root"
+            android:visibility="visible"
 
-    <!-- Progress bar -->
-    <include layout="@layout/shared_loading"
-        android:id="@+id/shared_loading_root"
-        android:visibility="visible"
+            />
 
-        />
 
-    <!--<LinearLayout-->
-        <!--android:id="@+id/l_loading_root"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:orientation="vertical"-->
-        <!--android:visibility="visible">-->
+    </FrameLayout>
 
-        <!--<ImageView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@mipmap/app_logo"-->
-            <!--android:minHeight="200dp"-->
-            <!--android:minWidth="200dp"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:layout_marginTop="50dp"-->
-            <!--/>-->
-
-        <!--<ProgressBar-->
-            <!--style="?android:attr/progressBarStyleLarge"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginTop="100dp"-->
-            <!--android:layout_gravity="center">-->
-
-        <!--</ProgressBar>-->
-
-    <!--</LinearLayout>-->
 
 
 </LinearLayout>
