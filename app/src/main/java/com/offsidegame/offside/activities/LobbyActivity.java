@@ -38,9 +38,9 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.AvailableGameEvent;
 import com.offsidegame.offside.events.CannotJoinPrivateGameEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
-import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 import com.offsidegame.offside.events.NotEnoughCoinsEvent;
@@ -87,8 +87,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private final Activity thisActivity = this;
     private String androidDeviceId;
     private BottomNavigationViewEx bottomNavigation;
-
     private ImageView settingsButtonImageView;
+    private LinearLayout loadingRoot;
+    private TextView loadingMessageTextView;
 
     //playerAssets
     private LinearLayout playerInfoRoot;
@@ -159,8 +160,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             setEvents();
 
             togglePlayerAssetsVisibility(true);
+            EventBus.getDefault().post(new LoadingEvent(true,"Starting..."));
 
-            //Log.d(TAG,getResources().getConfiguration().locale.toString());
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -172,6 +173,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private void getIDs() {
 
 
+
         playerInfoRoot = (LinearLayout) findViewById(R.id.l_player_info_root);
 
         playerPictureImageView = (ImageView) findViewById(R.id.l_player_picture_image_view);
@@ -180,6 +182,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         powerItemsTextView = (TextView) findViewById(R.id.l_power_items_text_view);
 
         settingsButtonImageView = findViewById(R.id.l_settings_button_image_view);
+        loadingRoot = findViewById(R.id.shared_loading_root);
+        loadingMessageTextView = findViewById(R.id.shared_loading_message_text_view);
         bottomNavigation = findViewById(R.id.l_bottom_navigation);
 
         bottomNavigation.enableAnimation(false);
@@ -214,6 +218,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         settingsButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+//                toggleNavigationMenuVisibility(true);
+//                bottomNavigation.setCurrentItem(0);
 
                 settingsFragment = SettingsFragment.newInstance();
                 replaceFragment(settingsFragment);
@@ -356,6 +363,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         OffsideApplication.setIsLobbyActivityVisible(true);
 
         EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
+        EventBus.getDefault().post(new LoadingEvent(true,"Loading..."));
     }
 
     @Override
@@ -393,8 +401,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 if (OffsideApplication.isBoundToNetworkingService) {
                     PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
 
-                    if (playerAssets == null)
+                    if (playerAssets == null){
                         OffsideApplication.networkingService.requestPlayerAssets(playerId);
+
+                    }
+
 
                     else
                         onReceivePlayerAssets(playerAssets);
@@ -421,8 +432,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             if (!isGroupInviteExecuted)
                 whereToGoNext();
 
-
-
+            else
+                EventBus.getDefault().post(new LoadingEvent(false,null));
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -463,6 +474,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             Intent intent = getIntent();
             boolean showGroups = intent.getBooleanExtra("showGroups", false);
             boolean showNewsFeed = OffsideApplication.isBackFromNewsFeed();
+            boolean isBackFromCreatePrivateGroup = OffsideApplication.isIsBackFromCreatePrivateGroup();
 
             if (showGroups || !userRequiresRejoin) {
                 final Handler handler = new Handler();
@@ -470,11 +482,18 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     @Override
                     public void run() {
                         EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+                        EventBus.getDefault().post(new LoadingEvent(false,null));
                     }
                 }, 500);
 
             } else if (showNewsFeed) {
                 OffsideApplication.setIsBackFromNewsFeed(false);
+                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_news));
+                EventBus.getDefault().post(new LoadingEvent(false,null));
+
+            } else if(isBackFromCreatePrivateGroup) {
+                OffsideApplication.setIsBackFromCreatePrivateGroup(false);
+                EventBus.getDefault().post(new LoadingEvent(false,null));
             } else {
                 tryJoinSelectedAvailableGame(playerId, lastKnownGameId, lastKnownPrivateGameId);
             }
@@ -491,6 +510,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         currentGameId = gameId;
         currentPrivateGameId = privateGameId;
         OffsideApplication.networkingService.requestAvailableGame(playerId, gameId, privateGameId);
+        EventBus.getDefault().post(new LoadingEvent(true,"Try join to your last played game"));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -501,8 +521,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 OffsideApplication.setSelectedAvailableGame(availableGame);
                 String groupId = availableGame.getGroupId();
                 OffsideApplication.networkingService.requestPrivateGroup(playerId, groupId);
+                EventBus.getDefault().post(new LoadingEvent(true,"Checking game..."));
 
-            } else {
+            }
+            else {
+                EventBus.getDefault().post(new LoadingEvent(false,null));
                 EventBus.getDefault().post(new CannotJoinPrivateGameEvent(R.string.lbl_no_active_private_game));
                 EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
             }
@@ -515,6 +538,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePrivateGroup(PrivateGroupEvent privateGroupEvent) {
         try {
+            EventBus.getDefault().post(new LoadingEvent(false,null));
             if (privateGroupEvent == null)
                 return;
 
@@ -528,6 +552,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             } else if (currentGameId != null && currentPrivateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
                 OffsideApplication.networkingService.requestJoinPrivateGame(playerId, currentGameId, groupId, currentPrivateGameId, androidDeviceId);
+                EventBus.getDefault().post(new LoadingEvent(true,"Joining..."));
             }
 
 
@@ -542,6 +567,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     public void onPlayerJoinedPrivateGame(JoinGameEvent joinGameEvent) {
 
         try {
+            EventBus.getDefault().post(new LoadingEvent(false,null));
             GameInfo gameInfo = joinGameEvent.getGameInfo();
 
             if (gameInfo == null) {
@@ -555,7 +581,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             String privateGroupId = OffsideApplication.getSelectedPrivateGroupId();
 
             OffsideApplication.setSelectedPrivateGameId(privateGameId);
-
 
             OffsideApplication.setUserPreferences(privateGroupId, gameId, privateGameId);
 
@@ -578,6 +603,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePrivateGroupChanged(PrivateGroupChangedEvent privateGroupChangedEvent) {
         try {
+            EventBus.getDefault().post(new LoadingEvent(false,null));
             if (privateGroupChangedEvent == null)
                 return;
 
@@ -596,6 +622,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveSelectedPrivateGroup(PrivateGroup privateGroup) {
         try {
+            EventBus.getDefault().post(new LoadingEvent(false,null));
             toggleNavigationMenuVisibility(true);
             bottomNavigation.setCurrentItem(0);
 
@@ -616,6 +643,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     public void onPrivateGameGenerated(PrivateGameGeneratedEvent privateGameGeneratedEvent) {
         try {
 
+            EventBus.getDefault().post(new LoadingEvent(false,null));
             String privateGameId = privateGameGeneratedEvent.getPrivateGameId();
             String gameId = OffsideApplication.getSelectedAvailableGame().getGameId();
             String groupId = OffsideApplication.getSelectedPrivateGroupId();
@@ -775,24 +803,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onFriendInviteReceived(FriendInviteReceivedEvent friendInviteReceivedEvent) {
-        //old method
-//        String invitationUrl = friendInviteReceivedEvent.getInvitationUrl();
-//        String inviterName = OffsideApplication.getPlayerAssets().getPlayerName();
-//
-//        String shareMessage = String.format("%s invited you to join a group in SideKick. Click to join %s", inviterName, invitationUrl);
-//        Intent sendIntent = new Intent();
-//        sendIntent.setAction(Intent.ACTION_SEND);
-//        sendIntent.setType("text/plain");
-//        sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-//        sendIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        sendIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//
-//
-//        startActivity(Intent.createChooser(sendIntent, "Invite friendS"));
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNotificationBubbleReceived(NotificationBubbleEvent notificationBubbleEvent) {
         if (bottomNavigation.getSelectedItemId() == R.id.nav_action_play)
             return;
@@ -927,9 +937,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         final String message;
         if(isPlayerWasRemovedFromPrivateGame)
-            message= "Player successfully removed";
+            message= getString(R.string.lbl_player_Successfully_quit_game);
         else
-            message = "Player or Game not found";
+            message = getString(R.string.lbl_playe_or_game_not_found);
 
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -939,17 +949,27 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             }
         }, 2000);
 
-
-
-
-
-
-
-
-
-
             EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoadingEventReceived(LoadingEvent loadingEvent) {
+        if(loadingEvent==null)
+            return;
+        String loadingMessage = loadingEvent.getLoadingMessage();
+        if(loadingMessage!=null)
+            loadingMessageTextView.setText(loadingMessage);
+
+        boolean isLoading = loadingEvent.isLoading();
+        if(isLoading)
+            loadingRoot.setVisibility(View.VISIBLE);
+        else
+            loadingRoot.setVisibility(View.GONE);
+
+
+
+    }
+
 
     @Override
     public void onBackPressed() {

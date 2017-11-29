@@ -111,6 +111,9 @@
     <string name="lbl_yes">כן</string>
     <string name="lbl_noooo">בטל</string>
     <string name="lbl_change_private_group_name">שנה שם קבוצה</string>
+    <string name="lbl_back">חזרה</string>
+    <string name="lbl_player_Successfully_quit_game">פרשת מהמשחק בהצלחה</string>
+    <string name="lbl_playe_or_game_not_found">לא נמצא משחק פעיל</string>
 
 
 </resources>

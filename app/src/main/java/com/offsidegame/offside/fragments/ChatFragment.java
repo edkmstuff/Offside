@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +32,7 @@ import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
+import com.offsidegame.offside.events.InGamePlayerAssetsUpdateEvent;
 import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PositionEvent;
@@ -42,6 +45,7 @@ import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
@@ -66,8 +70,8 @@ public class ChatFragment extends Fragment {
 
 
     //<editor-fold desc="****************MEMBERS**************">
-    private FrameLayout loadingRoot;
-    private TextView versionTextView;
+
+    //private TextView versionTextView;
 
     private ImageView chatSendImageView;
     private EditText chatMessageEditText;
@@ -142,9 +146,9 @@ public class ChatFragment extends Fragment {
         try {
             super.onResume();
             EventBus.getDefault().register(this);
-
-            init();
             OffsideApplication.setScoreboard(null);
+            init();
+
 
 
             //chat data
@@ -232,8 +236,7 @@ public class ChatFragment extends Fragment {
 
             getIDs(view);
             setEvents();
-            resetVisibility();
-            versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
+            //versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
 
             return view;
 
@@ -247,8 +250,7 @@ public class ChatFragment extends Fragment {
 
     private void getIDs(View view) {
 
-        loadingRoot = (FrameLayout) view.findViewById(R.id.shared_loading_root);
-        versionTextView = (TextView) view.findViewById(R.id.shared_version_text_view);
+        //versionTextView = (TextView) view.findViewById(R.id.shared_version_text_view);
         root = (LinearLayout) view.findViewById(R.id.fc_root);
         chatListView = (ListView) view.findViewById(R.id.fc_chat_list_view);
         chatSendImageView = (ImageView) view.findViewById(R.id.fc_chat_send_image_view);
@@ -568,12 +570,6 @@ public class ChatFragment extends Fragment {
 
     }
 
-    public void resetVisibility() {
-
-        root.setVisibility(View.GONE);
-        loadingRoot.setVisibility(View.VISIBLE);
-
-    }
 
     private void hideKeypad() {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -665,7 +661,6 @@ public class ChatFragment extends Fragment {
             OffsideApplication.playerAnswers = player.getPlayerAnswers();
 
             createNewChatAdapter(false);
-            loadingRoot.setVisibility(View.GONE);
             root.setVisibility(View.VISIBLE);
 
         } catch (Exception ex) {
@@ -744,9 +739,26 @@ public class ChatFragment extends Fragment {
         try {
             boolean isAnswerAccepted = postAnswerRequestInfo.isAnswerAccepted();
             if (!isAnswerAccepted) {
-                String msg = "Answered not accepted! details: " + "gameid: " + postAnswerRequestInfo.getGameId() + " playerid: " + postAnswerRequestInfo.getPlayerId() + " questionid: " + postAnswerRequestInfo.getQuestionId() + " answerid: " + postAnswerRequestInfo.getAnswerId() + " isSkippped: " + postAnswerRequestInfo.isSkipped() + " betsize: " + postAnswerRequestInfo.getBetSize();
+                String msg = "Sorry! Answer wasn't sent! details: " + "gameid: " + postAnswerRequestInfo.getGameId() + " playerid: " + postAnswerRequestInfo.getPlayerId() + " questionid: " + postAnswerRequestInfo.getQuestionId() + " answerid: " + postAnswerRequestInfo.getAnswerId() + " isSkippped: " + postAnswerRequestInfo.isSkipped() + " betsize: " + postAnswerRequestInfo.getBetSize();
+                final String msgPop = "Sorry! Answer wasn't sent!";
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Snackbar.make(root,msgPop, Snackbar.LENGTH_SHORT).show();
+                    }
+                }, 2000);
+
                 ACRA.getErrorReporter().handleSilentException(new Throwable(msg));
+
             }
+//            else{
+//                OffsideApplication.getPlayerAssets().setPowerItems(OffsideApplication.getGameInfo().getPlayer().getPowerItems());
+//                PlayerAssets playerAssets =OffsideApplication.getPlayerAssets();
+//                EventBus.getDefault().post(playerAssets);
+//
+//            }
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -759,7 +771,7 @@ public class ChatFragment extends Fragment {
 
         try {
             Position position = positionEvent.getPosition();
-            String positionDisplay = Integer.toString(position.getPrivateGamePosition()) + "/" + Integer.toString(position.getPrivateGameTotalPlayers());
+            String positionDisplay = String.format("%d/%d",position.getPrivateGamePosition(),position.getPrivateGameTotalPlayers());
             positionTextView.setText(positionDisplay);
 
         } catch (Exception ex) {
@@ -803,7 +815,8 @@ public class ChatFragment extends Fragment {
             if (currentPlayer != null) {
                 int oldOffsideCoinsValue = currentPlayer.getOffsideCoins();
                 int newOffsideCoinsValue = updatedPlayer.getOffsideCoins();
-                String formattedCoinsValue = Formatter.formatNumber(newOffsideCoinsValue, Formatter.intCommaSeparator);
+                offsideCoins = newOffsideCoinsValue;
+                String formattedCoinsValue = Formatter.formatNumber(offsideCoins, Formatter.intCommaSeparator);
                 offsideCoinsTextView.setText(formattedCoinsValue);
                 if (newOffsideCoinsValue != oldOffsideCoinsValue) {
                     //offsideCoinsImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
@@ -812,18 +825,8 @@ public class ChatFragment extends Fragment {
 
                 int oldPowerItems = currentPlayer.getPowerItems();
                 int newPowerItems = updatedPlayer.getPowerItems();
-                String formattedPowerItems = Formatter.formatNumber(newPowerItems, Formatter.intCommaSeparator);
-                powerItemsTextView.setText(formattedPowerItems);
-                if (newPowerItems != oldPowerItems) {
 
-                    Animation a = new RotateAnimation(0.0f, 360.0f,
-                            Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                            0.5f);
-                    a.setRepeatCount(1);
-                    a.setDuration(1000);
-                    powerItemImageView.startAnimation(a);
-
-                }
+                updatePowerItems(oldPowerItems, newPowerItems);
             }
 
 
@@ -927,7 +930,7 @@ public class ChatFragment extends Fragment {
                 previousRankCoins = coins;
 
             }
-            if (awardResId > 0 && position < numberOfPlayers ) {
+            if (awardResId > 0 && position < numberOfPlayers && position < 4  ) {
                 ImageHelper.loadImage(getContext(), awardImageView, awardResId, false);
                 awardImageView.setVisibility(View.VISIBLE);
             } else
@@ -937,6 +940,42 @@ public class ChatFragment extends Fragment {
             scoreTextView.setText(formattedScoreValue);
 
             scoreboardRoot.addView(layout);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveInGamePlayerAssetsUpdate(InGamePlayerAssetsUpdateEvent inGamePlayerAssetsUpdateEvent) {
+        if(inGamePlayerAssetsUpdateEvent==null)
+            return;
+
+        int oldValue = inGamePlayerAssetsUpdateEvent.getOldValue();
+        int newValue = inGamePlayerAssetsUpdateEvent.getNewValue();
+        String assetType = inGamePlayerAssetsUpdateEvent.getAssetType();
+
+        if(assetType.equals(InGamePlayerAssetsUpdateEvent.assetTypePowerItems)){ //POWER_ITEMS
+
+            updatePowerItems(oldValue,newValue);
+        }
+
+    }
+
+    private void updatePowerItems(int oldPowerItems, int newPowerItems){
+
+        OffsideApplication.getGameInfo().getPlayer().setPowerItems(newPowerItems);
+        powerItems = newPowerItems;
+
+        String formattedPowerItems = Formatter.formatNumber(newPowerItems, Formatter.intCommaSeparator);
+        powerItemsTextView.setText(formattedPowerItems);
+
+        if (newPowerItems != oldPowerItems) {
+
+            Animation a = new RotateAnimation(0.0f, 360.0f,
+                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                    0.5f);
+            a.setRepeatCount(1);
+            a.setDuration(1000);
+            powerItemImageView.startAnimation(a);
+
         }
     }
 

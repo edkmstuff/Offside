@@ -5,23 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-        <!-- Progress bar -->
-        <include layout="@layout/shared_loading"
-            android:visibility="gone"/>
-
     <LinearLayout
         android:id="@+id/fg_groups_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <ImageView
-            android:layout_width="160dp"
-            android:layout_height="80dp"
+            android:layout_width="140dp"
+            android:layout_height="70dp"
             android:scaleType="centerCrop"
             android:src="@drawable/sidekick_logo_text_only"
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
-            android:alpha="0.85"
+            android:alpha="0.35"
             />
         <android.support.design.widget.TabLayout
             android:id="@+id/fg_groups_tab_layout"
@@ -33,6 +29,7 @@
             app:tabGravity="fill"
             style="@style/TabLayoutStyle"
             app:tabBackground="@color/transparentBackground"
+            android:layout_marginTop="4dp"
             />
         <View
             android:layout_width="match_parent"

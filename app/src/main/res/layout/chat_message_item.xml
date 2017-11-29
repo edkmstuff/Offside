@@ -340,7 +340,7 @@
                             android:layout_margin="1dp"
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
-                            android:text="which team will offsideCoins next?"
+                            android:text="which team will assetType next?"
                             android:fontFamily="@font/font_open_sans_hebrew"/>
 
                         <!--bet panel-->
@@ -778,7 +778,7 @@
                             android:gravity="center"
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
-                            android:text="which team will offsideCoins next?"
+                            android:text="which team will assetType next?"
                             android:textColor="@color/colorBlack" />
 
                         <TextView
@@ -875,7 +875,7 @@
                             android:gravity="center"
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
-                            android:text="which team will offsideCoins next?"
+                            android:text="which team will assetType next?"
                             android:textColor="@color/colorBlack" />
 
                         <TextView
@@ -936,7 +936,7 @@
                             android:gravity="center"
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
-                            android:text="which team will offsideCoins next?" />
+                            android:text="which team will assetType next?" />
 
 
                         <LinearLayout
@@ -1042,7 +1042,7 @@
                             android:layout_height="match_parent"
                             android:layout_marginTop="10dp"
                             android:gravity="center"
-                            android:text="You earned 100 offsideCoins" />
+                            android:text="You earned 100 assetType" />
 
 
                         <TextView

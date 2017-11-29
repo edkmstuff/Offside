@@ -2,6 +2,7 @@ package com.offsidegame.offside.adapters;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.events.NotEnoughCoinsEvent;
+import com.offsidegame.offside.helpers.AnimationHelper;
 import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.AvailableGame;
@@ -203,27 +206,36 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
 
-                    int balance = OffsideApplication.getPlayerAssets().getBalance();
-                    int entranceFee = viewHolder.availableGame.getEntranceFee();
-                    if(entranceFee<=balance || viewHolder.userIsAlreadyInGame ){
-                        OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
-                        String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
-                        String gameId = viewHolder.availableGame.getGameId();
-                        String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
-                        String privateGameId = viewHolder.availableGame.getPrivateGameId();
-                        String androidDeviceId = OffsideApplication.getAndroidDeviceId();
-                        OffsideApplication.networkingService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
+                    int duration =500;
+                    int delay = 0;
+                    AnimationHelper.animateButtonClick(view,duration);
 
-                    }
-                    else
-                    {
-                        EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
 
-                    }
+                            int balance = OffsideApplication.getPlayerAssets().getBalance();
+                            int entranceFee = viewHolder.availableGame.getEntranceFee();
+                            if(entranceFee<=balance || viewHolder.userIsAlreadyInGame ){
+                                OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
+                                String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
+                                String gameId = viewHolder.availableGame.getGameId();
+                                String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
+                                String privateGameId = viewHolder.availableGame.getPrivateGameId();
+                                String androidDeviceId = OffsideApplication.getAndroidDeviceId();
+                                OffsideApplication.networkingService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
+
+                            }
+                            else
+                            {
+                                EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
+
+                            }
 
 
-
-
+                        }
+                    }, delay);
 
                 }
             });
@@ -233,27 +245,44 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 public void onClick(View view) {
 
                     try {
-                        int balance = OffsideApplication.getPlayerAssets().getBalance();
-                        int entranceFee = viewHolder.availableGame.getEntranceFee();
-                        if(entranceFee<=balance){
-                            OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
-                            String gameId = viewHolder.availableGame.getGameId();
-                            String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
-                            String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
-                            String privateGameContentLanguage;
-                            //create the private game in hebrew if user's device locale set to hebrew, otherwise english
-                            if(context.getResources().getConfiguration().locale.getDisplayLanguage().toString().equalsIgnoreCase(OffsideApplication.availableLanguages.get("he")))
-                                privateGameContentLanguage = OffsideApplication.availableLanguages.get("he");
-                            else
-                                privateGameContentLanguage = OffsideApplication.availableLanguages.get("en");
-                            OffsideApplication.networkingService.requestCreatePrivateGame(playerId, gameId, groupId,  privateGameContentLanguage);
 
-                        }
-                        else
-                        {
-                            EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
+                        int duration =500;
+                        int delay =0;
 
-                        }
+                        AnimationHelper.animateButtonClick(view,duration);
+
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                int balance = OffsideApplication.getPlayerAssets().getBalance();
+                                int entranceFee = viewHolder.availableGame.getEntranceFee();
+                                if(entranceFee<=balance){
+                                    OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
+                                    String gameId = viewHolder.availableGame.getGameId();
+                                    String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
+                                    String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
+                                    String privateGameContentLanguage;
+                                    //create the private game in hebrew if user's device locale set to hebrew, otherwise english
+                                    if(context.getResources().getConfiguration().locale.getDisplayLanguage().toString().equalsIgnoreCase(OffsideApplication.availableLanguages.get("he")))
+                                        privateGameContentLanguage = OffsideApplication.availableLanguages.get("he");
+                                    else
+                                        privateGameContentLanguage = OffsideApplication.availableLanguages.get("en");
+                                    OffsideApplication.networkingService.requestCreatePrivateGame(playerId, gameId, groupId,  privateGameContentLanguage);
+                                    EventBus.getDefault().post(new LoadingEvent(true,"Creating and joining to game"));
+
+                                }
+                                else
+                                {
+                                    EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
+
+                                }
+
+
+                            }
+                        }, delay);
+
                     } catch (Exception ex) {
                         ACRA.getErrorReporter().handleSilentException(ex);
                     }
@@ -264,15 +293,23 @@ public class AvailableGamesAdapter extends BaseAdapter {
 
             resetVisibility(viewHolder);
             if (viewHolder.availableGame.getPrivateGroupPlayers().length == 0) {
+
                 viewHolder.joinPrivateGameRoot.setVisibility(GONE);
+
+                viewHolder.createPrivateGameRoot.setBackgroundResource(R.drawable.button_start_game);
                 viewHolder.createPrivateGameRoot.setVisibility(View.VISIBLE);
                 viewHolder.createPrivateGameButtonTextView.setVisibility(GONE);
             } else {
-                viewHolder.joinPrivateGameRoot.setVisibility(View.VISIBLE);
-                viewHolder.joinPrivateGameButtonTextView.setVisibility(GONE);
+
                 viewHolder.createPrivateGameRoot.setVisibility(GONE);
+
+                viewHolder.joinPrivateGameRoot.setVisibility(View.VISIBLE);
+                viewHolder.joinPrivateGameRoot.setBackgroundResource(R.drawable.button_start_game);
+                viewHolder.joinPrivateGameButtonTextView.setVisibility(GONE);
+
                 if(viewHolder.userIsAlreadyInGame){
                     viewHolder.gameEnterFeeRoot.setVisibility(GONE);
+                    viewHolder.joinPrivateGameRoot.setBackgroundResource(R.drawable.button_game_is_on);
                     viewHolder.joinPrivateGameButtonTextView.setText(R.string.lbl_resume_game);
                     viewHolder.joinPrivateGameButtonTextView.setVisibility(View.VISIBLE);
                 }

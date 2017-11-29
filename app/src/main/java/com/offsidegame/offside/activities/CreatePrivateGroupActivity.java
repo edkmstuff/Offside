@@ -3,6 +3,7 @@ package com.offsidegame.offside.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,12 +14,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.LoadingEvent;
+import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 import com.offsidegame.offside.events.PrivateGroupCreatedEvent;
+import com.offsidegame.offside.helpers.AnimationHelper;
 import com.offsidegame.offside.models.OffsideApplication;
 
 import org.acra.ACRA;
@@ -30,8 +36,6 @@ import org.greenrobot.eventbus.ThreadMode;
 public class CreatePrivateGroupActivity extends AppCompatActivity {
     private final String activityName = "LobbyActivity";
     private final Context context = this;
-    private FrameLayout loadingRoot;
-    private TextView versionTextView;
     private LinearLayout createPrivateGroupRoot;
     private EditText privateGroupNameEditText;
     private TextView savePrivateGroupButtonTextView;
@@ -54,15 +58,11 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
         getIds();
         setEvents();
 
-        versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
-
     }
 
     private void getIds() {
 
         savePrivateGroupButtonTextView = findViewById(R.id.cpg_save_private_group_button_text_view);
-        loadingRoot = findViewById(R.id.shared_loading_root);
-        versionTextView = findViewById(R.id.shared_version_text_view);
         createPrivateGroupRoot = findViewById(R.id.cpg_create_private_group_root);
         privateGroupNameEditText = findViewById(R.id.cpg_private_group_name_edit_text);
     }
@@ -109,18 +109,32 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                String groupName = privateGroupNameEditText.getText().toString();
-                groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;
+                int duration =500;
+                int delay =(int)(duration*0.2);
+                AnimationHelper.animateButtonClick(view,duration);
 
-                String groupType = getResources().getString(R.string.key_private_group_name);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
 
-                if (OffsideApplication.isBoundToNetworkingService)
-                    OffsideApplication.networkingService.requestCreatePrivateGroup(playerId, groupName, groupType);
-                else
-                    throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
+                        String groupName = privateGroupNameEditText.getText().toString();
+                        groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;
 
-                createPrivateGroupRoot.setVisibility(View.GONE);
-                loadingRoot.setVisibility(View.VISIBLE);
+                        String groupType = getResources().getString(R.string.key_private_group_name);
+                        if (OffsideApplication.isBoundToNetworkingService)
+                            OffsideApplication.networkingService.requestCreatePrivateGroup(playerId, groupName, groupType);
+                        else
+                            throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
+
+                        createPrivateGroupRoot.setVisibility(View.GONE);
+                        String message = String.format("Creating %s...", groupName);
+                        EventBus.getDefault().post(new LoadingEvent(true,message));
+
+                    }
+                }, delay);
+
+
 
             }
         });
@@ -169,12 +183,11 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
             Context eventContext = networkingServiceBoundEvent.getContext();
             if (eventContext == context || eventContext == getApplicationContext()) {
 
-                if (OffsideApplication.isPlayerQuitGame()) {
-                    loadingRoot.setVisibility(View.GONE);
-                    return;
-                }
+//                if (OffsideApplication.isPlayerQuitGame()) {
+//                    return;
+//                }
                 if (OffsideApplication.isBoundToNetworkingService) {
-                    loadingRoot.setVisibility(View.GONE);
+                    EventBus.getDefault().post(new LoadingEvent(false,null));
                 } else
                     throw new RuntimeException(activityName + " - onNetworkingServiceBinding - Error: SignalRIsNotBound");
             }
@@ -195,5 +208,11 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        OffsideApplication.setIsBackFromCreatePrivateGroup(true);
+        finish();
     }
 }

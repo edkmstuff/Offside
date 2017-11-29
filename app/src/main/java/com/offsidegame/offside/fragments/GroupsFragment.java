@@ -27,14 +27,11 @@ import org.greenrobot.eventbus.ThreadMode;
  * Created by user on 8/22/2017.
  */
 
-
 public class GroupsFragment extends Fragment {
     private LinearLayout groupsRoot;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
-    private FrameLayout loadingRoot;
-    private TextView versionTextView;
     private String playerId;
 
 
@@ -70,10 +67,6 @@ public class GroupsFragment extends Fragment {
             getIDs(view);
             setEvents();
 
-            resetVisibility();
-
-            versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
-
             return view;
 
 
@@ -87,8 +80,6 @@ public class GroupsFragment extends Fragment {
     private void getIDs(View view) {
 
         groupsRoot =  view.findViewById(R.id.fg_groups_root);
-        loadingRoot =  view.findViewById(R.id.shared_loading_root);
-        versionTextView =  view.findViewById(R.id.shared_version_text_view);
 
         viewPager =  view.findViewById(R.id.fg_tabs_container_view_pager);
         tabLayout =  view.findViewById(R.id.fg_groups_tab_layout);
@@ -125,12 +116,6 @@ public class GroupsFragment extends Fragment {
         });
     }
 
-    public void resetVisibility() {
-
-        loadingRoot.setVisibility(View.VISIBLE);
-        groupsRoot.setVisibility(View.GONE);
-
-    }
 
 
     public void addPage(String groupType) {
@@ -189,7 +174,6 @@ public class GroupsFragment extends Fragment {
 
     }
 
-
     public void addPagesToGroupsFragment() {
 
         try {
@@ -197,8 +181,6 @@ public class GroupsFragment extends Fragment {
                 addPage(getString(R.string.key_private_group_name));
                 addPage(getString(R.string.key_public_group_name));
             }
-
-            loadingRoot.setVisibility(View.GONE);
 
 
         } catch (Exception ex) {

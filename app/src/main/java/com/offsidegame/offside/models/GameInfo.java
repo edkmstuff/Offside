@@ -35,6 +35,7 @@ public class GameInfo {
 
 
 
+
     public String getGameId() {
         return gameId;
     }
@@ -107,5 +108,7 @@ public class GameInfo {
         this.player = player;
 
     }
+
+
 }
 

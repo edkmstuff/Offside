@@ -8,16 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.helpers.ReadRss;
 import com.offsidegame.offside.models.OffsideApplication;
 
+import org.greenrobot.eventbus.EventBus;
+
 public class NewsFragment extends Fragment {
 
-    private FrameLayout loadingRoot;
-    private TextView versionTextView;
     private RecyclerView recyclerView;
 
 
@@ -50,17 +52,15 @@ public class NewsFragment extends Fragment {
         getIDs(view);
 
         Context context = getContext();
-        versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
+        EventBus.getDefault().post(new LoadingEvent(true,"Loading content..."));
 
-        ReadRss readRss = new ReadRss(context, recyclerView, loadingRoot);
+        ReadRss readRss = new ReadRss(context, recyclerView, null);
         readRss.execute();
 
         return view;
     }
 
     public void getIDs(View view){
-        loadingRoot =  view.findViewById(R.id.shared_loading_root);
-        versionTextView =  view.findViewById(R.id.shared_version_text_view);
         recyclerView= view.findViewById(R.id.nf_recycler_View);
     }
 

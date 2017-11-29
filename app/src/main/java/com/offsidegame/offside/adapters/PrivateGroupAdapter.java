@@ -4,6 +4,7 @@ package com.offsidegame.offside.adapters;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.GroupInviteEvent;
+import com.offsidegame.offside.helpers.AnimationHelper;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
@@ -164,13 +166,13 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 String title = String.format("%d %S", countActivePlayersInPrivateGroup, context.getString(R.string.lbl_now_playing));
                 viewHolder.totalPlayingPlayersInGroupTextView.setText(title);
                 viewHolder.groupGameStatusTextView.setText(R.string.lbl_game_is_active);
-                viewHolder.groupGameStatusTextView.setBackgroundResource(R.color.colorActive);
+                viewHolder.groupGameStatusTextView.setBackgroundResource(R.drawable.button_game_is_on);
 
 
             } else {
                 viewHolder.totalPlayingPlayersInGroupTextView.setText(R.string.lbl_no_playing_players);
                 viewHolder.groupGameStatusTextView.setText(R.string.lbl_play_here);
-                viewHolder.groupGameStatusTextView.setBackgroundResource(R.color.colorButton);
+                viewHolder.groupGameStatusTextView.setBackgroundResource(R.drawable.button_start_game);
 
             }
 
@@ -178,9 +180,21 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
                     try {
-                        //Toast.makeText(context,"item clicked" ,Toast.LENGTH_SHORT).show();
+
+                        int duration =500;
+//                        int delay =(int)(0);
+                        AnimationHelper.animateButtonClick(view,duration);
                         OffsideApplication.setSelectedPrivateGroup(viewHolder.privateGroup);
                         EventBus.getDefault().post(OffsideApplication.getSelectedPrivateGroup());
+
+//                        final Handler handler = new Handler();
+//                        handler.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//
+//                            }
+//                        }, delay);
+
                     } catch (Exception ex) {
                         ACRA.getErrorReporter().handleSilentException(ex);
                     }

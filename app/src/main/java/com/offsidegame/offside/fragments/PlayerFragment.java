@@ -24,6 +24,8 @@ import com.facebook.share.widget.ShareButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.LoadingEvent;
+import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.ExperienceLevel;
@@ -57,9 +59,6 @@ public class PlayerFragment extends Fragment {
     private PlayerAssets playerAssets;
     private String playerId;
     private ExperienceLevel playerCurrentExpLevel;
-
-    private FrameLayout loadingRoot;
-    private TextView versionTextView;
 
     private LinearLayout playerMainDetailsRoot;
     private LinearLayout playerDetailsRoot;
@@ -144,7 +143,6 @@ public class PlayerFragment extends Fragment {
             getIDs(view, context);
             setEvents();
 
-            versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
 
             playerAssets = OffsideApplication.getPlayerAssets();
 
@@ -166,8 +164,7 @@ public class PlayerFragment extends Fragment {
 
     private void getIDs(View view, Context context) {
 
-        loadingRoot = (FrameLayout) view.findViewById(R.id.shared_loading_root);
-        versionTextView = (TextView) view.findViewById(R.id.shared_version_text_view);
+
         playerMainDetailsRoot = (LinearLayout) view.findViewById(R.id.vp_player_main_details_root);
         latestGameTabRoot = (LinearLayout) view.findViewById(R.id.vp_latest_game_tab_root);
         trophiesTabRoot = (LinearLayout) view.findViewById(R.id.vp_trophies_tab_root);
@@ -520,8 +517,8 @@ public class PlayerFragment extends Fragment {
 
             //</editor-fold>
 
-            loadingRoot.setVisibility(View.GONE);
-            //root.setVisibility(View.VISIBLE);
+            EventBus.getDefault().post(new LoadingEvent(false,null));
+
 
             playerMainDetailsRoot.setVisibility(View.VISIBLE);
             playerDetailsRoot.setVisibility(View.VISIBLE);

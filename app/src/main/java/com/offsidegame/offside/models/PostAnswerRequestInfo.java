@@ -18,8 +18,11 @@ public class PostAnswerRequestInfo {
     private boolean isSkipped;
     @com.google.gson.annotations.SerializedName("BS")
     private int betSize;
+    @com.google.gson.annotations.SerializedName("IAA")
+    private boolean isAnswerAccepted;
 
-    public PostAnswerRequestInfo(String playerId, String gameId, String questionId, String answerId, boolean isSkipped, int betSize) {
+
+    public PostAnswerRequestInfo(String playerId, String gameId, String questionId, String answerId, boolean isSkipped, int betSize, boolean isAnswerAccepted) {
         this.playerId = playerId;
         this.gameId = gameId;
 
@@ -27,10 +30,10 @@ public class PostAnswerRequestInfo {
         this.answerId = answerId;
         this.isSkipped = isSkipped;
         this.betSize = betSize;
-        this.isAnswerAccepted = false;
+        this.isAnswerAccepted = isAnswerAccepted;
     }
 
-    private boolean isAnswerAccepted;
+
 
 
     public String getPlayerId() {

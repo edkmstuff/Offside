@@ -104,7 +104,7 @@
     <string name="lbl_no_active_private_game">No active game</string>
     <string name="lbl_news">NEWS</string>
     <string name="lbl_your_position">POSITION:</string>
-    <string name="lbl_create_private_group_hint">Give cool name</string>
+    <string name="lbl_create_private_group_hint">Give a cool name</string>
     <string name="lbl_delete_private_group">Delete Group</string>
     <string name="lbl_error_user_profile_picture_not_saved">User Image was not saved</string>
     <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"https://www.sidekickgame.com\",\n  }\n}]</string>
@@ -131,6 +131,9 @@
     <string name="lbl_yes">YES</string>
     <string name="lbl_noooo">NOOOO!!!!</string>
     <string name="lbl_change_private_group_name">Change Group Name</string>
+    <string name="lbl_back">Back</string>
+    <string name="lbl_player_Successfully_quit_game">You left a game</string>
+    <string name="lbl_playe_or_game_not_found">Player or Game not found</string>
 
 
 </resources>

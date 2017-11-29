@@ -98,7 +98,7 @@ public class NetworkingService extends Service {
     private String CLIENT_REQUESTS_EXCHANGE_NAME = "FROM_CLIENTS";
     private int sendToServerErrorDelay = 15000;
     private int mId = -1;
-    private Map<String, String> listenToQueues = new HashMap<>();
+    //private Map<Channel, String> currentExchanges = new HashMap<>();
 
 
     private boolean chatMessagesReceived = false;
@@ -181,8 +181,7 @@ public class NetworkingService extends Service {
 
                 } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
-                }
-                finally {
+                } finally {
 
                     if (latch != null)
                         latch.countDown();
@@ -207,37 +206,46 @@ public class NetworkingService extends Service {
 
     public void createListenerQueue(final String queueName, final CountDownLatch latch) {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (listenerQueueName != null)
-                        return;
-                    if (queueName == null)
-                        return;
-                    listenerQueueName = channel.queueDeclare(queueName, false, false, false, null).getQueue();
+        try
+        {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (listenerQueueName != null)
+                            return;
+                        if (queueName == null)
+                            return;
+                        listenerQueueName = channel.queueDeclare(queueName, false, false, false, null).getQueue();
 
 
-                } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+                    } catch (Exception ex) {
+                        ACRA.getErrorReporter().handleSilentException(ex);
 
-                } finally {
+                    } finally {
 
-                    //finally we release the waiting thread
-                    if (latch != null)
-                        latch.countDown();
+                        //finally we release the waiting thread
+                        if (latch != null)
+                            latch.countDown();
 
 
+                    }
                 }
-            }
-        }).start();
+            }).start();
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return;
+        }
+
 
 
     }
 
-    public void listenToExchange(final String exchangeName ,final CountDownLatch latch) {
+    private String consumerTag = null;
 
-
+    public void listenToExchange(final String exchangeName, final CountDownLatch latch) {
 
         new Thread(new Runnable() {
             @Override
@@ -249,7 +257,11 @@ public class NetworkingService extends Service {
 
                     channel.exchangeDeclare(exchangeName, "fanout");
                     channel.queueBind(listenerQueueName, exchangeName, "");
-                    channel.basicConsume(listenerQueueName, true, new DefaultConsumer(channel) {
+
+                    if (consumerTag != null)
+                        return;
+
+                    consumerTag = channel.basicConsume(listenerQueueName, true, new DefaultConsumer(channel) {
                         @Override
                         public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                             String json = new String(body, "UTF-8");
@@ -258,6 +270,7 @@ public class NetworkingService extends Service {
                             onServerMessage(wrapper.getKey(), wrapper.getValue());
                         }
                     });
+
 
                 } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
@@ -272,6 +285,32 @@ public class NetworkingService extends Service {
         }).start();
 
     }
+
+    public void stopListening() {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (consumerTag != null){
+                        channel.basicCancel(consumerTag);
+                        consumerTag = null;
+                    }
+
+                    if (listenerQueueName != null){
+                        channel.queueDelete(listenerQueueName);
+                        listenerQueueName=null;
+
+                    }
+
+                } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                }
+            }
+        }).start();
+
+    }
+
 
     public void onServerMessage(String message, String model) {
         final Gson gson = new GsonBuilder().create();
@@ -298,7 +337,7 @@ public class NetworkingService extends Service {
             Position position = gson.fromJson(model, Position.class);
             positionReceived = true;
             EventBus.getDefault().post(new PositionEvent(position));
-        } else if (message.equals("AnswerAccepted")) {
+        } else if (message.equals("AnswerAcceptedReceived")) {
             PostAnswerRequestInfo postAnswerRequestInfo = gson.fromJson(model, PostAnswerRequestInfo.class);
             answerAccepted = true;
             EventBus.getDefault().post(postAnswerRequestInfo);

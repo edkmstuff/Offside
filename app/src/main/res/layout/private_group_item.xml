@@ -40,24 +40,28 @@
             android:id="@+id/pg_group_game_status_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:background="@color/colorActive"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/button_game_is_on"
             android:gravity="center"
             android:minWidth="100dp"
+
             android:padding="5dp"
             android:text="משחק פעיל"
             android:textColor="@color/colorWhite"
             android:textStyle="bold"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            />
         <!--group members-->
         <LinearLayout
             style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="4dp">
             <ImageView
                 android:id="@+id/pg_invite_friends_image_view"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@mipmap/ic_invite_freind_to_group"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_invite_friend"
 
                 />
             <HorizontalScrollView

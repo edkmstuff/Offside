@@ -2,34 +2,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.offsidegame.offside.fragments.ShopFragment"
-    >
+    tools:context="com.offsidegame.offside.fragments.ShopFragment">
 
     <LinearLayout
-        android:id="@+id/sf_sign_out_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:gravity="center"
-        android:layoutDirection="locale">
+        android:layoutDirection="locale"
+        android:orientation="vertical">
         <!-- separator line-->
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/colorWhite"
             android:alpha="0.5"
-            />
-
+            android:background="@color/colorWhite" />
+        <!--disconnect-->
         <LinearLayout
+            android:id="@+id/sf_sign_out_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center|start">
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_sign_out"
-                />
+                android:src="@mipmap/ic_sign_out" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,13 +44,41 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
-            android:background="@color/colorWhite"
             android:alpha="0.5"
-            />
+            android:background="@color/colorWhite" />
+        <!--back-->
+        <LinearLayout
+            android:id="@+id/sf_back_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|start"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/ic_left" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_back"
+                android:textSize="22sp"
+
+
+                />
+
+        </LinearLayout>
+
+        <!-- separator line-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:alpha="0.5"
+            android:background="@color/colorWhite" />
 
 
     </LinearLayout>
-
 
 
 </LinearLayout>

@@ -15,8 +15,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/floatingActionButtonMargin"
-            android:src="@mipmap/ic_add"
-            app:backgroundTint="@color/colorButton"
+            android:src="@mipmap/ic_add_group"
+            app:backgroundTint="@color/colorWhite"
             app:fabSize="mini"
             />
 

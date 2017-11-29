@@ -96,8 +96,9 @@
     </style>
 
     <style name="Button">
-        <item name="android:background">@color/colorButton</item>
+
         <item name="android:textColor">@color/buttonTextColor</item>
+        <item name="android:background">@drawable/button_start_game</item>
 
     </style>
 

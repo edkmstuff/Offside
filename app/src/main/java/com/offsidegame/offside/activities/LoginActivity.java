@@ -12,6 +12,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private int playerColorId = 0;
     private boolean isUserImageUrlValid = false;
     private String playerEmail;
-    private FrameLayout loadingRoot;
+    private LinearLayout loadingRoot;
     private TextView versionTextView;
     private boolean isInLoginProcess = false;
     private FirebaseAnalytics analytics;

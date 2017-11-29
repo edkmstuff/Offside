@@ -133,9 +133,9 @@
 //////            homeTeam = OffsideApplication.getGameInfo().getHomeTeam();
 //////            awayTeam = OffsideApplication.getGameInfo().getAwayTeam();
 //////            PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
-//////            offsideCoins = player != null? player.getOffsideCoins() : OffsideApplication.getGameInfo().getOffsideCoins();
+//////            offsideCoins = player != null? player.getAssetType() : OffsideApplication.getGameInfo().getAssetType();
 //////            trophies = OffsideApplication.getGameInfo().getTrophies();
-//////            powerItems = player.getPowerItems();
+//////            powerItems = player.getNewValue();
 //////
 //////
 //////
@@ -329,7 +329,7 @@
 //////            createNewChatAdapter(true);
 //////
 //////            PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
-//////            offsideCoins = player != null? player.getOffsideCoins() : 0;
+//////            offsideCoins = player != null? player.getAssetType() : 0;
 //////            offsideCoinsTextView.setText(Integer.toString(offsideCoins));
 //////
 //////            EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
@@ -565,7 +565,7 @@
 //////                return;
 //////
 //////            player.incrementRewardVideoWatchCount();
-//////            OffsideApplication.networkingService.setPowerItems(gameId, playerId, rewardAmount, true);
+//////            OffsideApplication.networkingService.setNewValue(gameId, playerId, rewardAmount, true);
 ////
 ////
 ////        } catch (Exception ex) {
@@ -583,14 +583,14 @@
 ////
 //////
 //////            OffsideApplication.playerAnswers = updatedPlayer.getPlayerAnswers();
-//////            //scoreTextView.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
-//////            //scoreTextView1.setText(Integer.toString((int) updatedPlayer.getOffsideCoins()));
+//////            //scoreTextView.setText(Integer.toString((int) updatedPlayer.getAssetType()));
+//////            //scoreTextView1.setText(Integer.toString((int) updatedPlayer.getAssetType()));
 //////
 //////            PlayerModel currentPlayer = OffsideApplication.getGameInfo().getPlayer();
 //////
 //////            if (currentPlayer != null) {
-//////                int oldOffsideCoinsValue = currentPlayer.getOffsideCoins();
-//////                int newOffsideCoinsValue = updatedPlayer.getOffsideCoins();
+//////                int oldOffsideCoinsValue = currentPlayer.getAssetType();
+//////                int newOffsideCoinsValue = updatedPlayer.getAssetType();
 //////                offsideCoinsTextView.setText(Integer.toString(newOffsideCoinsValue));
 //////                if (newOffsideCoinsValue != oldOffsideCoinsValue) {
 //////                    offsideCoinsImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
@@ -605,8 +605,8 @@
 ////////
 ////////                }
 //////
-//////                int oldPowerItems = currentPlayer.getPowerItems();
-//////                int newPowerItems = updatedPlayer.getPowerItems();
+//////                int oldPowerItems = currentPlayer.getNewValue();
+//////                int newPowerItems = updatedPlayer.getNewValue();
 //////                powerItemsTextView.setText(Integer.toString(newPowerItems));
 //////                if (newPowerItems != oldPowerItems) {
 //////
@@ -656,7 +656,7 @@
 ////                for(int i=0; i<currentScores.length;i++){
 ////                    boolean isEqualScore = currentScores[i].getImageUrl().equals(scores[i].getImageUrl()) &&
 ////                            currentScores[i].getPosition() ==scores[i].getPosition() &&
-////                            currentScores[i].getOffsideCoins()==scores[i].getOffsideCoins();
+////                            currentScores[i].getAssetType()==scores[i].getAssetType();
 ////
 ////                    if(!isEqualScore)
 ////                        break;
@@ -694,7 +694,7 @@
 ////
 ////            rankTextView.setText(Integer.toString(score.getPosition()));
 ////            ImageHelper.loadImage(thisActivity, score.getImageUrl(), imageView, "ChatActivity");
-////            textView.setText(Integer.toString(score.getOffsideCoins()));
+////            textView.setText(Integer.toString(score.getAssetType()));
 ////
 ////            scoreboardRoot.addView(layout);
 ////        }

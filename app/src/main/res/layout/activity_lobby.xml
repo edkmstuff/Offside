@@ -12,142 +12,137 @@
     android:orientation="vertical"
     tools:context="com.offsidegame.offside.activities.LobbyActivity">
 
-    <!--lobby root-->
-    <LinearLayout
-
-        android:id="@+id/l_lobby_root"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-        <!--player info and settings-->
-        <LinearLayout
-            android:id="@+id/l_player_info_root"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:padding="5dp"
-            android:weightSum="10">
+        android:layout_height="match_parent">
 
-            <!-- player status -->
+        <!--lobby root-->
+        <LinearLayout
+
+            android:id="@+id/l_lobby_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+            <!--player info and settings-->
             <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/l_player_info_root"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:layout_weight="9"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="5dp"
+                android:weightSum="10">
 
-                <!-- profile picture-->
+                <!-- player status -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:layoutDirection="rtl"
-                    android:orientation="horizontal"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    >
+                    android:layout_weight="9"
+                    android:orientation="horizontal">
 
-
-                    <ImageView
-                        android:id="@+id/l_player_picture_image_view"
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_profile"
-                        />
-
-                </LinearLayout>
-
-                <!-- powers-->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:layout_marginLeft="36dp"
-                    android:layout_marginRight="36dp"
-                    android:gravity="center"
-                    android:layoutDirection="rtl"
-                    android:orientation="horizontal"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
-
-                    <TextView
-                        android:id="@+id/l_power_items_text_view"
+                    <!-- profile picture-->
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="-14dp"
-                        android:background="@color/playerAssetsBackgroundColor"
-                        android:paddingBottom="2dp"
-                        android:paddingLeft="15dp"
-                        android:paddingRight="5dp"
-                        android:paddingTop="2dp"
-                        android:text="24"
-                        android:textColor="@color/colorWhite" />
-
-                    <ImageView
-                        android:id="@+id/c_power_item_image_view"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_soccer_ball" />
-
-                </LinearLayout>
-
-                <!-- coins -->
-                <LinearLayout
-                    android:id="@+id/l_balance_root"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:layoutDirection="rtl"
-                    android:orientation="horizontal"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp">
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-
-                        android:layout_height="wrap_content"
-                        android:background="@color/colorButton"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
                         android:gravity="center"
-                        android:minWidth="20dp"
-                        android:padding="2dp"
-                        android:text="+"
-                        android:textColor="@color/colorWhite"
+                        android:layoutDirection="rtl"
+                        android:orientation="horizontal"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        >
 
 
-                        />
+                        <ImageView
+                            android:id="@+id/l_player_picture_image_view"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_profile"
+                            />
 
-                    <TextView
-                        android:id="@+id/l_balance_text_view"
+                    </LinearLayout>
+
+                    <!-- powers-->
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="-12dp"
-                        android:background="@color/playerAssetsBackgroundColor"
-                        android:paddingBottom="2dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="5dp"
-                        android:paddingTop="2dp"
-                        android:text="4,000"
-                        android:textColor="@color/colorWhite" />
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:layout_marginLeft="36dp"
+                        android:layout_marginRight="36dp"
+                        android:gravity="center"
+                        android:layoutDirection="rtl"
+                        android:orientation="horizontal"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp">
 
-                    <ImageView
-                        android:id="@+id/c_offside_coins_image_view"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:scaleType="centerCrop"
-                        android:src="@mipmap/ic_coin" />
+                        <TextView
+                            android:id="@+id/l_power_items_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="-18dp"
+                            android:background="@drawable/power_items_assets_bg"
+                            android:gravity="center"
+                            android:paddingLeft="24dp"
+                            android:paddingRight="16dp"
+                            android:text="24"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="18sp"
+                            />
+
+                        <ImageView
+                            android:id="@+id/c_power_item_image_view"
+                            android:layout_width="27dp"
+                            android:layout_height="27dp"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_soccer_ball" />
+
+                    </LinearLayout>
+
+                    <!-- coins -->
+                    <LinearLayout
+                        android:id="@+id/l_balance_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layoutDirection="rtl"
+                        android:orientation="horizontal"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        >
+
+
+
+                        <TextView
+                            android:id="@+id/l_balance_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="-18dp"
+                            android:background="@drawable/coins_assets_bg"
+                            android:paddingBottom="2dp"
+                            android:paddingLeft="24dp"
+                            android:paddingRight="44dp"
+                            android:paddingTop="2dp"
+                            android:text="4,000"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="18sp"
+                            android:gravity="center"/>
+
+                        <ImageView
+                            android:id="@+id/c_offside_coins_image_view"
+                            android:layout_width="27dp"
+                            android:layout_height="27dp"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/ic_coin" />
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
-
-            </LinearLayout>
-
-            <!-- alternative player status: logo at left , align to left  -->
-            <!--<LinearLayout-->
+                <!-- alternative player status: logo at left , align to left  -->
+                <!--<LinearLayout-->
                 <!--android:layout_width="0dp"-->
                 <!--android:layout_height="wrap_content"-->
                 <!--android:layout_weight="10"-->
@@ -156,152 +151,161 @@
 
                 <!--&lt;!&ndash; profile picture&ndash;&gt;-->
                 <!--<LinearLayout-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_gravity="right"-->
-                    <!--android:layout_marginLeft="2dp"-->
-                    <!--android:gravity="center"-->
-                    <!--android:layoutDirection="rtl"-->
-                    <!--android:orientation="horizontal">-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_gravity="right"-->
+                <!--android:layout_marginLeft="2dp"-->
+                <!--android:gravity="center"-->
+                <!--android:layoutDirection="rtl"-->
+                <!--android:orientation="horizontal">-->
 
 
-                    <!--<ImageView-->
-                        <!--android:id="@+id/l_player_picture_image_view"-->
-                        <!--android:layout_width="22dp"-->
-                        <!--android:layout_height="22dp"-->
-                        <!--android:scaleType="centerCrop"-->
-                        <!--android:src="@mipmap/ic_profile"-->
-                        <!--/>-->
+                <!--<ImageView-->
+                <!--android:id="@+id/l_player_picture_image_view"-->
+                <!--android:layout_width="22dp"-->
+                <!--android:layout_height="22dp"-->
+                <!--android:scaleType="centerCrop"-->
+                <!--android:src="@mipmap/ic_profile"-->
+                <!--/>-->
 
                 <!--</LinearLayout>-->
 
                 <!--&lt;!&ndash; powers&ndash;&gt;-->
                 <!--<LinearLayout-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_gravity="right"-->
-                    <!--android:layout_marginLeft="2dp"-->
-                    <!--android:gravity="center"-->
-                    <!--android:layoutDirection="rtl"-->
-                    <!--android:orientation="horizontal">-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_gravity="right"-->
+                <!--android:layout_marginLeft="2dp"-->
+                <!--android:gravity="center"-->
+                <!--android:layoutDirection="rtl"-->
+                <!--android:orientation="horizontal">-->
 
-                    <!--<TextView-->
-                        <!--android:id="@+id/l_power_items_text_view"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginLeft="-14dp"-->
-                        <!--android:background="#50000000"-->
-                        <!--android:paddingBottom="2dp"-->
-                        <!--android:paddingLeft="15dp"-->
-                        <!--android:paddingRight="5dp"-->
-                        <!--android:paddingTop="2dp"-->
-                        <!--android:text="2"-->
-                        <!--android:textColor="@color/colorWhite" />-->
+                <!--<TextView-->
+                <!--android:id="@+id/l_power_items_text_view"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="-14dp"-->
+                <!--android:background="#50000000"-->
+                <!--android:paddingBottom="2dp"-->
+                <!--android:paddingLeft="15dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--android:paddingTop="2dp"-->
+                <!--android:text="2"-->
+                <!--android:textColor="@color/colorWhite" />-->
 
-                    <!--<ImageView-->
-                        <!--android:id="@+id/c_power_item_image_view"-->
-                        <!--android:layout_width="24dp"-->
-                        <!--android:layout_height="24dp"-->
-                        <!--android:scaleType="centerCrop"-->
-                        <!--android:src="@mipmap/ic_soccer_ball" />-->
+                <!--<ImageView-->
+                <!--android:id="@+id/c_power_item_image_view"-->
+                <!--android:layout_width="24dp"-->
+                <!--android:layout_height="24dp"-->
+                <!--android:scaleType="centerCrop"-->
+                <!--android:src="@mipmap/ic_soccer_ball" />-->
 
                 <!--</LinearLayout>-->
 
                 <!--&lt;!&ndash; coins &ndash;&gt;-->
                 <!--<LinearLayout-->
-                    <!--android:id="@+id/l_balance_root"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:layout_marginLeft="2dp"-->
-                    <!--android:gravity="center"-->
-                    <!--android:layoutDirection="rtl"-->
-                    <!--android:orientation="horizontal">-->
+                <!--android:id="@+id/l_balance_root"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginLeft="2dp"-->
+                <!--android:gravity="center"-->
+                <!--android:layoutDirection="rtl"-->
+                <!--android:orientation="horizontal">-->
 
 
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
+                <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
 
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:background="@color/colorButton"-->
-                        <!--android:gravity="center"-->
-                        <!--android:minWidth="20dp"-->
-                        <!--android:padding="2dp"-->
-                        <!--android:text="+"-->
-                        <!--android:textColor="@color/colorWhite"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/colorButton"-->
+                <!--android:gravity="center"-->
+                <!--android:minWidth="20dp"-->
+                <!--android:padding="2dp"-->
+                <!--android:text="+"-->
+                <!--android:textColor="@color/colorWhite"-->
 
 
-                        <!--/>-->
+                <!--/>-->
 
-                    <!--<TextView-->
-                        <!--android:id="@+id/l_balance_text_view"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginLeft="-12dp"-->
-                        <!--android:background="#50000000"-->
-                        <!--android:paddingBottom="2dp"-->
-                        <!--android:paddingLeft="12dp"-->
-                        <!--android:paddingRight="5dp"-->
-                        <!--android:paddingTop="2dp"-->
-                        <!--android:text="4000"-->
-                        <!--android:textColor="@color/colorWhite" />-->
+                <!--<TextView-->
+                <!--android:id="@+id/l_balance_text_view"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_marginLeft="-12dp"-->
+                <!--android:background="#50000000"-->
+                <!--android:paddingBottom="2dp"-->
+                <!--android:paddingLeft="12dp"-->
+                <!--android:paddingRight="5dp"-->
+                <!--android:paddingTop="2dp"-->
+                <!--android:text="4000"-->
+                <!--android:textColor="@color/colorWhite" />-->
 
-                    <!--<ImageView-->
-                        <!--android:id="@+id/c_offside_coins_image_view"-->
-                        <!--android:layout_width="24dp"-->
-                        <!--android:layout_height="24dp"-->
-                        <!--android:scaleType="centerCrop"-->
-                        <!--android:src="@mipmap/ic_coin" />-->
+                <!--<ImageView-->
+                <!--android:id="@+id/c_offside_coins_image_view"-->
+                <!--android:layout_width="24dp"-->
+                <!--android:layout_height="24dp"-->
+                <!--android:scaleType="centerCrop"-->
+                <!--android:src="@mipmap/ic_coin" />-->
 
                 <!--</LinearLayout>-->
 
 
-            <!--</LinearLayout>-->
-            <!-- end ****** alternative player status -->
+                <!--</LinearLayout>-->
+                <!-- end ****** alternative player status -->
 
-            <!--settings button-->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layoutDirection="rtl">
+                <!--settings button-->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layoutDirection="rtl">
 
-                <ImageView
-                    android:id="@+id/l_settings_button_image_view"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
-                    android:layout_gravity="left"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/settings" />
+                    <ImageView
+                        android:id="@+id/l_settings_button_image_view"
+                        android:layout_width="21dp"
+                        android:layout_height="21dp"
+                        android:layout_gravity="left"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/settings" />
+
+                </LinearLayout>
+
 
             </LinearLayout>
 
 
+
+            <FrameLayout
+                android:id="@+id/l_fragment_container_root"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
+
+            </FrameLayout>
+
+            <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
+                android:id="@+id/l_bottom_navigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:itemIconTint="@color/navUnSelectedItemColor"
+                android:background="@color/navBackgroundColor"
+                android:layout_alignParentBottom="true"
+
+                app:menu="@menu/bottom_navigation_menu_items" />
+
+
+
         </LinearLayout>
 
+        <!-- Progress bar -->
+        <include layout="@layout/shared_loading"
+            android:visibility="gone"/>
 
 
-        <FrameLayout
-            android:id="@+id/l_fragment_container_root"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            >
-
-        </FrameLayout>
-
-        <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
-            android:id="@+id/l_bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:itemIconTint="@color/navUnSelectedItemColor"
-            android:background="@color/navBackgroundColor"
-            android:layout_alignParentBottom="true"
-
-            app:menu="@menu/bottom_navigation_menu_items" />
+    </FrameLayout>
 
 
-
-    </LinearLayout>
 
 
 </LinearLayout>

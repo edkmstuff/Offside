@@ -8,14 +8,13 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.text.Editable;
-import android.text.TextWatcher;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
+
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,6 +24,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.LeagueAdapter;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
+import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.PrivateGroupDeletedEvent;
 import com.offsidegame.offside.models.AvailableGame;
@@ -53,8 +53,6 @@ public class SingleGroupFragment extends Fragment {
 
 
     private ViewPagerAdapter viewPagerAdapter;
-    private FrameLayout loadingRoot;
-    private TextView versionTextView;
 
     private LinearLayout singlePrivateGroupRoot;
     private LinearLayout singleGroupGamesTabRoot;
@@ -123,7 +121,6 @@ public class SingleGroupFragment extends Fragment {
             setEvents();
             resetVisibility();
 
-            versionTextView.setText(OffsideApplication.getVersion());
             return view;
 
         } catch (Exception ex) {
@@ -135,8 +132,6 @@ public class SingleGroupFragment extends Fragment {
 
     private void getIDs(View view) {
 
-        loadingRoot = (FrameLayout) view.findViewById(R.id.shared_loading_root);
-        versionTextView = (TextView) view.findViewById(R.id.shared_version_text_view);
         //leagues
         viewPager = (ViewPager) view.findViewById(R.id.fsg_leagues_pages_view_pager);
         tabLayout = (TabLayout) view.findViewById(R.id.fsg_leagues_selection_tab_layout);
@@ -316,7 +311,7 @@ public class SingleGroupFragment extends Fragment {
     private void navigateGroup(int step) {
 
         try {
-            YoYo.with(Techniques.FadeOut).playOn(groupLeagueGamesRoot);
+
             resetVisibility();
             currentGroupSelectedIndex = currentGroupSelectedIndex + step;
             int newSelectedGroupIndex = currentGroupSelectedIndex % groupsCount;
@@ -341,7 +336,7 @@ public class SingleGroupFragment extends Fragment {
     }
 
     private void singleGroupTabSwitched(View view) {
-        YoYo.with(Techniques.FadeIn).playOn(singleGroupTabsRoot);
+
         if (singleGroupGamesTabRoot == view) {
             showAvailableGames();
         } else if (singleGroupLeagueTabRoot == view) {
@@ -351,7 +346,7 @@ public class SingleGroupFragment extends Fragment {
 
     public void showAvailableGames() {
 
-        loadingRoot.setVisibility(View.VISIBLE);
+        EventBus.getDefault().post(new LoadingEvent(true,"Loading matches..."));
         singleGroupLeagueRoot.setVisibility(View.GONE);
         singleGroupTabsRoot.setVisibility(View.GONE);
 
@@ -364,8 +359,8 @@ public class SingleGroupFragment extends Fragment {
         //singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
         singleGroupGamesTabTextView.setTextColor(selectedTabColor);
 
-        loadingRoot.setVisibility(View.GONE);
-        YoYo.with(Techniques.FadeIn).playOn(groupLeagueGamesRoot);
+        EventBus.getDefault().post(new LoadingEvent(false,null));
+        YoYo.with(Techniques.FadeIn).playOn(singleGroupGamesRoot);
         singleGroupGamesRoot.setVisibility(View.VISIBLE);
         singleGroupTabsRoot.setVisibility(View.VISIBLE);
 
@@ -374,7 +369,7 @@ public class SingleGroupFragment extends Fragment {
 
     private void showLeague() {
 
-        loadingRoot.setVisibility(View.VISIBLE);
+        EventBus.getDefault().post(new LoadingEvent(true,"Loading group scoreboard..."));
         singleGroupTabsRoot.setVisibility(View.GONE);
         singleGroupGamesRoot.setVisibility(View.GONE);
 
@@ -423,8 +418,8 @@ public class SingleGroupFragment extends Fragment {
         String myPositionOutOf = String.format("%s %d/%d",getString(R.string.lbl_your_position) , myPosition,leagueRecords.length );
         singleGroupPositionOutOfTextView.setText(myPositionOutOf);
 
-        loadingRoot.setVisibility(View.GONE);
-        YoYo.with(Techniques.FadeIn).playOn(groupLeagueGamesRoot);
+        EventBus.getDefault().post(new LoadingEvent(false,null));
+        YoYo.with(Techniques.FadeIn).playOn(singleGroupLeagueRoot);
         singleGroupLeagueRoot.setVisibility(View.VISIBLE);
         singleGroupTabsRoot.setVisibility(View.VISIBLE);
 
@@ -540,7 +535,7 @@ public class SingleGroupFragment extends Fragment {
             }
             viewPager.setCurrentItem(0);
 
-            loadingRoot.setVisibility(View.GONE);
+            EventBus.getDefault().post(new LoadingEvent(false,null));
             showAvailableGames();
 
 

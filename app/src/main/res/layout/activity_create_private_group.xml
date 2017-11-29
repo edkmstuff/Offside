@@ -10,11 +10,6 @@
     android:orientation="vertical"
     tools:context="com.offsidegame.offside.activities.CreatePrivateGroupActivity">
 
-
-    <!-- Progress bar -->
-    <include layout="@layout/shared_loading"
-        android:visibility="gone"/>
-
     <!--create private group root-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +40,7 @@
                     android:src="@drawable/sidekick_logo_text_only"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
-                    android:alpha="0.85"
+                    android:alpha="0.35"
                     />
 
             </LinearLayout>
@@ -60,48 +55,43 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:padding="10dp"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="8dp">
+                android:layout_marginTop="22dp">
 
 
+                <LinearLayout
+                    style="@style/LinearLayoutVerticalWidthMatchHeightWrap"
+                    android:gravity="center"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+
+                    >
+                    <EditText
+                        android:id="@+id/cpg_private_group_name_edit_text"
+                        style="@style/editTextClassic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:ems="10"
+                        android:hint="@string/lbl_create_private_group_hint"
+                        android:inputType="textNoSuggestions|textShortMessage"
+                        android:minHeight="48dp"
+                        android:paddingStart="6dp"
+                        android:maxLength="20"
+                        android:layout_gravity="center"
+                        />
 
 
-                <!--<TextView-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="10dp"-->
-                    <!--android:layout_marginTop="20dp"-->
-                    <!--android:text="@string/lbl_select_name_for_club"-->
-                    <!--android:textColor="@color/grayText" />-->
-
-                <EditText
-                    android:id="@+id/cpg_private_group_name_edit_text"
-                    style="@style/editTextClassic"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:ems="10"
-                    android:hint="@string/lbl_create_private_group_hint"
-                    android:inputType="textEmailAddress"
-                    android:minHeight="50dp"
-                    android:paddingRight="5dp"
-                    android:textDirection="rtl"
-                    android:maxLength="20"
-                    />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/cpg_save_private_group_button_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     style="@style/Button"
                     android:gravity="center"
-                    android:minHeight="50dp"
+                    android:minHeight="54dp"
                     android:minWidth="100dp"
-                    android:padding="5dp"
                     android:text="@string/lbl_create_private_group"
-                    android:textDirection="rtl"
-
 
                     />
 

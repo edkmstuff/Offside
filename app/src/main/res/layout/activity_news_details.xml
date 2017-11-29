@@ -7,28 +7,45 @@
     android:orientation="vertical"
     android:background="@drawable/app_background">
 
-    <LinearLayout
-
-        android:id="@+id/nd_back_root"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="left"
-        >
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <LinearLayout
 
-        <ImageView
-            android:id="@+id/fsg_group_navigation_left_button_image_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_left"/>
+                android:id="@+id/nd_back_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                >
 
-    </LinearLayout>
+                <ImageView
+                    android:id="@+id/fsg_group_navigation_left_button_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_left"/>
 
-    <WebView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/nd_news_details_web_view">
+            </LinearLayout>
 
-    </WebView>
+            <WebView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/nd_news_details_web_view">
+
+            </WebView>
+
+        </LinearLayout>
+
+
+
+        <!-- Progress bar -->
+        <include layout="@layout/shared_loading"
+            android:visibility="gone"/>
+    </FrameLayout>
+
 
 
 

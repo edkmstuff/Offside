@@ -1,12 +1,10 @@
 package com.offsidegame.offside.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -35,10 +33,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.SlotActivity;
+import com.offsidegame.offside.events.InGamePlayerAssetsUpdateEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
 import com.offsidegame.offside.events.RewardEvent;
 import com.offsidegame.offside.helpers.ImageHelper;
-import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.ChatMessage;
@@ -46,7 +44,6 @@ import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.Winner;
-import com.squareup.picasso.Picasso;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -421,7 +418,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         }
     }
 
-
     private void generateGetCoinsChatMessage(final ViewHolder viewHolder) {
 
         try {
@@ -762,6 +758,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                 answers[i].setSelectedBetSize(betSize);
                             }
 
+                            viewHolder.incomingDoubleupBetRoot.setOnClickListener(null);
+                            viewHolder.incomingDoubleupBetRoot.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_unselected);
+
+                            int oldValue = OffsideApplication.getGameInfo().getPlayer().getPowerItems();
+                            int newValue = oldValue==0 ? 0 :oldValue-1;
+
+                            EventBus.getDefault().post(new InGamePlayerAssetsUpdateEvent(InGamePlayerAssetsUpdateEvent.assetTypePowerItems,oldValue,newValue));
+
                         }
                     });
 
@@ -772,6 +776,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     if (!isAllowToDoubleup) {
                         viewHolder.incomingDoubleupBetRoot.setOnClickListener(null);
                         viewHolder.incomingDoubleupBetRoot.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_unselected);
+                    }
+                    else{
+                        viewHolder.incomingDoubleupBetRoot.setBackgroundResource(R.drawable.double_up_button);
                     }
 
 
@@ -786,9 +793,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         }
 
                     }
-
-
-
 
 
 
@@ -822,7 +826,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 ////                                }
 //
 //                                //update balance
-////                                int postBetOffsideCoins = OffsideApplication.getOffsideCoins() - betSize;
+////                                int postBetOffsideCoins = OffsideApplication.getAssetType() - betSize;
 ////                                viewHolder.incomingBalanceTextView.setText(String.valueOf(postBetOffsideCoins));
 //
 //                            }

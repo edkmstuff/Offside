@@ -14,11 +14,13 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.offsidegame.offside.adapters.NewsFeedAdapter;
+import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.models.FeedItem;
 import com.offsidegame.offside.models.OffsideApplication;
 
 import org.acra.ACRA;
 
+import org.greenrobot.eventbus.EventBus;
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 import org.w3c.dom.Document;
@@ -56,9 +58,9 @@ public class ReadRss extends AsyncTask<Void,Void, Void> {
     ArrayList<FeedItem> feedItems;
     RecyclerView recyclerView;
     NewsFeedAdapter newsFeedAdapter;
-    FrameLayout loadingProgress;
+    LinearLayout loadingProgress;
 
-    public ReadRss(Context context, RecyclerView recyclerView, FrameLayout loadingProgress) {
+    public ReadRss(Context context, RecyclerView recyclerView, LinearLayout loadingProgress) {
         this.context = context;
         this.recyclerView = recyclerView;
         this.loadingProgress = loadingProgress;
@@ -71,14 +73,14 @@ public class ReadRss extends AsyncTask<Void,Void, Void> {
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        loadingProgress.setVisibility(View.VISIBLE);
+        //loadingProgress.setVisibility(View.VISIBLE);
         //progressDialog.show();
     }
 
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        loadingProgress.setVisibility(View.GONE);
+        EventBus.getDefault().post(new LoadingEvent(false,null));
         //progressDialog.dismiss();
 
         newsFeedAdapter = new NewsFeedAdapter(context,feedItems);

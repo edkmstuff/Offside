@@ -116,6 +116,8 @@ public class OffsideApplication extends Application {
 
     private static boolean isBackFromNewsFeed = false;
 
+    private static boolean isBackFromCreatePrivateGroup = false;
+
     private static HashMap<String, LeagueRecord[]> leaguesRecords;
 
 
@@ -367,6 +369,14 @@ public class OffsideApplication extends Application {
 
     public static void setIsBackFromNewsFeed(boolean isBackFromNewsFeed) {
         OffsideApplication.isBackFromNewsFeed = isBackFromNewsFeed;
+    }
+
+    public static boolean isIsBackFromCreatePrivateGroup() {
+        return isBackFromCreatePrivateGroup;
+    }
+
+    public static void setIsBackFromCreatePrivateGroup(boolean isBackFromCreatePrivateGroup) {
+        OffsideApplication.isBackFromCreatePrivateGroup = isBackFromCreatePrivateGroup;
     }
 
 
