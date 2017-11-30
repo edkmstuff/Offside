@@ -134,7 +134,7 @@
     <string name="lbl_back">Back</string>
     <string name="lbl_player_Successfully_quit_game">You left a game</string>
     <string name="lbl_playe_or_game_not_found">Player or Game not found</string>
-    <string name="lbl_collect">COLLECT</string>
+    <string name="lbl_collect">COOL!</string>
     <string name="lbl_missing_coins_dialog_title">More coins?</string>
     <string name="lbl_you_can_get">How would you like to get more</string>
 

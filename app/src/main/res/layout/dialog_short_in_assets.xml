@@ -6,8 +6,7 @@
     android:layout_height="wrap_content"
     android:padding="8dp"
     android:gravity="center"
-    android:background="@drawable/shade_button"
-
+    android:background="@drawable/bg_dialog_get_coins"
     >
 
         <TextView

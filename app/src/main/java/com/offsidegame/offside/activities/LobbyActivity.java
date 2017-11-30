@@ -26,6 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -60,6 +62,7 @@ import com.offsidegame.offside.fragments.SingleGroupFragment;
 import com.offsidegame.offside.helpers.DynamicLinkHelper;
 import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.ImageHelper;
+import com.offsidegame.offside.helpers.NetworkingService;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
@@ -467,6 +470,12 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName, true);
 
         playerInfoRoot.setVisibility(View.VISIBLE);
+
+        YoYo.with(Techniques.StandUp.Bounce).duration(1000).playOn(balanceRoot);
+
+
+
+
 
         //check balance
         int minRequiredBalance = OffsideApplication.getMinRequiredBalance();
@@ -877,7 +886,12 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         dialogueCloseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 rewardDialog.cancel();
+                OffsideApplication.networkingService.requestPlayerAssets(playerId);
+
+
+
             }
         });
 
