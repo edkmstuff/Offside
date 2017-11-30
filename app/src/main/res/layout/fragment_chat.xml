@@ -245,7 +245,7 @@
                     android:layout_gravity="center"
                     android:gravity="center_vertical"
                     android:padding="5dp"
-                    android:src="@mipmap/ic_invite_freind_to_group"
+                    android:src="@drawable/ic_invite_friend"
                      />
 
 

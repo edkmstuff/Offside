@@ -2,12 +2,8 @@ package com.offsidegame.offside.adapters;
 
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -166,13 +162,13 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 String title = String.format("%d %S", countActivePlayersInPrivateGroup, context.getString(R.string.lbl_now_playing));
                 viewHolder.totalPlayingPlayersInGroupTextView.setText(title);
                 viewHolder.groupGameStatusTextView.setText(R.string.lbl_game_is_active);
-                viewHolder.groupGameStatusTextView.setBackgroundResource(R.drawable.button_game_is_on);
+                viewHolder.groupGameStatusTextView.setBackgroundResource(R.drawable.bg_button_game_is_on);
 
 
             } else {
                 viewHolder.totalPlayingPlayersInGroupTextView.setText(R.string.lbl_no_playing_players);
                 viewHolder.groupGameStatusTextView.setText(R.string.lbl_play_here);
-                viewHolder.groupGameStatusTextView.setBackgroundResource(R.drawable.button_start_game);
+                viewHolder.groupGameStatusTextView.setBackgroundResource(R.drawable.bg_button_start_game);
 
             }
 

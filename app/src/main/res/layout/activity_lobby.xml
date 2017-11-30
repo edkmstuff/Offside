@@ -59,7 +59,7 @@
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:scaleType="centerCrop"
-                            android:src="@mipmap/ic_profile"
+                            android:src="@drawable/profile"
                             />
 
                     </LinearLayout>
@@ -119,7 +119,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="-18dp"
-                            android:background="@drawable/coins_assets_bg"
+                            android:background="@drawable/bg_assets_coins"
                             android:paddingBottom="2dp"
                             android:paddingLeft="24dp"
                             android:paddingRight="44dp"

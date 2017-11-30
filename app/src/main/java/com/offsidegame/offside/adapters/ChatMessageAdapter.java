@@ -778,7 +778,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         viewHolder.incomingDoubleupBetRoot.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_unselected);
                     }
                     else{
-                        viewHolder.incomingDoubleupBetRoot.setBackgroundResource(R.drawable.double_up_button);
+                        viewHolder.incomingDoubleupBetRoot.setBackgroundResource(R.drawable.shape_bg_button_double_up);
                     }
 
 

@@ -14,7 +14,7 @@ public class NotEnoughCoinsEvent {
         this.requiredCoins = requiredCoins;
     }
 
-    public boolean iseligble(){
+    public boolean isEligble(){
         return availableCoins>requiredCoins;
 
     }

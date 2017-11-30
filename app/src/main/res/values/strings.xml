@@ -54,8 +54,8 @@
     <string name="lbl_click_to_answer">Click to answer</string>
     <string name="lbl_click_to_view">Click to see</string>
     <string name="lbl_get_offside_coins">Get power item</string>
-    <string name="lbl_watch_short_video">WATCH VIDEO(10 coins)</string>
-    <string name="lbl_buy_offside_coins">BUY COINS</string>
+    <string name="lbl_watch_short_video">Watch Video</string>
+    <string name="lbl_buy_offside_coins">Shop</string>
     <string name="lbl_loading_video">Loading video...</string>
     <string name="lbl_leave_game">Exit game</string>
     <string name="lbl_start_slot">Click to roll</string>
@@ -65,7 +65,7 @@
     <string name="lbl_you_didnt_earn_balls">You did not win any power items, no worries - you can try again</string>
     <string name="lbl_try_again">Try again</string>
     <string name="lbl_you_missed_this_question">You was not connected</string>
-    <string name="lbl_feeling_lucky">LUCKY SLOT</string>
+    <string name="lbl_feeling_lucky">Feeling Lucky</string>
     <string name="lbl_is">correct answer</string>
     <string name="lbl_your_answer_was">Your answer</string>
     <string name="lbl_and_the_winner_is">And the winners are....</string>
@@ -112,7 +112,7 @@
     <string name="lbl_player_experience">My Level</string>
     <string name="lbl_no_group_selected">You did not select group</string>
     <string name="lbl_doubleup">DOUBLE UP</string>
-    <string name="lbl_congratulations">Congratulations</string>
+    <string name="lbl_congratulations">Congratulation!</string>
     <string name="lbl_pre_bonus_reward_message">You have just got yourself</string>
     <string name="lbl_close">CLOSE</string>
     <string name="lbl_latest_game">Latest Game</string>
@@ -134,6 +134,8 @@
     <string name="lbl_back">Back</string>
     <string name="lbl_player_Successfully_quit_game">You left a game</string>
     <string name="lbl_playe_or_game_not_found">Player or Game not found</string>
-
+    <string name="lbl_collect">COLLECT</string>
+    <string name="lbl_missing_coins_dialog_title">More coins?</string>
+    <string name="lbl_you_can_get">How would you like to get more</string>
 
 </resources>

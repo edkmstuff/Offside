@@ -410,7 +410,7 @@ public class NetworkingService extends Service {
             String friendInviteCode = friendInviteCodeKeyValue.getValue();
             friendInviteReceived = true;
             EventBus.getDefault().post(new FriendInviteReceivedEvent(friendInviteCode));
-        } else if (message.equals("FriendInviteReceived")) {
+        } else if (message.equals("PlayerRewardedReceived")) {
             KeyValue rewardValueKeyValue = gson.fromJson(model, KeyValue.class);
             Integer rewardValue = Integer.parseInt(rewardValueKeyValue.getValue());
             playerRewardSaved = true;

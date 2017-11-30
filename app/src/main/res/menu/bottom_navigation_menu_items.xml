@@ -35,7 +35,7 @@
 
     <item
         android:id="@+id/nav_action_shop"
-        android:icon="@drawable/shop"
+        android:icon="@drawable/ic_shop"
         android:title="@string/lbl_shop"></item>
 
 </menu>

@@ -34,8 +34,8 @@
     <string name="lbl_click_to_answer">לחץ כדי לענות</string>
     <string name="lbl_click_to_view">לחץ כדי לראות</string>
     <string name="lbl_get_offside_coins">השג כדור</string>
-    <string name="lbl_watch_short_video">צפה בוידאו קצר (1000 מטבעות)</string>
-    <string name="lbl_buy_offside_coins">רכוש מטבעות</string>
+    <string name="lbl_watch_short_video">צפה בוידאו</string>
+    <string name="lbl_buy_offside_coins">חנות</string>
     <string name="lbl_loading_video">טוען וידאו...</string>
     <string name="lbl_leave_game">צא מהמשחק</string>
     <string name="lbl_start_slot">לחץ כאן כדי להגריל</string>
@@ -45,7 +45,7 @@
     <string name="lbl_you_didnt_earn_balls">לא זכית בכדורים הפעם... לא נורא, תוכל לנסות שוב</string>
     <string name="lbl_try_again">נסה שוב</string>
     <string name="lbl_you_missed_this_question">לא היית מחובר בזמן שנשלחה השאלה</string>
-    <string name="lbl_feeling_lucky">הגרל כדורים (סיכוי 1:10)</string>
+    <string name="lbl_feeling_lucky">הגרל</string>
     <string name="lbl_is">התשובה הנכונה</string>
     <string name="lbl_your_answer_was">תשובתך</string>
     <string name="lbl_and_the_winner_is">והמנצחים שלנו הם...</string>
@@ -114,6 +114,10 @@
     <string name="lbl_back">חזרה</string>
     <string name="lbl_player_Successfully_quit_game">פרשת מהמשחק בהצלחה</string>
     <string name="lbl_playe_or_game_not_found">לא נמצא משחק פעיל</string>
+    <string name="lbl_collect">מתאים לי</string>
+    <string name="lbl_missing_coins_dialog_title">עוד מטבעות?</string>
+    <string name="lbl_you_can_get">איך תרצה להשיג</string>
+    <string name="lbl_pick_a_way_below"></string>
 
 
 </resources>

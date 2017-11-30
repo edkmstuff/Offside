@@ -296,7 +296,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
 
                 viewHolder.joinPrivateGameRoot.setVisibility(GONE);
 
-                viewHolder.createPrivateGameRoot.setBackgroundResource(R.drawable.button_start_game);
+                viewHolder.createPrivateGameRoot.setBackgroundResource(R.drawable.bg_button_start_game);
                 viewHolder.createPrivateGameRoot.setVisibility(View.VISIBLE);
                 viewHolder.createPrivateGameButtonTextView.setVisibility(GONE);
             } else {
@@ -304,12 +304,12 @@ public class AvailableGamesAdapter extends BaseAdapter {
                 viewHolder.createPrivateGameRoot.setVisibility(GONE);
 
                 viewHolder.joinPrivateGameRoot.setVisibility(View.VISIBLE);
-                viewHolder.joinPrivateGameRoot.setBackgroundResource(R.drawable.button_start_game);
+                viewHolder.joinPrivateGameRoot.setBackgroundResource(R.drawable.bg_button_start_game);
                 viewHolder.joinPrivateGameButtonTextView.setVisibility(GONE);
 
                 if(viewHolder.userIsAlreadyInGame){
                     viewHolder.gameEnterFeeRoot.setVisibility(GONE);
-                    viewHolder.joinPrivateGameRoot.setBackgroundResource(R.drawable.button_game_is_on);
+                    viewHolder.joinPrivateGameRoot.setBackgroundResource(R.drawable.bg_button_game_is_on);
                     viewHolder.joinPrivateGameButtonTextView.setText(R.string.lbl_resume_game);
                     viewHolder.joinPrivateGameButtonTextView.setVisibility(View.VISIBLE);
                 }

@@ -18,14 +18,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -125,7 +125,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     //reward dialoge
     private Dialog rewardDialog;
-    private TextView dialoguePlayerNameTextView;
+    //private TextView dialoguePlayerNameTextView;
     private TextView dialogueRewardValueTextView;
     private ImageView dialoguePlayerImageImageView;
     private ImageView dialogueCoinImageView;
@@ -138,6 +138,12 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private TextView getCoinsBuyCoinsActionTextView;
     private Button notEnoughCoinsDialogueCloseButton;
     private boolean isPlayerCanJoinPrivateGame = false;
+
+    private  LinearLayout getCoinsShopRoot;
+    private  LinearLayout getCoinsWatchVideoRoot;
+    private  LinearLayout getCoinsSlotMachineRoot;
+
+
 
     private boolean isGroupInviteExecuted ;
     //</editor-fold>
@@ -210,7 +216,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         balanceRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_shop));
+                onNotEnoughCoinsEventReceived(new NotEnoughCoinsEvent(0,1));
+
 
             }
         });
@@ -424,6 +431,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     public void onReceivePlayerAssets(PlayerAssets playerAssets) {
 
         try {
+
             if (playerAssets == null)
                 return;
 
@@ -459,6 +467,17 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName, true);
 
         playerInfoRoot.setVisibility(View.VISIBLE);
+
+        //check balance
+        int minRequiredBalance = OffsideApplication.getMinRequiredBalance();
+
+        boolean isLowCoinsInventory = balance < minRequiredBalance;
+
+        if(isLowCoinsInventory)
+        {
+            EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,minRequiredBalance));
+
+        }
 
 
     }
@@ -834,6 +853,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlayerRewardedReceived(PlayerRewardedReceivedEvent playerRewardedReceivedEvent) {
 
+        onLoadingEventReceived(new LoadingEvent(false,null));
         if (playerRewardedReceivedEvent == null)
             return;
         final int rewardValue = playerRewardedReceivedEvent.getRewardValue();
@@ -841,19 +861,17 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         rewardDialog = new Dialog(context);
         rewardDialog.setContentView(R.layout.dialog_reward);
 
-
         dialoguePlayerImageImageView = rewardDialog.findViewById(R.id.dr_player_image_image_view);
-        dialoguePlayerNameTextView = rewardDialog.findViewById(R.id.dr_player_name_text_view);
+        //dialoguePlayerNameTextView = rewardDialog.findViewById(R.id.dr_player_name_text_view);
         dialogueRewardValueTextView = rewardDialog.findViewById(R.id.dr_reward_value_text_view);
         dialogueCoinImageView = rewardDialog.findViewById(R.id.dr_coin_image_view);
         dialogueCloseButton = rewardDialog.findViewById(R.id.dr_close_button);
 
-        ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, dialoguePlayerImageImageView, activityName, true);
-        dialoguePlayerNameTextView.setText(OffsideApplication.getPlayerAssets().getPlayerName());
+        //dialoguePlayerNameTextView.setText(OffsideApplication.getPlayerAssets().getPlayerName());
         dialogueRewardValueTextView.setText(String.format("%d", rewardValue));
-        YoYo.with(Techniques.Bounce)
-                .repeat(YoYo.INFINITE)
-                .playOn(dialogueCoinImageView);
+//        YoYo.with(Techniques.Bounce)
+//                .repeat(YoYo.INFINITE)
+//                .playOn(dialogueCoinImageView);
 
 
         dialogueCloseButton.setOnClickListener(new View.OnClickListener() {
@@ -863,6 +881,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             }
         });
 
+        adjustDialogWidthToWindow(rewardDialog);
         rewardDialog.show();
 
 
@@ -882,6 +901,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     }
 
 
+
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCannotJoinPrivateGameReceived(CannotJoinPrivateGameEvent cannotJoinPrivateGameEvent) {
 
@@ -897,19 +918,56 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         if (notEnoughCoinsEvent == null)
             return;
 
-        boolean isEligble = notEnoughCoinsEvent.iseligble();
+        boolean isEligible = notEnoughCoinsEvent.isEligble();
 
-        if (!isEligble) {
+        if (!isEligible) {
             shortInAssetsDialog = new Dialog(context);
             shortInAssetsDialog.setContentView(R.layout.dialog_short_in_assets);
+
 
 
             getCoinsWatchRewardVideoActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_watch_reward_video_action_text_view);
             getCoinsBuyCoinsActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_buy_coins_action_text_view);
             getCoinsSlotMachineActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_slot_machine_action_text_view);
             notEnoughCoinsDialogueCloseButton = shortInAssetsDialog.findViewById(R.id.dsia_close_button);
+            getCoinsShopRoot = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_shop_root);
+            getCoinsWatchVideoRoot =  shortInAssetsDialog.findViewById(R.id.dsia_get_coins_watch_video_root);
+            getCoinsSlotMachineRoot = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_slot_machine_root);
 
-            //todo: Add clickListener to buttons in dialogue
+
+
+            getCoinsShopRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_shop));
+                    shortInAssetsDialog.cancel();
+                }
+            });
+
+            getCoinsWatchVideoRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //todo: add load video
+                    Snackbar.make(playerInfoRoot,"COMING SOON!!!", Snackbar.LENGTH_SHORT).show();
+                    shortInAssetsDialog.cancel();
+
+                }
+            });
+
+            getCoinsSlotMachineRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //todo: fix slotActivity then uncomment this
+                    Snackbar.make(playerInfoRoot,"COMING SOON!!!", Snackbar.LENGTH_SHORT).show();
+                    shortInAssetsDialog.cancel();
+
+
+//                    Intent intent = new Intent(context,SlotActivity.class);
+//                    startActivity(intent);
+
+                }
+            });
+
 
             notEnoughCoinsDialogueCloseButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -918,6 +976,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 }
             });
 
+            adjustDialogWidthToWindow(shortInAssetsDialog);
             shortInAssetsDialog.show();
 
         }
@@ -967,6 +1026,18 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             loadingRoot.setVisibility(View.GONE);
 
 
+
+    }
+
+    public void adjustDialogWidthToWindow(Dialog dialog){
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        Window window = dialog.getWindow();
+        lp.copyFrom(window.getAttributes());
+        //This makes the dialog take up the full width
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
 
     }
 

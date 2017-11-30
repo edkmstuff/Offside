@@ -4,20 +4,17 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
-    android:background="@color/colorPrimaryDark"
+    android:padding="8dp"
+    android:gravity="center"
+    android:background="@drawable/shade_button"
 
     >
-    <LinearLayout
-       style="@style/LinearLayoutVerticalWidthMatchHeightWrap"
-        android:gravity="center"
-        android:padding="15dp"
-        >
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="@dimen/OffsideLargeText"
-            android:text="YO!!!"
+            android:text="@string/lbl_missing_coins_dialog_title"
             android:layout_gravity="center"
             android:fontFamily="@font/font_open_sans_hebrew_bold"
             android:layout_marginTop="5dp"
@@ -25,11 +22,12 @@
 
         <LinearLayout
             style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
-            android:gravity="center">
+            android:gravity="center"
+            >
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="you need"
+                android:text="@string/lbl_you_can_get"
                 android:layout_gravity="center_vertical"
                 android:fontFamily="@font/font_open_sans_hebrew"
 
@@ -46,77 +44,129 @@
                 android:layout_marginRight="5dp"
 
                 />
+
+
+        </LinearLayout>
+
+    <LinearLayout
+        style="@style/LinearLayoutHorizontalWidthMatchHeightWrap"
+        android:gravity="center"
+        android:weightSum="3"
+        android:paddingLeft="4dp"
+        android:paddingRight="4dp"
+        android:layout_marginTop="14dp">
+
+        <!--button slot-->
+        <LinearLayout
+            android:id="@+id/dsia_get_coins_slot_machine_root"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/bg_button_dialog_get_coins"
+
+
+            >
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_slot"
+                />
+
             <TextView
+                android:id="@+id/dsia_get_coins_slot_machine_action_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="in order to play"
-                android:layout_gravity="center_vertical"
-                android:fontFamily="@font/font_open_sans_hebrew"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="@string/lbl_feeling_lucky"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/OffsideSmallText" />
 
+
+        </LinearLayout>
+
+        <!--button video-->
+        <LinearLayout
+            android:id="@+id/dsia_get_coins_watch_video_root"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/bg_button_dialog_get_coins"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+
+            >
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_play_video"/>
+            <TextView
+                android:id="@+id/dsia_get_coins_buy_coins_action_text_view"
+                android:text="@string/lbl_watch_short_video"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:layout_marginTop="8dp"
+                android:textSize="@dimen/OffsideSmallText"
                 />
 
         </LinearLayout>
-        <TextView
-            android:id="@+id/dsia_get_coins_watch_reward_video_action_text_view"
-            style="@style/Button"
-            android:layout_width="wrap_content"
-            android:minWidth="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:minHeight="50dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="@string/lbl_watch_short_video"
-            android:textColor="@color/colorWhite"
-            android:layout_marginTop="10dp"/>
 
-        <TextView
-            android:id="@+id/dsia_get_coins_buy_coins_action_text_view"
-            style="@style/Button"
-            android:layout_width="wrap_content"
-            android:minWidth="200dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
-            android:minHeight="50dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="@string/lbl_buy_offside_coins"
-            android:textColor="@color/colorWhite"
-            android:visibility="visible" />
+        <!--button store-->
 
-        <TextView
-            android:id="@+id/dsia_get_coins_slot_machine_action_text_view"
-            style="@style/Button"
-            android:layout_width="wrap_content"
-            android:minWidth="200dp"
+        <LinearLayout
+            android:id="@+id/dsia_get_coins_shop_root"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
             android:gravity="center"
-            android:minHeight="50dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="@string/lbl_feeling_lucky"
-            android:textColor="@color/colorWhite" />
+            android:background="@drawable/bg_button_dialog_get_coins"
 
+            >
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/ic_shop"/>
+            <TextView
+                android:id="@+id/dsia_get_coins_watch_reward_video_action_text_view"
+
+                android:text="@string/lbl_buy_offside_coins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:layout_marginTop="8dp"
+                android:textSize="@dimen/OffsideSmallText"
+
+                />
+
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
 
         <Button
             android:id="@+id/dsia_close_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Button"
             android:fontFamily="@font/font_open_sans_hebrew"
             android:text="@string/lbl_close"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="14dp"
             android:layout_gravity="center"
+            android:background="@drawable/bg_button_dialog"
             >
 
 
         </Button>
-    </LinearLayout>
+
 
 
 

@@ -26,6 +26,6 @@
 
     </shape>
 </item>
-    <item android:drawable="@mipmap/ic_offside_coin_bet_with_logo" />
+    <item android:drawable="@drawable/gold_coin" />
 
 </layer-list>

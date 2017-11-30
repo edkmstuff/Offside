@@ -120,6 +120,8 @@ public class OffsideApplication extends Application {
 
     private static HashMap<String, LeagueRecord[]> leaguesRecords;
 
+    private static int minRequiredBalance = 200;
+
 
     public static String getMessageTypeText() {
         return messageTypeText;
@@ -514,4 +516,7 @@ public class OffsideApplication extends Application {
     }
 
 
+    public static int getMinRequiredBalance() {
+        return minRequiredBalance;
+    }
 }

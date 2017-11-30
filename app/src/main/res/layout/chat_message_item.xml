@@ -356,7 +356,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="5dp"
-                                android:background="@drawable/double_up_button"
+                                android:background="@drawable/shape_bg_button_double_up"
                                 android:gravity="center"
                                 android:orientation="horizontal">
 
