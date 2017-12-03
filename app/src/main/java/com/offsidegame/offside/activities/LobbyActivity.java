@@ -182,8 +182,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     private void getIDs() {
 
-
-
         playerInfoRoot = (LinearLayout) findViewById(R.id.l_player_info_root);
 
         playerPictureImageView = (ImageView) findViewById(R.id.l_player_picture_image_view);

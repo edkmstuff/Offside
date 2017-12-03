@@ -442,18 +442,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                         String privateGameIdFromInvitation = dynamicLinkQueryPairs.get("privateGameId").get(0);
 
                                         //Add player to the group from which he was invited
-                                        if (groupIdFromInvitation != null)
-
-
-                                            //OffsideApplication.signalRService.requestJoinPrivateGroup(playerId, groupIdFromInvitation);
-
-                                            OffsideApplication.networkingService.requestJoinPrivateGroup(playerId,groupIdFromInvitation);
-                                        OffsideApplication.networkingService.requestJoinPrivateGroup(playerId, groupIdFromInvitation);
-
+                                        if (groupIdFromInvitation == null)
+                                            return;
 
                                         //Override userPreferences, as theses will be used when tryJoinSelectedAvailableGame will be executed (Lobby Activity)
                                         if (gameIdFromInvitation != null && privateGameIdFromInvitation != null)
                                             OffsideApplication.setUserPreferences(groupIdFromInvitation, gameIdFromInvitation, privateGameIdFromInvitation);
+
+                                        OffsideApplication.networkingService.requestJoinPrivateGroup(playerId,groupIdFromInvitation);
+
 
                                     } catch (UnsupportedEncodingException e) {
                                         e.printStackTrace();
