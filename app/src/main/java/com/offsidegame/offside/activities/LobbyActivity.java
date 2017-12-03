@@ -149,6 +149,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
     private boolean isGroupInviteExecuted ;
+    private boolean isInGameInvite = false;
     //</editor-fold>
 
 
@@ -469,7 +470,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName, true);
 
-        playerInfoRoot.setVisibility(View.VISIBLE);
+        if(!isInGameInvite){
+            playerInfoRoot.setVisibility(View.VISIBLE);
+
+        }
+
 
         YoYo.with(Techniques.StandUp.Bounce).duration(1000).playOn(balanceRoot);
 
@@ -751,6 +756,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         if (privateGameId != null) {
             String gameTitle = String.format("%s vs. %s", OffsideApplication.getGameInfo().getHomeTeam(), OffsideApplication.getGameInfo().getAwayTeam());
             invitationMessage = String.format("\nOur group %s is watching\n %s. \nCome play Sidekick with us ", groupName, gameTitle);
+            isInGameInvite = true;
         } else if (groupId != null) {
             invitationMessage = String.format("\nJoin my group %s \nand Let's play Sidekick", groupName);
         } else

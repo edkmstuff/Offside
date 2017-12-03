@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:background="@drawable/bg_dialog_get_coins"
-    android:padding="15dp"
+    android:padding="12dp"
 
     >
 
@@ -36,22 +36,19 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="25dp"
-
-
-
         android:weightSum="2"
         android:orientation="horizontal">
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="left">
+            android:gravity="start">
             <Button
                 android:id="@+id/dad_ok_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Button"
-                android:fontFamily="@font/font_open_sans_hebrew_extra_bold"
+                android:fontFamily="@font/font_open_sans_hebrew"
                 android:text="@string/lbl_yes"
                 android:background="@drawable/bg_button_dialog"
                 />
@@ -60,7 +57,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="end"
 
             >
             <Button
@@ -68,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/Button"
-                android:fontFamily="@font/font_open_sans_hebrew_extra_bold"
+                android:fontFamily="@font/font_open_sans_hebrew"
                 android:text="@string/lbl_noooo"
                 android:background="@drawable/bg_button_dialog"
                 />

@@ -165,9 +165,20 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPrivateGroupCreated(PrivateGroupCreatedEvent privateGroupCreatedEvent) {
         try {
-            Intent intent = new Intent(context, LobbyActivity.class);
-            intent.putExtra("showGroups", true);
-            startActivity(intent);
+
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    Intent intent = new Intent(context, LobbyActivity.class);
+                    intent.putExtra("showGroups", true);
+                    startActivity(intent);
+
+                }
+            }, 500);
+
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
