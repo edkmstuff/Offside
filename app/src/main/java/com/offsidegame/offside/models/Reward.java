@@ -105,8 +105,8 @@ public class Reward {
             resourceId = R.drawable.trophy_silver_big;
         if(rewardTypeName.equals(rewardTypeBronzeTrophy))
             resourceId = R.drawable.trophy_bronze_big;
-        if(rewardTypeName.equals(rewardTypeCoins))
-            resourceId = R.drawable.gold_coin;
+//        if(rewardTypeName.equals(rewardTypeCoins))
+//            resourceId = R.drawable.gold_coin;
 
         return resourceId;
 

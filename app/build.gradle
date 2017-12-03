@@ -9,8 +9,8 @@ android {
         applicationId "com.offsidegame.offside"
         minSdkVersion 19
         targetSdkVersion rootProject.ext.compileSdkVersion
-        versionCode 46
-        versionName "6.1.9"
+        versionCode 48
+        versionName "6.1.10"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -32,6 +32,16 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "RABBITMQ_HOSTNAME_STRING", "\"sktestvm.westeurope.cloudapp.azure.com\""
+            buildConfigField "String", "GAME_SERVER_HOSTNAME_STRING", "\"offside.azurewebsites.net\""
+
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "RABBITMQ_HOSTNAME_STRING", "\"10.0.2.2\""
+            buildConfigField "String", "GAME_SERVER_HOSTNAME_STRING", "\"10.0.2.2\""
+
         }
 
 
@@ -98,7 +108,7 @@ dependencies {
 
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
-    compile 'ch.acra:acra:4.9.2'
+    compile 'ch.acra:acra:4.9.0'
 
     compile 'com.google.code.gson:gson:2.8.2'
 

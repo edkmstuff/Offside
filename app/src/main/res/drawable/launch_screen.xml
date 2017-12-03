@@ -4,7 +4,7 @@
 
     <item>
         <bitmap
-            android:src="@drawable/lobby_background"
+            android:src="@drawable/app_background"
             android:tileMode="disabled"
             android:gravity="center"/>
         <!--<color android:color="@color/colorWhite"/>-->

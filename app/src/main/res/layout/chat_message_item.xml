@@ -415,7 +415,7 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:background="@drawable/shape_bg_circle"
+
                                         android:gravity="center"
                                         android:text="10"
                                         android:textColor="@color/colorBlack"
@@ -441,7 +441,7 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:background="@drawable/shape_bg_circle"
+
                                         android:gravity="center"
                                         android:text="20"
                                         android:textColor="@color/colorBlack"
@@ -1194,6 +1194,7 @@
                             android:paddingTop="5dp"
                             android:text="This is a sample text"
                             android:textColor="@color/chatText"
+                            android:layout_gravity="start"
 
                             />
 

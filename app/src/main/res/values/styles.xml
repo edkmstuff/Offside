@@ -30,7 +30,7 @@
         <item name="colorControlActivated">@color/colorAccent</item>
         <item name="colorControlHighlight">#00B0FF</item>
         <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:windowBackground">@drawable/lobby_background</item>
+        <item name="android:windowBackground">@drawable/app_background</item>
 
     </style>
 

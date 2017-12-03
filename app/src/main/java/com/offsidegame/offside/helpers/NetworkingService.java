@@ -15,9 +15,11 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.offsidegame.offside.BuildConfig;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.LobbyActivity;
 import com.offsidegame.offside.events.AvailableGameEvent;
@@ -92,7 +94,8 @@ public class NetworkingService extends Service {
 //    private String hostName = "10.0.0.17";
 
     /****************************PRODUCTION**************************/
-    private String hostName = "sktestvm.westeurope.cloudapp.azure.com";
+    //private String hostName = "sktestvm.westeurope.cloudapp.azure.com";
+    private String hostName = BuildConfig.RABBITMQ_HOSTNAME_STRING;
 
     private final IBinder binder = new LocalBinder();
     private String CLIENT_REQUESTS_EXCHANGE_NAME = "FROM_CLIENTS";
@@ -157,6 +160,7 @@ public class NetworkingService extends Service {
 
         try {
             startRabbitMq();
+            ACRA.getErrorReporter().putCustomData("RabbitMqHostName", hostName);
         } catch (InterruptedException ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
