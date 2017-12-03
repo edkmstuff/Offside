@@ -10,7 +10,7 @@ import java.text.DecimalFormat;
 
 public class Formatter {
 
-    public static String intCommaSeparator = "#,###,###.##";
+    public static String intCommaSeparator = "#,###,###.#";
 
 
     public static String formatNumber(Integer value, String format){

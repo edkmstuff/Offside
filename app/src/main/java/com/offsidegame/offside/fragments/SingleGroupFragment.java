@@ -65,7 +65,7 @@ public class SingleGroupFragment extends Fragment {
     private TextView groupNavigationGroupNameTextView;
     private TextView groupNavigationLeftButtonTextView;
     private TextView groupNavigationRightButtonTextView;
-//    private ImageView groupNavigationLeftButtonImageView;
+    //    private ImageView groupNavigationLeftButtonImageView;
 //    private ImageView groupNavigationRightButtonImageView;
     private TextView groupNavigationLastPlayedTextView;
     private TextView singleGroupGamesTabTextView;
@@ -85,6 +85,7 @@ public class SingleGroupFragment extends Fragment {
     private LinearLayout singleGroupChangePrivateGroupNameRoot;
     private LinearLayout singleGroupDeletePrivateGroupButtonRoot;
     private EditText singleGroupChangeGroupNameEditText;
+    private LinearLayout singleGroupNoGamesRoot;
 
 
     public static SingleGroupFragment newInstance() {
@@ -150,7 +151,7 @@ public class SingleGroupFragment extends Fragment {
         singleGroupLeagueListView = (ListView) view.findViewById(R.id.fsg_single_group_league_list_view);
         groupNavigationGroupNameTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_group_name_text_view);
 
-        groupNavigationLeftButtonTextView =  view.findViewById(R.id.fsg_group_navigation_left_button_text_view);
+        groupNavigationLeftButtonTextView = view.findViewById(R.id.fsg_group_navigation_left_button_text_view);
         groupNavigationRightButtonTextView = view.findViewById(R.id.fsg_group_navigation_right_button_text_view);
         groupNavigationLastPlayedTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_last_played_text_view);
 
@@ -163,6 +164,7 @@ public class SingleGroupFragment extends Fragment {
         singleGroupChangePrivateGroupNameRoot = view.findViewById(R.id.fsg_single_group_change_group_name_root);
         singleGroupDeletePrivateGroupButtonRoot = view.findViewById(R.id.fsg_single_group_delete_group_root);
 
+        singleGroupNoGamesRoot = view.findViewById(R.id.fsg_single_group_no_games_root);
 
     }
 
@@ -191,8 +193,8 @@ public class SingleGroupFragment extends Fragment {
                 singleGroupTabSwitched(view);
 //                singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
 //                singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenu);
-                final int selectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuSelectedItem);
-                final int unSelectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuUnSelectedItem);
+                final int selectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuSelectedItem);
+                final int unSelectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuUnSelectedItem);
                 singleGroupGamesTabTextView.setTextColor(selectedTabColor);
                 singleGroupLeagueTabTextView.setTextColor(unSelectedTabColor);
 
@@ -202,8 +204,8 @@ public class SingleGroupFragment extends Fragment {
         singleGroupLeagueTabRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final int selectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuSelectedItem);
-                final int unSelectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuUnSelectedItem);
+                final int selectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuSelectedItem);
+                final int unSelectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuUnSelectedItem);
 //                singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenu);
 //                singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
                 singleGroupGamesTabTextView.setTextColor(unSelectedTabColor);
@@ -270,8 +272,7 @@ public class SingleGroupFragment extends Fragment {
     }
 
     private void createDialogApproveDelete() {
-        try
-        {
+        try {
             dialogApproveDelete = new Dialog(getContext());
             dialogApproveDelete.setContentView(R.layout.dialog_approve_delete);
             dialogOkButton = dialogApproveDelete.findViewById(R.id.dad_ok_button);
@@ -294,16 +295,17 @@ public class SingleGroupFragment extends Fragment {
 
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
     }
 
-    private void resetVisibility(){
+    private void resetVisibility() {
         singleGroupLeagueRoot.setVisibility(View.GONE);
         singleGroupGamesRoot.setVisibility(View.GONE);
         singleGroupTabsRoot.setVisibility(View.GONE);
+        singleGroupNoGamesRoot.setVisibility(View.GONE);
 
 
     }
@@ -320,7 +322,7 @@ public class SingleGroupFragment extends Fragment {
             // this is just to avoid negative indexes
             currentGroupSelectedIndex = newSelectedGroupIndex;
             PrivateGroup newSelectedGroup = OffsideApplication.getPrivateGroupsInfo().getPrivateGroups().get(newSelectedGroupIndex);
-            if(step!=0)
+            if (step != 0)
                 OffsideApplication.setSelectedPrivateGroup(newSelectedGroup);
 
             groupNavigationGroupNameTextView.setText(OffsideApplication.getSelectedPrivateGroup().getName());
@@ -346,12 +348,12 @@ public class SingleGroupFragment extends Fragment {
 
     public void showAvailableGames() {
 
-        EventBus.getDefault().post(new LoadingEvent(true,"Loading matches..."));
+        EventBus.getDefault().post(new LoadingEvent(true, "Loading matches..."));
         singleGroupLeagueRoot.setVisibility(View.GONE);
-        singleGroupTabsRoot.setVisibility(View.GONE);
+        //singleGroupTabsRoot.setVisibility(View.GONE);
 
-        final int selectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuSelectedItem);
-        final int unSelectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuUnSelectedItem);
+        final int selectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuSelectedItem);
+        final int unSelectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuUnSelectedItem);
 
         //singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenu);
         singleGroupLeagueTabTextView.setTextColor(unSelectedTabColor);
@@ -359,9 +361,13 @@ public class SingleGroupFragment extends Fragment {
         //singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
         singleGroupGamesTabTextView.setTextColor(selectedTabColor);
 
-        EventBus.getDefault().post(new LoadingEvent(false,null));
+        EventBus.getDefault().post(new LoadingEvent(false, null));
         YoYo.with(Techniques.FadeIn).playOn(singleGroupGamesRoot);
-        singleGroupGamesRoot.setVisibility(View.VISIBLE);
+
+        if(OffsideApplication.getAvailableGames().length==0)
+            singleGroupNoGamesRoot.setVisibility(View.VISIBLE);
+        else
+            singleGroupGamesRoot.setVisibility(View.VISIBLE);
         singleGroupTabsRoot.setVisibility(View.VISIBLE);
 
 
@@ -369,9 +375,10 @@ public class SingleGroupFragment extends Fragment {
 
     private void showLeague() {
 
-        EventBus.getDefault().post(new LoadingEvent(true,"Loading group scoreboard..."));
+        EventBus.getDefault().post(new LoadingEvent(true, "Loading group scoreboard..."));
         singleGroupTabsRoot.setVisibility(View.GONE);
         singleGroupGamesRoot.setVisibility(View.GONE);
+        singleGroupNoGamesRoot.setVisibility(View.GONE);
 
         HashMap<String, LeagueRecord[]> leaguesRecords = OffsideApplication.getLeaguesRecords();
         PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
@@ -387,8 +394,8 @@ public class SingleGroupFragment extends Fragment {
         LeagueAdapter leagueAdapter = new LeagueAdapter(getActivity(), new ArrayList<>(Arrays.asList(leagueRecords)));
         singleGroupLeagueListView.setAdapter(leagueAdapter);
 
-        final int selectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuSelectedItem);
-        final int unSelectedTabColor = ContextCompat.getColor(getContext(),R.color.navigationMenuUnSelectedItem);
+        final int selectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuSelectedItem);
+        final int unSelectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuUnSelectedItem);
 
         //singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenu);
         singleGroupGamesTabTextView.setTextColor(unSelectedTabColor);
@@ -400,7 +407,7 @@ public class SingleGroupFragment extends Fragment {
 
         String groupCreator = currentGroup.getCreatedByUserId();
 
-        if(currentGroup.getGroupType().equalsIgnoreCase(getString(R.string.key_private_group_name))
+        if (currentGroup.getGroupType().equalsIgnoreCase(getString(R.string.key_private_group_name))
                 && groupCreator.equals(OffsideApplication.getPlayerId()))
             singleGroupOptionsRoot.setVisibility(View.VISIBLE);
         else
@@ -409,16 +416,16 @@ public class SingleGroupFragment extends Fragment {
         //calc my position
         String myPlayerId = OffsideApplication.getPlayerId();
         int myPosition = 0;
-        for(int i=0; i< leagueRecords.length;i++ ){
-            LeagueRecord lr =  leagueRecords[i];
-            if(lr.getPlayerId().equals(myPlayerId))
-                myPosition = i+1;
+        for (int i = 0; i < leagueRecords.length; i++) {
+            LeagueRecord lr = leagueRecords[i];
+            if (lr.getPlayerId().equals(myPlayerId))
+                myPosition = i + 1;
         }
 
-        String myPositionOutOf = String.format("%s %d/%d",getString(R.string.lbl_your_position) , myPosition,leagueRecords.length );
+        String myPositionOutOf = String.format("%s %d/%d", getString(R.string.lbl_your_position), myPosition, leagueRecords.length);
         singleGroupPositionOutOfTextView.setText(myPositionOutOf);
 
-        EventBus.getDefault().post(new LoadingEvent(false,null));
+        EventBus.getDefault().post(new LoadingEvent(false, null));
         YoYo.with(Techniques.FadeIn).playOn(singleGroupLeagueRoot);
         singleGroupLeagueRoot.setVisibility(View.VISIBLE);
         singleGroupTabsRoot.setVisibility(View.VISIBLE);
@@ -498,7 +505,6 @@ public class SingleGroupFragment extends Fragment {
     }
 
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveLeagueRecords(LeagueRecord[] leagueRecords) {
         try {
@@ -535,7 +541,7 @@ public class SingleGroupFragment extends Fragment {
             }
             viewPager.setCurrentItem(0);
 
-            EventBus.getDefault().post(new LoadingEvent(false,null));
+            EventBus.getDefault().post(new LoadingEvent(false, null));
             showAvailableGames();
 
 
@@ -559,7 +565,6 @@ public class SingleGroupFragment extends Fragment {
         }
 
     }
-
 
 
 }

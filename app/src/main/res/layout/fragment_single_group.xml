@@ -2,18 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <!-- Progress bar -->
-    <include
-        layout="@layout/shared_loading"
-        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/fsg_single_group_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:weightSum="12"
         android:orientation="vertical">
 
@@ -233,9 +228,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="7"
                 android:orientation="vertical"
-                android:visibility="gone"
-
-                >
+                android:visibility="gone">
 
                 <android.support.design.widget.TabLayout
                     android:id="@+id/fsg_leagues_selection_tab_layout"
@@ -266,6 +259,30 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/fsg_single_group_no_games_root"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="7"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:gravity="center"
+                android:padding="61dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/lbl_no_available_games_at_this_time"
+                    android:gravity="center"
+                    android:fontFamily="@font/font_open_sans_hebrew_light"
+                    android:textSize="@dimen/OffsideMediumText"
+
+                    />
+
+            </LinearLayout>
+
+
             <!-- LEAGUE-->
             <LinearLayout
                 android:id="@+id/fsg_single_group_league_root"
@@ -274,7 +291,7 @@
                 android:layout_weight="7"
                 android:orientation="vertical"
                 android:background="@drawable/single_group_background"
-                android:visibility="visible"
+                android:visibility="gone"
                 >
 
                 <LinearLayout

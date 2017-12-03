@@ -137,5 +137,6 @@
     <string name="lbl_collect">COOL!</string>
     <string name="lbl_missing_coins_dialog_title">More coins?</string>
     <string name="lbl_you_can_get">How would you like to get more</string>
+    <string name="lbl_no_available_games_at_this_time">No scheduled games at this moment</string>
 
 </resources>

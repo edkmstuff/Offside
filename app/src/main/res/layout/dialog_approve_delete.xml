@@ -4,7 +4,7 @@
     android:orientation="vertical" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:background="@color/colorPrimaryDark"
+    android:background="@drawable/bg_dialog_get_coins"
     android:padding="15dp"
 
     >
@@ -15,23 +15,20 @@
         android:text="@string/lbl_are_you_sure_you_want_to_delete"
         android:layout_gravity="center"
         android:gravity="center"
-        android:fontFamily="@font/font_open_sans_hebrew"
+        android:fontFamily="@font/font_open_sans_hebrew_bold"
         android:layout_marginTop="15dp"
         android:textSize="@dimen/OffsideMediumText"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+
 
         />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/lbl_all_data_will_be_lost_forever"
-        android:layout_gravity="center"
-        android:fontFamily="@font/font_open_sans_hebrew"
+        android:fontFamily="@font/font_open_sans_hebrew_bold"
         android:textSize="@dimen/OffsideMediumText"
         android:layout_marginTop="15dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:gravity="center"
         />
 
     <LinearLayout
@@ -39,8 +36,9 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="25dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
+
+
+
         android:weightSum="2"
         android:orientation="horizontal">
         <LinearLayout
@@ -55,7 +53,7 @@
                 style="@style/Button"
                 android:fontFamily="@font/font_open_sans_hebrew_extra_bold"
                 android:text="@string/lbl_yes"
-                android:background="@color/correctAnswerColor"
+                android:background="@drawable/bg_button_dialog"
                 />
         </LinearLayout>
         <LinearLayout
@@ -72,7 +70,8 @@
                 style="@style/Button"
                 android:fontFamily="@font/font_open_sans_hebrew_extra_bold"
                 android:text="@string/lbl_noooo"
-                android:background="@color/wrongAnswerColor"/>
+                android:background="@drawable/bg_button_dialog"
+                />
 
 
         </LinearLayout>

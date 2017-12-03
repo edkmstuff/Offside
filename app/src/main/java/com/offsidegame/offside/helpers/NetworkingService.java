@@ -87,9 +87,9 @@ public class NetworkingService extends Service {
     private String userName = "kfir";
 
     /****************************DEVELOPMENT**************************/
-    //private String hostName = "10.0.2.2";
+    private String hostName = "10.0.2.2";
     //private String hostName = "192.168.1.140";
-    private String hostName = "10.0.0.17";
+//    private String hostName = "10.0.0.17";
 
     /****************************PRODUCTION**************************/
 //    private String hostName = "sktestvm.westeurope.cloudapp.azure.com";

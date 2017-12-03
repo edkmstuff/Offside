@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.RoundImage;
 import com.offsidegame.offside.models.LeagueRecord;
 import com.squareup.picasso.Picasso;
@@ -72,10 +73,11 @@ public class LeagueAdapter extends ArrayAdapter<LeagueRecord> {
             int darkBackground = R.drawable.shape_bg_league_record_odd;
 
             viewHolder.leagueRecordRoot.setBackgroundResource(position%2 == 0? lightBackGround : darkBackground);
-            viewHolder.leagueRecordPositionTextView.setText(Integer.toString(viewHolder.leagueRecord.getPosition()));
+            viewHolder.leagueRecordPositionTextView.setText(String.format("%d",viewHolder.leagueRecord.getPosition()));
             viewHolder.leagueRecordPlayerNameTextView.setText(viewHolder.leagueRecord.getPlayerName());
-            viewHolder.leagueRecordPointsTextView.setText(Integer.toString(viewHolder.leagueRecord.getPoints()));
-            viewHolder.leagueRecordFactorizedPointsTextView.setText(Integer.toString(viewHolder.leagueRecord.getGamesCount()));
+            String points = Formatter.formatNumber(viewHolder.leagueRecord.getPoints(),Formatter.intCommaSeparator);
+            viewHolder.leagueRecordPointsTextView.setText(points);
+            viewHolder.leagueRecordFactorizedPointsTextView.setText(String.format("%d",viewHolder.leagueRecord.getGamesCount()));
 
             Uri uri = Uri.parse(viewHolder.leagueRecord.getImageUrl());
             loadFbImage(viewHolder.leagueRecordProfilePictureImageView, uri);
