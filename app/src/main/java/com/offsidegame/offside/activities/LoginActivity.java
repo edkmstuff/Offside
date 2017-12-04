@@ -152,17 +152,19 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
             Context eventContext = networkingServiceBoundEvent.getContext();
             if (eventContext == context || eventContext == getApplicationContext()) {
+                //loadingRoot.setVisibility(View.GONE);
+                versionTextView.setVisibility(View.GONE);
 
 
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //loadingRoot.setVisibility(View.GONE);
-                        versionTextView.setVisibility(View.GONE);
-
-                    }
-                }, 1000);
+//                final Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        //loadingRoot.setVisibility(View.GONE);
+//                        versionTextView.setVisibility(View.GONE);
+//
+//                    }
+//                }, 1000);
 
 
 
