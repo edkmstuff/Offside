@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
+    android:layout_gravity="center"
     android:background="@drawable/bg_dialog_congrats1"
     >
 
@@ -69,7 +69,6 @@
             android:textSize="@dimen/OffsideLargeText"
             android:fontFamily="@font/font_open_sans_hebrew"
             android:text="@string/lbl_collect"
-
             android:layout_marginTop="10dp"/>
 
 

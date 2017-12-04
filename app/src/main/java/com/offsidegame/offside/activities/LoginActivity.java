@@ -158,7 +158,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        loadingRoot.setVisibility(View.GONE);
+                        //loadingRoot.setVisibility(View.GONE);
                         versionTextView.setVisibility(View.GONE);
 
                     }
@@ -205,6 +205,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
             } else { //not signed in
 
+
+                //loadingRoot.setVisibility(View.GONE);
                 AuthUI.IdpConfig facebookIdp = new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER)
                         .setPermissions(Arrays.asList("user_friends")).build();
 
@@ -225,6 +227,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                 .setLogo(R.drawable.app_logo_10)
                                 .build(),
                         RC_SIGN_IN);
+
+
 
 
             }
@@ -400,15 +404,22 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     public void analyzeDynamicLink() {
 
-//        Intent intent = getIntent();
-//        String action = intent.getAction();
-//        Uri data = intent.getData();
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        Uri data = intent.getData();
 //        if(data==null){
 //            startLobbyActivity();
 //            return;
 //        }
-//        Log.d(TAG, "------action-----: " + action);
-//        Log.d(TAG, "------data-----: " + (data != null ? data.toString() : "empty"));
+        Log.d(TAG, "------action-----: " + action);
+        Log.d(TAG, "------data-----: " + (data != null ? data.toString() : "empty"));
+
+        ACRA.getErrorReporter().putCustomData("action_1", action);
+        if(data!=null){
+            ACRA.getErrorReporter().putCustomData("intentDataQuery_2", data.getQuery());
+            ACRA.getErrorReporter().putCustomData("intentDataEncodedPath_3", data.getEncodedPath());
+        }
+
 
 
         FirebaseDynamicLinks.getInstance()
@@ -419,6 +430,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                         // Get deep link from result (may be null if no link is found)
                         Uri deepLink = null;
                         if (pendingDynamicLinkData != null) {
+                            ACRA.getErrorReporter().putCustomData("pendingDynamicLinkData_4", pendingDynamicLinkData.getLink().toString());
                             analytics = FirebaseAnalytics.getInstance(context);
                             deepLink = pendingDynamicLinkData.getLink();
 //                            if(deepLink==null)
@@ -427,6 +439,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 //                                Log.d(TAG, "*****deepLink*****"+deepLink.toString());
                             FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(pendingDynamicLinkData);
                             if (invite != null) {
+                                ACRA.getErrorReporter().putCustomData("inviteId_5",invite.getInvitationId() );
                                 String inviteId = invite.getInvitationId();
 //                                if(!TextUtils.isEmpty(inviteId))
 //                                    Log.d(TAG, "ACCPET invitation Id" + inviteId);
@@ -436,10 +449,18 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                     url = new URL("http", Uri.parse(deepLink.getQuery()).getHost(), deepLink.getQuery().toString());
                                     try {
 
+                                        ACRA.getErrorReporter().putCustomData("utl_6",url.toString() );
                                         Map<String, List<String>> dynamicLinkQueryPairs = HttpHelper.splitQuery(url);
                                         String groupIdFromInvitation = dynamicLinkQueryPairs.get("groupId").get(0);
+                                        groupIdFromInvitation = groupIdFromInvitation.equalsIgnoreCase("null") ? null : groupIdFromInvitation;
                                         String gameIdFromInvitation = dynamicLinkQueryPairs.get("gameId").get(0);
+                                        gameIdFromInvitation = gameIdFromInvitation.equalsIgnoreCase("null") ? null : gameIdFromInvitation;
                                         String privateGameIdFromInvitation = dynamicLinkQueryPairs.get("privateGameId").get(0);
+                                        privateGameIdFromInvitation = privateGameIdFromInvitation.equalsIgnoreCase("null") ? null : privateGameIdFromInvitation;
+
+                                        ACRA.getErrorReporter().putCustomData("groupIdFromInvitation_6",groupIdFromInvitation );
+                                        ACRA.getErrorReporter().putCustomData("gameIdFromInvitation_7",gameIdFromInvitation );
+                                        ACRA.getErrorReporter().putCustomData("privateGameIdFromInvitation_8",privateGameIdFromInvitation );
 
                                         //Add player to the group from which he was invited
                                         if (groupIdFromInvitation == null)
@@ -452,12 +473,12 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                         OffsideApplication.networkingService.requestJoinPrivateGroup(playerId,groupIdFromInvitation);
 
 
-                                    } catch (UnsupportedEncodingException e) {
-                                        e.printStackTrace();
+                                    } catch (UnsupportedEncodingException ex) {
+                                        ACRA.getErrorReporter().handleSilentException(ex);
                                     }
 
-                                } catch (MalformedURLException e) {
-                                    e.printStackTrace();
+                                } catch (MalformedURLException ex) {
+                                    ACRA.getErrorReporter().handleSilentException(ex);
                                 }
 
                             }
@@ -486,6 +507,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     public void startLobbyActivity() {
 
+        loadingRoot.setVisibility(View.GONE);
         Intent intent = new Intent(context, LobbyActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

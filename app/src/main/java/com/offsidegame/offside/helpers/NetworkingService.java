@@ -52,6 +52,7 @@ import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
+import com.offsidegame.offside.models.PrivateGameInfo;
 import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupsInfo;
 import com.offsidegame.offside.models.Question;
@@ -128,6 +129,7 @@ public class NetworkingService extends Service {
     private boolean playerJoinPrivateGroupReceived = false;
     private boolean playerRewardSaved = false;
     private boolean playerQuitPrivateGame = false;
+    private boolean playerJoinedPrivateGameByCode = false;
 
 
     public NetworkingService() {
@@ -160,7 +162,7 @@ public class NetworkingService extends Service {
 
         try {
             startRabbitMq();
-            ACRA.getErrorReporter().putCustomData("RabbitMqHostName", hostName);
+            //ACRA.getErrorReporter().putCustomData("RabbitMqHostName", hostName);
         } catch (InterruptedException ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
@@ -424,10 +426,15 @@ public class NetworkingService extends Service {
             boolean playerWasRemovedFromPrivateGame = Boolean.parseBoolean(playerWasRemovedFromPrivateGameKeyValue.getValue());
             playerQuitPrivateGame = true;
             EventBus.getDefault().post(new PlayerQuitFromPrivateGameEvent(playerWasRemovedFromPrivateGame));
+        } else if (message.equals("PrivateGameInfoByCodeReceived")) {
+            PrivateGameInfo privateGameInfo = gson.fromJson(model, PrivateGameInfo.class);
+            playerJoinedPrivateGameByCode = true;
+            EventBus.getDefault().post(privateGameInfo);
         }
 
 
     }
+
 
     private void fireNotification(String messageType, String message) {
 
@@ -822,6 +829,18 @@ public class NetworkingService extends Service {
         params.put("rewardType", rewardType);
         params.put("rewardReason", rewardReason);
         params.put("quantity", Integer.toString(quantity));
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method);
+    }
+
+    public void RequestPrivateGameInfoByCode(String playerId, String privateGameCode) {
+        playerJoinedPrivateGameByCode = false;
+        String method = "RequestPrivateGameInfoByCode";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("code", privateGameCode);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
         sendToServer(json, method);

@@ -99,7 +99,7 @@
     <string name="lbl_open_game">OPEN GAME</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="lbl_sign_out">Disconnect</string>
+    <string name="lbl_sign_out">Logout</string>
     <string name="lbl_settings">SETTINGS</string>
     <string name="lbl_no_active_private_game">No active game</string>
     <string name="lbl_news">NEWS</string>
@@ -131,12 +131,13 @@
     <string name="lbl_yes">YES</string>
     <string name="lbl_noooo">NOOOO!!!!</string>
     <string name="lbl_change_private_group_name">Change Group Name</string>
-    <string name="lbl_back">Back</string>
+    <string name="lbl_close_camel">Close</string>
     <string name="lbl_player_Successfully_quit_game">You left a game</string>
     <string name="lbl_playe_or_game_not_found">Player or Game not found</string>
     <string name="lbl_collect">COOL!</string>
     <string name="lbl_missing_coins_dialog_title">More coins?</string>
-    <string name="lbl_you_can_get">How would you like to get more</string>
+    <string name="lbl_you_can_get">To get more</string>
     <string name="lbl_no_available_games_at_this_time">No scheduled games at this moment</string>
+    <string name="lbl_join_private_game_with_code">Join game with code</string>
 
 </resources>

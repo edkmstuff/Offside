@@ -289,11 +289,13 @@ public class ChatFragment extends Fragment {
         backNavigationButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
-                if(selectedPrivateGroup==null || OffsideApplication.getPrivateGroupsInfo()==null)
-                    EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
-                else
-                    EventBus.getDefault().post(selectedPrivateGroup);
+
+                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+//                PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
+//                if(selectedPrivateGroup==null || OffsideApplication.getPrivateGroupsInfo()==null)
+//                    EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+//                else
+//                    EventBus.getDefault().post(selectedPrivateGroup);
             }
         });
 

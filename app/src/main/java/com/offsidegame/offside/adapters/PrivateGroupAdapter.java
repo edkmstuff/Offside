@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.GroupInviteEvent;
+import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.helpers.AnimationHelper;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.OffsideApplication;
@@ -202,6 +203,7 @@ public class PrivateGroupAdapter extends BaseAdapter {
                 @Override
                 public void onClick(View view) {
 
+                    EventBus.getDefault().post(new LoadingEvent(true,"Creating Invitation..."));
                     String groupId = viewHolder.privateGroup.getId();
                     String groupName = viewHolder.privateGroup.getName();
                     String playerId = OffsideApplication.getPlayerId();

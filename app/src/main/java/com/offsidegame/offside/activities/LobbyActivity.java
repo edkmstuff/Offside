@@ -15,12 +15,15 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -42,6 +45,7 @@ import com.offsidegame.offside.events.CannotJoinPrivateGameEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
+import com.offsidegame.offside.events.JoinGameWithCodeEvent;
 import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
@@ -67,6 +71,7 @@ import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
+import com.offsidegame.offside.models.PrivateGameInfo;
 import com.offsidegame.offside.models.PrivateGroup;
 
 import org.acra.ACRA;
@@ -147,9 +152,15 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private  LinearLayout getCoinsSlotMachineRoot;
 
 
-
     private boolean isGroupInviteExecuted ;
     private boolean isInGameInvite = false;
+
+    //join with code dialog
+    private Dialog joinGameWithCodeDialog;
+    private Button dialogJoinGameButton;
+    private EditText dialogJoinGamePrivateGameCodeEditText;
+
+
     //</editor-fold>
 
 
@@ -168,9 +179,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             getIDs();
             setEvents();
+            EventBus.getDefault().post(new LoadingEvent(true,"Starting..."));
 
             togglePlayerAssetsVisibility(true);
-            EventBus.getDefault().post(new LoadingEvent(true,"Starting..."));
+
 
 
         } catch (Exception ex) {
@@ -472,13 +484,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             playerInfoRoot.setVisibility(View.VISIBLE);
 
         }
-
-
         YoYo.with(Techniques.StandUp.Bounce).duration(1000).playOn(balanceRoot);
-
-
-
-
 
         //check balance
         int minRequiredBalance = OffsideApplication.getMinRequiredBalance();
@@ -772,6 +778,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
 
+        EventBus.getDefault().post(new LoadingEvent(false,null));
+
 
     }
 
@@ -875,12 +883,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         rewardDialog.setContentView(R.layout.dialog_reward);
 
         dialoguePlayerImageImageView = rewardDialog.findViewById(R.id.dr_player_image_image_view);
-        //dialoguePlayerNameTextView = rewardDialog.findViewById(R.id.dr_player_name_text_view);
         dialogueRewardValueTextView = rewardDialog.findViewById(R.id.dr_reward_value_text_view);
         dialogueCoinImageView = rewardDialog.findViewById(R.id.dr_coin_image_view);
         dialogueCloseButton = rewardDialog.findViewById(R.id.dr_close_button);
-
-        //dialoguePlayerNameTextView.setText(OffsideApplication.getPlayerAssets().getPlayerName());
         dialogueRewardValueTextView.setText(String.format("%d", rewardValue));
 //        YoYo.with(Techniques.Bounce)
 //                .repeat(YoYo.INFINITE)
@@ -894,31 +899,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 rewardDialog.cancel();
                 OffsideApplication.networkingService.requestPlayerAssets(playerId);
 
-
-
             }
         });
 
         adjustDialogWidthToWindow(rewardDialog);
         rewardDialog.show();
 
-
-//        Handler handler = new Handler();
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                Snackbar.make(playerInfoRoot,String.format("You got %d coins",rewardValue), Snackbar.LENGTH_SHORT).show();
-//            }
-//        }, 2000);
-
-        //not needed since when we are back form the invite screen the onresume is executed hence getPlayerAssets happen
-//        int currentBalance = OffsideApplication.getPlayerAssets().getBalance();
-//        OffsideApplication.getPlayerAssets().setBalance(currentBalance + rewardValue);
-
-
     }
-
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -1042,10 +1029,88 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             loadingRoot.setVisibility(View.VISIBLE);
         else
             loadingRoot.setVisibility(View.GONE);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onJoinGameWithCodeReceived(JoinGameWithCodeEvent joinGameWithCodeEvent) {
+
+        onLoadingEventReceived(new LoadingEvent(false,null));
+        if (joinGameWithCodeEvent == null)
+            return;
 
 
+        joinGameWithCodeDialog = new Dialog(context);
+        joinGameWithCodeDialog.setContentView(R.layout.dialog_join_with_code);
+
+        dialogJoinGamePrivateGameCodeEditText = joinGameWithCodeDialog.findViewById(R.id.djwc_private_game_code_edit_text);
+        dialogJoinGameButton = joinGameWithCodeDialog.findViewById(R.id.djwc_enter_game_button);
+
+        dialogJoinGamePrivateGameCodeEditText.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if(s.toString().trim().length()<6){
+                    dialogJoinGameButton.setEnabled(false);
+                } else {
+                    dialogJoinGameButton.setEnabled(true);
+                }
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+                if(s.toString().trim().length()<6){
+                    dialogJoinGameButton.setEnabled(false);
+                } else {
+                    dialogJoinGameButton.setEnabled(true);
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().trim().length()<6){
+                    dialogJoinGameButton.setEnabled(false);
+                } else {
+                    dialogJoinGameButton.setEnabled(true);
+                }
+
+            }
+        });
+
+
+
+        dialogJoinGameButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String privateGameCode = dialogJoinGamePrivateGameCodeEditText.getText().toString();
+                OffsideApplication.networkingService.RequestPrivateGameInfoByCode(playerId, privateGameCode);
+                joinGameWithCodeDialog.cancel();
+            }
+        });
+
+        adjustDialogWidthToWindow(joinGameWithCodeDialog);
+        joinGameWithCodeDialog.show();
 
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPrivateGameInfoReceived(PrivateGameInfo privateGameInfo) {
+        if(privateGameInfo==null)
+            return;
+
+        String gameId=privateGameInfo.getGameId();
+        String groupId =privateGameInfo.getGroupId();
+        String privateGameId = privateGameInfo.getPrivateGameId();
+
+        OffsideApplication.setUserPreferences(groupId,gameId,privateGameId);
+        whereToGoNext();
+
+    }
+
+
 
     public void adjustDialogWidthToWindow(Dialog dialog){
 
