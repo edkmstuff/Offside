@@ -15,8 +15,6 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.offsidegame.offside.BuildConfig;
@@ -65,7 +63,6 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
 import com.rabbitmq.client.AMQP;
@@ -95,8 +92,8 @@ public class NetworkingService extends Service {
 //    private String hostName = "10.0.0.17";
 
     /****************************PRODUCTION**************************/
-    //private String hostName = "sktestvm.westeurope.cloudapp.azure.com";
-    private String hostName = BuildConfig.RABBITMQ_HOSTNAME_STRING;
+    private String hostName = "sktestvm.westeurope.cloudapp.azure.com";
+    //private String hostName = BuildConfig.RABBITMQ_HOSTNAME_STRING;
 
     private final IBinder binder = new LocalBinder();
     private String CLIENT_REQUESTS_EXCHANGE_NAME = "FROM_CLIENTS";

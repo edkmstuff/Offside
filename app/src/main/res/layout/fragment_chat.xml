@@ -29,7 +29,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="start">
+                android:gravity="start"
+                android:padding="2dp">
 
                 <ImageView
                     android:id="@+id/fsg_back_navigation_button_image_view"
@@ -37,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:src="@mipmap/ic_left"
                     android:contentDescription="back"
-                    android:padding="4dp"/>
+                    />
 
             </LinearLayout>
 
@@ -62,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:padding="4dp">
+                android:padding="6dp">
 
                 <ImageView
                     android:id="@+id/fc_exit_button_image_view"

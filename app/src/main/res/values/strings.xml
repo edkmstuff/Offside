@@ -139,5 +139,7 @@
     <string name="lbl_you_can_get">To get more</string>
     <string name="lbl_no_available_games_at_this_time">No scheduled games at this moment</string>
     <string name="lbl_join_private_game_with_code">Join game with code</string>
+    <string name="lbl_you_are_about_to_quit_this_game">You are about to quit this game</string>
+    <string name="lbl_are_you_sure">Are you sure?</string>
 
 </resources>

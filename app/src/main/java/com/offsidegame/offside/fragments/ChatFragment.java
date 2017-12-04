@@ -2,6 +2,7 @@ package com.offsidegame.offside.fragments;
 
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -18,6 +19,7 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -45,11 +47,9 @@ import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
-import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.Score;
 import com.offsidegame.offside.models.Scoreboard;
 
@@ -129,9 +129,12 @@ public class ChatFragment extends Fragment {
     //private AvailableGame selectedAvailableGame = null;
     private String gameId = null;
     private String privateGameId = null;
-    private String groupId = null;
     private String androidDeviceId = null;
     private String playerId = null;
+
+    private Dialog approveQuitDialog;
+    private Button dialogOkButton;
+    private Button dialogCancelButton;
 
     //</editor-fold>
 
@@ -302,7 +305,8 @@ public class ChatFragment extends Fragment {
         exitButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OffsideApplication.networkingService.requestQuitFromPrivateGame(playerId,gameId,privateGameId,androidDeviceId);
+
+                showApproveQuitDialog();
             }
         });
 
@@ -568,6 +572,36 @@ public class ChatFragment extends Fragment {
 
 //        actionsFlowLayout.setVisibility(View.VISIBLE);
 //        rewardVideoLoadingRoot.setVisibility(View.GONE);
+
+
+    }
+
+    private void showApproveQuitDialog(){
+
+        approveQuitDialog = new Dialog(getContext());
+        approveQuitDialog.setContentView(R.layout.dialog_approve_quit_game);
+
+        dialogOkButton = approveQuitDialog.findViewById(R.id.daq_ok_button);
+        dialogCancelButton = approveQuitDialog.findViewById(R.id.daq_cancel_button);
+
+        dialogOkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OffsideApplication.networkingService.requestQuitFromPrivateGame(playerId,gameId,privateGameId,androidDeviceId);
+                approveQuitDialog.cancel();
+
+            }
+        });
+
+        dialogCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                approveQuitDialog.cancel();
+            }
+        });
+
+        approveQuitDialog.show();
+
 
 
     }
