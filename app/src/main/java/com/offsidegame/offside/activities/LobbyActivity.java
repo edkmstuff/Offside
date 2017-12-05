@@ -179,7 +179,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             getIDs();
             setEvents();
-            EventBus.getDefault().post(new LoadingEvent(true,"Starting..."));
+            EventBus.getDefault().post(new LoadingEvent(true,"Starting"));
 
             togglePlayerAssetsVisibility(true);
 
@@ -384,7 +384,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         OffsideApplication.setIsLobbyActivityVisible(true);
 
         EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
-        EventBus.getDefault().post(new LoadingEvent(true,"Loading..."));
+        //EventBus.getDefault().post(new LoadingEvent(true,"Loading"));
     }
 
     @Override
@@ -558,7 +558,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 OffsideApplication.setSelectedAvailableGame(availableGame);
                 String groupId = availableGame.getGroupId();
                 OffsideApplication.networkingService.requestPrivateGroup(playerId, groupId);
-                EventBus.getDefault().post(new LoadingEvent(true,"Checking game..."));
+                EventBus.getDefault().post(new LoadingEvent(true,"Checking game"));
 
             }
             else {
@@ -580,16 +580,16 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 return;
 
             PrivateGroup privateGroup = privateGroupEvent.getPrivateGroup();
-            OffsideApplication.setSelectedPrivateGroup(privateGroup);
-
-            String groupId = privateGroup.getId();
 
             if (privateGroup == null || currentPrivateGameId == null) {
                 EventBus.getDefault().post(new CannotJoinPrivateGameEvent(R.string.lbl_no_active_private_game));
 
-            } else if (currentGameId != null && currentPrivateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
+            } else if (currentGameId != null && currentPrivateGameId != null && privateGroup.getId() != null && androidDeviceId != null && playerId != null) {
+
+                OffsideApplication.setSelectedPrivateGroup(privateGroup);
+                String groupId = privateGroup.getId();
                 OffsideApplication.networkingService.requestJoinPrivateGame(playerId, currentGameId, groupId, currentPrivateGameId, androidDeviceId);
-                EventBus.getDefault().post(new LoadingEvent(true,"Joining..."));
+                EventBus.getDefault().post(new LoadingEvent(true,"Joining"));
             }
 
 
@@ -1131,6 +1131,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             finish();
         else
             EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+        EventBus.getDefault().post(new LoadingEvent(false,null));
 
     }
 

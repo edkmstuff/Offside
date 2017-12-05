@@ -754,10 +754,11 @@ public class ChatFragment extends Fragment {
             //boolean isRandomAnswer = questionAnsweredEvent.isRandomAnswer();
             boolean isSkipped = questionAnsweredEvent.isSkipped();
             int betSize = questionAnsweredEvent.getBetSize();
+            String privateGameId = OffsideApplication.getSelectedPrivateGameId();
 
             // this parameter will be null if the user does not answer
             String answerId = questionAnsweredEvent.getAnswerId();
-            OffsideApplication.networkingService.requestPostAnswer(playerId, gameId, questionId, answerId, isSkipped, betSize);
+            OffsideApplication.networkingService.requestPostAnswer(playerId, gameId, privateGameId, questionId, answerId, isSkipped, betSize);
             if (!OffsideApplication.playerAnswers.containsKey(questionId))
                 OffsideApplication.playerAnswers.put(questionId, new AnswerIdentifier(answerId, isSkipped, betSize, true));
 

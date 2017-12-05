@@ -308,7 +308,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@color/chatIncomingFromBot"
-                            android:layoutDirection="rtl"
+                            android:layoutDirection="locale"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -348,7 +348,6 @@
                             android:id="@+id/cm_incoming_bet_panel_root"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layoutDirection="rtl"
                             android:orientation="vertical">
 
                             <LinearLayout
@@ -367,7 +366,6 @@
                                     android:layout_marginLeft="5dp"
                                     android:layout_marginRight="5dp"
                                     android:gravity="center_vertical"
-                                    android:layoutDirection="rtl"
                                     android:orientation="horizontal"
                                     android:padding="5dp">
 
@@ -408,7 +406,6 @@
                                     android:layout_weight="1"
                                     android:background="@drawable/shape_bg_rectangle_bordered"
                                     android:gravity="center"
-                                    android:layoutDirection="rtl"
                                     android:orientation="horizontal"
                                     android:padding="5dp">
 
@@ -434,7 +431,6 @@
                                     android:layout_weight="1"
                                     android:background="@drawable/shape_bg_rectangle_gray_no_border"
                                     android:gravity="center"
-                                    android:layoutDirection="rtl"
                                     android:orientation="horizontal"
                                     android:padding="5dp">
 
@@ -747,7 +743,6 @@
                             android:id="@+id/cm_incoming_processed_question_answers_bars_root"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layoutDirection="rtl"
                             android:orientation="vertical">
 
                         </LinearLayout>
@@ -1127,7 +1122,7 @@
             android:id="@+id/cm_outgoing_messages_root"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layoutDirection="rtl"
+
             android:orientation="horizontal"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
@@ -1195,6 +1190,7 @@
                             android:text="This is a sample text"
                             android:textColor="@color/chatText"
                             android:layout_gravity="start"
+
 
                             />
 

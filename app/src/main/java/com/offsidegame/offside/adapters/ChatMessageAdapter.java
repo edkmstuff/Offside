@@ -1314,18 +1314,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 //viewHolder.incomingSelectedAnswerTextView.setVisibility(View.GONE);
 
             }
-//            else {
-//                viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_user_selected_answer_title);
-//                viewHolder.incomingSelectedAnswerTextView.setText(answer.getAnswerText());
-//                int answerNumber = getAnswerNumber(question, answer.getId());
-//                //int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
-//                int backgroundColorResourceId = context.getResources().getIdentifier("shape_bg_rectangle_answer_selected", "color", context.getPackageName());
-//                viewHolder.incomingSelectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
-//                viewHolder.incomingSelectedAnswerTextView.setVisibility(View.VISIBLE);
-//
-//            }
-
-//            viewHolder.incomingSelectedAnswerReturnTextView.setText(Integer.toString(returnValue));
 
             playerAnswers.put(questionId, new AnswerIdentifier(answerId, isSkipped, betSize, true));
             if (view != null) //null when question was skipped

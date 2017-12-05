@@ -17,7 +17,6 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.offsidegame.offside.BuildConfig;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.LobbyActivity;
 import com.offsidegame.offside.events.AvailableGameEvent;
@@ -56,6 +55,12 @@ import com.offsidegame.offside.models.PrivateGroupsInfo;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.Scoreboard;
 import com.offsidegame.offside.models.UserProfileInfo;
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.DefaultConsumer;
+import com.rabbitmq.client.Envelope;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -64,13 +69,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-
-import com.rabbitmq.client.AMQP;
-import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Connection;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.DefaultConsumer;
-import com.rabbitmq.client.Envelope;
 
 
 /**
@@ -288,6 +286,32 @@ public class NetworkingService extends Service {
         }).start();
 
     }
+
+    public void unBindExchange(final String exchangeName, final CountDownLatch latch) {
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if(exchangeName==null || listenerQueueName==null)
+                        return;
+
+                    channel.queueUnbind(listenerQueueName, exchangeName, "");
+
+                } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                } finally {
+
+                    //finally we release the waiting thread
+                    if (latch != null)
+                        latch.countDown();
+
+                }
+            }
+        }).start();
+
+    }
+
 
     public void stopListening() {
 
@@ -580,13 +604,14 @@ public class NetworkingService extends Service {
         sendToServer(json, method);
     }
 
-    public void requestPostAnswer(final String playerId, final String gameId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
+    public void requestPostAnswer(final String playerId, final String gameId,final String privateGameId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
         answerAccepted = false;
         String method = "RequestPostAnswer";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
         params.put("playerId", playerId);
         params.put("gameId", gameId);
+        params.put("privateGameId", privateGameId);
         params.put("questionId", questionId);
         params.put("answerId", answerId);
         params.put("isSkipped", Boolean.toString(isSkipped));
@@ -596,17 +621,17 @@ public class NetworkingService extends Service {
         sendToServer(json, method);
     }
 
-    public void requestGetScoreboard(String playerId, String gameId) {
-        scoreboardReceived = false;
-        String method = "RequestGetScoreboard";
-        Map<String, String> params = new HashMap<>();
-        params.put("method", method);
-        params.put("playerId", playerId);
-        params.put("gameId", gameId);
-        Gson gson = new GsonBuilder().create();
-        String json = gson.toJson(params);
-        sendToServer(json, method);
-    }
+//    public void requestGetScoreboard(String playerId, String gameId) {
+//        scoreboardReceived = false;
+//        String method = "RequestGetScoreboard";
+//        Map<String, String> params = new HashMap<>();
+//        params.put("method", method);
+//        params.put("playerId", playerId);
+//        params.put("gameId", gameId);
+//        Gson gson = new GsonBuilder().create();
+//        String json = gson.toJson(params);
+//        sendToServer(json, method);
+//    }
 
     public void requestGetChatMessages(String playerId, String gameId, String privateGameId, String androidDeviceId) {
         chatMessagesReceived = false;

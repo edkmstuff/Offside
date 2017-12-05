@@ -39,7 +39,7 @@ import java.util.concurrent.CountDownLatch;
 //         formUri = "http://10.0.0.17:8080/api/Offside/AcraCrashReport",
 
 /****************************PRODUCTION**************************/
-       formUri = "http://offside.azurewebsites.net/api/Offside/AcraCrashReport",
+        formUri = "http://offside.azurewebsites.net/api/Offside/AcraCrashReport",
 
         httpMethod = HttpSender.Method.POST,
         mode = ReportingInteractionMode.TOAST,
@@ -247,20 +247,9 @@ public class OffsideApplication extends Application {
         return selectedPrivateGroup;
     }
 
-    public static void setSelectedPrivateGroup(PrivateGroup selectedPrivateGroup)  {
-        CountDownLatch latch = new CountDownLatch(1);
-        String oldGroupId = OffsideApplication.getSelectedPrivateGroupId();
+    public static void setSelectedPrivateGroup(PrivateGroup selectedPrivateGroup) {
+
         OffsideApplication.selectedPrivateGroup = selectedPrivateGroup;
-        String newGroupId = OffsideApplication.getSelectedPrivateGroupId();
-        OffsideApplication.networkingService.listenToExchange(newGroupId, latch);
-        try{
-            latch.await();
-        }
-        catch (Exception ex){
-
-        }
-
-
 
     }
 
@@ -283,16 +272,15 @@ public class OffsideApplication extends Application {
         return playerAssets;
     }
 
-    public static void setPlayerAssets(PlayerAssets playerAssets)  {
-        CountDownLatch  latch = new CountDownLatch(1);
+    public static void setPlayerAssets(PlayerAssets playerAssets) {
+        CountDownLatch latch = new CountDownLatch(1);
         String oldPlayerId = OffsideApplication.getPlayerId();
         OffsideApplication.playerAssets = playerAssets;
         String newPlayerId = OffsideApplication.getPlayerId();
         OffsideApplication.networkingService.listenToExchange(newPlayerId, latch);
-        try{
+        try {
             latch.await();
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
 
         }
 
@@ -302,16 +290,20 @@ public class OffsideApplication extends Application {
         return selectedAvailableGame;
     }
 
-    public static void setSelectedAvailableGame(AvailableGame selectedAvailableGame)  {
-        CountDownLatch latch = new CountDownLatch(1);
-        String oldGameId = OffsideApplication.getSelectedGameId();
-        OffsideApplication.selectedAvailableGame = selectedAvailableGame;
-        String newGameId = OffsideApplication.getSelectedGameId();
-        OffsideApplication.networkingService.listenToExchange(newGameId, latch);
-        try{
+    public static void setSelectedAvailableGame(AvailableGame selectedAvailableGame) {
+        try {
+            CountDownLatch latch = new CountDownLatch(1);
+            String oldGameId = OffsideApplication.getSelectedGameId();
+            OffsideApplication.networkingService.unBindExchange(oldGameId,latch);
             latch.await();
-        }
-        catch (Exception ex){
+
+            latch = new CountDownLatch(1);
+            OffsideApplication.selectedAvailableGame = selectedAvailableGame;
+            String newGameId = OffsideApplication.getSelectedGameId();
+            OffsideApplication.networkingService.listenToExchange(newGameId, latch);
+            latch.await();
+
+        } catch (Exception ex) {
 
         }
 
@@ -327,16 +319,21 @@ public class OffsideApplication extends Application {
         return null;
     }
 
-    public static void setSelectedPrivateGameId(String selectedPrivateGameId)  {
-        CountDownLatch latch = new CountDownLatch(1);
-        String oldPrivateGameId = OffsideApplication.getSelectedPrivateGameId();
-        OffsideApplication.selectedPrivateGameId = selectedPrivateGameId;
-        String newPrivateGameId = OffsideApplication.getSelectedPrivateGameId();
-        OffsideApplication.networkingService.listenToExchange(newPrivateGameId, latch);
-        try{
+    public static void setSelectedPrivateGameId(String selectedPrivateGameId) {
+        try {
+
+            CountDownLatch latch = new CountDownLatch(1);
+            String oldPrivateGameId = OffsideApplication.getSelectedPrivateGameId();
+            OffsideApplication.networkingService.unBindExchange(oldPrivateGameId, latch);
             latch.await();
-        }
-        catch (Exception ex){
+
+            latch = new CountDownLatch(1);
+            OffsideApplication.selectedPrivateGameId = selectedPrivateGameId;
+            String newPrivateGameId = OffsideApplication.getSelectedPrivateGameId();
+            OffsideApplication.networkingService.listenToExchange(newPrivateGameId, latch);
+            latch.await();
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -397,8 +394,8 @@ public class OffsideApplication extends Application {
                 }
             });
 
-            availableLanguages.put("en","English");
-            availableLanguages.put("he","עברית");
+            availableLanguages.put("en", "English");
+            availableLanguages.put("he", "עברית");
 
 
             //signal r
@@ -490,7 +487,7 @@ public class OffsideApplication extends Application {
 
     }
 
-    public static void setUserPreferences(String groupId, String gameId, String privateGameId ) {
+    public static void setUserPreferences(String groupId, String gameId, String privateGameId) {
         try {
             SharedPreferences settings = getContext().getSharedPreferences(context.getString(R.string.preference_name), 0);
             SharedPreferences.Editor editor = settings.edit();
