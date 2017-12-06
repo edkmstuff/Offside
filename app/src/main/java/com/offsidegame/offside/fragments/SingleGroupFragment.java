@@ -339,96 +339,117 @@ public class SingleGroupFragment extends Fragment {
 
     private void singleGroupTabSwitched(View view) {
 
-        if (singleGroupGamesTabRoot == view) {
-            showAvailableGames();
-        } else if (singleGroupLeagueTabRoot == view) {
-            showLeague();
+        try
+        {
+            if (singleGroupGamesTabRoot == view) {
+                showAvailableGames();
+            } else if (singleGroupLeagueTabRoot == view) {
+                showLeague();
+            }
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
         }
+
     }
 
     public void showAvailableGames() {
+        try
+        {
+            EventBus.getDefault().post(new LoadingEvent(true, "Loading matches..."));
+            singleGroupLeagueRoot.setVisibility(View.GONE);
+            //singleGroupTabsRoot.setVisibility(View.GONE);
 
-        EventBus.getDefault().post(new LoadingEvent(true, "Loading matches..."));
-        singleGroupLeagueRoot.setVisibility(View.GONE);
-        //singleGroupTabsRoot.setVisibility(View.GONE);
+            final int selectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuSelectedItem);
+            final int unSelectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuUnSelectedItem);
 
-        final int selectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuSelectedItem);
-        final int unSelectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuUnSelectedItem);
+            //singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenu);
+            singleGroupLeagueTabTextView.setTextColor(unSelectedTabColor);
 
-        //singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenu);
-        singleGroupLeagueTabTextView.setTextColor(unSelectedTabColor);
+            //singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+            singleGroupGamesTabTextView.setTextColor(selectedTabColor);
 
-        //singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
-        singleGroupGamesTabTextView.setTextColor(selectedTabColor);
+            EventBus.getDefault().post(new LoadingEvent(false, null));
+            YoYo.with(Techniques.FadeIn).playOn(singleGroupGamesRoot);
 
-        EventBus.getDefault().post(new LoadingEvent(false, null));
-        YoYo.with(Techniques.FadeIn).playOn(singleGroupGamesRoot);
+            if(OffsideApplication.getAvailableGames().length==0)
+                singleGroupNoGamesRoot.setVisibility(View.VISIBLE);
+            else
+                singleGroupGamesRoot.setVisibility(View.VISIBLE);
+            singleGroupTabsRoot.setVisibility(View.VISIBLE);
 
-        if(OffsideApplication.getAvailableGames().length==0)
-            singleGroupNoGamesRoot.setVisibility(View.VISIBLE);
-        else
-            singleGroupGamesRoot.setVisibility(View.VISIBLE);
-        singleGroupTabsRoot.setVisibility(View.VISIBLE);
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
 
 
     }
 
     private void showLeague() {
 
-        EventBus.getDefault().post(new LoadingEvent(true, "Loading group scoreboard..."));
-        singleGroupTabsRoot.setVisibility(View.GONE);
-        singleGroupGamesRoot.setVisibility(View.GONE);
-        singleGroupNoGamesRoot.setVisibility(View.GONE);
+        try
+        {
 
-        HashMap<String, LeagueRecord[]> leaguesRecords = OffsideApplication.getLeaguesRecords();
-        PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
-        if (selectedPrivateGroup == null)
-            return;
+            EventBus.getDefault().post(new LoadingEvent(true, "Loading group scoreboard..."));
+            singleGroupTabsRoot.setVisibility(View.GONE);
+            singleGroupGamesRoot.setVisibility(View.GONE);
+            singleGroupNoGamesRoot.setVisibility(View.GONE);
 
-        String groupId = selectedPrivateGroup.getId();
-        if (!leaguesRecords.containsKey(groupId)) {
-            getLeagueRecords(groupId);
-            return;
+            HashMap<String, LeagueRecord[]> leaguesRecords = OffsideApplication.getLeaguesRecords();
+            PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
+            if (selectedPrivateGroup == null)
+                return;
+
+            String groupId = selectedPrivateGroup.getId();
+            if (!leaguesRecords.containsKey(groupId)) {
+                getLeagueRecords(groupId);
+                return;
+            }
+            LeagueRecord[] leagueRecords = leaguesRecords.get(groupId);
+            LeagueAdapter leagueAdapter = new LeagueAdapter(getActivity(), new ArrayList<>(Arrays.asList(leagueRecords)));
+            singleGroupLeagueListView.setAdapter(leagueAdapter);
+
+            final int selectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuSelectedItem);
+            final int unSelectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuUnSelectedItem);
+
+            //singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenu);
+            singleGroupGamesTabTextView.setTextColor(unSelectedTabColor);
+
+            singleGroupLeagueTabTextView.setTextColor(selectedTabColor);
+            //singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
+
+            PrivateGroup currentGroup = OffsideApplication.getSelectedPrivateGroup();
+
+            String groupCreator = currentGroup.getCreatedByUserId();
+
+            if (currentGroup.getGroupType().equalsIgnoreCase(getString(R.string.key_private_group_name))
+                    && groupCreator.equals(OffsideApplication.getPlayerId()))
+                singleGroupOptionsRoot.setVisibility(View.VISIBLE);
+            else
+                singleGroupOptionsRoot.setVisibility(View.GONE);
+
+            //calc my position
+            String myPlayerId = OffsideApplication.getPlayerId();
+            int myPosition = 0;
+            for (int i = 0; i < leagueRecords.length; i++) {
+                LeagueRecord lr = leagueRecords[i];
+                if (lr.getPlayerId().equals(myPlayerId))
+                    myPosition = i + 1;
+            }
+
+            String myPositionOutOf = String.format("%s %d/%d", getString(R.string.lbl_your_position), myPosition, leagueRecords.length);
+            singleGroupPositionOutOfTextView.setText(myPositionOutOf);
+
+            EventBus.getDefault().post(new LoadingEvent(false, null));
+            YoYo.with(Techniques.FadeIn).playOn(singleGroupLeagueRoot);
+            singleGroupLeagueRoot.setVisibility(View.VISIBLE);
+            singleGroupTabsRoot.setVisibility(View.VISIBLE);
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
         }
-        LeagueRecord[] leagueRecords = leaguesRecords.get(groupId);
-        LeagueAdapter leagueAdapter = new LeagueAdapter(getActivity(), new ArrayList<>(Arrays.asList(leagueRecords)));
-        singleGroupLeagueListView.setAdapter(leagueAdapter);
 
-        final int selectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuSelectedItem);
-        final int unSelectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuUnSelectedItem);
-
-        //singleGroupGamesTabRoot.setBackgroundResource(R.color.navigationMenu);
-        singleGroupGamesTabTextView.setTextColor(unSelectedTabColor);
-
-        singleGroupLeagueTabTextView.setTextColor(selectedTabColor);
-        //singleGroupLeagueTabRoot.setBackgroundResource(R.color.navigationMenuSelectedItem);
-
-        PrivateGroup currentGroup = OffsideApplication.getSelectedPrivateGroup();
-
-        String groupCreator = currentGroup.getCreatedByUserId();
-
-        if (currentGroup.getGroupType().equalsIgnoreCase(getString(R.string.key_private_group_name))
-                && groupCreator.equals(OffsideApplication.getPlayerId()))
-            singleGroupOptionsRoot.setVisibility(View.VISIBLE);
-        else
-            singleGroupOptionsRoot.setVisibility(View.GONE);
-
-        //calc my position
-        String myPlayerId = OffsideApplication.getPlayerId();
-        int myPosition = 0;
-        for (int i = 0; i < leagueRecords.length; i++) {
-            LeagueRecord lr = leagueRecords[i];
-            if (lr.getPlayerId().equals(myPlayerId))
-                myPosition = i + 1;
-        }
-
-        String myPositionOutOf = String.format("%s %d/%d", getString(R.string.lbl_your_position), myPosition, leagueRecords.length);
-        singleGroupPositionOutOfTextView.setText(myPositionOutOf);
-
-        EventBus.getDefault().post(new LoadingEvent(false, null));
-        YoYo.with(Techniques.FadeIn).playOn(singleGroupLeagueRoot);
-        singleGroupLeagueRoot.setVisibility(View.VISIBLE);
-        singleGroupTabsRoot.setVisibility(View.VISIBLE);
 
     }
 
@@ -476,30 +497,42 @@ public class SingleGroupFragment extends Fragment {
     }
 
     public void setupTabLayout() {
-        selectedTabPosition = viewPager.getCurrentItem();
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            tabLayout.getTabAt(i).setCustomView(viewPagerAdapter.getTabView(i));
+        try
+        {
+            selectedTabPosition = viewPager.getCurrentItem();
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                tabLayout.getTabAt(i).setCustomView(viewPagerAdapter.getTabView(i));
+            }
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
         }
+
     }
 
-//    private void joinPrivateGame(String selectedPrivateGameId) {
-//        OffsideApplication.setSelectedPrivateGameId(selectedPrivateGameId);
-//        EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_play));
-//
-//    }
+
 
     private List<String> getDistinctLeagues(AvailableGame[] availableGames) {
 
-        List<String> availableLeagues = new ArrayList<>();
-        for (int i = 0; i < availableGames.length; i++) {
-            String currentLeague = availableGames[i].getLeagueName();
-            if (!availableLeagues.contains(currentLeague)) {
-                availableLeagues.add(currentLeague);
+        try
+        {
+            List<String> availableLeagues = new ArrayList<>();
+            for (int i = 0; i < availableGames.length; i++) {
+                String currentLeague = availableGames[i].getLeagueName();
+                if (!availableLeagues.contains(currentLeague)) {
+                    availableLeagues.add(currentLeague);
+                }
+
             }
 
+            return availableLeagues;
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return null;
         }
 
-        return availableLeagues;
 
 
     }

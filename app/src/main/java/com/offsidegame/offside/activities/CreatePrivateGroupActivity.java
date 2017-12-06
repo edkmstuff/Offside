@@ -44,19 +44,27 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_private_group);
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_create_private_group);
 
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        playerId = firebaseUser.getUid();
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            playerId = firebaseUser.getUid();
 
-        if (OffsideApplication.getUserProfileInfo() == null)
-            playerDisplayName = firebaseUser.getDisplayName();
-        else
-            playerDisplayName = OffsideApplication.getUserProfileInfo().getPlayerName();
+            if (OffsideApplication.getUserProfileInfo() == null)
+                playerDisplayName = firebaseUser.getDisplayName();
+            else
+                playerDisplayName = OffsideApplication.getUserProfileInfo().getPlayerName();
 
-        getIds();
-        setEvents();
+            getIds();
+            setEvents();
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
 
     }
 
@@ -74,7 +82,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if(s.toString().trim().length()==0){
+                if (s.toString().trim().length() == 0) {
                     savePrivateGroupButtonTextView.setEnabled(false);
                 } else {
                     savePrivateGroupButtonTextView.setEnabled(true);
@@ -85,7 +93,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
                                           int after) {
-                if(s.toString().trim().length()==0){
+                if (s.toString().trim().length() == 0) {
                     savePrivateGroupButtonTextView.setEnabled(false);
                 } else {
                     savePrivateGroupButtonTextView.setEnabled(true);
@@ -95,7 +103,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().trim().length()==0){
+                if (s.toString().trim().length() == 0) {
                     savePrivateGroupButtonTextView.setEnabled(false);
                 } else {
                     savePrivateGroupButtonTextView.setEnabled(true);
@@ -109,9 +117,9 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                int duration =500;
-                int delay =(int)(duration*0.2);
-                AnimationHelper.animateButtonClick(view,duration);
+                int duration = 500;
+                int delay = (int) (duration * 0.2);
+                AnimationHelper.animateButtonClick(view, duration);
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -129,11 +137,10 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
                         createPrivateGroupRoot.setVisibility(View.GONE);
                         String message = String.format("Creating %s...", groupName);
-                        EventBus.getDefault().post(new LoadingEvent(true,message));
+                        EventBus.getDefault().post(new LoadingEvent(true, message));
 
                     }
                 }, delay);
-
 
 
             }
@@ -145,21 +152,43 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
-        super.onResume();
-        savePrivateGroupButtonTextView.setEnabled(false);
-        EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
+        try {
+            super.onResume();
+            savePrivateGroupButtonTextView.setEnabled(false);
+            EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     @Override
     public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(context);
+        try {
+            super.onStart();
+            EventBus.getDefault().register(context);
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(context);
-        super.onStop();
+        try {
+
+            EventBus.getDefault().unregister(context);
+            super.onStop();
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -177,7 +206,6 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
                 }
             }, 500);
-
 
 
         } catch (Exception ex) {
@@ -198,7 +226,7 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 //                    return;
 //                }
                 if (OffsideApplication.isBoundToNetworkingService) {
-                    EventBus.getDefault().post(new LoadingEvent(false,null));
+                    EventBus.getDefault().post(new LoadingEvent(false, null));
                 } else
                     throw new RuntimeException(activityName + " - onNetworkingServiceBinding - Error: SignalRIsNotBound");
             }
@@ -223,7 +251,15 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        OffsideApplication.setIsBackFromCreatePrivateGroup(true);
-        finish();
+        try
+        {
+            OffsideApplication.setIsBackFromCreatePrivateGroup(true);
+            finish();
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 }

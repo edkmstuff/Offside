@@ -20,6 +20,7 @@ import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.FeedItem;
 import com.offsidegame.offside.models.OffsideApplication;
 
+import org.acra.ACRA;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.util.ArrayList;
@@ -50,31 +51,41 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
-        YoYo.with(Techniques.FadeIn).playOn(holder.cardView);
-        final FeedItem currentItem = feedItems.get(position);
-        holder.titleTextView.setText(currentItem.getTitle());
-        holder.descriptionTextView.setText(currentItem.getDescription());
+        try
+        {
+            YoYo.with(Techniques.FadeIn).playOn(holder.cardView);
+            final FeedItem currentItem = feedItems.get(position);
+            holder.titleTextView.setText(currentItem.getTitle());
+            holder.descriptionTextView.setText(currentItem.getDescription());
 
-        PrettyTime pt = new PrettyTime();
-        Date publishDate = DateHelper.formatAsDate(currentItem.getPubDate(),"EEE, d MMM yyyy HH:mm:ss Z",context);
-        if(publishDate!=null)
-            holder.publishDateTextView.setText(pt.format(publishDate));
-        else
-            holder.publishDateTextView.setText(currentItem.getPubDate());
+            PrettyTime pt = new PrettyTime();
+            Date publishDate = DateHelper.formatAsDate(currentItem.getPubDate(),"EEE, d MMM yyyy HH:mm:ss Z",context);
+            if(publishDate!=null)
+                holder.publishDateTextView.setText(pt.format(publishDate));
+            else
+                holder.publishDateTextView.setText(currentItem.getPubDate());
 
-        Uri imageUri = Uri.parse(currentItem.getThumbnailUri());
-        ImageHelper.loadImage(context,holder.thumbnailImageView,imageUri,false);
+            Uri imageUri = Uri.parse(currentItem.getThumbnailUri());
+            ImageHelper.loadImage(context,holder.thumbnailImageView,imageUri,false);
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            holder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                Intent intent = new Intent(context, NewsDetailsActivity.class);
-                intent.putExtra("Link",currentItem.getLink());
-                context.startActivity(intent);
+                    Intent intent = new Intent(context, NewsDetailsActivity.class);
+                    intent.putExtra("Link",currentItem.getLink());
+                    context.startActivity(intent);
 
-            }
-        });
+                }
+            });
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+
 
     }
 

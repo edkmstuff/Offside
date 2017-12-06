@@ -52,17 +52,25 @@ public class AvailableGamesFragment extends Fragment {
 
 
     private ArrayList<AvailableGame> getAvailableGames() {
-        leagueType = leagueType != null ? leagueType : this.getArguments().getString("leagueType");
-        availableGames = OffsideApplication.getAvailableGames();
+        try
+        {
+            leagueType = leagueType != null ? leagueType : this.getArguments().getString("leagueType");
+            availableGames = OffsideApplication.getAvailableGames();
 
-        ArrayList filteredAvailableGamesList = new ArrayList<>();
+            ArrayList filteredAvailableGamesList = new ArrayList<>();
 
-        for (AvailableGame availableGame : availableGames) {
-            if (availableGame.getLeagueName().equals(leagueType))
-                filteredAvailableGamesList.add(availableGame);
+            for (AvailableGame availableGame : availableGames) {
+                if (availableGame.getLeagueName().equals(leagueType))
+                    filteredAvailableGamesList.add(availableGame);
+            }
+
+            return filteredAvailableGamesList;
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return null;
         }
 
-        return filteredAvailableGamesList;
 
     }
 

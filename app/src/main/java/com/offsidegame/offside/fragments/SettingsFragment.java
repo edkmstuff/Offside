@@ -48,7 +48,6 @@ public class SettingsFragment extends Fragment {
         {
 
             super.onResume();
-//            EventBus.getDefault().register(this);
         } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
                     return ;
@@ -60,7 +59,6 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onPause(){
         super.onPause();
-//        EventBus.getDefault().unregister(this);
     }
 
     @Override

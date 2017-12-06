@@ -16,6 +16,7 @@ import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.helpers.ReadRss;
 import com.offsidegame.offside.models.OffsideApplication;
 
+import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 
 public class NewsFragment extends Fragment {
@@ -47,17 +48,25 @@ public class NewsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_news, container, false);
+        try
+        {
+            View view = inflater.inflate(R.layout.fragment_news, container, false);
 
-        getIDs(view);
+            getIDs(view);
 
-        Context context = getContext();
-        EventBus.getDefault().post(new LoadingEvent(true,"Loading content..."));
+            Context context = getContext();
+            EventBus.getDefault().post(new LoadingEvent(true,"Loading content..."));
 
-        ReadRss readRss = new ReadRss(context, recyclerView, null);
-        readRss.execute();
+            ReadRss readRss = new ReadRss(context, recyclerView, null);
+            readRss.execute();
 
-        return view;
+            return view;
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return null;
+        }
+
     }
 
     public void getIDs(View view){

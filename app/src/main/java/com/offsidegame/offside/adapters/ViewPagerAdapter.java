@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.offsidegame.offside.R;
 
+import org.acra.ACRA;
+
 import java.util.ArrayList;
 
 
@@ -49,24 +51,40 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public void addFragment(Fragment fragment, String title) {
-        if (mFragmentList.contains(fragment))
-            return;
-        if (isTabFragmentExist(title))
-            return;
-        mFragmentList.add(fragment);
-        mFragmentTitleList.add(title);
+        try
+        {
+            if (mFragmentList.contains(fragment))
+                return;
+            if (isTabFragmentExist(title))
+                return;
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+        }
+
     }
 
     public boolean isTabFragmentExist(String title) {
-        boolean tabFragmentExist = false;
-        for (String tabTitle : mFragmentTitleList) {
-            if (tabTitle.equals(title)) {
-                tabFragmentExist = true;
-                break;
-            }
+        try
+        {
+            boolean tabFragmentExist = false;
+            for (String tabTitle : mFragmentTitleList) {
+                if (tabTitle.equals(title)) {
+                    tabFragmentExist = true;
+                    break;
+                }
 
+            }
+            return tabFragmentExist;
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return false;
         }
-        return tabFragmentExist;
+
 
     }
 
@@ -80,15 +98,25 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     public View getTabView(final int position) {
-        View view = LayoutInflater.from(context).inflate(R.layout.custom_tab_item, null);
+        try
+        {
+            View view = LayoutInflater.from(context).inflate(R.layout.custom_tab_item, null);
 
-        TextView tabItemName = (TextView) view.findViewById(R.id.textViewTabItemName);
+            TextView tabItemName = (TextView) view.findViewById(R.id.textViewTabItemName);
 
-        tabItemName.setText(mFragmentTitleList.get(position));
+            tabItemName.setText(mFragmentTitleList.get(position));
 
-        tabItemName.setTextColor(context.getResources().getColor(R.color.navigationMenuSelectedItem));
+            tabItemName.setTextColor(context.getResources().getColor(R.color.navigationMenuSelectedItem));
 
-        return view;
+            return view;
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+                    return null;
+        }
+
     }
 
 

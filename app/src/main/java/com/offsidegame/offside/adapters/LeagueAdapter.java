@@ -96,20 +96,29 @@ public class LeagueAdapter extends ArrayAdapter<LeagueRecord> {
 
 
     private void loadFbImage(final ImageView fbProfilePicture, Uri fbImageUri) {
-        Picasso.with(context).load(fbImageUri).into(fbProfilePicture, new com.squareup.picasso.Callback() {
-            @Override
-            public void onSuccess() {
-                Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
-                RoundImage roundedImage = new RoundImage(bm);
-                fbProfilePicture.setImageDrawable(roundedImage);
-                //fbProfilePicture.animate().alpha(1.1f).setDuration(200).start();
-            }
+        try
+        {
+            Picasso.with(context).load(fbImageUri).into(fbProfilePicture, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
+                    RoundImage roundedImage = new RoundImage(bm);
+                    fbProfilePicture.setImageDrawable(roundedImage);
+                    //fbProfilePicture.animate().alpha(1.1f).setDuration(200).start();
+                }
 
-            @Override
-            public void onError() {
+                @Override
+                public void onError() {
 
-            }
-        });
+                }
+            });
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
 
