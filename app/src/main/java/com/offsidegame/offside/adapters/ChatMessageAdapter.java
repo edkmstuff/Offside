@@ -727,8 +727,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                             int betSize = playerMinBetSize * 2;
                             for (int i = 0; i < answers.length; i++) {
                                 final int returnValue = (int) Math.round(answers[i].getPointsMultiplier() * betSize);
-                                viewHolder.answerReturnTextViews[i].setText(String.valueOf(returnValue));
+                                //viewHolder.answerReturnTextViews[i].setText(String.valueOf(returnValue));
+                                viewHolder.answerReturnTextViews[i].setText(String.valueOf(answers[i].getPointsMultiplier()*2));
                                 answers[i].setScore(returnValue);
+                                //answers[i].setScore(answers[i].getPointsMultiplier()*2);
                                 answers[i].setSelectedBetSize(betSize);
                             }
 
@@ -762,7 +764,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         for (int i = 0; i < answers.length; i++) {
                             final int returnValue = (int) Math.round(answers[i].getPointsMultiplier() * betSize);
                             viewHolder.answerReturnTextViews[i].setText(String.valueOf(returnValue));
+                            viewHolder.answerReturnTextViews[i].setText(String.valueOf(answers[i].getPointsMultiplier()));
                             answers[i].setScore(returnValue);
+                            //answers[i].setScore(answers[i].getPointsMultiplier());
                             answers[i].setSelectedBetSize(betSize);
                         }
 
@@ -1182,10 +1186,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             for (int i = 0; i < answers.length; i++) {
                 final String answerText = answers[i].getAnswerText();
                 final int initialReturnValue = (int) answers[i].getPointsMultiplier() * playerMinBetSize;
+                //final double initialReturnValue = answers[i].getPointsMultiplier();
 
                 viewHolder.answerTextViews[i].setText(answerText);
                 if (isAskedQuestion) {
-                    viewHolder.answerReturnTextViews[i].setText(String.valueOf(initialReturnValue));
+                    //viewHolder.answerReturnTextViews[i].setText(String.valueOf(initialReturnValue));
+                    viewHolder.answerReturnTextViews[i].setText(String.valueOf(answers[i].getPointsMultiplier()));
                     viewHolder.answerReturnTextViews[i].setVisibility(View.VISIBLE);
 
 
