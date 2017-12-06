@@ -1024,6 +1024,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         if(loadingMessage!=null)
             loadingMessageTextView.setText(loadingMessage);
 
+//        if(loadingMessage.startsWith("You are disconnected"))
+//            loadingMessageTextView.setBackgroundResource(R.color.colorBlack);
+//        else
+//            loadingMessageTextView.setBackgroundResource(0); // reset
+
         boolean isLoading = loadingEvent.isLoading();
         if(isLoading)
             loadingRoot.setVisibility(View.VISIBLE);

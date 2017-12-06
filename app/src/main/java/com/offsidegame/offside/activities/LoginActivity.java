@@ -320,8 +320,13 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
         }
 
-        HttpHelper httpHelper = new HttpHelper(playerProfilePictureUrl);
-        httpHelper.execute();
+        try {
+            HttpHelper httpHelper = new HttpHelper(playerProfilePictureUrl);
+            httpHelper.execute();
+        }
+        catch(Exception ex){
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
 
 
 

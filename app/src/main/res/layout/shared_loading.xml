@@ -40,6 +40,7 @@
                 android:textColor="@color/grayText"
                 android:textSize="@dimen/OffsideMediumSmallText"
                 android:lines="1"
+                android:padding="5dp"
                 android:fontFamily="@font/font_open_sans_hebrew_light"
 
                 />
@@ -50,10 +51,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="..."
+                android:text=""
                 android:textColor="@color/grayText"
                 android:textSize="@dimen/OffsideSmallText"
                 android:lines="1"
+                android:padding="5dp"
                 android:fontFamily="@font/font_open_sans_hebrew_light"
                 android:layout_marginTop="4dp"
 
