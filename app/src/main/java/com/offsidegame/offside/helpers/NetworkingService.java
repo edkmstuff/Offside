@@ -612,7 +612,7 @@ public class NetworkingService extends Service {
                             @Override
                             public void run() {
                                 if (!availableGameReceived)
-                                    EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGame"));
+                                    EventBus.getDefault().post(new NetworkingErrorEvent("Request"));
                             }
                         }, sendToServerErrorDelay);
                     }
