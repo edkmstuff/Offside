@@ -21,7 +21,7 @@ android {
 //        release {
 //            storeFile file("offsideKey.keystore")
 //            storePassword "newcareer@12"
-//            keyAlias "Offsidekey file"
+//            keyAlias "OffsideKeyStore1"
 //            keyPassword "newcareer@12"
 //            v2SigningEnabled false
 //        }

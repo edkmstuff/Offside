@@ -677,44 +677,19 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     viewHolder.incomingQuestionTextView.setVisibility(View.VISIBLE);
                     viewHolder.incomingAnswersRoot.setVisibility(View.VISIBLE);
 
-
-//                    int betSize = answerIdentifier.getBetSize();
-//
-//                    final Answer answerOfTheUser;
-//                    int returnValue = 0;
-//
-//                    if (answerNumber != 0) {
-//                        answerOfTheUser = viewHolder.question.getAnswers()[answerNumber - 1];
-//                        viewHolder.incomingSelectedAnswerTextView.setText(answerOfTheUser.getAnswerText());
-//                        returnValue = (int) (betSize * answerOfTheUser.getPointsMultiplier());
-//                        final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
-//                        viewHolder.incomingSelectedAnswerTextView.setBackgroundResource(backgroundColorResourceId);
-//                        viewHolder.incomingSelectedAnswerTextView.setVisibility(View.VISIBLE);
-//                    }
-//
-//                    //set values to widgets
-//                    viewHolder.incomingProcessingQuestionTextView.setText(viewHolder.question.getQuestionText());
-//
-//                    viewHolder.incomingSelectedAnswerReturnTextView.setText(Integer.toString(returnValue));
-
                     if (answerIdentifier.isSkipped())
                         //viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_randomly_selected_answer_title);
                         viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_seems_like_you_skipped_this_question);
 
-//                    else {
-//                        viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_user_selected_answer_title);
-//                        viewHolder.incomingSelectedAnswerTextView.setVisibility(View.VISIBLE);
-//                    }
-
-
-                    //visibility set
-
-                    //viewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
                     viewHolder.incomingQuestionRoot.setVisibility(View.VISIBLE);
                     viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
                     return;
 
-                } else if (!isOpenForAnswering) {
+                } else if (!isOpenForAnswering) { //player did not answer this question
+                    removeClickListenerFromAnswers(viewHolder);
+                    setAnswersVisibility(viewHolder, viewHolder.question.getAnswers(), playerMinBetSize, isAskedQuestion, isProcessedQuestion);
+                    setStyleForSelectedAnswer(viewHolder, null);
+                    viewHolder.incomingSelectedAnswerTitleTextView.setText(R.string.lbl_seems_like_you_skipped_this_question);
                     viewHolder.incomingMissedQuestionTextView.setText(viewHolder.question.getQuestionText());
                     viewHolder.incomingMissedQuestionRoot.setVisibility(View.VISIBLE);
                     viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
@@ -1402,10 +1377,14 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                 viewHolder.answerReturnTextViews[i].setTextColor(ContextCompat.getColor(context, R.color.answerTextUnSelectedColor));
             }
 
-            int answerNumber = getAnswerNumber(viewHolder.question, answerId);
-            viewHolder.answerRoots[answerNumber].setBackgroundResource(R.drawable.shape_bg_rectangle_answer_selected);
-            viewHolder.answerTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextSelectedColor));
-            viewHolder.answerReturnTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextSelectedColor));
+            if(answerId!=null){
+                int answerNumber = getAnswerNumber(viewHolder.question, answerId);
+                viewHolder.answerRoots[answerNumber].setBackgroundResource(R.drawable.shape_bg_rectangle_answer_selected);
+                viewHolder.answerTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextSelectedColor));
+                viewHolder.answerReturnTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextSelectedColor));
+
+            }
+
 
 
 

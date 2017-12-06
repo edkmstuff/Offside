@@ -44,7 +44,7 @@
     <string name="lbl_well_done_you_earned_2_power_items">כל הכבוד! זכית ב - 2 כדורים</string>
     <string name="lbl_you_didnt_earn_balls">לא זכית בכדורים הפעם... לא נורא, תוכל לנסות שוב</string>
     <string name="lbl_try_again">נסה שוב</string>
-    <string name="lbl_you_missed_this_question">לא היית מחובר בזמן שנשלחה השאלה</string>
+    <string name="lbl_you_missed_this_question">לא היית מחובר בזמן שנשלחה השאלה או שבחרת לא לענות</string>
     <string name="lbl_feeling_lucky">הגרל</string>
     <string name="lbl_is">התשובה הנכונה</string>
     <string name="lbl_your_answer_was">תשובתך</string>

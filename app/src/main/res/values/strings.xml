@@ -64,7 +64,7 @@
     <string name="lbl_well_done_you_earned_2_power_items">Congrats! You won 2 power items</string>
     <string name="lbl_you_didnt_earn_balls">You did not win any power items, no worries - you can try again</string>
     <string name="lbl_try_again">Try again</string>
-    <string name="lbl_you_missed_this_question">You were not connected</string>
+    <string name="lbl_you_missed_this_question">You were not connected or you did not answer</string>
     <string name="lbl_feeling_lucky">Feeling Lucky</string>
     <string name="lbl_is">correct answer</string>
     <string name="lbl_your_answer_was">Your answer</string>
