@@ -383,11 +383,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     viewHolder.incomingUserSentTextView.setTextColor(playerColorId);
                 }
                 else {
-                    String playerColor = OffsideApplication.getPlayerAssets().getPlayerColor();
+                    String playerColor = viewHolder.chatMessage.getSenderColor();
                     int playerColorId = Color.parseColor(playerColor);
                     viewHolder.incomingUserSentTextView.setTextColor(playerColorId);
                 }
-
 
                 viewHolder.incomingTextMessageTextView.setText(viewHolder.chatMessage.getMessageText());
 
@@ -1203,22 +1202,31 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     private void setAnswersVisibility(ViewHolder viewHolder, Answer[] answers, int playerMinBetSize, boolean isAskedQuestion, boolean isProcessedQuestion) {
 
-        for (int i = 0; i < answers.length; i++) {
-            final String answerText = answers[i].getAnswerText();
-            final int initialReturnValue = (int) answers[i].getPointsMultiplier() * playerMinBetSize;
+        try
+        {
+            for (int i = 0; i < answers.length; i++) {
+                final String answerText = answers[i].getAnswerText();
+                final int initialReturnValue = (int) answers[i].getPointsMultiplier() * playerMinBetSize;
 
-            viewHolder.answerTextViews[i].setText(answerText);
-            if (isAskedQuestion) {
-                viewHolder.answerReturnTextViews[i].setText(String.valueOf(initialReturnValue));
-                viewHolder.answerReturnTextViews[i].setVisibility(View.VISIBLE);
+                viewHolder.answerTextViews[i].setText(answerText);
+                if (isAskedQuestion) {
+                    viewHolder.answerReturnTextViews[i].setText(String.valueOf(initialReturnValue));
+                    viewHolder.answerReturnTextViews[i].setVisibility(View.VISIBLE);
 
 
-            } else if (isProcessedQuestion) {
-                viewHolder.answerReturnTextViews[i].setVisibility(View.GONE);
+                } else if (isProcessedQuestion) {
+                    viewHolder.answerReturnTextViews[i].setVisibility(View.GONE);
+                }
+
+                viewHolder.answerRoots[i].setVisibility(View.VISIBLE);
             }
 
-            viewHolder.answerRoots[i].setVisibility(View.VISIBLE);
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
         }
+
     }
 
     private void generateSocialFeedChatMessage(ViewHolder viewHolder) {
@@ -1258,20 +1266,22 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     public void shareOnFacebook(ShareButton facebookShareButton, Bitmap bitmapImage, String quote) {
 
-        StringBuilder sb = new StringBuilder();
+        try
+        {
+            StringBuilder sb = new StringBuilder();
 
-        sb.append(quote);
-        sb.append("\r\n");
-        sb.append("\r\n");
-        sb.append("think you can bit me? come join!!!");
-        ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse(OffsideApplication.getAppLogoPictureUrl()))
-                .setShareHashtag(new ShareHashtag.Builder()
-                        .setHashtag("#Sidekick#soccer#livegame")
-                        .build())
-                //.setQuote(quote+"\r\n"+ "think you can bit me? come join!!!" )
-                .setQuote(sb.toString())
-                .build();
+            sb.append(quote);
+            sb.append("\r\n");
+            sb.append("\r\n");
+            sb.append("think you can bit me? come join!!!");
+            ShareLinkContent content = new ShareLinkContent.Builder()
+                    .setContentUrl(Uri.parse(OffsideApplication.getAppLogoPictureUrl()))
+                    .setShareHashtag(new ShareHashtag.Builder()
+                            .setHashtag("#Sidekick#soccer#livegame")
+                            .build())
+                    //.setQuote(quote+"\r\n"+ "think you can bit me? come join!!!" )
+                    .setQuote(sb.toString())
+                    .build();
 
 
 //        SharePhoto photo = new SharePhoto.Builder()
@@ -1282,8 +1292,15 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 //                .addPhoto(photo)
 //                .build();
 
-        //ShareDialog.show(thisActivity, content);
-        facebookShareButton.setShareContent(content);
+            //ShareDialog.show(thisActivity, content);
+            facebookShareButton.setShareContent(content);
+
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
 
     }
 
@@ -1377,16 +1394,26 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     private void setStyleForSelectedAnswer(ViewHolder viewHolder, String answerId) {
 
-        for (int i = 0; i < viewHolder.answerRoots.length; i++) {
-            viewHolder.answerRoots[i].setBackgroundResource(R.drawable.shape_bg_rectangle_answer_unselected);
-            viewHolder.answerTextViews[i].setTextColor(ContextCompat.getColor(context, R.color.answerTextUnSelectedColor));
-            viewHolder.answerReturnTextViews[i].setTextColor(ContextCompat.getColor(context, R.color.answerTextUnSelectedColor));
-        }
+        try
+        {
+            for (int i = 0; i < viewHolder.answerRoots.length; i++) {
+                viewHolder.answerRoots[i].setBackgroundResource(R.drawable.shape_bg_rectangle_answer_unselected);
+                viewHolder.answerTextViews[i].setTextColor(ContextCompat.getColor(context, R.color.answerTextUnSelectedColor));
+                viewHolder.answerReturnTextViews[i].setTextColor(ContextCompat.getColor(context, R.color.answerTextUnSelectedColor));
+            }
 
-        int answerNumber = getAnswerNumber(viewHolder.question, answerId);
-        viewHolder.answerRoots[answerNumber].setBackgroundResource(R.drawable.shape_bg_rectangle_answer_selected);
-        viewHolder.answerTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextSelectedColor));
-        viewHolder.answerReturnTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextSelectedColor));
+            int answerNumber = getAnswerNumber(viewHolder.question, answerId);
+            viewHolder.answerRoots[answerNumber].setBackgroundResource(R.drawable.shape_bg_rectangle_answer_selected);
+            viewHolder.answerTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextSelectedColor));
+            viewHolder.answerReturnTextViews[answerNumber].setTextColor(ContextCompat.getColor(context, R.color.answerTextSelectedColor));
+
+
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
 
 
     }
@@ -1441,20 +1468,30 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     private String formatTimerDisplay(long millisUntilFinished) {
 
-        String timerDisplayFormat = "";
+        try
+        {
+            String timerDisplayFormat = "";
 
-        int min = (int) Math.floor(millisUntilFinished / 1000 / 60);
-        int sec = ((int) Math.floor(millisUntilFinished / 1000) % 60);
-        String minString = Integer.toString(min);
-        String secString = Integer.toString(sec);
+            int min = (int) Math.floor(millisUntilFinished / 1000 / 60);
+            int sec = ((int) Math.floor(millisUntilFinished / 1000) % 60);
+            String minString = Integer.toString(min);
+            String secString = Integer.toString(sec);
 
-        if (min < 10)
-            minString = "0" + minString;
-        if (sec < 10)
-            secString = "0" + secString;
+            if (min < 10)
+                minString = "0" + minString;
+            if (sec < 10)
+                secString = "0" + secString;
 
-        timerDisplayFormat = minString + ":" + secString;
-        return timerDisplayFormat;
+            timerDisplayFormat = minString + ":" + secString;
+            return timerDisplayFormat;
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return Float.toString(millisUntilFinished);
+
+        }
+
     }
 
     private void resetWidgetsVisibility(ViewHolder viewHolder) {
@@ -1503,9 +1540,18 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
     }
 
     private void removeClickListenerFromAnswers(ViewHolder viewHolder) {
-        for (int i = 0; i < viewHolder.answerRoots.length; i++) {
-            viewHolder.answerRoots[i].setOnClickListener(null);
+        try
+        {
+            for (int i = 0; i < viewHolder.answerRoots.length; i++) {
+                viewHolder.answerRoots[i].setOnClickListener(null);
+            }
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
         }
+
     }
 
 

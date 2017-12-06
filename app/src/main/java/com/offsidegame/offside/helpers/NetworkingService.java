@@ -340,118 +340,127 @@ public class NetworkingService extends Service {
 
 
     public void onServerMessage(String message, String model) {
-        final Gson gson = new GsonBuilder().create();
+        try
+        {
+            final Gson gson = new GsonBuilder().create();
 
-        if (message.equals("ChatMessagesReceived")) {
-            Chat chat = gson.fromJson(model, Chat.class);
-            chatMessagesReceived = true;
-            EventBus.getDefault().post(new ChatEvent(chat));
-        } else if (message.equals("ChatMessageReceived")) {
-            ChatMessage chatMessage = gson.fromJson(model, ChatMessage.class);
-            chatMessageReceived = true;
-            fireNotification(chatMessage.getMessageType(), chatMessage.getMessageText());
-            EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
-            EventBus.getDefault().post(new NotificationBubbleEvent(NotificationBubbleEvent.navigationItemChat));
-        } else if (message.equals("ScoreboardReceived")) {
-            Scoreboard scoreboard = gson.fromJson(model, Scoreboard.class);
-            scoreboardReceived = true;
-            EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
-        } else if (message.equals("PlayerDataReceived")) {
-            PlayerModel playerModel = gson.fromJson(model, PlayerModel.class);
-            playerDataReceived = true;
-            EventBus.getDefault().post(new PlayerModelEvent(playerModel));
-        } else if (message.equals("PositionReceived")) {
-            Position position = gson.fromJson(model, Position.class);
-            positionReceived = true;
-            EventBus.getDefault().post(new PositionEvent(position));
-        } else if (message.equals("AnswerAcceptedReceived")) {
-            PostAnswerRequestInfo postAnswerRequestInfo = gson.fromJson(model, PostAnswerRequestInfo.class);
-            answerAccepted = true;
-            EventBus.getDefault().post(postAnswerRequestInfo);
-        } else if (message.equals("PrivateGroupsReceived")) {
-            PrivateGroupsInfo privateGroupsInfo = gson.fromJson(model, PrivateGroupsInfo.class);
-            privateGroupsReceived = true;
-            EventBus.getDefault().post(privateGroupsInfo);
-        } else if (message.equals("PrivateGroupCreated")) {
-            PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
-            privateGroupCreated = true;
-            EventBus.getDefault().post(new PrivateGroupCreatedEvent(privateGroup));
-        } else if (message.equals("PrivateGroupDeletedReceived")) {
-            KeyValue numberOfDeletedGroupsKeyValue = gson.fromJson(model, KeyValue.class);
-            Integer numberOfDeletedGroups = Integer.parseInt(numberOfDeletedGroupsKeyValue.getValue());
-            privateGroupDeleted = true;
-            EventBus.getDefault().post(new PrivateGroupDeletedEvent(numberOfDeletedGroups));
-        } else if (message.equals("PlayerJoinedPrivateGroupReceived")) {
-            KeyValue numberOfPlayerAddedKeyValue = gson.fromJson(model, KeyValue.class);
-            Integer numberOfPlayerAdded = Integer.parseInt(numberOfPlayerAddedKeyValue.getValue());
-            playerJoinPrivateGroupReceived = true;
-            EventBus.getDefault().post(new PlayerJoinPrivateGroupEvent(numberOfPlayerAdded));
-        } else if (message.equals("PrivateGroupReceived")) {
-            PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
-            privateGroupReceived = true;
-            EventBus.getDefault().post(new PrivateGroupEvent(privateGroup));
-        } else if (message.equals("PrivateGroupChangedReceived")) {
-            PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
-            privateGroupChangedReceived = true;
-            EventBus.getDefault().post(new PrivateGroupChangedEvent(privateGroup));
-        } else if (message.equals("AvailableGamesReceived")) {
-            AvailableGame[] availableGames = gson.fromJson(model, AvailableGame[].class);
-            availableGamesReceived = true;
-            EventBus.getDefault().post(availableGames);
-        } else if (message.equals("LeagueRecordsReceived")) {
-            LeagueRecord[] leagueRecords = gson.fromJson(model, LeagueRecord[].class);
-            leagueRecordsReceived = true;
-            EventBus.getDefault().post(leagueRecords);
-        } else if (message.equals("PrivateGameCreated")) {
-            KeyValue privateGameIdKeyValue = gson.fromJson(model, KeyValue.class);
-            String privateGameId = privateGameIdKeyValue.getValue();
-            privateGameCreated = true;
-            EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameId));
-        } else if (message.equals("PlayerJoinedPrivateGame")) {
-            GameInfo gameInfo = gson.fromJson(model, GameInfo.class);
-            playerJoinedPrivateGame = true;
-            EventBus.getDefault().post(new JoinGameEvent(gameInfo));
-        } else if (message.equals("LoggedInUserReceived")) {
-            PlayerAssets playerAssets = gson.fromJson(model, PlayerAssets.class);
-            loggedInUserReceived = true;
-            EventBus.getDefault().post(playerAssets);
-        } else if (message.equals("PlayerImageSaved")) {
-            KeyValue isPlayerImageSavedKeyValue = gson.fromJson(model, KeyValue.class);
-            Boolean isPlayerImageSaved = Boolean.parseBoolean(isPlayerImageSavedKeyValue.getValue());
-            playerImageSaved = true;
-            EventBus.getDefault().post(new PlayerImageSavedEvent(isPlayerImageSaved));
-        } else if (message.equals("UserProfileInfoReceived")) {
-            UserProfileInfo userProfileInfo = gson.fromJson(model, UserProfileInfo.class);
-            userProfileInfoReceived = true;
-            EventBus.getDefault().post(userProfileInfo);
-        } else if (message.equals("PlayerAssetsReceived")) {
-            PlayerAssets playerAssets = gson.fromJson(model, PlayerAssets.class);
-            playerAssetsReceived = true;
-            EventBus.getDefault().post(playerAssets);
-        } else if (message.equals("AvailableGameReceived")) {
-            AvailableGame availableGame = gson.fromJson(model, AvailableGame.class);
-            availableGameReceived = true;
-            EventBus.getDefault().post(new AvailableGameEvent(availableGame));
-        } else if (message.equals("FriendInviteReceived")) {
-            KeyValue friendInviteCodeKeyValue = gson.fromJson(model, KeyValue.class);
-            String friendInviteCode = friendInviteCodeKeyValue.getValue();
-            friendInviteReceived = true;
-            EventBus.getDefault().post(new FriendInviteReceivedEvent(friendInviteCode));
-        } else if (message.equals("PlayerRewardedReceived")) {
-            KeyValue rewardValueKeyValue = gson.fromJson(model, KeyValue.class);
-            Integer rewardValue = Integer.parseInt(rewardValueKeyValue.getValue());
-            playerRewardSaved = true;
-            EventBus.getDefault().post(new PlayerRewardedReceivedEvent(rewardValue));
-        } else if (message.equals("PlayerQuitPrivateGameReceived")) {
-            KeyValue playerWasRemovedFromPrivateGameKeyValue = gson.fromJson(model, KeyValue.class);
-            boolean playerWasRemovedFromPrivateGame = Boolean.parseBoolean(playerWasRemovedFromPrivateGameKeyValue.getValue());
-            playerQuitPrivateGame = true;
-            EventBus.getDefault().post(new PlayerQuitFromPrivateGameEvent(playerWasRemovedFromPrivateGame));
-        } else if (message.equals("PrivateGameInfoByCodeReceived")) {
-            PrivateGameInfo privateGameInfo = gson.fromJson(model, PrivateGameInfo.class);
-            playerJoinedPrivateGameByCode = true;
-            EventBus.getDefault().post(privateGameInfo);
+            if (message.equals("ChatMessagesReceived")) {
+                Chat chat = gson.fromJson(model, Chat.class);
+                chatMessagesReceived = true;
+                EventBus.getDefault().post(new ChatEvent(chat));
+            } else if (message.equals("ChatMessageReceived")) {
+                ChatMessage chatMessage = gson.fromJson(model, ChatMessage.class);
+                chatMessageReceived = true;
+                fireNotification(chatMessage.getMessageType(), chatMessage.getMessageText());
+                EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
+                EventBus.getDefault().post(new NotificationBubbleEvent(NotificationBubbleEvent.navigationItemChat));
+            } else if (message.equals("ScoreboardReceived")) {
+                Scoreboard scoreboard = gson.fromJson(model, Scoreboard.class);
+                scoreboardReceived = true;
+                EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
+            } else if (message.equals("PlayerDataReceived")) {
+                PlayerModel playerModel = gson.fromJson(model, PlayerModel.class);
+                playerDataReceived = true;
+                EventBus.getDefault().post(new PlayerModelEvent(playerModel));
+            } else if (message.equals("PositionReceived")) {
+                Position position = gson.fromJson(model, Position.class);
+                positionReceived = true;
+                EventBus.getDefault().post(new PositionEvent(position));
+            } else if (message.equals("AnswerAcceptedReceived")) {
+                PostAnswerRequestInfo postAnswerRequestInfo = gson.fromJson(model, PostAnswerRequestInfo.class);
+                answerAccepted = true;
+                EventBus.getDefault().post(postAnswerRequestInfo);
+            } else if (message.equals("PrivateGroupsReceived")) {
+                PrivateGroupsInfo privateGroupsInfo = gson.fromJson(model, PrivateGroupsInfo.class);
+                privateGroupsReceived = true;
+                EventBus.getDefault().post(privateGroupsInfo);
+            } else if (message.equals("PrivateGroupCreated")) {
+                PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
+                privateGroupCreated = true;
+                EventBus.getDefault().post(new PrivateGroupCreatedEvent(privateGroup));
+            } else if (message.equals("PrivateGroupDeletedReceived")) {
+                KeyValue numberOfDeletedGroupsKeyValue = gson.fromJson(model, KeyValue.class);
+                Integer numberOfDeletedGroups = Integer.parseInt(numberOfDeletedGroupsKeyValue.getValue());
+                privateGroupDeleted = true;
+                EventBus.getDefault().post(new PrivateGroupDeletedEvent(numberOfDeletedGroups));
+            } else if (message.equals("PlayerJoinedPrivateGroupReceived")) {
+                KeyValue numberOfPlayerAddedKeyValue = gson.fromJson(model, KeyValue.class);
+                Integer numberOfPlayerAdded = Integer.parseInt(numberOfPlayerAddedKeyValue.getValue());
+                playerJoinPrivateGroupReceived = true;
+                EventBus.getDefault().post(new PlayerJoinPrivateGroupEvent(numberOfPlayerAdded));
+            } else if (message.equals("PrivateGroupReceived")) {
+                PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
+                privateGroupReceived = true;
+                EventBus.getDefault().post(new PrivateGroupEvent(privateGroup));
+            } else if (message.equals("PrivateGroupChangedReceived")) {
+                PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
+                privateGroupChangedReceived = true;
+                EventBus.getDefault().post(new PrivateGroupChangedEvent(privateGroup));
+            } else if (message.equals("AvailableGamesReceived")) {
+                AvailableGame[] availableGames = gson.fromJson(model, AvailableGame[].class);
+                availableGamesReceived = true;
+                EventBus.getDefault().post(availableGames);
+            } else if (message.equals("LeagueRecordsReceived")) {
+                LeagueRecord[] leagueRecords = gson.fromJson(model, LeagueRecord[].class);
+                leagueRecordsReceived = true;
+                EventBus.getDefault().post(leagueRecords);
+            } else if (message.equals("PrivateGameCreated")) {
+                KeyValue privateGameIdKeyValue = gson.fromJson(model, KeyValue.class);
+                String privateGameId = privateGameIdKeyValue.getValue();
+                privateGameCreated = true;
+                EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameId));
+            } else if (message.equals("PlayerJoinedPrivateGame")) {
+                GameInfo gameInfo = gson.fromJson(model, GameInfo.class);
+                playerJoinedPrivateGame = true;
+                EventBus.getDefault().post(new JoinGameEvent(gameInfo));
+            } else if (message.equals("LoggedInUserReceived")) {
+                PlayerAssets playerAssets = gson.fromJson(model, PlayerAssets.class);
+                loggedInUserReceived = true;
+                EventBus.getDefault().post(playerAssets);
+            } else if (message.equals("PlayerImageSaved")) {
+                KeyValue isPlayerImageSavedKeyValue = gson.fromJson(model, KeyValue.class);
+                Boolean isPlayerImageSaved = Boolean.parseBoolean(isPlayerImageSavedKeyValue.getValue());
+                playerImageSaved = true;
+                EventBus.getDefault().post(new PlayerImageSavedEvent(isPlayerImageSaved));
+            } else if (message.equals("UserProfileInfoReceived")) {
+                UserProfileInfo userProfileInfo = gson.fromJson(model, UserProfileInfo.class);
+                userProfileInfoReceived = true;
+                EventBus.getDefault().post(userProfileInfo);
+            } else if (message.equals("PlayerAssetsReceived")) {
+                PlayerAssets playerAssets = gson.fromJson(model, PlayerAssets.class);
+                playerAssetsReceived = true;
+                EventBus.getDefault().post(playerAssets);
+            } else if (message.equals("AvailableGameReceived")) {
+                AvailableGame availableGame = gson.fromJson(model, AvailableGame.class);
+                availableGameReceived = true;
+                EventBus.getDefault().post(new AvailableGameEvent(availableGame));
+            } else if (message.equals("FriendInviteReceived")) {
+                KeyValue friendInviteCodeKeyValue = gson.fromJson(model, KeyValue.class);
+                String friendInviteCode = friendInviteCodeKeyValue.getValue();
+                friendInviteReceived = true;
+                EventBus.getDefault().post(new FriendInviteReceivedEvent(friendInviteCode));
+            } else if (message.equals("PlayerRewardedReceived")) {
+                KeyValue rewardValueKeyValue = gson.fromJson(model, KeyValue.class);
+                Integer rewardValue = Integer.parseInt(rewardValueKeyValue.getValue());
+                playerRewardSaved = true;
+                EventBus.getDefault().post(new PlayerRewardedReceivedEvent(rewardValue));
+            } else if (message.equals("PlayerQuitPrivateGameReceived")) {
+                KeyValue playerWasRemovedFromPrivateGameKeyValue = gson.fromJson(model, KeyValue.class);
+                boolean playerWasRemovedFromPrivateGame = Boolean.parseBoolean(playerWasRemovedFromPrivateGameKeyValue.getValue());
+                playerQuitPrivateGame = true;
+                EventBus.getDefault().post(new PlayerQuitFromPrivateGameEvent(playerWasRemovedFromPrivateGame));
+            } else if (message.equals("PrivateGameInfoByCodeReceived")) {
+                PrivateGameInfo privateGameInfo = gson.fromJson(model, PrivateGameInfo.class);
+                playerJoinedPrivateGameByCode = true;
+                EventBus.getDefault().post(privateGameInfo);
+            }
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
         }
+
 
 
     }
@@ -459,70 +468,79 @@ public class NetworkingService extends Service {
 
     private void fireNotification(String messageType, String message) {
 
-        boolean isAskedQuestion = messageType.equals(OffsideApplication.getMessageTypeAskedQuestion());
-        boolean isCloseQuestion = messageType.equals(OffsideApplication.getMessageTypeClosedQuestion());
+        try
+        {
 
-        if (isAskedQuestion || isCloseQuestion) {
-            MediaPlayer player;
+            boolean isAskedQuestion = messageType.equals(OffsideApplication.getMessageTypeAskedQuestion());
+            boolean isCloseQuestion = messageType.equals(OffsideApplication.getMessageTypeClosedQuestion());
 
-            int soundResource = R.raw.human_whisle;
-            if (isCloseQuestion) {
-                final Gson gson = new GsonBuilder().create();
-                Question question = gson.fromJson(message, Question.class);
-                if (OffsideApplication.playerAnswers.containsKey(question.getId()) && OffsideApplication.playerAnswers.get(question.getId()).getAnswerId().equals(question.getCorrectAnswerId())) {
-                    soundResource = ((int) (Math.random() * 100)) % 2 == 0 ? R.raw.bravo : R.raw.hooray;
-                } else {
-                    soundResource = R.raw.aww;
-                }
-            }
+            if (isAskedQuestion || isCloseQuestion) {
+                MediaPlayer player;
 
-            player = MediaPlayer.create(getApplicationContext(), soundResource);
-            player.start();
-
-            if (!OffsideApplication.isLobbyActivityVisible()) {
-
-                int titleResource = R.string.lbl_new_question_is_waiting_for_you;
-                int textResource = R.string.lbl_click_to_answer;
+                int soundResource = R.raw.human_whisle;
                 if (isCloseQuestion) {
-                    titleResource = R.string.lbl_we_have_an_answer;
-                    textResource = R.string.lbl_click_to_view;
+                    final Gson gson = new GsonBuilder().create();
+                    Question question = gson.fromJson(message, Question.class);
+                    if (OffsideApplication.playerAnswers.containsKey(question.getId()) && OffsideApplication.playerAnswers.get(question.getId()).getAnswerId().equals(question.getCorrectAnswerId())) {
+                        soundResource = ((int) (Math.random() * 100)) % 2 == 0 ? R.raw.bravo : R.raw.hooray;
+                    } else {
+                        soundResource = R.raw.aww;
+                    }
                 }
 
-                Bitmap largeNotificationIcon = BitmapFactory.decodeResource(getResources(), R.drawable.app_logo_10);
+                player = MediaPlayer.create(getApplicationContext(), soundResource);
+                player.start();
 
-                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.app_logo)
-                        .setLargeIcon(largeNotificationIcon)
-                        .setContentTitle(getString(titleResource))
-                        .setDefaults(NotificationCompat.DEFAULT_ALL)
-                        .setContentText(getString(textResource))
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setOnlyAlertOnce(true)
-                        .setColor(Color.BLUE);
+                if (!OffsideApplication.isLobbyActivityVisible()) {
+
+                    int titleResource = R.string.lbl_new_question_is_waiting_for_you;
+                    int textResource = R.string.lbl_click_to_answer;
+                    if (isCloseQuestion) {
+                        titleResource = R.string.lbl_we_have_an_answer;
+                        textResource = R.string.lbl_click_to_view;
+                    }
+
+                    Bitmap largeNotificationIcon = BitmapFactory.decodeResource(getResources(), R.drawable.app_logo_10);
+
+                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.mipmap.app_logo)
+                            .setLargeIcon(largeNotificationIcon)
+                            .setContentTitle(getString(titleResource))
+                            .setDefaults(NotificationCompat.DEFAULT_ALL)
+                            .setContentText(getString(textResource))
+                            .setPriority(NotificationCompat.PRIORITY_HIGH)
+                            .setOnlyAlertOnce(true)
+                            .setColor(Color.BLUE);
 
 
 // Creates an explicit intent for an Activity in your app
-                Intent chatIntent = new Intent(this, LobbyActivity.class);
+                    Intent chatIntent = new Intent(this, LobbyActivity.class);
 
 // The stack builder object will contain an artificial back stack for the
 // started Activity.
 // This ensures that navigating backward from the Activity leads out of
 // your application to the Home screen.
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
 // Adds the back stack for the Intent (but not the Intent itself)
-                stackBuilder.addParentStack(LobbyActivity.class);
+                    stackBuilder.addParentStack(LobbyActivity.class);
 // Adds the Intent that starts the Activity to the top of the stack
-                stackBuilder.addNextIntent(chatIntent);
-                PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                mBuilder.setContentIntent(resultPendingIntent);
-                NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    stackBuilder.addNextIntent(chatIntent);
+                    PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    mBuilder.setContentIntent(resultPendingIntent);
+                    NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 // mId allows you to update the notification later on.
-                mNotificationManager.notify(mId, mBuilder.build());
+                    mNotificationManager.notify(mId, mBuilder.build());
+
+                }
+
 
             }
 
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
 
         }
+
 
 
     }
@@ -563,8 +581,6 @@ public class NetworkingService extends Service {
     }
 
     public void requestQuitFromPrivateGame(String playerId, String gameId, String privateGameId, String androidDeviceId) {
-
-        //TODO: NOT IN USE - do we need it?
 
         Map<String, String> params = new HashMap<>();
         params.put("method", "RequestQuitPrivateGame");

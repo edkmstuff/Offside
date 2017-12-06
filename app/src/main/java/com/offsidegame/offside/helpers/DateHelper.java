@@ -9,6 +9,7 @@ import org.acra.ACRA;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -23,21 +24,45 @@ public class DateHelper {
     }
 
     public Date getCurrentDate(){
-       Calendar calendar = Calendar.getInstance();
-        return calendar.getTime();
+        try
+        {
+            Calendar calendar = Calendar.getInstance();
+            return calendar.getTime();
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return null;
+        }
+
     }
 
     public Date addHours(Date date, int hours){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.HOUR_OF_DAY, 3);
-        return calendar.getTime();
+        try
+        {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.add(Calendar.HOUR_OF_DAY, 3);
+            return calendar.getTime();
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return null;
+        }
+
     }
 
     public String formatAsString(Date date, Context context){
-        String dateFormat = context.getString(R.string.date_format);
-        String dateAsString = new SimpleDateFormat(dateFormat).format(date);
-        return dateAsString;
+        try
+        {
+            String dateFormat = context.getString(R.string.date_format);
+            String dateAsString = new SimpleDateFormat(dateFormat).format(date);
+            return dateAsString;
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return date.toString();
+        }
+
     }
 
     public static  Date formatAsDate(String dateAsString, String dateFormat, Context context){
@@ -46,13 +71,14 @@ public class DateHelper {
         Date date;
         try {
             date = formatter.parse(dateAsString);
+            return date;
         }
         catch (ParseException pe) {
-            Log.e(context.getString(R.string.log_tag), pe.getMessage());
+            //Log.e(context.getString(R.string.log_tag), pe.getMessage());
             ACRA.getErrorReporter().handleSilentException(pe);
-            date = null;
+            return null;
         }
-        return date;
+
     }
 
 }

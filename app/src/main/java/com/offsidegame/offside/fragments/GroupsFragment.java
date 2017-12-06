@@ -43,16 +43,30 @@ public class GroupsFragment extends Fragment {
 
     @Override
     public void onResume(){
-        super.onResume();
-        EventBus.getDefault().register(this);
-        playerId = OffsideApplication.getPlayerId();
-        OffsideApplication.networkingService.requestPrivateGroupsInfo(playerId);
+        try
+        {
+            super.onResume();
+            EventBus.getDefault().register(this);
+            playerId = OffsideApplication.getPlayerId();
+            OffsideApplication.networkingService.requestPrivateGroupsInfo(playerId);
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     @Override
     public void onPause(){
-        super.onPause();
-        EventBus.getDefault().unregister(this);
+        try
+        {
+            super.onPause();
+            EventBus.getDefault().unregister(this);
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
 
     }
 
@@ -119,17 +133,26 @@ public class GroupsFragment extends Fragment {
 
 
     public void addPage(String groupType) {
-        Bundle bundle = new Bundle();
-        bundle.putString(getString(R.string.key_group_type), groupType);
-        PrivateGroupsFragment privateGroupsFragment = new PrivateGroupsFragment();
-        privateGroupsFragment.setArguments(bundle);
-        viewPagerAdapter.addFragment(privateGroupsFragment, getPageTitle(groupType));
-        viewPagerAdapter.notifyDataSetChanged();
-        if (viewPagerAdapter.getCount() > 0)
-            tabLayout.setupWithViewPager(viewPager);
+        try
+        {
+            Bundle bundle = new Bundle();
+            bundle.putString(getString(R.string.key_group_type), groupType);
+            PrivateGroupsFragment privateGroupsFragment = new PrivateGroupsFragment();
+            privateGroupsFragment.setArguments(bundle);
+            viewPagerAdapter.addFragment(privateGroupsFragment, getPageTitle(groupType));
+            viewPagerAdapter.notifyDataSetChanged();
+            if (viewPagerAdapter.getCount() > 0)
+                tabLayout.setupWithViewPager(viewPager);
 
 
-        setupTabLayout();
+            setupTabLayout();
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     private String getPageTitle(String groupType) {
@@ -143,10 +166,19 @@ public class GroupsFragment extends Fragment {
     }
 
     public void setupTabLayout() {
-        selectedTabPosition = viewPager.getCurrentItem();
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            tabLayout.getTabAt(i).setCustomView(viewPagerAdapter.getTabView(i));
+        try
+        {
+            selectedTabPosition = viewPager.getCurrentItem();
+            for (int i = 0; i < tabLayout.getTabCount(); i++) {
+                tabLayout.getTabAt(i).setCustomView(viewPagerAdapter.getTabView(i));
+            }
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
         }
+
     }
 
     public boolean isTabsCreated() {

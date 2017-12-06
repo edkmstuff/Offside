@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import org.acra.ACRA;
+
 import java.util.ArrayList;
 
 /**
@@ -37,19 +39,17 @@ public class CustomTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
 
-        String title = fragments.get(position).toString();
+        try
+        {
+            String title = fragments.get(position).toString();
 
-//        String groupType = fragments.get(position).getArguments().getString("groupType");
-//        String title = "לא ידוע";
-//        if (groupType == null)
-//            return title;
-//
-//        if (groupType.equals("PRIVATE_GROUP"))
-//            title = "הקבוצות שלי";
-//        else if (groupType.equals("PUBLIC_GROUP"))
-//            title = "קבוצות ציבוריות";
+            return title;
 
-        return title;
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return null;
+        }
 
 
     }

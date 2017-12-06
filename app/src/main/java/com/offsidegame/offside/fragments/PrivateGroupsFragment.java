@@ -21,6 +21,8 @@ import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupsInfo;
 
+import org.acra.ACRA;
+
 import java.util.ArrayList;
 
 
@@ -33,53 +35,70 @@ public class PrivateGroupsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_private_groups, container, false);
+        try
+        {
+            View rootView = inflater.inflate(R.layout.fragment_private_groups, container, false);
 
-        if (OffsideApplication.getPrivateGroupsInfo() == null)
+            if (OffsideApplication.getPrivateGroupsInfo() == null)
+                return rootView;
+
+            //ImageView createPrivateGroupImageView = (ImageView) rootView.findViewById(R.id.fpg_create_private_group_image_view);
+            FloatingActionButton createPrivateGroupFloatingActionButton = rootView.findViewById(R.id.fpg_create_private_group_floating_action_button);
+            createPrivateGroupFloatingActionButton.setSize(30);
+            ListView listView = (ListView) rootView.findViewById(R.id.fpg_private_groups_list_view);
+            PrivateGroupAdapter privateGroupAdapter = new PrivateGroupAdapter(this.getActivity(), getPrivateGroups());
+            listView.setAdapter(privateGroupAdapter);
+
+            if(groupType.equals(getString(R.string.key_public_group_name)))
+                createPrivateGroupFloatingActionButton.setVisibility(View.GONE);
+            else
+                createPrivateGroupFloatingActionButton.setVisibility(View.VISIBLE);
+
+            createPrivateGroupFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    Intent intent = new Intent(getContext(), CreatePrivateGroupActivity.class);
+                    startActivity(intent);
+
+                }
+            });
+
+
             return rootView;
 
-        //ImageView createPrivateGroupImageView = (ImageView) rootView.findViewById(R.id.fpg_create_private_group_image_view);
-        FloatingActionButton createPrivateGroupFloatingActionButton = rootView.findViewById(R.id.fpg_create_private_group_floating_action_button);
-        createPrivateGroupFloatingActionButton.setSize(30);
-        ListView listView = (ListView) rootView.findViewById(R.id.fpg_private_groups_list_view);
-        PrivateGroupAdapter privateGroupAdapter = new PrivateGroupAdapter(this.getActivity(), getPrivateGroups());
-        listView.setAdapter(privateGroupAdapter);
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return null;
 
-        if(groupType.equals(getString(R.string.key_public_group_name)))
-            createPrivateGroupFloatingActionButton.setVisibility(View.GONE);
-        else
-            createPrivateGroupFloatingActionButton.setVisibility(View.VISIBLE);
+        }
 
-        createPrivateGroupFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent intent = new Intent(getContext(), CreatePrivateGroupActivity.class);
-                startActivity(intent);
-
-            }
-        });
-
-
-        return rootView;
     }
 
     private ArrayList<PrivateGroup> getPrivateGroups() {
-        groupType = this.getArguments().getString(getString(R.string.key_group_type));
-        PrivateGroupsInfo privateGroupsInfo = OffsideApplication.getPrivateGroupsInfo();
-        if (privateGroupsInfo != null)
-            privateGroups = privateGroupsInfo.getPrivateGroups();
-        if (privateGroups == null)
-            privateGroups = new ArrayList<>();
+        try
+        {
+            groupType = this.getArguments().getString(getString(R.string.key_group_type));
+            PrivateGroupsInfo privateGroupsInfo = OffsideApplication.getPrivateGroupsInfo();
+            if (privateGroupsInfo != null)
+                privateGroups = privateGroupsInfo.getPrivateGroups();
+            if (privateGroups == null)
+                privateGroups = new ArrayList<>();
 
-        ArrayList filteredGroupsList = new ArrayList<>();
+            ArrayList filteredGroupsList = new ArrayList<>();
 
-        for (PrivateGroup privateGroup : privateGroups) {
-            if (privateGroup.getGroupType().equals(groupType))
-                filteredGroupsList.add(privateGroup);
+            for (PrivateGroup privateGroup : privateGroups) {
+                if (privateGroup.getGroupType().equals(groupType))
+                    filteredGroupsList.add(privateGroup);
+            }
+
+            return filteredGroupsList;
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return null;
         }
-
-        return filteredGroupsList;
 
     }
 

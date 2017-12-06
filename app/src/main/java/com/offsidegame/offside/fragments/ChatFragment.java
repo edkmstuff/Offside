@@ -153,7 +153,6 @@ public class ChatFragment extends Fragment {
             init();
 
 
-
             //chat data
 //            gameId = OffsideApplication.getSelectedGameId();
 //            privateGameId = OffsideApplication.getSelectedPrivateGameId();
@@ -576,40 +575,52 @@ public class ChatFragment extends Fragment {
 
     }
 
-    private void showApproveQuitDialog(){
+    private void showApproveQuitDialog() {
 
-        approveQuitDialog = new Dialog(getContext());
-        approveQuitDialog.setContentView(R.layout.dialog_approve_quit_game);
+        try {
+            approveQuitDialog = new Dialog(getContext());
+            approveQuitDialog.setContentView(R.layout.dialog_approve_quit_game);
 
-        dialogOkButton = approveQuitDialog.findViewById(R.id.daq_ok_button);
-        dialogCancelButton = approveQuitDialog.findViewById(R.id.daq_cancel_button);
+            dialogOkButton = approveQuitDialog.findViewById(R.id.daq_ok_button);
+            dialogCancelButton = approveQuitDialog.findViewById(R.id.daq_cancel_button);
 
-        dialogOkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OffsideApplication.networkingService.requestQuitFromPrivateGame(playerId,gameId,privateGameId,androidDeviceId);
-                approveQuitDialog.cancel();
+            dialogOkButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    OffsideApplication.networkingService.requestQuitFromPrivateGame(playerId, gameId, privateGameId, androidDeviceId);
+                    approveQuitDialog.cancel();
 
-            }
-        });
+                }
+            });
 
-        dialogCancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                approveQuitDialog.cancel();
-            }
-        });
+            dialogCancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    approveQuitDialog.cancel();
+                }
+            });
 
-        approveQuitDialog.show();
+            approveQuitDialog.show();
 
 
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
 
     }
 
 
     private void hideKeypad() {
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(root.getWindowToken(), 0);
+        try {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(root.getWindowToken(), 0);
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     private boolean isPackageInstalled(String packageName, PackageManager packageManager) {
@@ -782,7 +793,7 @@ public class ChatFragment extends Fragment {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Snackbar.make(root,msgPop, Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(root, msgPop, Snackbar.LENGTH_SHORT).show();
                     }
                 }, 2000);
 
@@ -807,7 +818,7 @@ public class ChatFragment extends Fragment {
 
         try {
             Position position = positionEvent.getPosition();
-            String positionDisplay = String.format("%d/%d",position.getPrivateGamePosition(),position.getPrivateGameTotalPlayers());
+            String positionDisplay = String.format("%d/%d", position.getPrivateGamePosition(), position.getPrivateGameTotalPlayers());
             positionTextView.setText(positionDisplay);
 
         } catch (Exception ex) {
@@ -926,8 +937,8 @@ public class ChatFragment extends Fragment {
         scoreboardRoot.removeAllViewsInLayout();
 
         int numberOfPlayers = OffsideApplication.getScoreboard().getScores().length;
-        int previousRankCoins=0;
-        int awardResId=0;
+        int previousRankCoins = 0;
+        int awardResId = 0;
 
         for (Score score : OffsideApplication.getScoreboard().getScores()) {
 
@@ -945,28 +956,28 @@ public class ChatFragment extends Fragment {
             rankTextView.setText(String.format("%s", position));
             ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), imageView, "LobbyActivity", true);
 
-            if( position < 4 && position < numberOfPlayers) {
+            if (position < 4 && position < numberOfPlayers) {
 
-                switch(position){
+                switch (position) {
                     case 1:
                         awardResId = R.mipmap.trophy_gold;
                         break;
                     case 2:
-                        if(coins != previousRankCoins)
+                        if (coins != previousRankCoins)
                             awardResId = R.mipmap.trophy_silver;
                         break;
                     case 3:
-                        if(coins != previousRankCoins)
+                        if (coins != previousRankCoins)
                             awardResId = R.mipmap.trophy_bronze;
                         break;
-                        default:
-                            awardResId=0;
+                    default:
+                        awardResId = 0;
 
                 }
                 previousRankCoins = coins;
 
             }
-            if (awardResId > 0 && position < numberOfPlayers && position < 4  ) {
+            if (awardResId > 0 && position < numberOfPlayers && position < 4) {
                 ImageHelper.loadImage(getContext(), awardImageView, awardResId, false);
                 awardImageView.setVisibility(View.VISIBLE);
             } else
@@ -981,38 +992,52 @@ public class ChatFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveInGamePlayerAssetsUpdate(InGamePlayerAssetsUpdateEvent inGamePlayerAssetsUpdateEvent) {
-        if(inGamePlayerAssetsUpdateEvent==null)
-            return;
+        try {
+            if (inGamePlayerAssetsUpdateEvent == null)
+                return;
 
-        int oldValue = inGamePlayerAssetsUpdateEvent.getOldValue();
-        int newValue = inGamePlayerAssetsUpdateEvent.getNewValue();
-        String assetType = inGamePlayerAssetsUpdateEvent.getAssetType();
+            int oldValue = inGamePlayerAssetsUpdateEvent.getOldValue();
+            int newValue = inGamePlayerAssetsUpdateEvent.getNewValue();
+            String assetType = inGamePlayerAssetsUpdateEvent.getAssetType();
 
-        if(assetType.equals(InGamePlayerAssetsUpdateEvent.assetTypePowerItems)){ //POWER_ITEMS
+            if (assetType.equals(InGamePlayerAssetsUpdateEvent.assetTypePowerItems)) { //POWER_ITEMS
 
-            updatePowerItems(oldValue,newValue);
+                updatePowerItems(oldValue, newValue);
+            }
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
         }
+
 
     }
 
-    private void updatePowerItems(int oldPowerItems, int newPowerItems){
+    private void updatePowerItems(int oldPowerItems, int newPowerItems) {
+        try {
+            OffsideApplication.getGameInfo().getPlayer().setPowerItems(newPowerItems);
+            powerItems = newPowerItems;
 
-        OffsideApplication.getGameInfo().getPlayer().setPowerItems(newPowerItems);
-        powerItems = newPowerItems;
+            String formattedPowerItems = Formatter.formatNumber(newPowerItems, Formatter.intCommaSeparator);
+            powerItemsTextView.setText(formattedPowerItems);
 
-        String formattedPowerItems = Formatter.formatNumber(newPowerItems, Formatter.intCommaSeparator);
-        powerItemsTextView.setText(formattedPowerItems);
+            if (newPowerItems != oldPowerItems) {
 
-        if (newPowerItems != oldPowerItems) {
+                Animation a = new RotateAnimation(0.0f, 360.0f,
+                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                        0.5f);
+                a.setRepeatCount(1);
+                a.setDuration(1000);
+                powerItemImageView.startAnimation(a);
 
-            Animation a = new RotateAnimation(0.0f, 360.0f,
-                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
-                    0.5f);
-            a.setRepeatCount(1);
-            a.setDuration(1000);
-            powerItemImageView.startAnimation(a);
+            }
 
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
         }
+
+
     }
 
 

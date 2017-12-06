@@ -118,10 +118,18 @@ public class PlayerFragment extends Fragment {
 
     @Override
     public void onResume(){
-        super.onResume();
-        EventBus.getDefault().register(this);
-        playerId = OffsideApplication.getPlayerId();
-        OffsideApplication.networkingService.requestUserProfileData(playerId);
+        try
+        {
+            super.onResume();
+            EventBus.getDefault().register(this);
+            playerId = OffsideApplication.getPlayerId();
+            OffsideApplication.networkingService.requestUserProfileData(playerId);
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     @Override
@@ -136,6 +144,8 @@ public class PlayerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        try
+        {
             View view = inflater.inflate(R.layout.fragment_player, container, false);
 
             Context context = getContext();
@@ -158,8 +168,10 @@ public class PlayerFragment extends Fragment {
 
             return view;
 
-
-
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return null;
+        }
     }
 
     private void getIDs(View view, Context context) {
@@ -342,7 +354,6 @@ public class PlayerFragment extends Fragment {
         }
 
     }
-
 
 
     public void updateUserProfileFragment(UserProfileInfo userProfileInfo) {

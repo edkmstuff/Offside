@@ -37,6 +37,9 @@ public class ChatMessage {
     @com.google.gson.annotations.SerializedName("SBUI")
     private String sentByUserId;
 
+    @com.google.gson.annotations.SerializedName("SC")
+    private String senderColor;
+
     @com.google.gson.annotations.SerializedName("W")
     private List<Winner> winners;
 
@@ -133,5 +136,13 @@ public class ChatMessage {
 
     public void setSentByUserId(String sentByUserId) {
         this.sentByUserId = sentByUserId;
+    }
+
+    public String getSenderColor() {
+        return senderColor;
+    }
+
+    public void setSenderColor(String senderColor) {
+        this.senderColor = senderColor;
     }
 }

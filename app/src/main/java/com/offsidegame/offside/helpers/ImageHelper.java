@@ -46,126 +46,169 @@ public class ImageHelper {
     };
     public static void loadImage(final Activity activity, final String imageUrl, final ImageView imageView, final String callerName, final boolean isRoundedImage) {
 
+        try
+        {
 
-        Picasso.with(activity).load(imageUrl).into(imageView, new com.squareup.picasso.Callback() {
-            @Override
-            public void onSuccess() {
-                if (isRoundedImage) {
-                    Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                    RoundImage roundedImage = new RoundImage(bm);
-                    imageView.setImageDrawable(roundedImage);
+            Picasso.with(activity).load(imageUrl).into(imageView, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    if (isRoundedImage) {
+                        Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                        RoundImage roundedImage = new RoundImage(bm);
+                        imageView.setImageDrawable(roundedImage);
+                    }
                 }
-            }
 
-            @Override
-            public void onError() {
-                Exception ex = new RuntimeException(callerName + " - onCreate - Error loading image with url: " + imageUrl);
-                ACRA.getErrorReporter().handleSilentException(ex);
-            }
-        });
+                @Override
+                public void onError() {
+                    Exception ex = new RuntimeException(callerName + " - onCreate - Error loading image with url: " + imageUrl);
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                }
+            });
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
 
-
-
-
+        }
 
     }
 
     public static void loadImage(Context context, final File imagePath, final ImageView imageView, final String callerName, final boolean isRoundedImage) {
-        Picasso.with(context).load(imagePath).into(imageView, new com.squareup.picasso.Callback() {
-            @Override
-            public void onSuccess() {
-                if (isRoundedImage) {
-                    Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
-                    RoundImage roundedImage = new RoundImage(bm);
-                    imageView.setImageDrawable(roundedImage);
+        try
+        {
+            Picasso.with(context).load(imagePath).into(imageView, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    if (isRoundedImage) {
+                        Bitmap bm = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
+                        RoundImage roundedImage = new RoundImage(bm);
+                        imageView.setImageDrawable(roundedImage);
+                    }
                 }
-            }
 
-            @Override
-            public void onError() {
-                throw new RuntimeException(callerName + " - onCreate - Error loading image with path: " + imagePath.getPath());
-            }
-        });
+                @Override
+                public void onError() {
+                    throw new RuntimeException(callerName + " - onCreate - Error loading image with path: " + imagePath.getPath());
+                }
+            });
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     public static void loadImage(Context context, final ImageView fbProfilePicture, Uri fbImageUri, final boolean isRoundedImage) {
-        Picasso.with(context).load(fbImageUri).into(fbProfilePicture, new com.squareup.picasso.Callback() {
-            @Override
-            public void onSuccess() {
-                if (isRoundedImage) {
-                    Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
-                    RoundImage roundedImage = new RoundImage(bm);
-                    fbProfilePicture.setImageDrawable(roundedImage);
+        try
+        {
+            Picasso.with(context).load(fbImageUri).into(fbProfilePicture, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    if (isRoundedImage) {
+                        Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
+                        RoundImage roundedImage = new RoundImage(bm);
+                        fbProfilePicture.setImageDrawable(roundedImage);
+                    }
                 }
-            }
 
-            @Override
-            public void onError() {
+                @Override
+                public void onError() {
 
-            }
-        });
+                }
+            });
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     public static void loadImage(Context context, final ImageView fbProfilePicture, int resourceId, final boolean isRoundedImage ) {
-        Picasso.with(context).load(resourceId).into(fbProfilePicture, new com.squareup.picasso.Callback() {
-            @Override
-            public void onSuccess() {
-                if (isRoundedImage) {
-                    Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
-                    RoundImage roundedImage = new RoundImage(bm);
-                    fbProfilePicture.setImageDrawable(roundedImage);
+        try
+        {
+            Picasso.with(context).load(resourceId).into(fbProfilePicture, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    if (isRoundedImage) {
+                        Bitmap bm = ((BitmapDrawable) fbProfilePicture.getDrawable()).getBitmap();
+                        RoundImage roundedImage = new RoundImage(bm);
+                        fbProfilePicture.setImageDrawable(roundedImage);
+                    }
                 }
-            }
 
-            @Override
-            public void onError() {
+                @Override
+                public void onError() {
 
-            }
-        });
+                }
+            });
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     public static void storeImage(Bitmap image, Context context) {
-        String filename = OffsideApplication.getProfileImageFileName();
-        FileOutputStream outputStream;
-        try {
-            outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
-            image.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            outputStream.close();
+        try
+        {
 
+            String filename = OffsideApplication.getProfileImageFileName();
+            FileOutputStream outputStream;
+            try {
+                outputStream = context.openFileOutput(filename, Context.MODE_PRIVATE);
+                image.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                outputStream.close();
+
+            } catch (Exception ex) {
+                ACRA.getErrorReporter().handleSilentException(ex);
+            }
         } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
         }
+
 
     }
 
     public static Bitmap generateInitialsBasedProfileImage(String initials, Context context, int selectedColorId) {
 
-        Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        Paint paint = new Paint(Paint.LINEAR_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-        int colorPrimary = Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(context, selectedColorId)));
+        try
+        {
 
-        paint.setColor(colorPrimary);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(50, 50, 51, paint);
+            Bitmap bitmap = Bitmap.createBitmap(100, 100, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            Paint paint = new Paint(Paint.LINEAR_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+            int colorPrimary = Color.parseColor("#" + Integer.toHexString(ContextCompat.getColor(context, selectedColorId)));
 
-
-        Paint textPaint = new Paint(Paint.LINEAR_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.WHITE);
-        textPaint.setTextAlign(Paint.Align.CENTER);
-
-        textPaint.setTextSize(40);
+            paint.setColor(colorPrimary);
+            paint.setStyle(Paint.Style.FILL);
+            canvas.drawCircle(50, 50, 51, paint);
 
 
-        textPaint.setStyle(Paint.Style.FILL);
+            Paint textPaint = new Paint(Paint.LINEAR_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
+            textPaint.setColor(Color.WHITE);
+            textPaint.setTextAlign(Paint.Align.CENTER);
 
-        //paint.setTextSize(20);
-        int xPos = (canvas.getWidth() / 2);
-        int yPos = (int) ((canvas.getHeight() / 2) - ((textPaint.descent() + textPaint.ascent()) / 2));
+            textPaint.setTextSize(40);
 
 
-        canvas.drawText(initials, xPos, yPos, textPaint);
-        return bitmap;
+            textPaint.setStyle(Paint.Style.FILL);
+
+            //paint.setTextSize(20);
+            int xPos = (canvas.getWidth() / 2);
+            int yPos = (int) ((canvas.getHeight() / 2) - ((textPaint.descent() + textPaint.ascent()) / 2));
+
+
+            canvas.drawText(initials, xPos, yPos, textPaint);
+            return bitmap;
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+                    return null;
+
+        }
+
     }
 
     public static int getRandomColor(){

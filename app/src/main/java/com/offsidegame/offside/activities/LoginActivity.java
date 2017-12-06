@@ -87,7 +87,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             versionTextView.setVisibility(View.VISIBLE);
 
 
-
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
@@ -107,20 +106,40 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     @Override
     public void onResume() {
-        super.onResume();
-        EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
+        try {
+            super.onResume();
+            EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     @Override
     public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(context);
+        try {
+            super.onStart();
+            EventBus.getDefault().register(context);
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(context);
-        super.onStop();
+        try {
+            EventBus.getDefault().unregister(context);
+            super.onStop();
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     @Override
@@ -165,10 +184,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 //
 //                    }
 //                }, 1000);
-
-
-
-
 
 
                 if (isNetworkingServiceConnected() && !isInLoginProcess) {
@@ -231,8 +246,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                         RC_SIGN_IN);
 
 
-
-
             }
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -291,38 +304,44 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     private void handleSuccessfulLogin() throws InterruptedException {
 
-        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser == null || OffsideApplication.networkingService == null)
-            return;
+        try {
+            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (firebaseUser == null || OffsideApplication.networkingService == null)
+                return;
 
-        playerId = firebaseUser.getUid();
+            playerId = firebaseUser.getUid();
 
-        if (playerId != null && OffsideApplication.networkingService != null) {
-            CountDownLatch latch = new CountDownLatch(1);
-            OffsideApplication.networkingService.createListenerQueue(playerId, latch);
-            latch.await();
+            if (playerId != null && OffsideApplication.networkingService != null) {
+                CountDownLatch latch = new CountDownLatch(1);
+                OffsideApplication.networkingService.createListenerQueue(playerId, latch);
+                latch.await();
 
+
+            }
+            if (playerId != null && OffsideApplication.networkingService != null) {
+                CountDownLatch latch = new CountDownLatch(1);
+                OffsideApplication.networkingService.listenToExchange(playerId, latch);
+                latch.await();
+
+
+            }
+
+            playerDisplayName = (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) ? "NO NAME" : firebaseUser.getDisplayName();
+            playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
+            playerEmail = firebaseUser.getEmail();
+
+            if (playerProfilePictureUrl == null) {
+                playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
+            }
+
+            HttpHelper httpHelper = new HttpHelper(playerProfilePictureUrl);
+            httpHelper.execute();
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
-        if (playerId != null && OffsideApplication.networkingService != null) {
-            CountDownLatch latch = new CountDownLatch(1);
-            OffsideApplication.networkingService.listenToExchange(playerId, latch);
-            latch.await();
-
-
-        }
-
-        playerDisplayName = (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) ? "NO NAME" : firebaseUser.getDisplayName();
-        playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
-        playerEmail = firebaseUser.getEmail();
-
-        if(playerProfilePictureUrl==null){
-            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
-        }
-
-        HttpHelper httpHelper = new HttpHelper(playerProfilePictureUrl);
-        httpHelper.execute();
-
 
 
     }
@@ -330,27 +349,34 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onImageValidationCompleted(CompletedHttpRequestEvent completedHttpRequestEvent) {
 
-        //pick a color for player to be used in his messages on the chat bubble.
-        playerColorId = ImageHelper.getRandomColor();
+        try {
+            //pick a color for player to be used in his messages on the chat bubble.
+            playerColorId = ImageHelper.getRandomColor();
 
-        isUserImageUrlValid = completedHttpRequestEvent.isUrlValid();
+            isUserImageUrlValid = completedHttpRequestEvent.isUrlValid();
 
-        if (!isUserImageUrlValid ) {
+            if (!isUserImageUrlValid) {
 
-            String displayName = playerDisplayName.toUpperCase();
-            String[] displayNameParts = displayName.trim().split(" ");
-            String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
-            Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context, playerColorId);
-            byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
-            String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
+                String displayName = playerDisplayName.toUpperCase();
+                String[] displayNameParts = displayName.trim().split(" ");
+                String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
+                Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context, playerColorId);
+                byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
+                String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
 
-            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
-            OffsideApplication.networkingService.requestSaveImageInDatabase(playerId, imageString);
+                playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
+                OffsideApplication.networkingService.requestSaveImageInDatabase(playerId, imageString);
 
 
-        } else {
+            } else {
 
-            saveLoggedInUser();
+                saveLoggedInUser();
+            }
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
         }
 
 
@@ -368,27 +394,35 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     }
 
     public void saveLoggedInUser() {
-        SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl);
-        editor.commit();
-        String playerColor=null;
-        if(playerColorId==0){
-            playerColorId = ImageHelper.getRandomColor();
+        try {
+            SharedPreferences settings = getSharedPreferences(getString(R.string.preference_name), 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl);
+            editor.commit();
+            String playerColor = null;
+            if (playerColorId == 0) {
+                playerColorId = ImageHelper.getRandomColor();
+
+            }
+            playerColor = Formatter.colorNumberToHexaValue(context, playerColorId);
+            User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl, playerColor);
+            OffsideApplication.networkingService.requestSaveLoggedInUser(user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri(), user.getUserColor());
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
-        playerColor = Formatter.colorNumberToHexaValue(context,playerColorId);
-        User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl, playerColor);
-        OffsideApplication.networkingService.requestSaveLoggedInUser(user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri(), user.getUserColor());
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceivePlayerAssets(PlayerAssets playerAssets) {
         try {
             isInLoginProcess = false;
-            if(playerAssets.getPlayerColor() == null|| StringUtil.isBlank(playerAssets.getPlayerColor())){
+            if (playerAssets.getPlayerColor() == null || StringUtil.isBlank(playerAssets.getPlayerColor())) {
                 playerColorId = ImageHelper.getRandomColor();
-                String playerColor = Formatter.colorNumberToHexaValue(context,playerColorId);
+                String playerColor = Formatter.colorNumberToHexaValue(context, playerColorId);
                 playerAssets.setPlayerColor(playerColor);
 
             }
@@ -403,12 +437,11 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     }
 
 
-
     public void analyzeDynamicLink() {
-
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        Uri data = intent.getData();
+        try {
+            //        Intent intent = getIntent();
+//        String action = intent.getAction();
+//        Uri data = intent.getData();
 //        if(data==null){
 //            startLobbyActivity();
 //            return;
@@ -421,84 +454,98 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 //            ACRA.getErrorReporter().putCustomData("intentDataEncodedPath_3", data.getEncodedPath());
 //        }
 
-        FirebaseDynamicLinks.getInstance()
-                .getDynamicLink(getIntent())
-                .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
-                    @Override
-                    public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
-                        // Get deep link from result (may be null if no link is found)
-                        Uri deepLink = null;
-                        if (pendingDynamicLinkData != null) {
+            FirebaseDynamicLinks.getInstance()
+                    .getDynamicLink(getIntent())
+                    .addOnSuccessListener(this, new OnSuccessListener<PendingDynamicLinkData>() {
+                        @Override
+                        public void onSuccess(PendingDynamicLinkData pendingDynamicLinkData) {
+                            // Get deep link from result (may be null if no link is found)
+                            Uri deepLink = null;
+                            if (pendingDynamicLinkData != null) {
 //                            ACRA.getErrorReporter().putCustomData("pendingDynamicLinkData_4", pendingDynamicLinkData.getLink().toString());
-                            analytics = FirebaseAnalytics.getInstance(context);
-                            deepLink = pendingDynamicLinkData.getLink();
+                                analytics = FirebaseAnalytics.getInstance(context);
+                                deepLink = pendingDynamicLinkData.getLink();
 //                            if(deepLink==null)
 //                                Log.d(TAG, "*****deepLink***** = null");
 //                            else
 //                                Log.d(TAG, "*****deepLink*****"+deepLink.toString());
-                            FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(pendingDynamicLinkData);
-                            if (invite != null) {
+                                FirebaseAppInvite invite = FirebaseAppInvite.getInvitation(pendingDynamicLinkData);
+                                if (invite != null) {
 //                                ACRA.getErrorReporter().putCustomData("inviteId_5",invite.getInvitationId() );
 //                                String inviteId = invite.getInvitationId();
 //                                if(!TextUtils.isEmpty(inviteId))
 //                                    Log.d(TAG, "ACCPET invitation Id" + inviteId);
-                                URL url;
-                                try {
-                                    url = new URL("http", Uri.parse(deepLink.getQuery()).getHost(), deepLink.getQuery().toString());
+                                    URL url;
                                     try {
+                                        url = new URL("http", Uri.parse(deepLink.getQuery()).getHost(), deepLink.getQuery().toString());
+                                        try {
 
 //                                        ACRA.getErrorReporter().putCustomData("utl_6",url.toString() );
-                                        Map<String, List<String>> dynamicLinkQueryPairs = HttpHelper.splitQuery(url);
-                                        String groupIdFromInvitation = dynamicLinkQueryPairs.get("groupId").get(0);
-                                        groupIdFromInvitation = groupIdFromInvitation.equalsIgnoreCase("null") ? null : groupIdFromInvitation;
-                                        String gameIdFromInvitation = dynamicLinkQueryPairs.get("gameId").get(0);
-                                        gameIdFromInvitation = gameIdFromInvitation.equalsIgnoreCase("null") ? null : gameIdFromInvitation;
-                                        String privateGameIdFromInvitation = dynamicLinkQueryPairs.get("privateGameId").get(0);
-                                        privateGameIdFromInvitation = privateGameIdFromInvitation.equalsIgnoreCase("null") ? null : privateGameIdFromInvitation;
+                                            Map<String, List<String>> dynamicLinkQueryPairs = HttpHelper.splitQuery(url);
+                                            String groupIdFromInvitation = dynamicLinkQueryPairs.get("groupId").get(0);
+                                            groupIdFromInvitation = groupIdFromInvitation.equalsIgnoreCase("null") ? null : groupIdFromInvitation;
+                                            String gameIdFromInvitation = dynamicLinkQueryPairs.get("gameId").get(0);
+                                            gameIdFromInvitation = gameIdFromInvitation.equalsIgnoreCase("null") ? null : gameIdFromInvitation;
+                                            String privateGameIdFromInvitation = dynamicLinkQueryPairs.get("privateGameId").get(0);
+                                            privateGameIdFromInvitation = privateGameIdFromInvitation.equalsIgnoreCase("null") ? null : privateGameIdFromInvitation;
 
 //                                        ACRA.getErrorReporter().putCustomData("groupIdFromInvitation_6",groupIdFromInvitation );
 //                                        ACRA.getErrorReporter().putCustomData("gameIdFromInvitation_7",gameIdFromInvitation );
 //                                        ACRA.getErrorReporter().putCustomData("privateGameIdFromInvitation_8",privateGameIdFromInvitation );
 
-                                        //Add player to the group from which he was invited
-                                        if (groupIdFromInvitation == null)
-                                            return;
+                                            //Add player to the group from which he was invited
+                                            if (groupIdFromInvitation == null)
+                                                return;
 
-                                        //Override userPreferences, as theses will be used when tryJoinSelectedAvailableGame will be executed (Lobby Activity)
-                                        if (gameIdFromInvitation != null && privateGameIdFromInvitation != null)
-                                            OffsideApplication.setUserPreferences(groupIdFromInvitation, gameIdFromInvitation, privateGameIdFromInvitation);
+                                            //Override userPreferences, as theses will be used when tryJoinSelectedAvailableGame will be executed (Lobby Activity)
+                                            if (gameIdFromInvitation != null && privateGameIdFromInvitation != null)
+                                                OffsideApplication.setUserPreferences(groupIdFromInvitation, gameIdFromInvitation, privateGameIdFromInvitation);
 
-                                        OffsideApplication.networkingService.requestJoinPrivateGroup(playerId,groupIdFromInvitation);
+                                            OffsideApplication.networkingService.requestJoinPrivateGroup(playerId, groupIdFromInvitation);
 
-                                    } catch (UnsupportedEncodingException ex) {
+                                        } catch (UnsupportedEncodingException ex) {
+                                            ACRA.getErrorReporter().handleSilentException(ex);
+                                        }
+
+                                    } catch (MalformedURLException ex) {
                                         ACRA.getErrorReporter().handleSilentException(ex);
                                     }
 
-                                } catch (MalformedURLException ex) {
-                                    ACRA.getErrorReporter().handleSilentException(ex);
                                 }
 
+                            } else {
+                                startLobbyActivity();
                             }
-
-                        } else {
+                        }
+                    })
+                    .addOnFailureListener(this, new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "analyzeDynamicLink:onFailure", e);
                             startLobbyActivity();
                         }
-                    }
-                })
-                .addOnFailureListener(this, new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "analyzeDynamicLink:onFailure", e);
-                        startLobbyActivity();
-                    }
-                });
+                    });
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlayerJoinedPrivateGroup(PlayerJoinPrivateGroupEvent playerJoinPrivateGroupEvent) {
-        if (!OffsideApplication.isLobbyActivityVisible())
-            startLobbyActivity();
+        try
+        {
+            if (!OffsideApplication.isLobbyActivityVisible())
+                startLobbyActivity();
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 
     public void startLobbyActivity() {
