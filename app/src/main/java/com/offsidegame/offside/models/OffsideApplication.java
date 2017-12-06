@@ -67,9 +67,9 @@ public class OffsideApplication extends Application {
 
     /****************************DEVELOPMENT- LOCAL**************************/
 
-//    private static String initialsProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/";
-//    private static String defaultProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
-//    private static String defaultPictureUrlHazavitFeed = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
+    private static String initialsProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/";
+    private static String defaultProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
+    private static String defaultPictureUrlHazavitFeed = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
 //    private static String initialsProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/";
 //    private static String defaultProfilePictureUrl = "http://10.0.0.17:8080/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
@@ -86,9 +86,9 @@ public class OffsideApplication extends Application {
 //    private static String defaultPictureUrlHazavitFeed = "http://offside.somee.com/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
     /****************************PRODUCTION**************************/
-    private static String initialsProfilePictureUrl = "http://offside.azurewebsites.net/api/Offside/GetProfilePicture/";
-    private static String defaultProfilePictureUrl = "http://offside.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
-    private static String defaultPictureUrlHazavitFeed = "http://offside.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
+//    private static String initialsProfilePictureUrl = "http://offside.azurewebsites.net/api/Offside/GetProfilePicture/";
+//    private static String defaultProfilePictureUrl = "http://offside.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
+//    private static String defaultPictureUrlHazavitFeed = "http://offside.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
 //    private static String initialsProfilePictureUrl = String.format("http://%s/api/Offside/GetProfilePicture/",BuildConfig.GAME_SERVER_HOSTNAME_STRING);
 //    private static String defaultProfilePictureUrl = String.format("http://%s/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK",BuildConfig.GAME_SERVER_HOSTNAME_STRING);
