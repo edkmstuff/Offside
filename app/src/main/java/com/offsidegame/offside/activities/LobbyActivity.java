@@ -48,6 +48,7 @@ import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.JoinGameWithCodeEvent;
 import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.NetworkingErrorEvent;
 import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 import com.offsidegame.offside.events.NotEnoughCoinsEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
@@ -1217,6 +1218,24 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         }
 
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNetworkingErrorReceived(NetworkingErrorEvent networkingErrorEvent) {
+        try
+        {
+            EventBus.getDefault().post(new LoadingEvent(false, null));
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+
+    }
+    //new NetworkingErrorEvent("Request"));
+
 
 
     public void adjustDialogWidthToWindow(Dialog dialog) {
