@@ -831,13 +831,13 @@ public class ChatFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveRewardEvent(RewardEvent rewardEvent) {
         try {
-            int rewardAmount = rewardEvent.getRewardAmount();
-            PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
-            if (player == null || rewardAmount == 0)
-                return;
-
-            player.incrementRewardVideoWatchCount();
-            OffsideApplication.networkingService.setPowerItems(playerId, gameId, rewardAmount, true);
+//            int rewardAmount = rewardEvent.getRewardAmount();
+//            PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
+//            if (player == null || rewardAmount == 0)
+//                return;
+//
+//            player.incrementRewardVideoWatchCount();
+            //OffsideApplication.networkingService.setPowerItems(playerId, gameId, rewardAmount, true);
 
 
         } catch (Exception ex) {

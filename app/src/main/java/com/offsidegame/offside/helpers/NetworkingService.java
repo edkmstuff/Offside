@@ -106,37 +106,42 @@ public class NetworkingService extends Service {
     private String CLIENT_REQUESTS_EXCHANGE_NAME = "FROM_CLIENTS";
     private int sendToServerErrorDelay = 15000;
     private int mId = -1;
-    //private Map<Channel, String> currentExchanges = new HashMap<>();
 
 
-    private boolean chatMessagesReceived = false;
-    private boolean chatMessageReceived = false;
-    private boolean scoreboardReceived = false;
-    private boolean playerDataReceived = false; //no request from client, only push from server
-    private boolean positionReceived = false; //no request from client, only push from server
-    private boolean answerAccepted = false;
-    private boolean privateGroupCreated = false;
-    private boolean privateGroupReceived = false;
-    private boolean privateGroupChangedReceived = false; //no request from client, only push from server
-    private boolean availableGamesReceived = false;
-    private boolean leagueRecordsReceived = false;
-    private boolean privateGameCreated = false;
-    private boolean playerJoinedPrivateGame = false;
-    private boolean loggedInUserReceived = false;
-    private boolean userProfileInfoReceived = false;
-    private boolean playerAssetsReceived = false;
-    private boolean availableGameReceived = false;
-    private boolean friendInviteReceived = false;
-    private boolean playerImageSaved = false;
-    private boolean privateGroupsReceived = false;
-    private boolean privateGroupDeleted = false;
-    private boolean playerJoinPrivateGroupReceived = false;
-    private boolean playerRewardSaved = false;
-    private boolean playerQuitPrivateGame = false;
-    private boolean playerJoinedPrivateGameByCode = false;
+
+    private Map<String, Boolean> currentStates = new HashMap<>();
+
+
+
 
 
     public NetworkingService() {
+
+        currentStates.put("chatMessagesReceived",false);
+        currentStates.put("chatMessageReceived",false);
+        currentStates.put("scoreboardReceived",false);
+        currentStates.put("playerDataReceived",false); //no request from client, only push from server
+        currentStates.put("positionReceived",false); //no request from client, only push from server
+        currentStates.put("answerAccepted",false);
+        currentStates.put("privateGroupCreated",false);
+        currentStates.put("privateGroupReceived",false);
+        currentStates.put("privateGroupChangedReceived",false); //no request from client, only push from server
+        currentStates.put("availableGamesReceived",false);
+        currentStates.put("leagueRecordsReceived",false);
+        currentStates.put("privateGameCreated",false);
+        currentStates.put("playerJoinedPrivateGame",false);
+        currentStates.put("loggedInUserReceived",false);
+        currentStates.put("userProfileInfoReceived",false);
+        currentStates.put("playerAssetsReceived",false);
+        currentStates.put("availableGameReceived",false);
+        currentStates.put("friendInviteReceived",false);
+        currentStates.put("playerImageSaved",false);
+        currentStates.put("privateGroupsReceived",false);
+        currentStates.put("privateGroupDeleted",false);
+        currentStates.put("playerJoinPrivateGroupReceived",false);
+        currentStates.put("playerRewardSaved",false);
+        currentStates.put("playerQuitPrivateGame",false);
+        currentStates.put("playerJoinedPrivateGameByCode",false);
     }
 
     @Override
@@ -393,112 +398,112 @@ public class NetworkingService extends Service {
 
             if (message.equals("ChatMessagesReceived")) {
                 Chat chat = gson.fromJson(model, Chat.class);
-                chatMessagesReceived = true;
+                currentStates.put("chatMessagesReceived", true);
                 EventBus.getDefault().post(new ChatEvent(chat));
             } else if (message.equals("ChatMessageReceived")) {
                 ChatMessage chatMessage = gson.fromJson(model, ChatMessage.class);
-                chatMessageReceived = true;
+                currentStates.put("chatMessageReceived" , true);
                 fireNotification(chatMessage.getMessageType(), chatMessage.getMessageText());
                 EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
                 EventBus.getDefault().post(new NotificationBubbleEvent(NotificationBubbleEvent.navigationItemChat));
             } else if (message.equals("ScoreboardReceived")) {
                 Scoreboard scoreboard = gson.fromJson(model, Scoreboard.class);
-                scoreboardReceived = true;
+                currentStates.put("scoreboardReceived" , true);
                 EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
             } else if (message.equals("PlayerDataReceived")) {
                 PlayerModel playerModel = gson.fromJson(model, PlayerModel.class);
-                playerDataReceived = true;
+                currentStates.put("playerDataReceived" , true);
                 EventBus.getDefault().post(new PlayerModelEvent(playerModel));
             } else if (message.equals("PositionReceived")) {
                 Position position = gson.fromJson(model, Position.class);
-                positionReceived = true;
+                currentStates.put("positionReceived" , true);
                 EventBus.getDefault().post(new PositionEvent(position));
             } else if (message.equals("AnswerAcceptedReceived")) {
                 PostAnswerRequestInfo postAnswerRequestInfo = gson.fromJson(model, PostAnswerRequestInfo.class);
-                answerAccepted = true;
+                currentStates.put("answerAccepted" , true);
                 EventBus.getDefault().post(postAnswerRequestInfo);
             } else if (message.equals("PrivateGroupsReceived")) {
                 PrivateGroupsInfo privateGroupsInfo = gson.fromJson(model, PrivateGroupsInfo.class);
-                privateGroupsReceived = true;
+                currentStates.put("privateGroupsReceived" , true);
                 EventBus.getDefault().post(privateGroupsInfo);
             } else if (message.equals("PrivateGroupCreated")) {
                 PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
-                privateGroupCreated = true;
+                currentStates.put("privateGroupCreated" , true);
                 EventBus.getDefault().post(new PrivateGroupCreatedEvent(privateGroup));
             } else if (message.equals("PrivateGroupDeletedReceived")) {
                 KeyValue numberOfDeletedGroupsKeyValue = gson.fromJson(model, KeyValue.class);
                 Integer numberOfDeletedGroups = Integer.parseInt(numberOfDeletedGroupsKeyValue.getValue());
-                privateGroupDeleted = true;
+                currentStates.put("privateGroupDeleted" , true);
                 EventBus.getDefault().post(new PrivateGroupDeletedEvent(numberOfDeletedGroups));
             } else if (message.equals("PlayerJoinedPrivateGroupReceived")) {
                 KeyValue numberOfPlayerAddedKeyValue = gson.fromJson(model, KeyValue.class);
                 Integer numberOfPlayerAdded = Integer.parseInt(numberOfPlayerAddedKeyValue.getValue());
-                playerJoinPrivateGroupReceived = true;
+                currentStates.put("playerJoinPrivateGroupReceived" , true);
                 EventBus.getDefault().post(new PlayerJoinPrivateGroupEvent(numberOfPlayerAdded));
             } else if (message.equals("PrivateGroupReceived")) {
                 PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
-                privateGroupReceived = true;
+                currentStates.put("privateGroupReceived" , true);
                 EventBus.getDefault().post(new PrivateGroupEvent(privateGroup));
             } else if (message.equals("PrivateGroupChangedReceived")) {
                 PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
-                privateGroupChangedReceived = true;
+                currentStates.put("privateGroupChangedReceived" , true);
                 EventBus.getDefault().post(new PrivateGroupChangedEvent(privateGroup));
             } else if (message.equals("AvailableGamesReceived")) {
                 AvailableGame[] availableGames = gson.fromJson(model, AvailableGame[].class);
-                availableGamesReceived = true;
+                currentStates.put("availableGamesReceived" , true);
                 EventBus.getDefault().post(availableGames);
             } else if (message.equals("LeagueRecordsReceived")) {
                 LeagueRecord[] leagueRecords = gson.fromJson(model, LeagueRecord[].class);
-                leagueRecordsReceived = true;
+                currentStates.put("leagueRecordsReceived" , true);
                 EventBus.getDefault().post(leagueRecords);
             } else if (message.equals("PrivateGameCreated")) {
                 KeyValue privateGameIdKeyValue = gson.fromJson(model, KeyValue.class);
                 String privateGameId = privateGameIdKeyValue.getValue();
-                privateGameCreated = true;
+                currentStates.put("privateGameCreated" , true);
                 EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameId));
             } else if (message.equals("PlayerJoinedPrivateGame")) {
                 GameInfo gameInfo = gson.fromJson(model, GameInfo.class);
-                playerJoinedPrivateGame = true;
+                currentStates.put("playerJoinedPrivateGame" , true);
                 EventBus.getDefault().post(new JoinGameEvent(gameInfo));
             } else if (message.equals("LoggedInUserReceived")) {
                 PlayerAssets playerAssets = gson.fromJson(model, PlayerAssets.class);
-                loggedInUserReceived = true;
+                currentStates.put("loggedInUserReceived" , true);
                 EventBus.getDefault().post(playerAssets);
             } else if (message.equals("PlayerImageSaved")) {
                 KeyValue isPlayerImageSavedKeyValue = gson.fromJson(model, KeyValue.class);
                 Boolean isPlayerImageSaved = Boolean.parseBoolean(isPlayerImageSavedKeyValue.getValue());
-                playerImageSaved = true;
+                currentStates.put("playerImageSaved" , true);
                 EventBus.getDefault().post(new PlayerImageSavedEvent(isPlayerImageSaved));
             } else if (message.equals("UserProfileInfoReceived")) {
                 UserProfileInfo userProfileInfo = gson.fromJson(model, UserProfileInfo.class);
-                userProfileInfoReceived = true;
+                currentStates.put("userProfileInfoReceived" , true);
                 EventBus.getDefault().post(userProfileInfo);
             } else if (message.equals("PlayerAssetsReceived")) {
                 PlayerAssets playerAssets = gson.fromJson(model, PlayerAssets.class);
-                playerAssetsReceived = true;
+                currentStates.put("playerAssetsReceived" , true);
                 EventBus.getDefault().post(playerAssets);
             } else if (message.equals("AvailableGameReceived")) {
                 AvailableGame availableGame = gson.fromJson(model, AvailableGame.class);
-                availableGameReceived = true;
+                currentStates.put("availableGameReceived" , true);
                 EventBus.getDefault().post(new AvailableGameEvent(availableGame));
             } else if (message.equals("FriendInviteReceived")) {
                 KeyValue friendInviteCodeKeyValue = gson.fromJson(model, KeyValue.class);
                 String friendInviteCode = friendInviteCodeKeyValue.getValue();
-                friendInviteReceived = true;
+                currentStates.put("friendInviteReceived" , true);
                 EventBus.getDefault().post(new FriendInviteReceivedEvent(friendInviteCode));
             } else if (message.equals("PlayerRewardedReceived")) {
                 KeyValue rewardValueKeyValue = gson.fromJson(model, KeyValue.class);
                 Integer rewardValue = Integer.parseInt(rewardValueKeyValue.getValue());
-                playerRewardSaved = true;
+                currentStates.put("playerRewardSaved" , true);
                 EventBus.getDefault().post(new PlayerRewardedReceivedEvent(rewardValue));
             } else if (message.equals("PlayerQuitPrivateGameReceived")) {
                 KeyValue playerWasRemovedFromPrivateGameKeyValue = gson.fromJson(model, KeyValue.class);
                 boolean playerWasRemovedFromPrivateGame = Boolean.parseBoolean(playerWasRemovedFromPrivateGameKeyValue.getValue());
-                playerQuitPrivateGame = true;
+                currentStates.put("playerQuitPrivateGame" , true);
                 EventBus.getDefault().post(new PlayerQuitFromPrivateGameEvent(playerWasRemovedFromPrivateGame));
             } else if (message.equals("PrivateGameInfoByCodeReceived")) {
                 PrivateGameInfo privateGameInfo = gson.fromJson(model, PrivateGameInfo.class);
-                playerJoinedPrivateGameByCode = true;
+                currentStates.put("playerJoinedPrivateGameByCode" , true);
                 EventBus.getDefault().post(privateGameInfo);
             }
 
@@ -592,7 +597,7 @@ public class NetworkingService extends Service {
 
     }
 
-    private void sendToServer(final String json, final String method) {
+    private void sendToServer(final String json, final String method, final String stateKey) {
 
 
         new Thread(new Runnable() {
@@ -610,8 +615,8 @@ public class NetworkingService extends Service {
                         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if (!availableGameReceived)
-                                    EventBus.getDefault().post(new NetworkingErrorEvent("Request"));
+                                if (!currentStates.get(stateKey))
+                                    EventBus.getDefault().post(new NetworkingErrorEvent(method));
                             }
                         }, sendToServerErrorDelay);
                     }
@@ -628,20 +633,23 @@ public class NetworkingService extends Service {
     }
 
     public void requestQuitFromPrivateGame(String playerId, String gameId, String privateGameId, String androidDeviceId) {
-
+        String stateKey = "playerQuitPrivateGame";
+        currentStates.put(stateKey,false);
+        String method = "RequestQuitPrivateGame";
         Map<String, String> params = new HashMap<>();
-        params.put("method", "RequestQuitPrivateGame");
+        params.put("method", method);
         params.put("playerId", playerId);
         params.put("gameId", gameId);
         params.put("privateGameId", privateGameId);
         params.put("androidDeviceId", androidDeviceId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, null);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestAvailableGame(String playerId, String gameId, String privateGameId) {
-        availableGameReceived = false;
+        String stateKey = "availableGameReceived";
+        currentStates.put(stateKey,false);
         String method = "RequestAvailableGame";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -650,11 +658,12 @@ public class NetworkingService extends Service {
         params.put("privateGameId", privateGameId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestCreatePrivateGame(String playerId, String gameId, String groupId, String selectedLanguage) {
-        privateGameCreated = false;
+        String stateKey = "privateGameCreated";
+        currentStates.put(stateKey , false);
         String method = "RequestCreatePrivateGame";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -664,11 +673,12 @@ public class NetworkingService extends Service {
         params.put("selectedLanguage", selectedLanguage);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestPostAnswer(final String playerId, final String gameId, final String privateGameId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
-        answerAccepted = false;
+        String stateKey = "answerAccepted";
+        currentStates.put(stateKey , false);
         String method = "RequestPostAnswer";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -681,11 +691,11 @@ public class NetworkingService extends Service {
         params.put("betSize", Integer.toString(betSize));
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
 //    public void requestGetScoreboard(String playerId, String gameId) {
-//        scoreboardReceived = false;
+//        scoreboardReceived" , false);
 //        String method = "RequestGetScoreboard";
 //        Map<String, String> params = new HashMap<>();
 //        params.put("method", method);
@@ -697,7 +707,9 @@ public class NetworkingService extends Service {
 //    }
 
     public void requestGetChatMessages(String playerId, String gameId, String privateGameId, String androidDeviceId) {
-        chatMessagesReceived = false;
+
+        String stateKey = "chatMessagesReceived";
+        currentStates.put(stateKey , false);
         String method = "RequestGetChatMessages";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -707,11 +719,12 @@ public class NetworkingService extends Service {
         params.put("androidDeviceId", androidDeviceId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestSendChatMessage(String playerId, String gameId, String privateGameId, String message) {
-        chatMessageReceived = false;
+        String stateKey = "chatMessageReceived";
+        currentStates.put(stateKey , false);
         String method = "RequestSendChatMessage";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -721,11 +734,12 @@ public class NetworkingService extends Service {
         params.put("message", message);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestSaveLoggedInUser(String playerId, String name, String email, String imageUrl, String playerColor) {
-        loggedInUserReceived = false;
+        String stateKey = "loggedInUserReceived";
+        currentStates.put(stateKey , false);
         String method = "RequestSaveLoggedInUser";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -736,29 +750,31 @@ public class NetworkingService extends Service {
         params.put("playerColor", playerColor);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
 
     }
 
-    public void setPowerItems(String playerId, String gameId, int powerItems, boolean isDueToRewardVideo) {
-
-        //TODO: NOT IN USE - do we need it?
-
-        //loggedInUserReceived = false;
-        String method = "RequestSetPowerItems";
-        Map<String, String> params = new HashMap<>();
-        params.put("method", method);
-        params.put("playerId", playerId);
-        params.put("gameId", gameId);
-        params.put("powerItems", Integer.toString(powerItems));
-        params.put("isDueToRewardVideo", Boolean.toString(isDueToRewardVideo));
-        Gson gson = new GsonBuilder().create();
-        String json = gson.toJson(params);
-        sendToServer(json, method);
-    }
+//    public void setPowerItems(String playerId, String gameId, int powerItems, boolean isDueToRewardVideo) {
+//        String stateKey = "RequestSetPowerItems";
+//
+//        //TODO: NOT IN USE - do we need it?
+//
+//        //loggedInUserReceived" , false);
+//        String method = "RequestSetPowerItems";
+//        Map<String, String> params = new HashMap<>();
+//        params.put("method", method);
+//        params.put("playerId", playerId);
+//        params.put("gameId", gameId);
+//        params.put("powerItems", Integer.toString(powerItems));
+//        params.put("isDueToRewardVideo", Boolean.toString(isDueToRewardVideo));
+//        Gson gson = new GsonBuilder().create();
+//        String json = gson.toJson(params);
+//        sendToServer(json, method, stateKey);
+//    }
 
     public void requestSaveImageInDatabase(String playerId, String imageString) {
-        playerImageSaved = false;
+        String stateKey = "playerImageSaved";
+        currentStates.put(stateKey , false);
         String method = "RequestSaveImageInDatabase";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -766,22 +782,24 @@ public class NetworkingService extends Service {
         params.put("imageString", imageString);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestPrivateGroupsInfo(String playerId) {
-        privateGroupsReceived = false;
+        String stateKey = "privateGroupsReceived";
+        currentStates.put(stateKey , false);
         String method = "RequestPrivateGroupsInfo";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
         params.put("playerId", playerId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestAvailableGames(String playerId, String groupId) {
-        availableGamesReceived = false;
+        String stateKey = "availableGamesReceived";
+        currentStates.put(stateKey , false);
         String method = "RequestAvailableGames";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -789,11 +807,12 @@ public class NetworkingService extends Service {
         params.put("groupId", groupId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestCreatePrivateGroup(String playerId, String groupName, String groupType) {
-        privateGroupCreated = false;
+        String stateKey = "privateGroupCreated";
+        currentStates.put(stateKey , false);
         String method = "RequestCreatePrivateGroup";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -802,11 +821,12 @@ public class NetworkingService extends Service {
         params.put("groupType", groupType);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestJoinPrivateGame(String playerId, String gameId, String groupId, String privateGameId, String androidDeviceId) {
-        playerJoinedPrivateGame = false;
+        String stateKey = "playerJoinedPrivateGame";
+        currentStates.put(stateKey , false);
         String method = "RequestJoinPrivateGame";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -817,22 +837,24 @@ public class NetworkingService extends Service {
         params.put("androidDeviceId", androidDeviceId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestUserProfileData(String playerId) {
-        userProfileInfoReceived = false;
+        String stateKey = "userProfileInfoReceived";
+        currentStates.put(stateKey , false);
         String method = "RequestUserProfile";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
         params.put("playerId", playerId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestLeagueRecords(String playerId, String groupId) {
-        leagueRecordsReceived = false;
+        String stateKey = "leagueRecordsReceived";
+        currentStates.put(stateKey , false);
         String method = "RequestLeagueRecords";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -840,22 +862,24 @@ public class NetworkingService extends Service {
         params.put("groupId", groupId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestPlayerAssets(String playerId) {
-        playerAssetsReceived = false;
+        String stateKey = "playerAssetsReceived";
+        currentStates.put(stateKey , false);
         String method = "RequestPlayerAssets";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
         params.put("playerId", playerId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestInviteFriend(String inviterPlayerId, String groupId, String gameId, String privateGameId) {
-        friendInviteReceived = false;
+        String stateKey = "friendInviteReceived";
+        currentStates.put(stateKey , false);
         String method = "RequestInviteFriend";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -865,11 +889,12 @@ public class NetworkingService extends Service {
         params.put("privateGameId", privateGameId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestPrivateGroup(String playerId, String groupId) {
-        privateGroupReceived = false;
+        String stateKey = "privateGroupReceived";
+        currentStates.put(stateKey , false);
         String method = "RequestPrivateGroup";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -877,11 +902,12 @@ public class NetworkingService extends Service {
         params.put("groupId", groupId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestDeletePrivateGroup(String playerId, String groupId) {
-        privateGroupDeleted = false;
+        String stateKey = "privateGroupDeleted";
+        currentStates.put(stateKey , false);
         String method = "RequestDeletePrivateGroup";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -889,11 +915,12 @@ public class NetworkingService extends Service {
         params.put("groupId", groupId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestJoinPrivateGroup(String playerId, String groupId) {
-        playerJoinPrivateGroupReceived = false;
+        String stateKey = "playerJoinPrivateGroupReceived";
+        currentStates.put(stateKey , false);
         String method = "RequestJoinPrivateGroup";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -901,12 +928,12 @@ public class NetworkingService extends Service {
         params.put("groupId", groupId);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void requestToRewardPlayer(String playerId, String rewardType, String rewardReason, int quantity) {
-
-        playerRewardSaved = false;
+        String stateKey = "playerRewardSaved";
+        currentStates.put(stateKey , false);
         String method = "RequestToRewardPlayer";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -916,11 +943,12 @@ public class NetworkingService extends Service {
         params.put("quantity", Integer.toString(quantity));
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
     public void RequestPrivateGameInfoByCode(String playerId, String privateGameCode) {
-        playerJoinedPrivateGameByCode = false;
+        String stateKey = "playerJoinedPrivateGameByCode";
+        currentStates.put(stateKey , false);
         String method = "RequestPrivateGameInfoByCode";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -928,7 +956,7 @@ public class NetworkingService extends Service {
         params.put("code", privateGameCode);
         Gson gson = new GsonBuilder().create();
         String json = gson.toJson(params);
-        sendToServer(json, method);
+        sendToServer(json, method, stateKey);
     }
 
 
