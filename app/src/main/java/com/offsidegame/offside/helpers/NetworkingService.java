@@ -23,6 +23,7 @@ import com.offsidegame.offside.activities.LobbyActivity;
 import com.offsidegame.offside.events.AvailableGameEvent;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
+import com.offsidegame.offside.events.CompletedHttpRequestEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.NetworkingErrorEvent;
@@ -62,6 +63,11 @@ import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
+import com.rabbitmq.client.Recoverable;
+import com.rabbitmq.client.RecoverableConnection;
+import com.rabbitmq.client.RecoveryListener;
+import com.rabbitmq.client.ShutdownListener;
+import com.rabbitmq.client.ShutdownSignalException;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -78,7 +84,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class NetworkingService extends Service {
 
-    private Connection connection;
+    private RecoverableConnection connection;
     private Channel channel;
     private String listenerQueueName;
 
@@ -86,13 +92,13 @@ public class NetworkingService extends Service {
     private String userName = "kfir";
 
     /****************************DEVELOPMENT**************************/
-//    private String hostName = "10.0.2.2";
-    //private String hostName = "192.168.1.140";
+    //private String hostName = "10.0.2.2";
+    private String hostName = "192.168.1.140";
 //    private String hostName = "10.0.0.17";
 
     /****************************PRODUCTION**************************/
-//    private String hostName = "sktestvm.westeurope.cloudapp.azure.com";
-    private String hostName = BuildConfig.RABBITMQ_HOSTNAME_STRING;
+    //private String hostName = "sktestvm.westeurope.cloudapp.azure.com";
+    //private String hostName = BuildConfig.RABBITMQ_HOSTNAME_STRING;
 
     private final IBinder binder = new LocalBinder();
     private String CLIENT_REQUESTS_EXCHANGE_NAME = "FROM_CLIENTS";
@@ -174,12 +180,45 @@ public class NetworkingService extends Service {
                 try {
                     stopRabbitMq();
                     ConnectionFactory factory = new ConnectionFactory();
+
                     factory.setHost(hostName);
                     factory.setUsername(userName);
                     factory.setPassword(password);
                     factory.setAutomaticRecoveryEnabled(true);
-                    connection = factory.newConnection();
+                    factory.setRequestedHeartbeat(10);
+                    factory.setConnectionTimeout(10000);
+                    connection = (RecoverableConnection) factory.newConnection();
                     channel = connection.createChannel();
+
+                    connection.addShutdownListener(new ShutdownListener() {
+                        @Override
+                        public void shutdownCompleted(ShutdownSignalException cause) {
+                            try {
+                                System.out.println("connection shutdownCompleted");
+                            } catch (Exception ex) {
+                                ACRA.getErrorReporter().handleSilentException(ex);
+                            }
+                        }
+                    });
+
+                    connection.addRecoveryListener(new RecoveryListener() {
+                        @Override
+                        public void handleRecovery(Recoverable recoverable) {
+                            EventBus.getDefault().post(new LoadingEvent(true,"Done!"));
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
+
+                        @Override
+                        public void handleRecoveryStarted(Recoverable recoverable) {
+                            EventBus.getDefault().post(new LoadingEvent(true,"Disconnected. Working on it..."));
+                        }
+                    });
+
+
+
 
                 } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
@@ -196,20 +235,26 @@ public class NetworkingService extends Service {
     }
 
     private void stopRabbitMq() {
-        try {
-            if (channel != null && channel.isOpen())
+
+        if (channel != null && channel.isOpen()) {
+            try {
                 channel.close();
-            if (connection != null && connection.isOpen())
+            } catch (Exception ex) {
+                ACRA.getErrorReporter().handleSilentException(ex);
+            }
+        }
+        if (connection != null && connection.isOpen()) {
+            try {
                 connection.close();
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
+            } catch (Exception ex) {
+                ACRA.getErrorReporter().handleSilentException(ex);
+            }
         }
     }
 
     public void createListenerQueue(final String queueName, final CountDownLatch latch) {
 
-        try
-        {
+        try {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -237,10 +282,9 @@ public class NetworkingService extends Service {
 
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
-                    return;
+            ACRA.getErrorReporter().handleSilentException(ex);
+            return;
         }
-
 
 
     }
@@ -294,7 +338,7 @@ public class NetworkingService extends Service {
             @Override
             public void run() {
                 try {
-                    if(exchangeName==null || listenerQueueName==null)
+                    if (exchangeName == null || listenerQueueName == null)
                         return;
 
                     channel.queueUnbind(listenerQueueName, exchangeName, "");
@@ -320,14 +364,14 @@ public class NetworkingService extends Service {
             @Override
             public void run() {
                 try {
-                    if (consumerTag != null){
+                    if (consumerTag != null) {
                         channel.basicCancel(consumerTag);
                         consumerTag = null;
                     }
 
-                    if (listenerQueueName != null){
+                    if (listenerQueueName != null) {
                         channel.queueDelete(listenerQueueName);
-                        listenerQueueName=null;
+                        listenerQueueName = null;
 
                     }
 
@@ -621,7 +665,7 @@ public class NetworkingService extends Service {
         sendToServer(json, method);
     }
 
-    public void requestPostAnswer(final String playerId, final String gameId,final String privateGameId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
+    public void requestPostAnswer(final String playerId, final String gameId, final String privateGameId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
         answerAccepted = false;
         String method = "RequestPostAnswer";
         Map<String, String> params = new HashMap<>();
