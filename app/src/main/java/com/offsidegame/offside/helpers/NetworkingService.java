@@ -24,7 +24,6 @@ import com.offsidegame.offside.activities.LoginActivity;
 import com.offsidegame.offside.events.AvailableGameEvent;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
-import com.offsidegame.offside.events.CompletedHttpRequestEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.LoadingEvent;
@@ -41,6 +40,7 @@ import com.offsidegame.offside.events.PrivateGroupChangedEvent;
 import com.offsidegame.offside.events.PrivateGroupCreatedEvent;
 import com.offsidegame.offside.events.PrivateGroupDeletedEvent;
 import com.offsidegame.offside.events.PrivateGroupEvent;
+import com.offsidegame.offside.events.PrivateGroupUpdatedEvent;
 import com.offsidegame.offside.events.ScoreboardEvent;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.Chat;
@@ -61,7 +61,6 @@ import com.offsidegame.offside.models.Scoreboard;
 import com.offsidegame.offside.models.UserProfileInfo;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.Envelope;
@@ -99,7 +98,7 @@ public class NetworkingService extends Service {
 //    private String hostName = "10.0.0.17";
 
     /****************************PRODUCTION**************************/
-    //private String hostName = "sktestvm.westeurope.cloudapp.azure.com";
+//    private String hostName = "sktestvm.westeurope.cloudapp.azure.com";
     private String hostName = BuildConfig.RABBITMQ_HOSTNAME_STRING;
 
     private final IBinder binder = new LocalBinder();
@@ -142,6 +141,10 @@ public class NetworkingService extends Service {
         currentStates.put("playerRewardSaved",false);
         currentStates.put("playerQuitPrivateGame",false);
         currentStates.put("playerJoinedPrivateGameByCode",false);
+        currentStates.put("privateGroupUpdatedReceived",false);
+        currentStates.put("playerNameUpdatedReceived",false);
+
+
     }
 
     @Override
@@ -505,15 +508,20 @@ public class NetworkingService extends Service {
                 PrivateGameInfo privateGameInfo = gson.fromJson(model, PrivateGameInfo.class);
                 currentStates.put("playerJoinedPrivateGameByCode" , true);
                 EventBus.getDefault().post(privateGameInfo);
+            } else if (message.equals("PrivateGroupUpdatedReceived")) {
+                PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
+                currentStates.put("privateGroupUpdatedReceived" , true);
+                EventBus.getDefault().post(new PrivateGroupUpdatedEvent(privateGroup));
+            } else if (message.equals("PlayerNameUpdatedReceived")) {
+                PlayerModel playerModel = gson.fromJson(model, PlayerModel.class);
+                currentStates.put("playerNameUpdatedReceived" , true);
+                EventBus.getDefault().post(new PlayerModelEvent(playerModel));
             }
-
 
         } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
 
         }
-
-
 
     }
 
@@ -754,24 +762,6 @@ public class NetworkingService extends Service {
 
     }
 
-//    public void setPowerItems(String playerId, String gameId, int powerItems, boolean isDueToRewardVideo) {
-//        String stateKey = "RequestSetPowerItems";
-//
-//        //TODO: NOT IN USE - do we need it?
-//
-//        //loggedInUserReceived" , false);
-//        String method = "RequestSetPowerItems";
-//        Map<String, String> params = new HashMap<>();
-//        params.put("method", method);
-//        params.put("playerId", playerId);
-//        params.put("gameId", gameId);
-//        params.put("powerItems", Integer.toString(powerItems));
-//        params.put("isDueToRewardVideo", Boolean.toString(isDueToRewardVideo));
-//        Gson gson = new GsonBuilder().create();
-//        String json = gson.toJson(params);
-//        sendToServer(json, method, stateKey);
-//    }
-
     public void requestSaveImageInDatabase(String playerId, String imageString) {
         String stateKey = "playerImageSaved";
         currentStates.put(stateKey , false);
@@ -958,6 +948,39 @@ public class NetworkingService extends Service {
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
+
+    public void RequestUpdatePrivateGroup(String playerId, String groupId, String groupName) {
+        String stateKey = "privateGroupUpdated";
+        currentStates.put(stateKey , false);
+        String method = "RequestUpdatePrivateGroup";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("groupId", groupId);
+        params.put("groupName", groupName);
+
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method, stateKey);
+    }
+
+    public void RequestUpdatePlayerName(String playerId, String playerName) {
+        String stateKey = "playerNameUpdated";
+        currentStates.put(stateKey , false);
+        String method = "RequestUpdatePlayerName";
+        Map<String, String> params = new HashMap<>();
+        params.put("method", method);
+        params.put("playerId", playerId);
+        params.put("playerName", playerName);
+
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(params);
+        sendToServer(json, method, stateKey);
+    }
+
+
+
+
 
 
     //</editor-fold>

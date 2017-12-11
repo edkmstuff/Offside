@@ -23,15 +23,19 @@ import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.zxing.common.StringUtils;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.events.EditValueEvent;
 import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.PlayerSettingsChangedEvent;
 import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.ExperienceLevel;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PlayerGame;
+import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Reward;
 import com.offsidegame.offside.models.UserProfileInfo;
 import com.offsidegame.offside.models.Winner;
@@ -40,6 +44,7 @@ import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jsoup.helper.StringUtil;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.util.ArrayList;
@@ -158,8 +163,15 @@ public class PlayerFragment extends Fragment {
 
             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             playerId = firebaseUser.getUid();
-            String userDisplayName = firebaseUser.getDisplayName();
-            userDisplayName = userDisplayName == null ? "No Name" : userDisplayName;
+            String userDisplayName;
+            if(playerAssets!=null && !StringUtil.isBlank(playerAssets.getPlayerName()) ){
+                userDisplayName = playerAssets.getPlayerName();
+            }
+            else{
+                userDisplayName = StringUtil.isBlank(firebaseUser.getDisplayName())? "No Name" :firebaseUser.getDisplayName() ;
+
+            }
+
 
             ImageHelper.loadImage(context,playerPictureImageView,Uri.parse(playerAssets.getImageUrl()), true);
             playerNameTextView.setText(userDisplayName);
@@ -307,6 +319,16 @@ public class PlayerFragment extends Fragment {
             }
         });
 
+        playerNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String dialogTitle = "Set player nickname";
+                String dialogInstructions = "Pick your stage name";
+                String groupCurrentName = playerNameTextView.getText().toString();
+                EventBus.getDefault().post(new EditValueEvent(dialogTitle,dialogInstructions,groupCurrentName,EditValueEvent.updatePlayerName));
+            }
+        });
+
     }
 
     public void resetVisibility() {
@@ -346,6 +368,26 @@ public class PlayerFragment extends Fragment {
 
             OffsideApplication.setUserProfileInfo(userProfileInfo);
             updateUserProfileFragment(userProfileInfo);
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePlayerSettingsChanged(PlayerSettingsChangedEvent playerSettingsChangedEvent) {
+        try {
+
+            PlayerModel playerModel = playerSettingsChangedEvent.getPlayerModel();
+
+            if (playerModel == null)
+                return;
+
+            playerNameTextView.setText(playerModel.getUserName());
+
 
 
         } catch (Exception ex) {

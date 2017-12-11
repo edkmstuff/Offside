@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@drawable/bg_dialog_congrats1"
+    android:padding="12dp"
+
+    >
+
+    <TextView
+        android:id="@+id/dev_title_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Join game with code"
+        android:fontFamily="@font/font_open_sans_hebrew"
+        android:textAllCaps="true"
+        android:textSize="@dimen/OffsideMediumText"
+        />
+
+    <TextView
+        android:id="@+id/dev_instructions_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter code"
+        android:fontFamily="@font/font_open_sans_hebrew"
+        android:layout_marginTop="22dp"
+        android:textAllCaps="true"
+        android:textSize="@dimen/OffsideMediumSmallText"
+        />
+
+    <EditText
+        android:id="@+id/dev_new_value_edit_text"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+
+        />
+
+
+    <LinearLayout
+      android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="25dp"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <Button
+                android:id="@+id/dev_submit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Button"
+                android:fontFamily="@font/font_open_sans_hebrew"
+                android:text="Send"
+                android:background="@drawable/bg_button_dialog"
+                />
+        </LinearLayout>
+        <!--<LinearLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="end"-->
+
+            <!--&gt;-->
+            <!--<Button-->
+                <!--android:id="@+id/dad_cancel_button"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--style="@style/Button"-->
+                <!--android:fontFamily="@font/font_open_sans_hebrew"-->
+                <!--android:text="@string/lbl_noooo"-->
+                <!--android:background="@drawable/bg_button_dialog"-->
+                <!--/>-->
+
+
+        <!--</LinearLayout>-->
+
+
+
+
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>

@@ -1,8 +1,15 @@
 package com.offsidegame.offside.models;
 
+import android.text.format.DateUtils;
+
+import com.offsidegame.offside.helpers.DateHelper;
+
 import org.ocpsoft.prettytime.PrettyTime;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -80,8 +87,23 @@ public class PrivateGroup {
     }
 
     public String getPrettyLastPlayed() {
-        String prettyLastPlayed = new PrettyTime().format(lastPlayed);
-        return String.format("%s %s", "Last played: ", prettyLastPlayed);
+        Calendar calendar  = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -5);
+        Date referenceDate = calendar.getTime();
+        if(lastPlayed.after(referenceDate)) {
+            String prettyLastPlayed = new PrettyTime().format(lastPlayed);
+            return String.format("%s %s", "Last played: ", prettyLastPlayed);
+
+        }
+        else{
+            return String.format("Long time ago");
+        }
+
+
+
+
+
+
     }
 
 

@@ -43,6 +43,7 @@ import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.AvailableGameEvent;
 import com.offsidegame.offside.events.CannotJoinPrivateGameEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.EditValueEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.JoinGameWithCodeEvent;
@@ -52,11 +53,14 @@ import com.offsidegame.offside.events.NetworkingErrorEvent;
 import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 import com.offsidegame.offside.events.NotEnoughCoinsEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
+import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PlayerQuitFromPrivateGameEvent;
 import com.offsidegame.offside.events.PlayerRewardedReceivedEvent;
+import com.offsidegame.offside.events.PlayerSettingsChangedEvent;
 import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.PrivateGroupChangedEvent;
 import com.offsidegame.offside.events.PrivateGroupEvent;
+import com.offsidegame.offside.events.PrivateGroupUpdatedEvent;
 import com.offsidegame.offside.fragments.ChatFragment;
 import com.offsidegame.offside.fragments.GroupsFragment;
 import com.offsidegame.offside.fragments.NewsFragment;
@@ -72,8 +76,10 @@ import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
+import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.PrivateGameInfo;
 import com.offsidegame.offside.models.PrivateGroup;
+import com.offsidegame.offside.models.PrivateGroupsInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -132,7 +138,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private int REQUEST_INVITE = 100;
     private String TAG = "SIDEKICK";
 
-    //reward dialoge
+    //reward dialog
     private Dialog rewardDialog;
     //private TextView dialoguePlayerNameTextView;
     private TextView dialogueRewardValueTextView;
@@ -160,6 +166,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private Dialog joinGameWithCodeDialog;
     private Button dialogJoinGameButton;
     private EditText dialogJoinGamePrivateGameCodeEditText;
+
+    //edit value dialog
+    private Dialog editValueDialog;
+    private Button dialogEditValueButton;
+    private EditText dialogEditValueEditText;
 
 
     //</editor-fold>
@@ -682,7 +693,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             PrivateGroup updatedPrivateGroup = privateGroupChangedEvent.getPrivateGroup();
 
-            OffsideApplication.getPrivateGroupsInfo().replace(updatedPrivateGroup);
+            PrivateGroupsInfo privateGroupsInfo = OffsideApplication.getPrivateGroupsInfo();
+            if(privateGroupsInfo!=null)
+                OffsideApplication.getPrivateGroupsInfo().replace(updatedPrivateGroup);
 
 
         } catch (Exception ex) {
@@ -829,44 +842,44 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         }
     }
 
-    private void shareShortDynamicLink() {
-        try {
-            String link = "http://www.sidekickgame.com";
-            String description = "LinkToAppOnGooglePlay";
-            String titleSocial = "Invite friends to play with you";
-            String source = "Sidekick Soccer";
-
-            Task<ShortDynamicLink> createLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                    .setDynamicLinkDomain("tmg9s.app.goo.gl")
-                    .setLink(Uri.parse(DynamicLinkHelper.buildDynamicLink(link, description, titleSocial, source)))
-                    .buildShortDynamicLink()
-                    .addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
-                        @Override
-                        public void onComplete(@NonNull Task<ShortDynamicLink> task) {
-                            if (task.isSuccessful()) {
-                                Uri shortLink = task.getResult().getShortLink();
-                                Uri flowchartLink = task.getResult().getPreviewLink();
-                                Log.d(TAG, "Short link: " + shortLink.toString());
-                                Log.d(TAG, "flowchartLink link: " + flowchartLink.toString());
-                                Intent intent = new Intent();
-                                String message = String.format("Invitation from %s to play Sidekick. /nWant to join ? follow this link /n %s ", OffsideApplication.getPlayerAssets().getPlayerName(), shortLink.toString());
-
-                                intent.setAction(Intent.ACTION_SEND);
-                                intent.putExtra(Intent.EXTRA_TEXT, message);
-                                intent.setType("text/plain");
-                                startActivity(intent);
-                            } else {
-                                Log.d(TAG, "Error building short link");
-                            }
-                        }
-                    });
-
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-
-    }
+//    private void shareShortDynamicLink() {
+//        try {
+//            String link = "http://www.sidekickgame.com";
+//            String description = "LinkToAppOnGooglePlay";
+//            String titleSocial = "Invite friends to play with you";
+//            String source = "Sidekick Soccer";
+//
+//            Task<ShortDynamicLink> createLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
+//                    .setDynamicLinkDomain("tmg9s.app.goo.gl")
+//                    .setLink(Uri.parse(DynamicLinkHelper.buildDynamicLink(link, description, titleSocial, source)))
+//                    .buildShortDynamicLink()
+//                    .addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<ShortDynamicLink> task) {
+//                            if (task.isSuccessful()) {
+//                                Uri shortLink = task.getResult().getShortLink();
+//                                Uri flowchartLink = task.getResult().getPreviewLink();
+//                                Log.d(TAG, "Short link: " + shortLink.toString());
+//                                Log.d(TAG, "flowchartLink link: " + flowchartLink.toString());
+//                                Intent intent = new Intent();
+//                                String message = String.format("Invitation from %s to play Sidekick. /nWant to join ? follow this link /n %s ", OffsideApplication.getPlayerAssets().getPlayerName(), shortLink.toString());
+//
+//                                intent.setAction(Intent.ACTION_SEND);
+//                                intent.putExtra(Intent.EXTRA_TEXT, message);
+//                                intent.setType("text/plain");
+//                                startActivity(intent);
+//                            } else {
+//                                Log.d(TAG, "Error building short link");
+//                            }
+//                        }
+//                    });
+//
+//
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//        }
+//
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -1198,9 +1211,106 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEditValueReceived(EditValueEvent editValueEvent) {
+
+        try {
+            //onLoadingEventReceived(new LoadingEvent(false, null));
+            if (editValueEvent == null)
+                return;
+
+            String dialogTitle = editValueEvent.getDialogTitle();
+            String dialogInstructions = editValueEvent.getDialogInstructions();
+            String currentValue = editValueEvent.getCurrentValue();
+            final String key = editValueEvent.getKey();
+
+            editValueDialog = new Dialog(context);
+            editValueDialog.setContentView(R.layout.dialog_edit_value);
+
+            TextView titleTextView = editValueDialog.findViewById(R.id.dev_title_text_view);
+            titleTextView.setText(dialogTitle);
+            TextView instructionsTextView = editValueDialog.findViewById(R.id.dev_instructions_text_view);
+            instructionsTextView.setText(dialogInstructions);
+            final EditText newValueEditText = editValueDialog.findViewById(R.id.dev_new_value_edit_text);
+            newValueEditText.setText(currentValue);
+            final Button submitButton = editValueDialog.findViewById(R.id.dev_submit_button);
+
+            newValueEditText.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    if (s.toString().trim().length() == 0) {
+                        submitButton.setEnabled(false);
+                    } else {
+                        submitButton.setEnabled(true);
+                    }
+
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count,
+                                              int after) {
+                    if (s.toString().trim().length() == 0) {
+                        submitButton.setEnabled(false);
+                    } else {
+                        submitButton.setEnabled(true);
+                    }
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s.toString().trim().length() == 0) {
+                        submitButton.setEnabled(false);
+                    } else {
+                        submitButton.setEnabled(true);
+                    }
+
+                }
+            });
+
+
+            submitButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String newValue = newValueEditText.getText().toString();
+                    if (key == EditValueEvent.updatePlayerName) {
+                        String playerId = OffsideApplication.getPlayerId();
+
+                        if (playerId == null)
+                            return;
+                        OffsideApplication.networkingService.RequestUpdatePlayerName(playerId, newValue);
+
+                    } else if (key == EditValueEvent.updateGroupName) {
+                        PrivateGroup privateGroup = OffsideApplication.getSelectedPrivateGroup();
+                        if (privateGroup == null)
+                            return;
+
+                        OffsideApplication.getSelectedPrivateGroup().setName(newValueEditText.getText().toString());
+                        OffsideApplication.networkingService.RequestUpdatePrivateGroup(playerId, privateGroup.getId(), newValue);
+
+                    }
+
+
+                }
+            });
+
+            adjustDialogWidthToWindow(editValueDialog);
+            editValueDialog.show();
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPrivateGameInfoReceived(PrivateGameInfo privateGameInfo) {
-        try
-        {
+        try {
             if (privateGameInfo == null)
                 return;
 
@@ -1213,7 +1323,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -1221,8 +1331,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNetworkingErrorReceived(NetworkingErrorEvent networkingErrorEvent) {
-        try
-        {
+        try {
             EventBus.getDefault().post(new LoadingEvent(false, null));
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -1234,14 +1343,79 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         }
 
     }
-    //new NetworkingErrorEvent("Request"));
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPrivateGroupUpdatedReceived(PrivateGroupUpdatedEvent privateGroupUpdatedEvent) {
+        try {
+            EventBus.getDefault().post(new LoadingEvent(false, null));
+            if (privateGroupUpdatedEvent == null)
+                return;
+
+            PrivateGroup privateGroup = privateGroupUpdatedEvent.getPrivateGroup();
+
+            PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
+
+            if (selectedPrivateGroup != null)
+                OffsideApplication.setSelectedPrivateGroup(privateGroup);
+
+            PrivateGroupsInfo privateGroupsInfo = OffsideApplication.getPrivateGroupsInfo();
+            if (privateGroupsInfo != null)
+
+                privateGroupsInfo.replace(privateGroup);
+
+            editValueDialog.cancel();
+
+            //to update the ui SingleGroupFragment;
+            EventBus.getDefault().post(new PrivateGroupChangedEvent(privateGroup));
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlayerModelReceived(PlayerModelEvent playerModelEvent) {
+        try {
+            EventBus.getDefault().post(new LoadingEvent(false, null));
+            PlayerModel updatedPlayer = playerModelEvent.getPlayerModel();
+            if (updatedPlayer == null)
+                return;
+
+            //update playerName in playerAseets
+            PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
+            if(playerAssets!=null)
+                playerAssets.setPlayerName(updatedPlayer.getUserName());
+
+            //update player in gameInfo , in case there is gameInfo
+            GameInfo gameInfo = OffsideApplication.getGameInfo();
+            if(gameInfo!=null) {
+                PlayerModel currentPlayer = gameInfo.getPlayer();
+                if (currentPlayer != null)
+                    currentPlayer.setUserName(updatedPlayer.getUserName());
+
+            }
+
+            editValueDialog.cancel();
+
+            //to update the ui PlayerFragment;
+            EventBus.getDefault().post(new PlayerSettingsChangedEvent(updatedPlayer));
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
 
 
     public void adjustDialogWidthToWindow(Dialog dialog) {
 
-        try
-        {
+        try {
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
             Window window = dialog.getWindow();
             lp.copyFrom(window.getAttributes());
@@ -1251,7 +1425,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             window.setAttributes(lp);
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -1260,8 +1434,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     @Override
     public void onBackPressed() {
-        try
-        {
+        try {
             if (bottomNavigation.getSelectedItemId() == R.id.nav_action_groups) //groups
                 finish();
             else
@@ -1270,7 +1443,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 

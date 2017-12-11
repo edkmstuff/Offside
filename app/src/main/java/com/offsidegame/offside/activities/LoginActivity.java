@@ -323,10 +323,15 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                 OffsideApplication.networkingService.listenToExchange(playerId, latch);
                 latch.await();
 
-
             }
+            String playerName = null;
+            if(OffsideApplication.getPlayerAssets()!=null && OffsideApplication.getPlayerAssets().getPlayerName()!=null)
+                playerName =OffsideApplication.getPlayerAssets().getPlayerName();
 
-            playerDisplayName = (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) ? "NO NAME" : firebaseUser.getDisplayName();
+            String firebaseDisplayName = (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) ? "NO NAME" : firebaseUser.getDisplayName();
+
+            playerDisplayName = playerName == null ? firebaseDisplayName : playerName;
+
             playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
             playerEmail = firebaseUser.getEmail();
 

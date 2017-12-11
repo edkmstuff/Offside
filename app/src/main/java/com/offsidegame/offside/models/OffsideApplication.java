@@ -480,6 +480,16 @@ public class OffsideApplication extends Application {
 
             editor.commit();
 
+
+            OffsideApplication.setSelectedPrivateGroup(null);
+            OffsideApplication.setSelectedPrivateGameId(null);
+            OffsideApplication.setSelectedAvailableGame(null);
+            OffsideApplication.setSelectedPrivateGameId(null);
+            OffsideApplication.setPlayerAssets(null);
+            OffsideApplication.setGameInfo(null);
+            OffsideApplication.setPrivateGroupsInfo(null);
+            OffsideApplication.setUserProfileInfo(null);
+
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 

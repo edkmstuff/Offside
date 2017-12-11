@@ -121,6 +121,7 @@
     <string name="lbl_join_private_game_with_code">הצטרף באמצעות קוד</string>
     <string name="lbl_you_are_about_to_quit_this_game">אתה עומד לפרוש מהמשחק</string>
     <string name="lbl_are_you_sure">האם אתה בטוח?</string>
+    <string name="lbl_disconnected_connecting">מנותק. מנסה להתחבר...</string>
 
 
 </resources>

@@ -24,13 +24,16 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.LeagueAdapter;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
+import com.offsidegame.offside.events.EditValueEvent;
 import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.PrivateGroupChangedEvent;
 import com.offsidegame.offside.events.PrivateGroupDeletedEvent;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.LeagueRecord;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PrivateGroup;
+import com.offsidegame.offside.models.PrivateGroupsInfo;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
@@ -265,6 +268,17 @@ public class SingleGroupFragment extends Fragment {
                 createDialogApproveDelete();
                 dialogApproveDelete.show();
 
+            }
+        });
+
+        groupNavigationGroupNameTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String dialogTitle = "Change name of this Group";
+                String dialogInstructions = "Pick a new name";
+                String groupCurrentName = groupNavigationGroupNameTextView.getText().toString();
+                EventBus.getDefault().post(new EditValueEvent(dialogTitle,dialogInstructions,groupCurrentName,EditValueEvent.updateGroupName));
             }
         });
 
@@ -598,6 +612,21 @@ public class SingleGroupFragment extends Fragment {
         }
 
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceivePrivateGroupNameChanged(PrivateGroupChangedEvent privateGroupChangedEvent) {
+        PrivateGroup privateGroup = privateGroupChangedEvent.getPrivateGroup();
+        if(privateGroup==null)
+            return;
+
+        groupNavigationGroupNameTextView.setText(privateGroup.getName());
+
+
+    }
+
+
+
+
 
 
 }
