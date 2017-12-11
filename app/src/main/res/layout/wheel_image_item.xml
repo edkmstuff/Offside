@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools = "http://schemas.android.com/tools"
+    tools:background="@color/wheelBackgroundColor"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+        <ImageView
+            android:id="@+id/wii_reward_image_image_view"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_coin"
+            />
+        <TextView
+            android:id="@+id/wii_reward_value_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="50"
+            android:textSize="@dimen/OffsideMediumText"
+            android:fontFamily="@font/font_open_sans_hebrew_extra_bold"
+            android:shadowRadius="1"
+            android:shadowDx="-1"
+            android:shadowDy="-1"
+
+            />
+
+    </LinearLayout>
+
+
+</FrameLayout>

@@ -63,6 +63,7 @@ import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.events.PrivateGroupUpdatedEvent;
 import com.offsidegame.offside.fragments.ChatFragment;
 import com.offsidegame.offside.fragments.GroupsFragment;
+import com.offsidegame.offside.fragments.LuckyWheelFragment;
 import com.offsidegame.offside.fragments.NewsFragment;
 import com.offsidegame.offside.fragments.PlayerFragment;
 import com.offsidegame.offside.fragments.SettingsFragment;
@@ -169,8 +170,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     //edit value dialog
     private Dialog editValueDialog;
-    private Button dialogEditValueButton;
-    private EditText dialogEditValueEditText;
+
+    Fragment luckyWheelFragment;
+
+
 
 
     //</editor-fold>
@@ -1038,7 +1041,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     @Override
                     public void onClick(View view) {
                         //todo: add load video
-                        Snackbar.make(playerInfoRoot, "COMING SOON!!!", Snackbar.LENGTH_SHORT).show();
                         shortInAssetsDialog.cancel();
 
                     }
@@ -1047,13 +1049,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 getCoinsSlotMachineRoot.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //todo: fix slotActivity then uncomment this
-                        Snackbar.make(playerInfoRoot, "COMING SOON!!!", Snackbar.LENGTH_SHORT).show();
+
+                        luckyWheelFragment = LuckyWheelFragment.newInstance();
+                        replaceFragment(luckyWheelFragment);
+
                         shortInAssetsDialog.cancel();
-
-
-//                    Intent intent = new Intent(context,SlotActivity.class);
-//                    startActivity(intent);
 
                     }
                 });
