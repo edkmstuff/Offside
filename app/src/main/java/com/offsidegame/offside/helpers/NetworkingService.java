@@ -102,8 +102,9 @@ public class NetworkingService extends Service {
     private String hostName = BuildConfig.RABBITMQ_HOSTNAME_STRING;
 
     private final IBinder binder = new LocalBinder();
-    private String CLIENT_REQUESTS_EXCHANGE_NAME = "FROM_CLIENTS";
-    private int sendToServerErrorDelay = 15000;
+    private String CLIENTS_TO_SERVER_EXCHANGE_NAME = "CLIENTS_TO_SERVER";
+    private String SERVER_TO_CLIENTS_EXCHANGE_NAME = "SERVER_TO_CLIENTS";
+    private int sendToServerErrorDelay = 30000;
     private int mId = -1;
 
 
@@ -301,18 +302,18 @@ public class NetworkingService extends Service {
 
     private String consumerTag = null;
 
-    public void listenToExchange(final String exchangeName, final CountDownLatch latch) {
+    public void listenToExchange(final String routingKey, final CountDownLatch latch) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
 
-                    if (exchangeName == null)
+                    if (routingKey == null)
                         return;
 
-                    channel.exchangeDeclare(exchangeName, "fanout");
-                    channel.queueBind(listenerQueueName, exchangeName, "");
+                    channel.exchangeDeclare(SERVER_TO_CLIENTS_EXCHANGE_NAME, "direct");
+                    channel.queueBind(listenerQueueName,SERVER_TO_CLIENTS_EXCHANGE_NAME, routingKey);
 
                     if (consumerTag != null)
                         return;
@@ -342,16 +343,16 @@ public class NetworkingService extends Service {
 
     }
 
-    public void unBindExchange(final String exchangeName, final CountDownLatch latch) {
+    public void unBindExchange(final String routingKey, final CountDownLatch latch) {
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    if (exchangeName == null || listenerQueueName == null)
+                    if (routingKey == null || listenerQueueName == null)
                         return;
 
-                    channel.queueUnbind(listenerQueueName, exchangeName, "");
+                    channel.queueUnbind(listenerQueueName,SERVER_TO_CLIENTS_EXCHANGE_NAME,  routingKey);
 
                 } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
@@ -616,9 +617,9 @@ public class NetworkingService extends Service {
 
                     if (connection == null || !connection.isOpen() || channel == null || !channel.isOpen())
                         return;
-                    channel.exchangeDeclare(CLIENT_REQUESTS_EXCHANGE_NAME, "fanout");
-                    //channel.queueDeclare(CLIENT_REQUESTS_EXCHANGE_NAME, false, false, false, null);
-                    channel.basicPublish(CLIENT_REQUESTS_EXCHANGE_NAME, "", null, json.getBytes("UTF-8"));
+                    channel.exchangeDeclare(CLIENTS_TO_SERVER_EXCHANGE_NAME, "fanout");
+                    //channel.queueDeclare(CLIENTS_TO_SERVER_EXCHANGE_NAME, false, false, false, null);
+                    channel.basicPublish(CLIENTS_TO_SERVER_EXCHANGE_NAME, "", null, json.getBytes("UTF-8"));
                     if (method != null) {
                         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                             @Override
