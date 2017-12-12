@@ -113,8 +113,8 @@ public class LuckyWheelFragment extends Fragment {
 
             @Override
             public void onReachTarget() {
-                int rewardValue=0;
-                MyWheelItem selectedWheelItem = myWheelItems.get(randomNumber);
+                int rewardValue;
+                MyWheelItem selectedWheelItem = myWheelItems.get(randomNumber-1);
                 if(selectedWheelItem==null){
                     Toast.makeText(getContext(),String.format("Problem %d",randomNumber),Toast.LENGTH_LONG).show();
                 }
@@ -157,10 +157,10 @@ public class LuckyWheelFragment extends Fragment {
 
     public int getRandomNumber(){
 
-        int randomNumber = 0;
+        int randomNumber = 1;
         Random r = new Random();
-        int Low = 0;
-        int High = myWheelItems.size()-1;
+        int Low = 1;
+        int High = myWheelItems.size();
         randomNumber = r.nextInt(High-Low) + Low;
 
         return randomNumber;
