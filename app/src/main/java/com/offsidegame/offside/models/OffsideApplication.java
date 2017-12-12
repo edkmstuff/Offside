@@ -323,13 +323,18 @@ public class OffsideApplication extends Application {
         try {
 
             CountDownLatch latch = new CountDownLatch(1);
+
             String oldPrivateGameId = OffsideApplication.getSelectedPrivateGameId();
+            String oldRoutingKey = OffsideApplication.getPlayerId()+'-'+ oldPrivateGameId;
+            OffsideApplication.networkingService.unBindExchange(oldRoutingKey, latch);
             OffsideApplication.networkingService.unBindExchange(oldPrivateGameId, latch);
             latch.await();
 
             latch = new CountDownLatch(1);
             OffsideApplication.selectedPrivateGameId = selectedPrivateGameId;
             String newPrivateGameId = OffsideApplication.getSelectedPrivateGameId();
+            String routingKey = OffsideApplication.getPlayerId()+'-'+ newPrivateGameId;
+            OffsideApplication.networkingService.listenToExchange(routingKey, latch);
             OffsideApplication.networkingService.listenToExchange(newPrivateGameId, latch);
             latch.await();
         } catch (Exception ex) {
