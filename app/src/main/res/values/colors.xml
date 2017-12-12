@@ -20,8 +20,6 @@
     <color name="chatIncomingFromBot">#F6F3F2</color>
     <color name="chatOutgoing">#F6F3F2</color>
     <color name="chatActions">#BDBDBD</color>
-    <color name="wrongAnswer">#DE1831</color>
-    <color name="correctAnswer">#388E3C</color>
     <color name="chatText">#5B5B5B</color>
 
     <color name="grayText">#c7c7c7</color>
@@ -29,15 +27,12 @@
 
     <!--new colors-->
     <color name="navBackgroundColor">#15194e</color>
-    <color name="navSelectedItemColor">#ffffff</color>
     <color name="navUnSelectedItemColor">#25ffffff</color>
 
 
     <color name="colorPrimary">#0D123F</color>
     <!--<color name="colorButton">#4061A9</color>-->
     <!--<color name="colorButton">#8C9EFF</color>-->
-    <color name="colorButton">#4061A9</color>
-    <color name="playerAssetsBackgroundColor">#212836</color>
     <!--<color name="playerAssetsBackgroundColor">#F9000030</color>-->
 
 
@@ -45,7 +40,6 @@
     <color name="colorPrimaryDark">#1A237E</color>
     <color name="colorActive">#00c420</color>
     <!--<color name="navigationMenu">#151A50</color>-->
-    <color name="navigationMenu">#1A237E</color>
     <!--<color name="navigationMenuSelectedItem">#383C69</color>-->
     <color name="navigationMenuSelectedItem">#FFFFFF</color>
     <color name="navigationMenuUnSelectedItem">#747474</color>
@@ -68,7 +62,6 @@
 
     <color name="correctAnswerColor">#00E676</color>
     <color name="wrongAnswerColor">#E57373</color>
-    <color name="popupBackgroundColor">#E57373</color>
 
     <color name="leagueRecordOddGradientStart">#1F4294</color>
     <color name="leagueRecordOddGradientEnd">#1D459A</color>
@@ -90,7 +83,9 @@
 
     <color name="senderNameColor">#E57373</color>
 
-    <color name="wheelBackgroundColor">#50000000</color>
+    <color name="wheelBackgroundColorOdd">#00E676</color>
+    <color name="wheelBackgroundColorEven">#69F0AE</color>
+
 
 
 

@@ -5,12 +5,6 @@
 
     </style>
 
-    <style name="CustomProgressBarHorizontal" parent="android:Widget.ProgressBar.Horizontal">
-        <item name="android:minHeight">20dp</item>
-        <item name="android:maxHeight">20dp</item>
-        <item name="android:background">@color/colorPrimary</item>
-    </style>
-
     <style name="editTextClassic" parent="@android:style/Widget.EditText">
         <item name="android:textColor">@color/colorWhite</item>
         <!--<item name="android:background">@android:drawable/edit_text</item>-->
@@ -57,29 +51,6 @@
     <style name="SimpleNavigationTabUnSelected">
         <item name="android:textColor">@color/navigationMenuUnSelectedItem</item>
     </style>
-
-    <style name="OffsideAnswer" parent="@android:style/Theme.Light.NoTitleBar">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">left</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:layout_marginLeft">5sp</item>
-
-    </style>
-
-    <style name="OffsideAnswer.QuestionText">
-        <item name="android:textSize">24sp</item>
-    </style>
-
-    <style name="OffsideActionButton">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">@color/colorWhite</item>
-
-    </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="TabLayoutStyle" parent="Widget.Design.TabLayout">
         <item name="tabIndicatorHeight">2dp</item>
@@ -187,19 +158,6 @@
     <!--<item name="android:background">#cfc6c6</item>-->
     <!--<item name="android:alpha">0.05</item>-->
     <!--</style>-->
-
-    <style name="ExperienceLevelImagePadding">
-
-        <item name="android:padding">2dp</item>
-
-    </style>
-
-    <style name="WheelText">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">@font/font_open_sans_hebrew</item>
-
-    </style>
 
 
 </resources>

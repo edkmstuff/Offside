@@ -14,7 +14,6 @@
     <string name="lbl_you_didnt_earn_points">לא זכית במטבעות</string>
     <string name="lbl_balance">יתרה</string>
     <string name="lbl_wrong_answer_encourage_feedback">לא נורא אולי בשאלה הבאה</string>
-    <string name="lbl_select_name_for_club">בחר שם לקבוצה</string>
     <string name="lbl_create_private_group">פתח קבוצה</string>
     <string name="lbl_type_message">הקלד הודעה</string>
     <string name="lbl_how_others_answered">כך ענו כולם</string>
@@ -22,22 +21,14 @@
     <string name="lbl_question_time_expired_message">תם הזמן לשאלה זו</string>
     <string name="lbl_we_have_an_answer">התשובה הנכונה לשאלה</string>
     <string name="lbl_in_few_seconds_you_will_see_others_answers">בעוד מספר שניות תראה כיצד חושבים כולם...</string>
-    <string name="lbl_commands_leaders">מובילים</string>
-    <string name="lbl_command_current_question">שאלה נוכחית</string>
-    <string name="lbl_command_offside_coins">היתרה שלי</string>
-    <string name="lbl_command_reload">הגרל כדורים</string>
-    <string name="lbl_command_game_code">קוד המשחק</string>
-    <string name="lbl_command_share_code">שתף קוד</string>
     <!--googles test aduinitid-->
     <string name="lbl_you_can_get_coins_doing_one_of_the_following">תוכל להשיג מטבעות באחת מהדרכים הבאות</string>
     <string name="lbl_new_question_is_waiting_for_you">שאלה חדשה מחכה לך</string>
     <string name="lbl_click_to_answer">לחץ כדי לענות</string>
     <string name="lbl_click_to_view">לחץ כדי לראות</string>
-    <string name="lbl_get_offside_coins">השג כדור</string>
     <string name="lbl_watch_short_video">צפה בוידאו</string>
     <string name="lbl_buy_offside_coins">חנות</string>
     <string name="lbl_loading_video">טוען וידאו...</string>
-    <string name="lbl_leave_game">צא מהמשחק</string>
     <string name="lbl_start_slot">לחץ כאן כדי להגריל</string>
     <string name="lbl_back_to_game">חזור למשחק</string>
     <string name="lbl_well_done_you_earned_1_power_items">כל הכבוד! זכית בכדור</string>
@@ -49,8 +40,6 @@
     <string name="lbl_is">התשובה הנכונה</string>
     <string name="lbl_your_answer_was">תשובתך</string>
     <string name="lbl_and_the_winner_is">והמנצחים שלנו הם...</string>
-    <string name="lbl_exceed_allowed_reward_video_watch_message">צפית במקסימום סרטונים המותרים למשחק אחד.</string>
-    <string name="lbl_failed_to_load_video">טעינת וידאו נכשלה</string>
     <string name="lbl_seems_like_you_skipped_this_question">נראה שבחרת לא לענות על השאלה</string>
     <string name="lbl_you_are_out_of_coins">אין לך מספיק מטבעות , תוכל לחדש את המלאי במחצית</string>
     <string name="lbl_game_is_active">משחק פעיל</string>
@@ -80,13 +69,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="lbl_sign_out">התנתק</string>
-    <string name="lbl_settings">הגדרות</string>
     <string name="lbl_no_active_private_game">לא נמצא משחק פעיל</string>
     <string name="lbl_news">news</string>
     <string name="lbl_your_position">מיקומך:</string>
     <string name="lbl_create_private_group_hint">בחר שם לקבוצה</string>
     <string name="lbl_delete_private_group">מחק קבוצה</string>
-    <string name="lbl_error_user_profile_picture_not_saved">User Image was not saved</string>
     <!--<string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"https://www.sidekickgame.com\",\n  }\n}]</string>-->
     <string name="lbl_resume_game">חזרה למשחק</string>
     <string name="lbl_player_experience">מה אני?</string>
@@ -121,7 +108,6 @@
     <string name="lbl_join_private_game_with_code">הצטרף באמצעות קוד</string>
     <string name="lbl_you_are_about_to_quit_this_game">אתה עומד לפרוש מהמשחק</string>
     <string name="lbl_are_you_sure">האם אתה בטוח?</string>
-    <string name="lbl_disconnected_connecting">מנותק. מנסה להתחבר...</string>
 
 
 </resources>
