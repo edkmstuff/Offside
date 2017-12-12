@@ -1,39 +1,37 @@
 package com.offsidegame.offside.fragments;
 
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.bluehomestudio.luckywheel.LuckyWheel;
-import com.bluehomestudio.luckywheel.OnLuckyWheelReachTheTarget;
-import com.bluehomestudio.luckywheel.WheelItem;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.NavigationEvent;
-import com.offsidegame.offside.helpers.Formatter;
-import com.offsidegame.offside.models.MyWheelItem;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Random;
 
 
 public class LuckyWheelFragment extends Fragment {
-    private LuckyWheel luckyWheel;
-    private List<MyWheelItem> myWheelItems;
+
     private Button rollWheelButton;
-    private int randomNumber;
+    private ImageView wheelImageView;
+    Random r;
+    int degree=0, degree_old=0;
 
-
-
+    //formula:  DS (degreesPerSector) = 360/numSectorsOnWheel  >>  FACTOR = DS/2
+    //the middle of each sector. the range it covers is FACTOR*2 (e.g. 4 slices=> 45)
+    private static final float FACTOR = 45f;
 
 
     public static LuckyWheelFragment newInstance() {
@@ -41,59 +39,52 @@ public class LuckyWheelFragment extends Fragment {
         return luckyWheelFragment;
     }
 
-    public LuckyWheelFragment(){}
+    public LuckyWheelFragment() {
+    }
 
     @Override
-    public void onResume(){
-        try
-        {
+    public void onResume() {
+        try {
 
             super.onResume();
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
-                    return ;
+            ACRA.getErrorReporter().handleSilentException(ex);
+            return;
         }
 
 
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        try
-        {
+        try {
             // Inflate the layout for this fragment
             View rootView = inflater.inflate(R.layout.fragment_lucky_wheel, container, false);
 
-            randomNumber=0;
-            
             getIds(rootView);
-            
-            setEvents();
 
-            loadWheelContent();
+            setEvents();
 
             return rootView;
 
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
-                    return null;
+            ACRA.getErrorReporter().handleSilentException(ex);
+            return null;
         }
 
     }
 
     private void getIds(View rootView) {
 
-        //cursorWheelLayout = rootView.findViewById(R.id.flw_cursor_wheel_layout);
-        luckyWheel = rootView.findViewById(R.id.flw_bluehome_studio_lucky_wheel);
         rollWheelButton = rootView.findViewById(R.id.flw_roll_wheel_button);
-
+        wheelImageView = rootView.findViewById(R.id.flw_wheel_image_view);
 
     }
 
@@ -103,75 +94,62 @@ public class LuckyWheelFragment extends Fragment {
         rollWheelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                randomNumber =getRandomNumber();
-                luckyWheel.rotateWheelTo(randomNumber);
+
+                degree_old = degree%360;
+                r= new Random();
+                degree =r.nextInt(3600)+720;
+                Log.d("SIDEKICK","degree: "+ degree);
+                RotateAnimation rotate = new RotateAnimation(degree_old,degree
+                        ,RotateAnimation.RELATIVE_TO_SELF,0.5f,RotateAnimation.RELATIVE_TO_SELF,0.5f);
+                rotate.setDuration(3600);
+                rotate.setFillAfter(true);
+                rotate.setInterpolator(new DecelerateInterpolator());
+                rotate.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        Toast.makeText(getContext(),"Spinning...",Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        String message = prizeEarned(360-(degree%360));
+                        Toast.makeText(getContext(),message,Toast.LENGTH_LONG).show();
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                wheelImageView.startAnimation(rotate);
+
+
 
             }
         });
 
-        luckyWheel.setLuckyWheelReachTheTarget(new OnLuckyWheelReachTheTarget() {
-
-            @Override
-            public void onReachTarget() {
-                int rewardValue;
-                MyWheelItem selectedWheelItem = myWheelItems.get(randomNumber-1);
-                if(selectedWheelItem==null){
-                    Toast.makeText(getContext(),String.format("Problem %d",randomNumber),Toast.LENGTH_LONG).show();
-                }
-
-                rewardValue = selectedWheelItem.rewardValue;
-
-                Toast.makeText(getContext(),String.format("you earned %d",rewardValue),Toast.LENGTH_LONG).show();
-
-            }
-        });
-
-
-    }
-
-    private void loadWheelContent() {
-
-        myWheelItems = new ArrayList<>();
-        String wheelSliceBackgroundColorEven = Formatter.colorNumberToHexaValue(getContext(),R.color.wheelBackgroundColorEven);
-        String wheelSliceBackgroundColorOdd = Formatter.colorNumberToHexaValue(getContext(),R.color.wheelBackgroundColorOdd);
-
-        myWheelItems.add(new MyWheelItem(R.mipmap.ic_coin,10,Color.parseColor(wheelSliceBackgroundColorEven), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_coin)));
-        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,1,Color.parseColor(wheelSliceBackgroundColorOdd), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_soccer_ball)));
-        myWheelItems.add(new MyWheelItem(R.mipmap.ic_coin,50,Color.parseColor(wheelSliceBackgroundColorEven), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_coin)));
-        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,2,Color.parseColor(wheelSliceBackgroundColorOdd), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_soccer_ball)));
-        myWheelItems.add(new MyWheelItem(R.mipmap.ic_coin,100,Color.parseColor(wheelSliceBackgroundColorEven), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_coin)));
-        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,4,Color.parseColor(wheelSliceBackgroundColorOdd), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_soccer_ball)));
-        myWheelItems.add(new MyWheelItem(R.mipmap.ic_coin,200,Color.parseColor(wheelSliceBackgroundColorEven), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_coin)));
-        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,8,Color.parseColor(wheelSliceBackgroundColorOdd), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_soccer_ball)));
-
-        List<WheelItem> wheelItems = new ArrayList<>();
-
-        for(MyWheelItem myWheelItem : myWheelItems){
-            wheelItems.add(myWheelItem.wheelItem);
-        }
-
-        luckyWheel.addWheelItems(wheelItems);
-
-    }
-
-
-    public int getRandomNumber(){
-
-        int randomNumber = 1;
-        Random r = new Random();
-        int Low = 1;
-        int High = myWheelItems.size();
-        randomNumber = r.nextInt(High-Low) + Low;
-
-        return randomNumber;
 
     }
 
 
 
-    public void backToGroups(){
+    private String prizeEarned(int degrees){
+        String text="";
+        if(degrees>=(FACTOR*1) && degrees<(FACTOR*3))
+            text="B";
+        if(degrees>=(FACTOR*3) && degrees<(FACTOR*5))
+            text="D";
+        if(degrees>=(FACTOR*5) && degrees<(FACTOR*7))
+           text="C";
 
-        EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+        if((degrees>=(FACTOR*7) && degrees<(360)) ||(degrees>=0 && degrees<(FACTOR*1)))
+            text="A";
+
+        return text;
+
     }
+
 
 }
