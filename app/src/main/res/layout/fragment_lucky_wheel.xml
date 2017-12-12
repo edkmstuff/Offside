@@ -2,7 +2,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.offsidegame.offside.fragments.ShopFragment"
     xmlns:LuckyWheel="http://schemas.android.com/apk/res-auto"
     android:gravity="center">
@@ -21,38 +20,6 @@
             style="@style/titleText"
             android:gravity="center"
             />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            >
-
-            <github.hellocsl.cursorwheel.CursorWheelLayout
-                android:id="@+id/flw_cursor_wheel_layout"
-                android:layout_width="280dip"
-                android:layout_height="280dip"
-                android:layout_gravity="center_vertical|right|bottom"
-                app:wheelBackgroundColor="@color/colorAccent_Translucent"
-                app:wheelCursorColor="@color/red"
-                app:wheelCursorHeight="20dip"
-                app:wheelSelectedAngle="270"
-                app:wheelFlingValue="460"
-                >
-
-                <TextView
-                    android:id="@id/id_wheel_menu_center_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    />
-
-
-            </github.hellocsl.cursorwheel.CursorWheelLayout>
-
-        </LinearLayout>
 
         <com.bluehomestudio.luckywheel.LuckyWheel
             android:id="@+id/flw_bluehome_studio_lucky_wheel"

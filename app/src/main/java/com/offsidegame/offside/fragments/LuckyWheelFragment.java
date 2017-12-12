@@ -13,8 +13,7 @@ import android.widget.Toast;
 import com.bluehomestudio.luckywheel.LuckyWheel;
 import com.bluehomestudio.luckywheel.OnLuckyWheelReachTheTarget;
 import com.bluehomestudio.luckywheel.WheelItem;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
+
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.helpers.Formatter;
@@ -26,13 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import github.hellocsl.cursorwheel.CursorWheelLayout;
-
 
 public class LuckyWheelFragment extends Fragment {
-
-
-    private CursorWheelLayout cursorWheelLayout;
     private LuckyWheel luckyWheel;
     private List<MyWheelItem> myWheelItems;
     private Button rollWheelButton;
@@ -105,13 +99,6 @@ public class LuckyWheelFragment extends Fragment {
 
     private void setEvents() {
 
-//        cursorWheelLayout.setOnMenuSelectedListener(new CursorWheelLayout.OnMenuSelectedListener() {
-//            @Override
-//            public void onItemSelected(CursorWheelLayout parent, View view, int pos) {
-//                Toast.makeText(getContext(), "Selected: "+ myWheelItems.get(pos).rewardValue, Toast.LENGTH_LONG).show();
-//
-//            }
-//        });
 
         rollWheelButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,17 +130,6 @@ public class LuckyWheelFragment extends Fragment {
     }
 
     private void loadWheelContent() {
-//        myWheelItems = new ArrayList<>();
-//        myWheelItems.add(new MyWheelItem(R.drawable.ic_coins_heap,100));
-//        myWheelItems.add(new MyWheelItem(R.drawable.ic_coins_heap,50));
-//        myWheelItems.add(new MyWheelItem(R.drawable.ic_coins_heap,10));
-//        myWheelItems.add(new MyWheelItem(R.drawable.ic_coins_heap,0));
-//        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,2));
-//        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,4));
-//        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,8));
-
-//        WheelImageAdapter wheelImageAdapter = new WheelImageAdapter(getContext(), myWheelItems);
-//        cursorWheelLayout.setAdapter(wheelImageAdapter);
 
         myWheelItems = new ArrayList<>();
         String wheelSliceBackgroundColorEven = Formatter.colorNumberToHexaValue(getContext(),R.color.wheelBackgroundColorEven);
