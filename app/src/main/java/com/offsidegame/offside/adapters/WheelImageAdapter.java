@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.models.WheelImage;
+import com.offsidegame.offside.models.MyWheelItem;
 
 import java.util.List;
 
@@ -20,37 +20,37 @@ import github.hellocsl.cursorwheel.CursorWheelLayout;
 public class WheelImageAdapter extends CursorWheelLayout.CycleWheelAdapter {
 
     private Context context;
-    private List<WheelImage> wheelImages;
+    private List<MyWheelItem> myWheelItems;
     private LayoutInflater inflater;
 
-    public WheelImageAdapter(Context context, List<WheelImage> wheelImages) {
+    public WheelImageAdapter(Context context, List<MyWheelItem> myWheelItems) {
         this.context = context;
-        this.wheelImages = wheelImages;
+        this.myWheelItems = myWheelItems;
         this.inflater = LayoutInflater.from(context);
     }
 
 
     @Override
     public int getCount() {
-        return wheelImages.size();
+        return myWheelItems.size();
     }
 
 
     @Override
     public View getView(View parent, int position) {
-        WheelImage wheelImage = getItem(position);
+        MyWheelItem myWheelItem = getItem(position);
         View root = inflater.inflate(R.layout.wheel_image_item,null, false);
         TextView rewardValueTextView = root.findViewById(R.id.wii_reward_value_text_view);
-        rewardValueTextView.setText(String.format("%d",wheelImage.rewardValue));
+        rewardValueTextView.setText(String.format("%d", myWheelItem.rewardValue));
         ImageView imageView = root.findViewById(R.id.wii_reward_image_image_view);
-        imageView.setImageResource(wheelImage.imageResourceId);
+        imageView.setImageResource(myWheelItem.imageResourceId);
 
 
         return root;
     }
 
     @Override
-    public WheelImage getItem(int position) {
-        return wheelImages.get(position);
+    public MyWheelItem getItem(int position) {
+        return myWheelItems.get(position);
     }
 }

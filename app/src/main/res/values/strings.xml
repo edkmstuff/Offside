@@ -6,14 +6,10 @@
     <string name="fui_progress_dialog_signing_up">Connecting...</string>
     <string name="preference_name" translatable="false">OffsidePlayerPreferences</string>
     <string name="date_format" translatable="false">EEEE, dd/MM/yyyy/hh:mm:ss</string>
-    <string name="log_tag" translatable="false">OffsideLog</string>
     <string name="game_id_key" translatable="false">gameId</string>
     <string name="player_profile_picture_url_key" translatable="false">userProfilePictureUrl</string>
     <string name="recent_token_key" translatable="false">recentToken</string>
     <string name="private_game_id_key" translatable="false">privateGameId</string>
-    <string name="private_game_title_key" translatable="false">privateGameTitle</string>
-    <string name="home_team_key" translatable="false">homeTeam</string>
-    <string name="away_team_key" translatable="false">awayTeam</string>
     <string name="rewarded_video_ad_unit_id_key" translatable="false">ca-app-pub-3734756240615742/4334945313</string>
     <string name="key_group_type" translatable="false">groupType</string>
     <string name="key_private_group_name" translatable="false">PRIVATE_GROUP</string>
@@ -31,7 +27,6 @@
     <string name="lbl_you_didnt_earn_points">You did not earn coins</string>
     <string name="lbl_balance">Balance</string>
     <string name="lbl_wrong_answer_encourage_feedback">Maybe next time...</string>
-    <string name="lbl_select_name_for_club">Name your group</string>
     <string name="lbl_create_private_group">CREATE GROUP</string>
     <string name="lbl_type_message">Message group</string>
     <string name="lbl_how_others_answered">Players answers</string>
@@ -39,12 +34,6 @@
     <string name="lbl_question_time_expired_message">Time is up for this question</string>
     <string name="lbl_we_have_an_answer">We have an answer</string>
     <string name="lbl_in_few_seconds_you_will_see_others_answers">In few seconds you will see what other thought</string>
-    <string name="lbl_commands_leaders">Leaders</string>
-    <string name="lbl_command_current_question">Current question</string>
-    <string name="lbl_command_offside_coins">My balance</string>
-    <string name="lbl_command_reload">Get power items</string>
-    <string name="lbl_command_game_code">Game code</string>
-    <string name="lbl_command_share_code">Share code</string>
 
 
     <!--googles test aduinitid-->
@@ -53,11 +42,9 @@
     <string name="lbl_new_question_is_waiting_for_you">New question is waiting for you</string>
     <string name="lbl_click_to_answer">Click to answer</string>
     <string name="lbl_click_to_view">Click to see</string>
-    <string name="lbl_get_offside_coins">Get power item</string>
     <string name="lbl_watch_short_video">Watch Video</string>
     <string name="lbl_buy_offside_coins">Shop</string>
     <string name="lbl_loading_video">Loading video...</string>
-    <string name="lbl_leave_game">Exit game</string>
     <string name="lbl_start_slot">Click to roll</string>
     <string name="lbl_back_to_game">BACK TO GAME</string>
     <string name="lbl_well_done_you_earned_1_power_items">Congrats! You won 1 power item</string>
@@ -69,8 +56,6 @@
     <string name="lbl_is">correct answer</string>
     <string name="lbl_your_answer_was">Your answer</string>
     <string name="lbl_and_the_winner_is">And the winners are....</string>
-    <string name="lbl_exceed_allowed_reward_video_watch_message">You are not allowed to see more videos in this match</string>
-    <string name="lbl_failed_to_load_video">Failed to load video</string>
     <string name="lbl_seems_like_you_skipped_this_question">Seems like you skipped this question</string>
     <string name="lbl_you_are_out_of_coins">You do not have enough coins to play, you will get more coins at halftime</string>
     <string name="lbl_game_is_active">GAME IS ON</string>
@@ -100,13 +85,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="lbl_sign_out">Logout</string>
-    <string name="lbl_settings">SETTINGS</string>
     <string name="lbl_no_active_private_game">No active game</string>
     <string name="lbl_news">NEWS</string>
     <string name="lbl_your_position">POSITION:</string>
     <string name="lbl_create_private_group_hint">Give a cool name</string>
     <string name="lbl_delete_private_group">Delete Group</string>
-    <string name="lbl_error_user_profile_picture_not_saved">User Image was not saved</string>
     <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"https://www.sidekickgame.com\",\n  }\n}]</string>
     <string name="lbl_resume_game">RESUME</string>
     <string name="lbl_player_experience">My Level</string>
@@ -141,6 +124,5 @@
     <string name="lbl_join_private_game_with_code">Join game with code</string>
     <string name="lbl_you_are_about_to_quit_this_game">You are about to quit this game</string>
     <string name="lbl_are_you_sure">Are you sure?</string>
-    <string name="lbl_disconnected_connecting">Disconnected. Working on it...</string>
 
 </resources>

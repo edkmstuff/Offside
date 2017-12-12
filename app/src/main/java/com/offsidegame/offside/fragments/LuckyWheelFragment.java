@@ -1,23 +1,30 @@
 package com.offsidegame.offside.fragments;
 
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.bluehomestudio.luckywheel.LuckyWheel;
+import com.bluehomestudio.luckywheel.OnLuckyWheelReachTheTarget;
+import com.bluehomestudio.luckywheel.WheelItem;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.adapters.WheelImageAdapter;
 import com.offsidegame.offside.events.NavigationEvent;
-import com.offsidegame.offside.models.WheelImage;
+import com.offsidegame.offside.helpers.Formatter;
+import com.offsidegame.offside.models.MyWheelItem;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import github.hellocsl.cursorwheel.CursorWheelLayout;
 
@@ -26,15 +33,18 @@ public class LuckyWheelFragment extends Fragment {
 
 
     private CursorWheelLayout cursorWheelLayout;
-    private List<WheelImage> wheelImages;
+    private LuckyWheel luckyWheel;
+    private List<MyWheelItem> myWheelItems;
+    private Button rollWheelButton;
+    private int randomNumber;
 
 
 
 
 
     public static LuckyWheelFragment newInstance() {
-        LuckyWheelFragment settingsFragment = new LuckyWheelFragment();
-        return settingsFragment;
+        LuckyWheelFragment luckyWheelFragment = new LuckyWheelFragment();
+        return luckyWheelFragment;
     }
 
     public LuckyWheelFragment(){}
@@ -65,6 +75,8 @@ public class LuckyWheelFragment extends Fragment {
         {
             // Inflate the layout for this fragment
             View rootView = inflater.inflate(R.layout.fragment_lucky_wheel, container, false);
+
+            randomNumber=0;
             
             getIds(rootView);
             
@@ -84,17 +96,45 @@ public class LuckyWheelFragment extends Fragment {
 
     private void getIds(View rootView) {
 
-        cursorWheelLayout = rootView.findViewById(R.id.flw_cursor_wheel_layout);
+        //cursorWheelLayout = rootView.findViewById(R.id.flw_cursor_wheel_layout);
+        luckyWheel = rootView.findViewById(R.id.flw_bluehome_studio_lucky_wheel);
+        rollWheelButton = rootView.findViewById(R.id.flw_roll_wheel_button);
 
 
     }
 
     private void setEvents() {
 
-        cursorWheelLayout.setOnMenuSelectedListener(new CursorWheelLayout.OnMenuSelectedListener() {
+//        cursorWheelLayout.setOnMenuSelectedListener(new CursorWheelLayout.OnMenuSelectedListener() {
+//            @Override
+//            public void onItemSelected(CursorWheelLayout parent, View view, int pos) {
+//                Toast.makeText(getContext(), "Selected: "+ myWheelItems.get(pos).rewardValue, Toast.LENGTH_LONG).show();
+//
+//            }
+//        });
+
+        rollWheelButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(CursorWheelLayout parent, View view, int pos) {
-                Toast.makeText(getContext(), "Selected: "+ wheelImages.get(pos).rewardValue, Toast.LENGTH_LONG).show();
+            public void onClick(View view) {
+                randomNumber =getRandomNumber();
+                luckyWheel.rotateWheelTo(randomNumber);
+
+            }
+        });
+
+        luckyWheel.setLuckyWheelReachTheTarget(new OnLuckyWheelReachTheTarget() {
+
+            @Override
+            public void onReachTarget() {
+                int rewardValue=0;
+                MyWheelItem selectedWheelItem = myWheelItems.get(randomNumber);
+                if(selectedWheelItem==null){
+                    Toast.makeText(getContext(),String.format("Problem %d",randomNumber),Toast.LENGTH_LONG).show();
+                }
+
+                rewardValue = selectedWheelItem.rewardValue;
+
+                Toast.makeText(getContext(),String.format("you earned %d",rewardValue),Toast.LENGTH_LONG).show();
 
             }
         });
@@ -103,17 +143,51 @@ public class LuckyWheelFragment extends Fragment {
     }
 
     private void loadWheelContent() {
-        wheelImages = new ArrayList<>();
-        wheelImages.add(new WheelImage(R.drawable.ic_coins_heap,100));
-        wheelImages.add(new WheelImage(R.drawable.ic_coins_heap,50));
-        wheelImages.add(new WheelImage(R.drawable.ic_coins_heap,10));
-        wheelImages.add(new WheelImage(R.drawable.ic_coins_heap,0));
-        wheelImages.add(new WheelImage(R.mipmap.ic_soccer_ball,2));
-        wheelImages.add(new WheelImage(R.mipmap.ic_soccer_ball,4));
-        wheelImages.add(new WheelImage(R.mipmap.ic_soccer_ball,8));
+//        myWheelItems = new ArrayList<>();
+//        myWheelItems.add(new MyWheelItem(R.drawable.ic_coins_heap,100));
+//        myWheelItems.add(new MyWheelItem(R.drawable.ic_coins_heap,50));
+//        myWheelItems.add(new MyWheelItem(R.drawable.ic_coins_heap,10));
+//        myWheelItems.add(new MyWheelItem(R.drawable.ic_coins_heap,0));
+//        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,2));
+//        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,4));
+//        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,8));
 
-        WheelImageAdapter wheelImageAdapter = new WheelImageAdapter(getContext(),wheelImages);
-        cursorWheelLayout.setAdapter(wheelImageAdapter);
+//        WheelImageAdapter wheelImageAdapter = new WheelImageAdapter(getContext(), myWheelItems);
+//        cursorWheelLayout.setAdapter(wheelImageAdapter);
+
+        myWheelItems = new ArrayList<>();
+        String wheelSliceBackgroundColorEven = Formatter.colorNumberToHexaValue(getContext(),R.color.wheelBackgroundColorEven);
+        String wheelSliceBackgroundColorOdd = Formatter.colorNumberToHexaValue(getContext(),R.color.wheelBackgroundColorOdd);
+
+        myWheelItems.add(new MyWheelItem(R.mipmap.ic_coin,10,Color.parseColor(wheelSliceBackgroundColorEven), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_coin)));
+        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,1,Color.parseColor(wheelSliceBackgroundColorOdd), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_soccer_ball)));
+        myWheelItems.add(new MyWheelItem(R.mipmap.ic_coin,50,Color.parseColor(wheelSliceBackgroundColorEven), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_coin)));
+        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,2,Color.parseColor(wheelSliceBackgroundColorOdd), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_soccer_ball)));
+        myWheelItems.add(new MyWheelItem(R.mipmap.ic_coin,100,Color.parseColor(wheelSliceBackgroundColorEven), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_coin)));
+        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,4,Color.parseColor(wheelSliceBackgroundColorOdd), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_soccer_ball)));
+        myWheelItems.add(new MyWheelItem(R.mipmap.ic_coin,200,Color.parseColor(wheelSliceBackgroundColorEven), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_coin)));
+        myWheelItems.add(new MyWheelItem(R.mipmap.ic_soccer_ball,8,Color.parseColor(wheelSliceBackgroundColorOdd), BitmapFactory.decodeResource(getResources(), R.mipmap.ic_soccer_ball)));
+
+        List<WheelItem> wheelItems = new ArrayList<>();
+
+        for(MyWheelItem myWheelItem : myWheelItems){
+            wheelItems.add(myWheelItem.wheelItem);
+        }
+
+        luckyWheel.addWheelItems(wheelItems);
+
+    }
+
+
+    public int getRandomNumber(){
+
+        int randomNumber = 0;
+        Random r = new Random();
+        int Low = 0;
+        int High = myWheelItems.size()-1;
+        randomNumber = r.nextInt(High-Low) + Low;
+
+        return randomNumber;
 
     }
 
