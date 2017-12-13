@@ -436,7 +436,7 @@ public class OffsideApplication extends Application {
 
     //signal r
     public static NetworkingService networkingService;
-    public static boolean isBoundToNetworkingService = false;
+    //public static boolean isBoundToNetworkingService = false;
     public final ServiceConnection signalRServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
@@ -444,14 +444,14 @@ public class OffsideApplication extends Application {
 
             NetworkingService.LocalBinder binder = (NetworkingService.LocalBinder) service;
             networkingService = binder.getService();
-            isBoundToNetworkingService = true;
+            //isBoundToNetworkingService = true;
             EventBus.getDefault().post(new NetworkingServiceBoundEvent(getApplicationContext()));
 
         }
 
         @Override
         public void onServiceDisconnected(ComponentName className) {
-            isBoundToNetworkingService = false;
+            //isBoundToNetworkingService = false;
         }
 
 

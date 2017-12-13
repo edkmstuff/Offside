@@ -193,14 +193,14 @@ public class SlotActivity extends AppCompatActivity {
                 goBackToChatButton.setVisibility(View.VISIBLE);
                 isStarted = false;
 
-                if(OffsideApplication.isBoundToNetworkingService && command != null)
-                {
+                //if(OffsideApplication.isBoundToNetworkingService && command != null)
+                //{
                     String gameId = OffsideApplication.getGameInfo().getGameId();
                     String gameCode = OffsideApplication.getGameInfo().getPrivateGameId();
                     FirebaseUser player = FirebaseAuth.getInstance().getCurrentUser();
                     String playerId = player.getUid();
                     OffsideApplication.networkingService.requestSendChatMessage(playerId, gameId, gameCode, command );
-                }
+                //}
 
             }
         }, frameDuration * 2);

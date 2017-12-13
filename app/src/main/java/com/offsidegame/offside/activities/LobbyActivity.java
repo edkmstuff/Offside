@@ -174,8 +174,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     Fragment luckyWheelFragment;
 
 
-
-
     //</editor-fold>
 
 
@@ -459,18 +457,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             Context eventContext = networkingServiceBoundEvent.getContext();
             if (eventContext == context) {
+                PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
 
-                if (OffsideApplication.isBoundToNetworkingService) {
-                    PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
-
-                    if (playerAssets == null) {
-                        OffsideApplication.networkingService.requestPlayerAssets(playerId);
-
-                    } else
-                        onReceivePlayerAssets(playerAssets);
+                if (playerAssets == null) {
+                    OffsideApplication.networkingService.requestPlayerAssets(playerId);
 
                 } else
-                    throw new RuntimeException(activityName + " - onNetworkingServiceBinding - Error: SignalRIsNotBound");
+                    onReceivePlayerAssets(playerAssets);
             }
 
         } catch (Exception ex) {
@@ -697,7 +690,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             PrivateGroup updatedPrivateGroup = privateGroupChangedEvent.getPrivateGroup();
 
             PrivateGroupsInfo privateGroupsInfo = OffsideApplication.getPrivateGroupsInfo();
-            if(privateGroupsInfo!=null)
+            if (privateGroupsInfo != null)
                 OffsideApplication.getPrivateGroupsInfo().replace(updatedPrivateGroup);
 
 
@@ -1387,12 +1380,12 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             //update playerName in playerAseets
             PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
-            if(playerAssets!=null)
+            if (playerAssets != null)
                 playerAssets.setPlayerName(updatedPlayer.getUserName());
 
             //update player in gameInfo , in case there is gameInfo
             GameInfo gameInfo = OffsideApplication.getGameInfo();
-            if(gameInfo!=null) {
+            if (gameInfo != null) {
                 PlayerModel currentPlayer = gameInfo.getPlayer();
                 if (currentPlayer != null)
                     currentPlayer.setUserName(updatedPlayer.getUserName());

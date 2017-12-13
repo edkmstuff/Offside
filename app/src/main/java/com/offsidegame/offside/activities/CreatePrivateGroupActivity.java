@@ -130,10 +130,10 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
                         groupName = groupName.length() > 20 ? groupName.substring(0, 20) : groupName;
 
                         String groupType = getResources().getString(R.string.key_private_group_name);
-                        if (OffsideApplication.isBoundToNetworkingService)
+                        //if (OffsideApplication.isBoundToNetworkingService)
                             OffsideApplication.networkingService.requestCreatePrivateGroup(playerId, groupName, groupType);
-                        else
-                            throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
+                        //else
+                          //  throw new RuntimeException(activityName + " - generatePrivateGameCodeButtonTextView - onClick - Error: SignalRIsNotBound");
 
                         createPrivateGroupRoot.setVisibility(View.GONE);
                         String message = String.format("Creating %s...", groupName);
@@ -225,10 +225,10 @@ public class CreatePrivateGroupActivity extends AppCompatActivity {
 //                if (OffsideApplication.isPlayerQuitGame()) {
 //                    return;
 //                }
-                if (OffsideApplication.isBoundToNetworkingService) {
+                //if (OffsideApplication.isBoundToNetworkingService) {
                     EventBus.getDefault().post(new LoadingEvent(false, null));
-                } else
-                    throw new RuntimeException(activityName + " - onNetworkingServiceBinding - Error: SignalRIsNotBound");
+                //} else
+                  //  throw new RuntimeException(activityName + " - onNetworkingServiceBinding - Error: SignalRIsNotBound");
             }
 
         } catch (Exception ex) {
