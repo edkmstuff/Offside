@@ -36,19 +36,34 @@
                 android:layout_height="60dp"
                 android:scaleType="centerCrop"
                 android:src="@mipmap/ic_soccer_ball" />
-
-            <TextView
-                android:id="@+id/vp_player_name_text_view"
+            <LinearLayout
+                android:id="@+id/vp_player_name_root"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="5dp"
-                android:text="דני רובסט"
-                android:textColor="@color/grayText"
-                android:textSize="@dimen/OffsideMediumText"
-                android:fontFamily="@font/font_open_sans_hebrew_bold"/>
+                android:orientation="horizontal"
+                android:gravity="center">
+                <TextView
+                    android:id="@+id/vp_player_name_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="5dp"
+                    android:text="Eran dagan"
+                    android:textColor="@color/grayText"
+                    android:textSize="@dimen/OffsideMediumText"
+                    android:fontFamily="@font/font_open_sans_hebrew_bold"
+                    android:layout_gravity="center_vertical"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_pencil"
+                    android:scaleType="centerCrop"/>
+
+            </LinearLayout>
+
+
 
             <TextView
                 android:id="@+id/vp_player_experience_level_text_view"

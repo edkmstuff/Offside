@@ -2,16 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.offsidegame.offside.fragments.ShopFragment"
-    xmlns:LuckyWheel="http://schemas.android.com/apk/res-auto"
     android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_gravity="center"
         android:orientation="vertical">
 
         <TextView
@@ -21,47 +18,6 @@
             style="@style/titleText"
             android:gravity="center"
             />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            >
-
-            <github.hellocsl.cursorwheel.CursorWheelLayout
-                android:id="@+id/flw_cursor_wheel_layout"
-                android:layout_width="280dip"
-                android:layout_height="280dip"
-                android:layout_gravity="center_vertical|right|bottom"
-                app:wheelBackgroundColor="@color/colorAccent_Translucent"
-                app:wheelCursorColor="@color/red"
-                app:wheelCursorHeight="20dip"
-                app:wheelSelectedAngle="270"
-                app:wheelFlingValue="460"
-                >
-
-                <TextView
-                    android:id="@id/id_wheel_menu_center_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    />
-
-
-            </github.hellocsl.cursorwheel.CursorWheelLayout>
-
-        </LinearLayout>
-
-        <com.bluehomestudio.luckywheel.LuckyWheel
-            android:id="@+id/flw_bluehome_studio_lucky_wheel"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
-            android:layout_marginTop="30dp"
-            android:layout_centerInParent="true"
-
-            LuckyWheel:arrow_image="@drawable/ic_soccer_goal"/>
 
         <Button
             android:id="@+id/flw_roll_wheel_button"
@@ -77,6 +33,29 @@
 
 
             />
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/pointer"
+                />
+            <ImageView
+                android:id="@+id/flw_wheel_image_view"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:scaleType="centerInside"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/wheel_empty"
+                android:rotation="45"/>
+        </RelativeLayout>
 
 
     </LinearLayout>

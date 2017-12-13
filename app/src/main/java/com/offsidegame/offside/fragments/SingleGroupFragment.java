@@ -63,6 +63,7 @@ public class SingleGroupFragment extends Fragment {
     private LinearLayout singleGroupGamesRoot;
     private LinearLayout singleGroupLeagueRoot;
     private LinearLayout singleGroupTabsRoot;
+    private LinearLayout goupNavigationGroupNameRoot;
     private TextView singleGroupPositionOutOfTextView;
     private ListView singleGroupLeagueListView;
     private TextView groupNavigationGroupNameTextView;
@@ -143,13 +144,14 @@ public class SingleGroupFragment extends Fragment {
         viewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), getActivity(), viewPager, tabLayout);
         viewPager.setAdapter(viewPagerAdapter);
 
-        singlePrivateGroupRoot = (LinearLayout) view.findViewById(R.id.fsg_single_group_root);
+        singlePrivateGroupRoot =  view.findViewById(R.id.fsg_single_group_root);
+        goupNavigationGroupNameRoot = view.findViewById(R.id.fsg_group_navigation_group_name_root);
         singleGroupTabsRoot = view.findViewById(R.id.fsg_single_group_tabs_root);
 
-        singleGroupGamesTabRoot = (LinearLayout) view.findViewById(R.id.fsg_single_group_games_tab_root);
-        singleGroupLeagueTabRoot = (LinearLayout) view.findViewById(R.id.fsg_single_group_league_tab_root);
-        singleGroupGamesRoot = (LinearLayout) view.findViewById(R.id.fsg_single_group_games_root);
-        singleGroupLeagueRoot = (LinearLayout) view.findViewById(R.id.fsg_single_group_league_root);
+        singleGroupGamesTabRoot =  view.findViewById(R.id.fsg_single_group_games_tab_root);
+        singleGroupLeagueTabRoot =  view.findViewById(R.id.fsg_single_group_league_tab_root);
+        singleGroupGamesRoot =  view.findViewById(R.id.fsg_single_group_games_root);
+        singleGroupLeagueRoot =  view.findViewById(R.id.fsg_single_group_league_root);
         singleGroupPositionOutOfTextView = (TextView) view.findViewById(R.id.fsg_single_group_position_out_of_text_view);
         singleGroupLeagueListView = (ListView) view.findViewById(R.id.fsg_single_group_league_list_view);
         groupNavigationGroupNameTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_group_name_text_view);
@@ -231,37 +233,6 @@ public class SingleGroupFragment extends Fragment {
             }
         });
 
-//        singleGroupChangePrivateGroupNameRoot.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //Todo: open dialogue for group name change
-//            }
-//        });
-
-//        singleGroupChangeGroupNameEditText.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                if(s.toString().trim().length()>0){
-//                    singleGroupChangeGroupNameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.ic_clear, 0);
-//                }
-//                else{
-//                    singleGroupChangeGroupNameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-//                }
-//            }
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//                singleGroupChangeGroupNameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.ic_clear, 0);
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//                singleGroupChangeGroupNameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.mipmap.ic_clear, 0);
-//            }
-//        });
-//
         singleGroupDeletePrivateGroupButtonRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -271,12 +242,12 @@ public class SingleGroupFragment extends Fragment {
             }
         });
 
-        groupNavigationGroupNameTextView.setOnClickListener(new View.OnClickListener() {
+        goupNavigationGroupNameRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                String dialogTitle = "Change name of this Group";
-                String dialogInstructions = "Pick a new name";
+                String dialogTitle = getString(R.string.lbl_change_name_of_this_group);
+                String dialogInstructions = getString(R.string.lbl_pick_new_name);
                 String groupCurrentName = groupNavigationGroupNameTextView.getText().toString();
                 EventBus.getDefault().post(new EditValueEvent(dialogTitle,dialogInstructions,groupCurrentName,EditValueEvent.updateGroupName));
             }

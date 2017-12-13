@@ -78,8 +78,7 @@ public class PlayerFragment extends Fragment {
     private LinearLayout podiumRoot;
     private LinearLayout[] winnersPodiumRoots = new LinearLayout[3];
 
-    //private TextView powerItemsTextView;
-    //private TextView balanceTextView;
+    private LinearLayout playerNameRoot;
     private TextView playerNameTextView;
     private TextView playerExperienceLevelTextView;
 
@@ -201,8 +200,7 @@ public class PlayerFragment extends Fragment {
         playerRecordsDetailsRoot = (LinearLayout) view.findViewById(R.id.vp_player_records_details_root);
         podiumRoot = (LinearLayout) view.findViewById(R.id.vp_latest_game_podium_root);
 
-        //powerItemsTextView = (TextView) view.findViewById(R.id.vp_power_items_text_view);
-        //balanceTextView = (TextView) view.findViewById(R.id.vp_balance_text_view);
+        playerNameRoot = view.findViewById(R.id.vp_player_name_root);
         playerNameTextView = (TextView) view.findViewById(R.id.vp_player_name_text_view);
         playerExperienceLevelTextView = (TextView) view.findViewById(R.id.vp_player_experience_level_text_view);
 
@@ -319,11 +317,11 @@ public class PlayerFragment extends Fragment {
             }
         });
 
-        playerNameTextView.setOnClickListener(new View.OnClickListener() {
+        playerNameRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String dialogTitle = "Set player nickname";
-                String dialogInstructions = "Pick your stage name";
+                String dialogTitle = getString(R.string.lbl_set_player_nickname);
+                String dialogInstructions = getString(R.string.lbl_pick_you_nickname);
                 String groupCurrentName = playerNameTextView.getText().toString();
                 EventBus.getDefault().post(new EditValueEvent(dialogTitle,dialogInstructions,groupCurrentName,EditValueEvent.updatePlayerName));
             }

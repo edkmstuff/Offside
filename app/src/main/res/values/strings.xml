@@ -124,5 +124,9 @@
     <string name="lbl_join_private_game_with_code">Join game with code</string>
     <string name="lbl_you_are_about_to_quit_this_game">You are about to quit this game</string>
     <string name="lbl_are_you_sure">Are you sure?</string>
+    <string name="lbl_change_name_of_this_group">Change group name</string>
+    <string name="lbl_pick_new_name">Pick a new name</string>
+    <string name="lbl_set_player_nickname">Change player nickname</string>
+    <string name="lbl_pick_you_nickname">Pick your stage name</string>
 
 </resources>
