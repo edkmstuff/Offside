@@ -635,7 +635,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             String chatMessageType = viewHolder.chatMessage.getMessageType();
 
             //bind Question object to the ui elements
-            final Gson gson = new GsonBuilder().create();
+            final Gson gson = new GsonBuilder().serializeNulls().create();
             viewHolder.question = gson.fromJson(viewHolder.chatMessage.getMessageText(), Question.class);
             final String questionId = viewHolder.question.getId();
 

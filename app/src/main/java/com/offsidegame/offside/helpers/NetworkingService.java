@@ -322,7 +322,7 @@ public class NetworkingService extends Service {
                         @Override
                         public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                             String json = new String(body, "UTF-8");
-                            final Gson gson = new GsonBuilder().create();
+                            final Gson gson = new GsonBuilder().serializeNulls().create();
                             KeyValue wrapper = gson.fromJson(json, KeyValue.class);
                             onServerMessage(wrapper.getKey(), wrapper.getValue());
                         }
@@ -398,7 +398,7 @@ public class NetworkingService extends Service {
     public void onServerMessage(String message, String model) {
         try
         {
-            final Gson gson = new GsonBuilder().create();
+            final Gson gson = new GsonBuilder().serializeNulls().create();
 
             if (message.equals("ChatMessagesReceived")) {
                 Chat chat = gson.fromJson(model, Chat.class);
@@ -540,7 +540,7 @@ public class NetworkingService extends Service {
 
                 int soundResource = R.raw.human_whisle;
                 if (isCloseQuestion) {
-                    final Gson gson = new GsonBuilder().create();
+                    final Gson gson = new GsonBuilder().serializeNulls().create();
                     Question question = gson.fromJson(message, Question.class);
                     if (OffsideApplication.playerAnswers.containsKey(question.getId()) && OffsideApplication.playerAnswers.get(question.getId()).getAnswerId().equals(question.getCorrectAnswerId())) {
                         soundResource = ((int) (Math.random() * 100)) % 2 == 0 ? R.raw.bravo : R.raw.hooray;
@@ -651,7 +651,7 @@ public class NetworkingService extends Service {
         params.put("gameId", gameId);
         params.put("privateGameId", privateGameId);
         params.put("androidDeviceId", androidDeviceId);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -665,7 +665,7 @@ public class NetworkingService extends Service {
         params.put("playerId", playerId);
         params.put("gameId", gameId);
         params.put("privateGameId", privateGameId);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -680,7 +680,7 @@ public class NetworkingService extends Service {
         params.put("gameId", gameId);
         params.put("groupId", groupId);
         params.put("selectedLanguage", selectedLanguage);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -698,7 +698,7 @@ public class NetworkingService extends Service {
         params.put("answerId", answerId);
         params.put("isSkipped", Boolean.toString(isSkipped));
         params.put("betSize", Integer.toString(betSize));
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -710,7 +710,7 @@ public class NetworkingService extends Service {
 //        params.put("method", method);
 //        params.put("playerId", playerId);
 //        params.put("gameId", gameId);
-//        Gson gson = new GsonBuilder().create();
+//        Gson gson = new GsonBuilder().serializeNulls().create();
 //        String json = gson.toJson(params);
 //        sendToServer(json, method);
 //    }
@@ -726,7 +726,7 @@ public class NetworkingService extends Service {
         params.put("gameId", gameId);
         params.put("privateGameId", privateGameId);
         params.put("androidDeviceId", androidDeviceId);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -741,7 +741,7 @@ public class NetworkingService extends Service {
         params.put("gameId", gameId);
         params.put("privateGameId", privateGameId);
         params.put("message", message);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -757,7 +757,7 @@ public class NetworkingService extends Service {
         params.put("email", email);
         params.put("imageUrl", imageUrl);
         params.put("playerColor", playerColor);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
 
@@ -771,7 +771,7 @@ public class NetworkingService extends Service {
         params.put("method", method);
         params.put("playerId", playerId);
         params.put("imageString", imageString);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -783,7 +783,7 @@ public class NetworkingService extends Service {
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
         params.put("playerId", playerId);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -796,7 +796,7 @@ public class NetworkingService extends Service {
         params.put("method", method);
         params.put("playerId", playerId);
         params.put("groupId", groupId);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -810,7 +810,7 @@ public class NetworkingService extends Service {
         params.put("playerId", playerId);
         params.put("groupName", groupName);
         params.put("groupType", groupType);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -826,7 +826,7 @@ public class NetworkingService extends Service {
         params.put("groupId", groupId);
         params.put("privateGameId", privateGameId);
         params.put("androidDeviceId", androidDeviceId);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -838,7 +838,7 @@ public class NetworkingService extends Service {
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
         params.put("playerId", playerId);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -851,7 +851,7 @@ public class NetworkingService extends Service {
         params.put("method", method);
         params.put("playerId", playerId);
         params.put("groupId", groupId);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -863,7 +863,7 @@ public class NetworkingService extends Service {
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
         params.put("playerId", playerId);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -878,7 +878,7 @@ public class NetworkingService extends Service {
         params.put("groupId", groupId);
         params.put("gameId", gameId);
         params.put("privateGameId", privateGameId);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -891,7 +891,7 @@ public class NetworkingService extends Service {
         params.put("method", method);
         params.put("playerId", playerId);
         params.put("groupId", groupId);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -904,7 +904,7 @@ public class NetworkingService extends Service {
         params.put("method", method);
         params.put("playerId", playerId);
         params.put("groupId", groupId);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -917,7 +917,7 @@ public class NetworkingService extends Service {
         params.put("method", method);
         params.put("playerId", playerId);
         params.put("groupId", groupId);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -932,7 +932,7 @@ public class NetworkingService extends Service {
         params.put("rewardType", rewardType);
         params.put("rewardReason", rewardReason);
         params.put("quantity", Integer.toString(quantity));
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -945,7 +945,7 @@ public class NetworkingService extends Service {
         params.put("method", method);
         params.put("playerId", playerId);
         params.put("code", privateGameCode);
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -960,7 +960,7 @@ public class NetworkingService extends Service {
         params.put("groupId", groupId);
         params.put("groupName", groupName);
 
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
@@ -974,7 +974,7 @@ public class NetworkingService extends Service {
         params.put("playerId", playerId);
         params.put("playerName", playerName);
 
-        Gson gson = new GsonBuilder().create();
+        Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
