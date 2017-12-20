@@ -322,8 +322,8 @@ public class PlayerFragment extends Fragment {
             public void onClick(View view) {
                 String dialogTitle = getString(R.string.lbl_set_player_nickname);
                 String dialogInstructions = getString(R.string.lbl_pick_you_nickname);
-                String groupCurrentName = playerNameTextView.getText().toString();
-                EventBus.getDefault().post(new EditValueEvent(dialogTitle,dialogInstructions,groupCurrentName,EditValueEvent.updatePlayerName));
+                String playerCurrentName = playerNameTextView.getText().toString();
+                EventBus.getDefault().post(new EditValueEvent(dialogTitle,dialogInstructions,playerCurrentName,EditValueEvent.updatePlayerName));
             }
         });
 

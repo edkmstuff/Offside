@@ -1,5 +1,6 @@
 package com.offsidegame.offside.activities;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,35 +9,52 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.ErrorCodes;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.ResultCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.CompletedHttpRequestEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
+import com.offsidegame.offside.events.EditValueEvent;
+import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
+import com.offsidegame.offside.events.PlayerModelEvent;
+import com.offsidegame.offside.events.PlayerSettingsChangedEvent;
 import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.HttpHelper;
 import com.offsidegame.offside.helpers.ImageHelper;
+import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
+import com.offsidegame.offside.models.PlayerModel;
+import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.User;
 
 import org.acra.ACRA;
@@ -70,6 +88,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private boolean isInLoginProcess = false;
     private FirebaseAnalytics analytics;
     private String TAG = "SIDEKICK";
+    //edit value dialog
+    private Dialog editValueDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -319,35 +339,46 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                 latch.await();
 
             }
-            String playerName = null;
-            if(OffsideApplication.getPlayerAssets()!=null && OffsideApplication.getPlayerAssets().getPlayerName()!=null)
-                playerName =OffsideApplication.getPlayerAssets().getPlayerName();
 
-            String firebaseDisplayName = (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) ? "NO NAME" : firebaseUser.getDisplayName();
+            if (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) {
+                String dialogTitle = getString(R.string.lbl_set_player_nickname);
+                String dialogInstructions = getString(R.string.lbl_pick_you_nickname);
+                EventBus.getDefault().post(new EditValueEvent(dialogTitle, dialogInstructions, null, EditValueEvent.updatePlayerName));
 
-            playerDisplayName = playerName == null ? firebaseDisplayName : playerName;
+            } else {
+                playerDisplayName = firebaseUser.getDisplayName();
+                playerEmail = firebaseUser.getEmail();
 
-            playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
-            playerEmail = firebaseUser.getEmail();
+                handleUserImage();
 
-            if (playerProfilePictureUrl == null) {
-                playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
             }
-
-        try {HttpHelper httpHelper = new HttpHelper(playerProfilePictureUrl);
-        httpHelper.execute();}
-        catch(Exception ex){
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
+    }
+
+    public void handleUserImage(){
+
+        playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
+
+        if (playerProfilePictureUrl == null) {
+            playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
+        }
+
+        try {
+            HttpHelper httpHelper = new HttpHelper(playerProfilePictureUrl);
+            httpHelper.execute();
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
 
     }
+
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onImageValidationCompleted(CompletedHttpRequestEvent completedHttpRequestEvent) {
@@ -369,6 +400,21 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
                 playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
                 OffsideApplication.networkingService.requestSaveImageInDatabase(playerId, imageString);
+
+                //update user image in firebase
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setPhotoUri(Uri.parse(playerProfilePictureUrl))
+                        .build();
+
+                firebaseUser.updateProfile(profileUpdates)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "User profile image updated.");
+                                }
+                            }
+                        });
 
 
             } else {
@@ -539,17 +585,17 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlayerJoinedPrivateGroup(PlayerJoinPrivateGroupEvent playerJoinPrivateGroupEvent) {
-        try
-        {
+        try {
             if (!OffsideApplication.isLobbyActivityVisible())
                 startLobbyActivity();
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
     }
+
 
     public void startLobbyActivity() {
 
@@ -559,5 +605,147 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         startActivity(intent);
+    }
+
+    //update player name in case of empty- phone login
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEditValueReceived(EditValueEvent editValueEvent) {
+
+        try {
+            //onLoadingEventReceived(new LoadingEvent(false, null));
+            if (editValueEvent == null)
+                return;
+
+            String dialogTitle = editValueEvent.getDialogTitle();
+            String dialogInstructions = editValueEvent.getDialogInstructions();
+            String currentValue = editValueEvent.getCurrentValue();
+            final String key = editValueEvent.getKey();
+
+            editValueDialog = new Dialog(context);
+            editValueDialog.setContentView(R.layout.dialog_edit_value);
+
+            TextView titleTextView = editValueDialog.findViewById(R.id.dev_title_text_view);
+            titleTextView.setText(dialogTitle);
+            TextView instructionsTextView = editValueDialog.findViewById(R.id.dev_instructions_text_view);
+            instructionsTextView.setText(dialogInstructions);
+            final EditText newValueEditText = editValueDialog.findViewById(R.id.dev_new_value_edit_text);
+            newValueEditText.setText(currentValue);
+            final Button submitButton = editValueDialog.findViewById(R.id.dev_submit_button);
+
+            newValueEditText.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    if (s.toString().trim().length() == 0) {
+                        submitButton.setEnabled(false);
+                    } else {
+                        submitButton.setEnabled(true);
+                    }
+
+                }
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count,
+                                              int after) {
+                    if (s.toString().trim().length() == 0) {
+                        submitButton.setEnabled(false);
+                    } else {
+                        submitButton.setEnabled(true);
+                    }
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    if (s.toString().trim().length() == 0) {
+                        submitButton.setEnabled(false);
+                    } else {
+                        submitButton.setEnabled(true);
+                    }
+
+                }
+            });
+
+
+            submitButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String newValue = newValueEditText.getText().toString();
+                    if (key == EditValueEvent.updatePlayerName) {
+
+                        if (playerId == null)
+                            return;
+                        OffsideApplication.networkingService.RequestUpdatePlayerName(playerId, newValue);
+
+                    }
+
+                }
+            });
+
+            adjustDialogWidthToWindow(editValueDialog);
+            editValueDialog.show();
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlayerModelReceived(PlayerModelEvent playerModelEvent) {
+        try {
+            EventBus.getDefault().post(new LoadingEvent(false, null));
+            PlayerModel updatedPlayer = playerModelEvent.getPlayerModel();
+            if (updatedPlayer == null)
+                return;
+
+            editValueDialog.cancel();
+
+
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(updatedPlayer.getUserName())
+                    .build();
+
+            firebaseUser.updateProfile(profileUpdates)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "User profile updated.");
+                            }
+                        }
+                    });
+
+            handleUserImage();
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+    public void adjustDialogWidthToWindow(Dialog dialog) {
+
+        try {
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            Window window = dialog.getWindow();
+            lp.copyFrom(window.getAttributes());
+            //This makes the dialog take up the full width
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(lp);
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
     }
 }

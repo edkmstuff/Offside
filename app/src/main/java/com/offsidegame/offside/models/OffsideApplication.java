@@ -93,9 +93,19 @@ public class OffsideApplication extends Application {
 //    private static String defaultProfilePictureUrl = "http://offside.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK";
 //    private static String defaultPictureUrlHazavitFeed = "http://offside.azurewebsites.net/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT";
 
-    private static String initialsProfilePictureUrl = String.format("http://%s/api/Offside/GetProfilePicture/",BuildConfig.GAME_SERVER_HOSTNAME_STRING);
-    private static String defaultProfilePictureUrl = String.format("http://%s/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK",BuildConfig.GAME_SERVER_HOSTNAME_STRING);
-    private static String defaultPictureUrlHazavitFeed = String.format("http://%s/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT",BuildConfig.GAME_SERVER_HOSTNAME_STRING);
+    private static String initialsProfilePictureUrl = String.format("http://%s/api/Offside/GetProfilePicture/",adjustedHostNameToEnvironment());
+    private static String defaultProfilePictureUrl = String.format("http://%s/api/Offside/GetProfilePicture/DEFAULT_SIDEKICK",adjustedHostNameToEnvironment());
+    private static String defaultPictureUrlHazavitFeed = String.format("http://%s/api/Offside/GetProfilePicture/DEFAULT_FEED_HAZAVIT",adjustedHostNameToEnvironment());
+
+    private static String adjustedHostNameToEnvironment(){
+        if(BuildConfig.GAME_SERVER_HOSTNAME_STRING.equals("10.0.0.17") ||
+                BuildConfig.GAME_SERVER_HOSTNAME_STRING.equals("10.0.2.2") ||
+        BuildConfig.GAME_SERVER_HOSTNAME_STRING.equals("192.168.1.140"))
+            return BuildConfig.GAME_SERVER_HOSTNAME_STRING+":8080";
+        else
+            return BuildConfig.GAME_SERVER_HOSTNAME_STRING;
+
+    }
 
     private static String appLogoPictureUrl = "http://www.sidekickgame.com/img/logo.png";
 
