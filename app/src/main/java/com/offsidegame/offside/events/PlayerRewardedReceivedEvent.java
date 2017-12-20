@@ -1,22 +1,23 @@
 package com.offsidegame.offside.events;
 
+import com.offsidegame.offside.models.RewardedPlayer;
+
 /**
  * Created by user on 9/13/2017.
  */
 
 public class PlayerRewardedReceivedEvent {
+    private RewardedPlayer rewardedPlayer;
 
-    private int rewardValue;
-
-    public PlayerRewardedReceivedEvent(int rewardValue) {
-        this.rewardValue = rewardValue;
+    public PlayerRewardedReceivedEvent(RewardedPlayer rewardedPlayer) {
+        this.rewardedPlayer = rewardedPlayer;
     }
 
-    public int getRewardValue() {
-        return rewardValue;
+    public RewardedPlayer getRewardedPlayer() {
+        return rewardedPlayer;
     }
 
-    public void setRewardValue(int rewardValue) {
-        this.rewardValue = rewardValue;
+    public void setRewardedPlayer(RewardedPlayer rewardedPlayer) {
+        this.rewardedPlayer = rewardedPlayer;
     }
 }

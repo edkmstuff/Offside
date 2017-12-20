@@ -36,7 +36,7 @@
             android:layoutDirection="rtl">
 
             <ImageView
-                android:id="@+id/dr_coin_image_view"
+                android:id="@+id/dr_reward_image_view"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:src="@drawable/ic_coins_heap"

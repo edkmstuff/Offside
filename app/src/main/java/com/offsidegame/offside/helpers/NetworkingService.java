@@ -57,6 +57,7 @@ import com.offsidegame.offside.models.PrivateGameInfo;
 import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupsInfo;
 import com.offsidegame.offside.models.Question;
+import com.offsidegame.offside.models.RewardedPlayer;
 import com.offsidegame.offside.models.Scoreboard;
 import com.offsidegame.offside.models.UserProfileInfo;
 import com.rabbitmq.client.AMQP;
@@ -69,11 +70,13 @@ import com.rabbitmq.client.RecoverableConnection;
 import com.rabbitmq.client.RecoveryListener;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
+import com.rabbitmq.client.SocketConfigurator;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -198,6 +201,7 @@ public class NetworkingService extends Service {
                     factory.setAutomaticRecoveryEnabled(true);
                     factory.setRequestedHeartbeat(10);
                     factory.setConnectionTimeout(10000);
+
                     connection = (RecoverableConnection) factory.newConnection();
                     channel = connection.createChannel();
 
@@ -496,10 +500,9 @@ public class NetworkingService extends Service {
                 currentStates.put("friendInviteReceived" , true);
                 EventBus.getDefault().post(new FriendInviteReceivedEvent(friendInviteCode));
             } else if (message.equals("PlayerRewardedReceived")) {
-                KeyValue rewardValueKeyValue = gson.fromJson(model, KeyValue.class);
-                Integer rewardValue = Integer.parseInt(rewardValueKeyValue.getValue());
+                RewardedPlayer rewardPlayer = gson.fromJson(model, RewardedPlayer.class);
                 currentStates.put("playerRewardSaved" , true);
-                EventBus.getDefault().post(new PlayerRewardedReceivedEvent(rewardValue));
+                EventBus.getDefault().post(new PlayerRewardedReceivedEvent(rewardPlayer));
             } else if (message.equals("PlayerQuitPrivateGameReceived")) {
                 KeyValue playerWasRemovedFromPrivateGameKeyValue = gson.fromJson(model, KeyValue.class);
                 boolean playerWasRemovedFromPrivateGame = Boolean.parseBoolean(playerWasRemovedFromPrivateGameKeyValue.getValue());

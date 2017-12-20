@@ -103,6 +103,7 @@
     <string name="lbl_playe_or_game_not_found">לא נמצא משחק פעיל</string>
     <string name="lbl_collect">מתאים לי</string>
     <string name="lbl_missing_coins_dialog_title">עוד מטבעות?</string>
+    <string name="lbl_missing_power_items_dialog_title">עוד כדורים?</string>
     <string name="lbl_you_can_get">דרכים להשיג</string>
     <string name="lbl_no_available_games_at_this_time">לא קיימים משחקים כרגע</string>
     <string name="lbl_join_private_game_with_code">הצטרף באמצעות קוד</string>

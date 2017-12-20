@@ -1,5 +1,6 @@
 package com.offsidegame.offside.fragments;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,11 +16,14 @@ import android.widget.Toast;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.models.OffsideApplication;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Random;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 
 public class LuckyWheelFragment extends Fragment {
@@ -31,7 +35,7 @@ public class LuckyWheelFragment extends Fragment {
 
     //formula:  DS (degreesPerSector) = 360/numSectorsOnWheel  >>  FACTOR = DS/2
     //the middle of each sector. the range it covers is FACTOR*2 (e.g. 4 slices=> 45)
-    private static final float FACTOR = 45f;
+    private static final float FACTOR = 22.5f;
 
 
     public static LuckyWheelFragment newInstance() {
@@ -105,16 +109,22 @@ public class LuckyWheelFragment extends Fragment {
                 rotate.setFillAfter(true);
                 rotate.setInterpolator(new DecelerateInterpolator());
                 rotate.setAnimationListener(new Animation.AnimationListener() {
+                    MediaPlayer mediaPlayer;
                     @Override
                     public void onAnimationStart(Animation animation) {
-                        Toast.makeText(getContext(),"Spinning...",Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getContext(),"Spinning...",Toast.LENGTH_SHORT).show();
+                        int soundResource = R.raw.wheel_spin_1;
+                        mediaPlayer = MediaPlayer.create(getContext(), soundResource);
+                        mediaPlayer.start();
 
                     }
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
                         String message = prizeEarned(360-(degree%360));
-                        Toast.makeText(getContext(),message,Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(),message,Toast.LENGTH_LONG).show();
+                        mediaPlayer.stop();
+
 
                     }
 
@@ -125,27 +135,55 @@ public class LuckyWheelFragment extends Fragment {
                 });
                 wheelImageView.startAnimation(rotate);
 
-
-
             }
         });
 
-
     }
 
-
-
     private String prizeEarned(int degrees){
-        String text="";
-        if(degrees>=(FACTOR*1) && degrees<(FACTOR*3))
-            text="B";
-        if(degrees>=(FACTOR*3) && degrees<(FACTOR*5))
-            text="D";
-        if(degrees>=(FACTOR*5) && degrees<(FACTOR*7))
-           text="C";
+        String text="nothing";
+        String playerId= OffsideApplication.getPlayerId();
+        String rewardReason= "LUCKY_WHEEL";
 
-        if((degrees>=(FACTOR*7) && degrees<(360)) ||(degrees>=0 && degrees<(FACTOR*1)))
-            text="A";
+        //22.5-67.49 deg
+        if(degrees>=(FACTOR*1) && degrees<(FACTOR*3))
+            //text="2B";
+            OffsideApplication.networkingService.requestToRewardPlayer(playerId, OffsideApplication.POWER_ITEMS, rewardReason, 2);
+
+        //67.5-112.49 deg
+        else if(degrees>=(FACTOR*3) && degrees<(FACTOR*5))
+            //text="1K";
+            OffsideApplication.networkingService.requestToRewardPlayer(playerId, OffsideApplication.COINS, rewardReason, 1000);
+
+        //112.5-157.49 deg
+        else if(degrees>=(FACTOR*5) && degrees<(FACTOR*7))
+           //text="1B";
+            OffsideApplication.networkingService.requestToRewardPlayer(playerId, OffsideApplication.POWER_ITEMS, rewardReason, 1);
+
+        //157.5-202.49 deg
+        else if(degrees>=(FACTOR*7) && degrees<(FACTOR*9))
+            //text="500";
+            OffsideApplication.networkingService.requestToRewardPlayer(playerId, OffsideApplication.COINS, rewardReason, 500);
+
+        //202.5-247.49 deg
+        else if(degrees>=(FACTOR*9) && degrees<(FACTOR*11))
+            //text="10B";
+            OffsideApplication.networkingService.requestToRewardPlayer(playerId, OffsideApplication.POWER_ITEMS, rewardReason, 10);
+
+        //247.5-292.49 deg
+        else if(degrees>=(FACTOR*11) && degrees<(FACTOR*13))
+            //text="200";
+            OffsideApplication.networkingService.requestToRewardPlayer(playerId, OffsideApplication.COINS, rewardReason, 200);
+
+        //292.5-337.49 deg
+        else if(degrees>=(FACTOR*13) && degrees<(FACTOR*15))
+            //text="5B";
+            OffsideApplication.networkingService.requestToRewardPlayer(playerId, OffsideApplication.POWER_ITEMS, rewardReason, 5);
+
+        //337.5-22.49 deg
+        else if((degrees>=(FACTOR*15) && degrees<(360)) ||(degrees>=0 && degrees<(FACTOR*1)))
+            //text="100";
+            OffsideApplication.networkingService.requestToRewardPlayer(playerId, OffsideApplication.COINS, rewardReason, 100);
 
         return text;
 

@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.LoadingEvent;
-import com.offsidegame.offside.events.NotEnoughCoinsEvent;
+import com.offsidegame.offside.events.NotEnoughAssetsEvent;
 import com.offsidegame.offside.helpers.AnimationHelper;
 import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.ImageHelper;
@@ -229,7 +229,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                             }
                             else
                             {
-                                EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
+                                EventBus.getDefault().post(new NotEnoughAssetsEvent(balance,entranceFee,OffsideApplication.COINS));
 
                             }
 
@@ -275,7 +275,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                                 }
                                 else
                                 {
-                                    EventBus.getDefault().post(new NotEnoughCoinsEvent(balance,entranceFee));
+                                    EventBus.getDefault().post(new NotEnoughAssetsEvent(balance,entranceFee, OffsideApplication.COINS));
 
                                 }
 

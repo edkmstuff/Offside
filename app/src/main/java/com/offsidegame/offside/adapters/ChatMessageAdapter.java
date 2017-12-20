@@ -31,6 +31,7 @@ import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.ironsource.mediationsdk.IronSource;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.SlotActivity;
 import com.offsidegame.offside.events.InGamePlayerAssetsUpdateEvent;
@@ -53,6 +54,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.ironsource.mediationsdk.IronSource.isOfferwallAvailable;
+
 /**
  * Created by KFIR on 11/21/2016.
  */
@@ -62,8 +65,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
     private Context context;
     private Map<String, AnswerIdentifier> playerAnswers;
-    private RewardedVideoAd rewardedVideoAd;
-    private String rewardedVideoAdAppUnitId;
+    //private RewardedVideoAd rewardedVideoAd;
+    //private String rewardedVideoAdAppUnitId;
 
 
     public ChatMessageAdapter(Context context, ArrayList<ChatMessage> chatMessages, Map<String, AnswerIdentifier> playerAnswers) {
@@ -422,7 +425,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         try {
 
             SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-            Uri profilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
 
             //visibility reset
             resetWidgetsVisibility(viewHolder);
@@ -434,136 +436,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             viewHolder.incomingGetCoinsNotEnoughCoinsMessageTextView.setText(viewHolder.chatMessage.getMessageText());
 
-            final PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
-
-            if (player != null && player.getRewardVideoWatchCount() < OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame()) {
-
-                viewHolder.incomingGetCoinsWatchRewardVideoActionTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        viewHolder.incomingGetCoinsPlayerOptionsRoot.setVisibility(View.GONE);
-                        viewHolder.incomingGetCoinsLoadingRoot.setVisibility(View.VISIBLE);
-                        viewHolder.incomingGetCoinsLoadingMessageTextView.setText("Loading " + Integer.toString(player.getRewardVideoWatchCount() + 1) + " of " + Integer.toString(OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame()) + " allowed videos");
-
-                        loadRewardedVideoAd();
-                    }
-                });
-
-                // Use an activity context to get the rewarded video instance.
-                rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(context);
-                rewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
-
-                    //<editor-fold desc="RewardedVideoAdListener Methods">
-                    @Override
-                    public void onRewarded(RewardItem reward) {
-
-                        int rewardAmount = reward.getAmount();
-
-                        viewHolder.incomingGetCoinsPlayerOptionsRoot.setVisibility(View.GONE);
-                        viewHolder.incomingGetCoinsLoadingRoot.setVisibility(View.GONE);
-
-                        //Toast.makeText(context, "onRewarded! currency: " + reward.getType() + "  amount: " +  reward.getAmount(), Toast.LENGTH_SHORT).show();
-
-                        EventBus.getDefault().post(new RewardEvent(rewardAmount));
-
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdLeftApplication() {
-
-                        //Toast.makeText(context, "onRewardedVideoAdLeftApplication",Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdClosed() {
-                        // Toast.makeText(context, "onRewardedVideoAdClosed", Toast.LENGTH_SHORT).show();
-                        //rewardedVideoAd = null;
-
-
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdFailedToLoad(int errorCode) {
-                        //Toast.makeText(context, "onRewardedVideoAdFailedToLoad", Toast.LENGTH_SHORT).show();
-                        //rewardedVideoAd = null;
-
-                        //viewHolder.incomingGetCoinsMessageRoot.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdLoaded() {
-                        try {
-
-                            if (rewardedVideoAd.isLoaded())
-                                rewardedVideoAd.show();
-                            //Toast.makeText(context, "onRewardedVideoAdLoaded", Toast.LENGTH_SHORT).show();
-
-                        } catch (Exception ex) {
-
-                            ACRA.getErrorReporter().handleException(ex);
-
-                        }
-
-                    }
-
-                    @Override
-                    public void onRewardedVideoAdOpened() {
-                        //Toast.makeText(context, "onRewardedVideoAdOpened", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onRewardedVideoStarted() {
-                        //Toast.makeText(context, "onRewardedVideoStarted", Toast.LENGTH_SHORT).show();
-                    }
-
-
-                    //</editor-fold>
-
-                });
-
-            } else  //user exceeds number of allowed videos to watch in a single game
-            {
-                viewHolder.incomingGetCoinsWatchRewardVideoActionTextView.setVisibility(View.GONE);
-            }
-
-            viewHolder.incomingGetCoinsBuyCoinsActionTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    viewHolder.incomingGetCoinsPlayerOptionsRoot.setVisibility(View.GONE);
-                    viewHolder.incomingGetCoinsLoadingRoot.setVisibility(View.VISIBLE);
-
-                    //ToDo: add IAP logic here
-                }
-            });
-
-            viewHolder.incomingGetCoinsSlotMachineActionTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, SlotActivity.class);
-                    getContext().startActivity(intent);
-                }
-            });
+            //todo: add button to refill offsiceCoins from balance
 
             //visibility set
             viewHolder.incomingMessagesRoot.setVisibility(View.VISIBLE);
             viewHolder.incomingGetCoinsMessageRoot.setVisibility(View.VISIBLE);
 
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-    }
-
-    private void loadRewardedVideoAd() {
-        try {
-
-            rewardedVideoAdAppUnitId = context.getString(R.string.rewarded_video_ad_unit_id_key);
-
-            if (rewardedVideoAd == null)
-                return;
-
-            if (!rewardedVideoAd.isLoaded())
-                rewardedVideoAd.loadAd(rewardedVideoAdAppUnitId, new AdRequest.Builder().build());
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -1099,6 +977,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             if (isClosedQuestion) {
 
                 //<editor-fold desc="CLOSED QUESTION">
+
                 Uri botProfilePictureUri = Uri.parse(viewHolder.chatMessage.getImageUrl());
                 Uri playerProfileImageUri = Uri.parse(OffsideApplication.getPlayerAssets().getImageUrl());
 

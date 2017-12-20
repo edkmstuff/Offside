@@ -65,6 +65,9 @@ public class OffsideApplication extends Application {
 
     private static String profileImageFileName = "profileImage.jpg";
 
+    public static String COINS = "COINS";
+    public static String POWER_ITEMS = "POWER_ITEMS";
+
     /****************************DEVELOPMENT- LOCAL**************************/
 
 //    private static String initialsProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/";

@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,12 +33,12 @@ import android.widget.Toast;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.appinvite.AppInviteInvitation;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
-import com.google.firebase.dynamiclinks.ShortDynamicLink;
+import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.logger.IronSourceError;
+import com.ironsource.mediationsdk.model.Placement;
+import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.AvailableGameEvent;
@@ -51,7 +52,7 @@ import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.events.NavigationEvent;
 import com.offsidegame.offside.events.NetworkingErrorEvent;
 import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
-import com.offsidegame.offside.events.NotEnoughCoinsEvent;
+import com.offsidegame.offside.events.NotEnoughAssetsEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PlayerQuitFromPrivateGameEvent;
@@ -69,10 +70,8 @@ import com.offsidegame.offside.fragments.PlayerFragment;
 import com.offsidegame.offside.fragments.SettingsFragment;
 import com.offsidegame.offside.fragments.ShopFragment;
 import com.offsidegame.offside.fragments.SingleGroupFragment;
-import com.offsidegame.offside.helpers.DynamicLinkHelper;
 import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.ImageHelper;
-import com.offsidegame.offside.helpers.NetworkingService;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
@@ -92,10 +91,14 @@ import java.io.Serializable;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
+
 
 public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     //<editor-fold desc="*****************MEMBERS****************">
+
+    //<editor-fold desc="*****************PRIVATE MEMBERS****************">
 
     //activity
     private final String activityName = "LobbyActivity";
@@ -111,6 +114,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private LinearLayout playerInfoRoot;
     private LinearLayout balanceRoot;
     private TextView balanceTextView;
+    private LinearLayout powerItemsRoot;
     private TextView powerItemsTextView;
 
     //Recent state
@@ -132,6 +136,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private ShopFragment shopFragment;
     private NewsFragment newsFragment;
     private SettingsFragment settingsFragment;
+    Fragment luckyWheelFragment;
     private int chatNavigationItemNotificationCount = 0;
 
     private Badge qBadgeView = null;
@@ -141,27 +146,27 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     //reward dialog
     private Dialog rewardDialog;
-    //private TextView dialoguePlayerNameTextView;
+
     private TextView dialogueRewardValueTextView;
-    private ImageView dialoguePlayerImageImageView;
-    private ImageView dialogueCoinImageView;
+    private ImageView rewardImageView;
     private Button dialogueCloseButton;
 
     //short in assets dialogue
     private Dialog shortInAssetsDialog;
-    private TextView getCoinsSlotMachineActionTextView;
-    private TextView getCoinsWatchRewardVideoActionTextView;
-    private TextView getCoinsBuyCoinsActionTextView;
-    private Button notEnoughCoinsDialogueCloseButton;
+    private LinearLayout dialogCoinsTitleRoot;
+    private LinearLayout dialogPowerItemsTitleRoot;
+
+    private Button notEnoughAssetsDialogueCloseButton;
     private boolean isPlayerCanJoinPrivateGame = false;
 
-    private LinearLayout getCoinsShopRoot;
-    private LinearLayout getCoinsWatchVideoRoot;
-    private LinearLayout getCoinsSlotMachineRoot;
+    private LinearLayout getAssetsShopRoot;
+    private LinearLayout getAssetsWatchVideoRoot;
+    private LinearLayout getAssetsSlotMachineRoot;
 
 
     private boolean isGroupInviteExecuted;
     private boolean isInGameInvite = false;
+    private boolean doWhereToGoNext = true;
 
     //join with code dialog
     private Dialog joinGameWithCodeDialog;
@@ -171,7 +176,72 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     //edit value dialog
     private Dialog editValueDialog;
 
-    Fragment luckyWheelFragment;
+    //</editor-fold>
+
+    //<editor-fold desc="ironSource">
+    private RewardedVideoListener rewardedVideoListener = new RewardedVideoListener() {
+        private String rewardName;
+        private int rewardAmount;
+        private String rewardType;
+        private String rewardReason = "WATCH_VIDEO";
+        @Override
+        public void onRewardedVideoAdOpened() {
+
+        }
+
+        @Override
+        public void onRewardedVideoAdClosed() {
+            if(rewardAmount>0 && rewardName!=null)
+                OffsideApplication.networkingService.requestToRewardPlayer(playerId, rewardType, rewardReason, rewardAmount);
+            doWhereToGoNext = false;
+
+        }
+
+        @Override
+        public void onRewardedVideoAvailabilityChanged(boolean b) {
+
+        }
+
+        @Override
+        public void onRewardedVideoAdStarted() {
+            Log.d(TAG, "onRewardedVideoAdStarted() called");
+
+        }
+
+        @Override
+        public void onRewardedVideoAdEnded() {
+
+
+        }
+
+        @Override
+        public void onRewardedVideoAdRewarded(Placement placement) {
+            //Log.d(TAG, "onRewardedVideoAdRewarded: " + placement);
+            rewardName = placement.getRewardName();
+            rewardAmount = placement.getRewardAmount();
+            rewardType=null;
+            if(rewardName.equalsIgnoreCase("Coin")){
+                rewardType = OffsideApplication.COINS;
+            }
+            else if(rewardName.equalsIgnoreCase("PowerItem")){
+                rewardType = OffsideApplication.POWER_ITEMS;
+            }
+
+            doWhereToGoNext = false;
+
+        }
+
+        @Override
+        public void onRewardedVideoAdShowFailed(IronSourceError ironSourceError) {
+            doWhereToGoNext = false;
+        }
+
+        @Override
+        public void onRewardedVideoAdClicked(Placement placement) {
+            doWhereToGoNext = false;
+        }
+    };
+    //</editor-fold>
 
 
     //</editor-fold>
@@ -196,6 +266,15 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             togglePlayerAssetsVisibility(true);
 
+            //Rewarded Video
+            IronSource.init(this, "6aa86bd5", IronSource.AD_UNIT.REWARDED_VIDEO);
+
+            //Init Offerwall
+            //IronSource.init(this, "6aa86bd5", IronSource.AD_UNIT.OFFERWALL);
+
+            //only run on development to verify if Ads-Network are configured correctly on IronSOurce management UI
+            //IntegrationHelper.validateIntegration(this);
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -210,6 +289,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         playerPictureImageView = (ImageView) findViewById(R.id.l_player_picture_image_view);
         balanceRoot = (LinearLayout) findViewById(R.id.l_balance_root);
+        powerItemsRoot =  findViewById(R.id.l_power_items_root);
         balanceTextView = (TextView) findViewById(R.id.l_balance_text_view);
         powerItemsTextView = (TextView) findViewById(R.id.l_power_items_text_view);
 
@@ -242,7 +322,16 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         balanceRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onNotEnoughCoinsEventReceived(new NotEnoughCoinsEvent(0, 1));
+                onNotEnoughAssetsEventReceived(new NotEnoughAssetsEvent(0, 1, OffsideApplication.COINS));
+
+
+            }
+        });
+
+        powerItemsRoot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onNotEnoughAssetsEventReceived(new NotEnoughAssetsEvent(0, 1,OffsideApplication.POWER_ITEMS));
 
 
             }
@@ -357,7 +446,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             }
         });
 
-
+        IronSource.setRewardedVideoListener(rewardedVideoListener);
     }
 
     private void togglePlayerAssetsVisibility(boolean isVisible) {
@@ -394,6 +483,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         try {
             super.onResume();
+            IronSource.onResume(this);
             OffsideApplication.setIsLobbyActivityVisible(true);
 
             EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
@@ -422,6 +512,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     public void onPause() {
         try {
             super.onPause();
+            IronSource.onPause(this);
             OffsideApplication.setIsLobbyActivityVisible(false);
 
         } catch (Exception ex) {
@@ -482,7 +573,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             updatePlayerAssets(playerAssets);
 
-            if (!isGroupInviteExecuted)
+            if (!isGroupInviteExecuted && doWhereToGoNext)
                 whereToGoNext();
 
             else
@@ -498,6 +589,16 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     public void updatePlayerAssets(PlayerAssets playerAssets) {
 
         try {
+            int currentPowerItems=0,currentBalance =0;
+
+            if(playerAssets==null)
+                return;
+
+            if(OffsideApplication.getPlayerAssets()!=null){
+                currentPowerItems = OffsideApplication.getPlayerAssets().getPowerItems();
+                currentBalance = OffsideApplication.getPlayerAssets().getBalance();
+            }
+
             OffsideApplication.setPlayerAssets(playerAssets);
 
             //update player stuff
@@ -516,7 +617,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 playerInfoRoot.setVisibility(View.VISIBLE);
 
             }
-            YoYo.with(Techniques.StandUp.Bounce).duration(1000).playOn(balanceRoot);
+            if(currentBalance!=balance)
+                YoYo.with(Techniques.StandUp.Bounce).duration(1000).playOn(balanceRoot);
+            if(currentPowerItems!=powerItems)
+                YoYo.with(Techniques.StandUp.Bounce).duration(1000).playOn(powerItemsRoot);
 
             //check balance
             int minRequiredBalance = OffsideApplication.getMinRequiredBalance();
@@ -524,7 +628,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             boolean isLowCoinsInventory = balance < minRequiredBalance;
 
             if (isLowCoinsInventory) {
-                EventBus.getDefault().post(new NotEnoughCoinsEvent(balance, minRequiredBalance));
+                EventBus.getDefault().post(new NotEnoughAssetsEvent(balance, minRequiredBalance,OffsideApplication.COINS ));
 
             }
 
@@ -878,6 +982,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 //    }
 
     @Override
+    //result of Invite activity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         try {
             super.onActivityResult(requestCode, resultCode, data);
@@ -951,17 +1056,27 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         try {
             onLoadingEventReceived(new LoadingEvent(false, null));
-            if (playerRewardedReceivedEvent == null)
+            if (playerRewardedReceivedEvent == null || playerRewardedReceivedEvent.getRewardedPlayer()==null)
                 return;
-            final int rewardValue = playerRewardedReceivedEvent.getRewardValue();
+            final PlayerAssets playerAssets = playerRewardedReceivedEvent.getRewardedPlayer().getPlayerAssets();
+            String rewardType = playerRewardedReceivedEvent.getRewardedPlayer().getRewardType();
+            int rewardValue = playerRewardedReceivedEvent.getRewardedPlayer().getRewardValue();
+
+            int soundResource = R.raw.jackpot_1;
+            final MediaPlayer mediaPlayer = MediaPlayer.create(context, soundResource);
 
             rewardDialog = new Dialog(context);
             rewardDialog.setContentView(R.layout.dialog_reward);
 
-            dialoguePlayerImageImageView = rewardDialog.findViewById(R.id.dr_player_image_image_view);
             dialogueRewardValueTextView = rewardDialog.findViewById(R.id.dr_reward_value_text_view);
-            dialogueCoinImageView = rewardDialog.findViewById(R.id.dr_coin_image_view);
+            rewardImageView = rewardDialog.findViewById(R.id.dr_reward_image_view);
+            if(rewardType.equalsIgnoreCase(OffsideApplication.POWER_ITEMS))
+                rewardImageView.setImageResource(R.mipmap.ic_soccer_ball);
+            else
+                rewardImageView.setImageResource(R.drawable.ic_coins_heap);
+
             dialogueCloseButton = rewardDialog.findViewById(R.id.dr_close_button);
+
             dialogueRewardValueTextView.setText(String.format("%d", rewardValue));
 
             dialogueCloseButton.setOnClickListener(new View.OnClickListener() {
@@ -969,13 +1084,16 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 public void onClick(View view) {
 
                     rewardDialog.cancel();
-                    OffsideApplication.networkingService.requestPlayerAssets(playerId);
+                    mediaPlayer.stop();
+                    onReceivePlayerAssets(playerAssets);
+                    //OffsideApplication.networkingService.requestPlayerAssets(playerId);
 
                 }
             });
 
             adjustDialogWidthToWindow(rewardDialog);
             rewardDialog.show();
+            mediaPlayer.start();
 
 
         } catch (Exception ex) {
@@ -1003,26 +1121,32 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     //</editor-fold>
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNotEnoughCoinsEventReceived(NotEnoughCoinsEvent notEnoughCoinsEvent) {
+    public void onNotEnoughAssetsEventReceived(NotEnoughAssetsEvent notEnoughAssetsEvent) {
 
         try {
-            if (notEnoughCoinsEvent == null)
+            if (notEnoughAssetsEvent == null)
                 return;
 
-            boolean isEligible = notEnoughCoinsEvent.isEligble();
+            boolean hasEnoughAssets = notEnoughAssetsEvent.hasEnoughAssets();
 
-            if (!isEligible) {
+            String assetName = notEnoughAssetsEvent.getAssetName();
+
+            if (!hasEnoughAssets) {
+
                 shortInAssetsDialog = new Dialog(context);
                 shortInAssetsDialog.setContentView(R.layout.dialog_short_in_assets);
-                getCoinsWatchRewardVideoActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_watch_reward_video_action_text_view);
-                getCoinsBuyCoinsActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_buy_coins_action_text_view);
-                getCoinsSlotMachineActionTextView = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_slot_machine_action_text_view);
-                notEnoughCoinsDialogueCloseButton = shortInAssetsDialog.findViewById(R.id.dsia_close_button);
-                getCoinsShopRoot = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_shop_root);
-                getCoinsWatchVideoRoot = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_watch_video_root);
-                getCoinsSlotMachineRoot = shortInAssetsDialog.findViewById(R.id.dsia_get_coins_slot_machine_root);
 
-                getCoinsShopRoot.setOnClickListener(new View.OnClickListener() {
+                dialogCoinsTitleRoot = shortInAssetsDialog.findViewById(R.id.dsia_dialog_coins_title_root);
+                dialogCoinsTitleRoot.setVisibility(View.GONE);
+                dialogPowerItemsTitleRoot = shortInAssetsDialog.findViewById(R.id.dsia_dialog_power_items_title_root);
+                dialogPowerItemsTitleRoot.setVisibility(View.GONE);
+
+                notEnoughAssetsDialogueCloseButton = shortInAssetsDialog.findViewById(R.id.dsia_close_button);
+                getAssetsShopRoot = shortInAssetsDialog.findViewById(R.id.dsia_get_assets_shop_root);
+                getAssetsWatchVideoRoot = shortInAssetsDialog.findViewById(R.id.dsia_get_assets_watch_video_root);
+                getAssetsSlotMachineRoot = shortInAssetsDialog.findViewById(R.id.dsia_get_assets_slot_machine_root);
+
+                getAssetsShopRoot.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_shop));
@@ -1030,16 +1154,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     }
                 });
 
-                getCoinsWatchVideoRoot.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //todo: add load video
-                        shortInAssetsDialog.cancel();
-
-                    }
-                });
-
-                getCoinsSlotMachineRoot.setOnClickListener(new View.OnClickListener() {
+                getAssetsSlotMachineRoot.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
@@ -1051,8 +1166,40 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     }
                 });
 
+                if(assetName == OffsideApplication.COINS){
+                    dialogCoinsTitleRoot.setVisibility(View.VISIBLE);
+                    final String placementName="GetMoreCoins";
+                    getAssetsWatchVideoRoot.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            loadRewardVideo(placementName);
+                            shortInAssetsDialog.cancel();
 
-                notEnoughCoinsDialogueCloseButton.setOnClickListener(new View.OnClickListener() {
+                        }
+                    });
+
+                }
+
+                else if(assetName == OffsideApplication.POWER_ITEMS){
+                    dialogPowerItemsTitleRoot.setVisibility(View.VISIBLE);
+                    final String placementName="GetMorePowerItems";
+                    getAssetsWatchVideoRoot.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            loadRewardVideo(placementName);
+                            shortInAssetsDialog.cancel();
+
+                        }
+                    });
+
+                }
+
+
+
+
+
+
+                notEnoughAssetsDialogueCloseButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         shortInAssetsDialog.cancel();
@@ -1068,6 +1215,20 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
 
+        }
+
+
+    }
+
+    private void loadRewardVideo(String placementName) {
+
+        String message;
+        boolean isRewardedVideoPlacementCapped = IronSource.isRewardedVideoPlacementCapped(placementName);
+        if(!isRewardedVideoPlacementCapped)
+            IronSource.showRewardedVideo(placementName);
+        else{
+            message="Exceed video watches per day for " + placementName;
+            Snackbar.make(playerInfoRoot, message, Snackbar.LENGTH_SHORT).show();
         }
 
 

@@ -66,6 +66,7 @@
 
                     <!-- powers-->
                     <LinearLayout
+                        android:id="@+id/l_power_items_root"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="right"
@@ -86,7 +87,7 @@
                             android:gravity="center"
                             android:paddingLeft="24dp"
                             android:paddingRight="16dp"
-                            android:text="24"
+                            android:text="0"
                             android:textColor="@color/colorWhite"
                             android:textSize="18sp"
                             />
@@ -124,7 +125,7 @@
                             android:paddingLeft="24dp"
                             android:paddingRight="44dp"
                             android:paddingTop="2dp"
-                            android:text="4,000"
+                            android:text="0"
                             android:textColor="@color/colorWhite"
                             android:textSize="18sp"
                             android:gravity="center"/>

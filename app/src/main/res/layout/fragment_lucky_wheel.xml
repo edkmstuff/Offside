@@ -10,52 +10,80 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical">
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Try your luck"
-            style="@style/titleText"
-            android:gravity="center"
-            />
+            android:orientation="vertical"
+            android:weightSum="10"
+            android:gravity="center">
 
-        <Button
-            android:id="@+id/flw_roll_wheel_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:minWidth="200dp"
-            android:minHeight="80dp"
-            android:gravity="center"
-            android:text="SPIN"
-            android:textAllCaps="true"
-            android:background="@drawable/bg_button_game_is_on"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:gravity="center">
+                <ImageView
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/wheel_title"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="7"
+                android:gravity="center">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <ImageView
+                        android:id="@+id/flw_wheel_image_view"
+                        android:layout_width="340dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wheel_with_values"
+                        android:padding="40dp"
+                        />
+                    <ImageView
+                        android:layout_width="340dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/wheel_frame"
+                        />
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center">
+                <Button
+                    android:id="@+id/flw_roll_wheel_button"
+                    android:layout_width="200dp"
+                    android:layout_height="45dp"
+                    android:text="FREE SPIN!"
+                    android:textColor="@color/colorBlack"
+                    android:fontFamily="@font/font_open_sans_hebrew_extra_bold"
+                    android:textAllCaps="true"
+                    android:background="@drawable/wheel_spin_button"
+                    android:textSize="@dimen/OffsideLargeText"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
 
-            />
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
 
 
-            <ImageView
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:scaleType="centerInside"
-                android:src="@drawable/pointer"
-                />
-            <ImageView
-                android:id="@+id/flw_wheel_image_view"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:scaleType="centerInside"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/wheel_empty"
-                android:rotation="45"/>
-        </RelativeLayout>
+
+
+
+
+
+
 
 
     </LinearLayout>
