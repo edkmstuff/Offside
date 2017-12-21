@@ -36,6 +36,7 @@ import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.InGamePlayerAssetsUpdateEvent;
 import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.NotEnoughAssetsEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PositionEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
@@ -118,7 +119,7 @@ public class ChatFragment extends Fragment {
     private TextView offsideCoinsTextView;
     private ImageView playerPictureImageView;
     private ImageView offsideCoinsImageView;
-    private ImageView powerItemImageView;
+    private ImageView powerItemsImageView;
 
 //    private FlowLayout actionsFlowLayout;
 //
@@ -151,28 +152,6 @@ public class ChatFragment extends Fragment {
             EventBus.getDefault().register(this);
             OffsideApplication.setScoreboard(null);
             init();
-
-
-            //chat data
-//            gameId = OffsideApplication.getSelectedGameId();
-//            privateGameId = OffsideApplication.getSelectedPrivateGameId();
-//            groupId = OffsideApplication.getSelectedPrivateGroupId();
-//            androidDeviceId = OffsideApplication.getAndroidDeviceId();
-//            playerId = OffsideApplication.getPlayerId();
-//            PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
-//            if(selectedPrivateGroup == null || privateGameId == null) {
-//                loadingRoot.setVisibility(View.GONE);
-//                Toast.makeText(getActivity(), R.string.lbl_no_active_games, Toast.LENGTH_SHORT).show();
-//                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
-//            }
-//            else {
-//                privateGroupName = selectedPrivateGroup.getName();
-//                OffsideApplication.networkingService.requestGetChatMessages(playerId, gameId, privateGameId,  androidDeviceId);
-////                if (gameId != null && privateGameId != null && groupId != null && androidDeviceId != null && playerId != null) {
-////                    OffsideApplication.networkingService.requestJoinPrivateGame(playerId, gameId, groupId, privateGameId,  androidDeviceId);
-////                }
-//            }
-
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -272,7 +251,7 @@ public class ChatFragment extends Fragment {
         offsideCoinsTextView = (TextView) view.findViewById(R.id.fc_offside_coins_text_view);
         offsideCoinsImageView = (ImageView) view.findViewById(R.id.fc_offside_coins_image_view);
         powerItemsTextView = (TextView) view.findViewById(R.id.fc_power_items_text_view);
-        powerItemImageView = (ImageView) view.findViewById(R.id.fc_power_item_image_view);
+        powerItemsImageView = (ImageView) view.findViewById(R.id.fc_power_item_image_view);
 
 
         //actionReloadRoot = (LinearLayout) view.findViewById(R.id.fc_action_reload_root);
@@ -346,6 +325,20 @@ public class ChatFragment extends Fragment {
                 }
 
 
+            }
+        });
+
+        powerItemsTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventBus.getDefault().post(new NotEnoughAssetsEvent(0, 1,OffsideApplication.POWER_ITEMS, false));
+            }
+        });
+
+        powerItemsImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EventBus.getDefault().post(new NotEnoughAssetsEvent(0, 1,OffsideApplication.POWER_ITEMS, false));
             }
         });
 
@@ -1029,7 +1022,7 @@ public class ChatFragment extends Fragment {
                         0.5f);
                 a.setRepeatCount(1);
                 a.setDuration(1000);
-                powerItemImageView.startAnimation(a);
+                powerItemsImageView.startAnimation(a);
 
             }
 

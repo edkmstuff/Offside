@@ -322,7 +322,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         balanceRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onNotEnoughAssetsEventReceived(new NotEnoughAssetsEvent(0, 1, OffsideApplication.COINS));
+                onNotEnoughAssetsEventReceived(new NotEnoughAssetsEvent(0, 1, OffsideApplication.COINS, true));
 
 
             }
@@ -331,7 +331,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         powerItemsRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onNotEnoughAssetsEventReceived(new NotEnoughAssetsEvent(0, 1,OffsideApplication.POWER_ITEMS));
+                onNotEnoughAssetsEventReceived(new NotEnoughAssetsEvent(0, 1,OffsideApplication.POWER_ITEMS, true));
 
 
             }
@@ -573,9 +573,15 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             updatePlayerAssets(playerAssets);
 
-            if (!isGroupInviteExecuted && doWhereToGoNext)
-                whereToGoNext();
+            Intent intent = getIntent();
+            String privateGameCode=null;
+            if(intent!=null)
+                privateGameCode= intent.getStringExtra("code");
+            if(privateGameCode!=null)
+                OffsideApplication.networkingService.RequestPrivateGameInfoByCode(playerId, privateGameCode);
 
+            else if (!isGroupInviteExecuted && doWhereToGoNext)
+                whereToGoNext();
             else
                 EventBus.getDefault().post(new LoadingEvent(false, null));
 
@@ -628,7 +634,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             boolean isLowCoinsInventory = balance < minRequiredBalance;
 
             if (isLowCoinsInventory) {
-                EventBus.getDefault().post(new NotEnoughAssetsEvent(balance, minRequiredBalance,OffsideApplication.COINS ));
+                EventBus.getDefault().post(new NotEnoughAssetsEvent(balance, minRequiredBalance,OffsideApplication.COINS, true ));
 
             }
 
@@ -1055,6 +1061,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     public void onPlayerRewardedReceived(PlayerRewardedReceivedEvent playerRewardedReceivedEvent) {
 
         try {
+            doWhereToGoNext = false;
             onLoadingEventReceived(new LoadingEvent(false, null));
             if (playerRewardedReceivedEvent == null || playerRewardedReceivedEvent.getRewardedPlayer()==null)
                 return;
@@ -1130,6 +1137,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             boolean hasEnoughAssets = notEnoughAssetsEvent.hasEnoughAssets();
 
             String assetName = notEnoughAssetsEvent.getAssetName();
+            boolean showLuckyWheel = notEnoughAssetsEvent.isIncludeLuckyWheel();
 
             if (!hasEnoughAssets) {
 
@@ -1194,17 +1202,18 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                 }
 
-
-
-
-
-
                 notEnoughAssetsDialogueCloseButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         shortInAssetsDialog.cancel();
                     }
                 });
+
+                if(showLuckyWheel)
+                    getAssetsSlotMachineRoot.setVisibility(View.VISIBLE);
+                else
+                    getAssetsSlotMachineRoot.setVisibility(View.GONE);
+
 
                 adjustDialogWidthToWindow(shortInAssetsDialog);
                 shortInAssetsDialog.show();

@@ -8,11 +8,13 @@ public class NotEnoughAssetsEvent {
     private int availableValue;
     private int requiredValue;
     private String assetName;
+    private boolean includeLuckyWheel;
 
-    public NotEnoughAssetsEvent(int availableValue, int requiredValue, String assetName) {
+    public NotEnoughAssetsEvent(int availableValue, int requiredValue, String assetName, boolean includeLuckyWheel) {
         this.availableValue = availableValue;
         this.requiredValue = requiredValue;
         this.assetName= assetName;
+        this.includeLuckyWheel = includeLuckyWheel;
     }
 
     public boolean hasEnoughAssets(){
@@ -26,5 +28,10 @@ public class NotEnoughAssetsEvent {
 
     public void setAssetName(String assetName) {
         this.assetName = assetName;
+    }
+
+
+    public boolean isIncludeLuckyWheel() {
+        return includeLuckyWheel;
     }
 }

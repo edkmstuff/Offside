@@ -553,7 +553,7 @@
                             android:layout_marginTop="5dp"
                             android:orientation="vertical"
                             android:weightSum="2">
-
+                            <!--answers 1-2-->
                             <LinearLayout
                                 android:id="@+id/cm_incoming_answers_1_2_root"
                                 android:layout_width="match_parent"
@@ -644,7 +644,7 @@
 
 
                             </LinearLayout>
-
+                            <!--answers 3-4-->
                             <LinearLayout
                                 android:id="@+id/cm_incoming_answers_3_4_root"
                                 android:layout_width="match_parent"
@@ -681,14 +681,6 @@
                                         android:layout_height="wrap_content"
                                         android:text="150" />
 
-                                    <!--<TextView-->
-                                    <!--android:id="@+id/cm_incoming_answer_3_percent_text_view"-->
-                                    <!--android:layout_width="wrap_content"-->
-                                    <!--android:layout_height="wrap_content"-->
-                                    <!--android:text="15%"-->
-                                    <!--android:textColor="@color/answerTextColor"-->
-                                    <!--android:textSize="@dimen/OffsideMediumText"-->
-                                    <!--android:textStyle="bold" />-->
 
                                 </LinearLayout>
 
@@ -721,14 +713,7 @@
                                         android:layout_height="wrap_content"
                                         android:text="100" />
 
-                                    <!--<TextView-->
-                                    <!--android:id="@+id/cm_incoming_answer_4_percent_text_view"-->
-                                    <!--android:layout_width="wrap_content"-->
-                                    <!--android:layout_height="wrap_content"-->
-                                    <!--android:text="25%"-->
-                                    <!--android:textColor="@color/answerTextColor"-->
-                                    <!--android:textSize="@dimen/OffsideMediumText"-->
-                                    <!--android:textStyle="bold" />-->
+
 
                                 </LinearLayout>
 
@@ -1067,35 +1052,40 @@
                         android:textColor="@color/chatText"
                         android:visibility="visible"
                         android:gravity="center">
-                        <FrameLayout
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingRight="10dp"
+                            android:paddingLeft="10dp"
                             >
+                            <ImageView
+                                android:id="@+id/cm_incoming_social_feed_image_view"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:minHeight="75dp"
+                                android:src="@mipmap/app_logo"
+                                android:alpha="0.6"
+                                android:layout_gravity="center"
+
+                                />
 
                             <TextView
                                 android:id="@+id/cm_incoming_social_feed_text_message_text_view"
                                 style="@style/questionText"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="I am a dummy text message, i m here so you can see the bubble"
-                                android:fontFamily="@font/font_open_sans_hebrew_bold"
-                                android:textSize="@dimen/OffsideMediumText"
-                                />
-
-                            <ImageView
-                                android:id="@+id/cm_incoming_social_feed_image_view"
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
-                                android:minHeight="75dp"
-                                android:src="@mipmap/app_logo"
-                                android:alpha="0.2"
-                                android:layout_gravity="center"
+                                android:layout_gravity="start"
+                                android:gravity="center_vertical"
+                                android:text="What an amazing turn of events! Eran’s last answer has helped him leapfrog Kfir into first place"
+                                android:fontFamily="@font/font_open_sans_hebrew"
+                                android:layout_marginStart="4dp"
 
                                 />
 
-                        </FrameLayout>
+
+
+                        </LinearLayout>
 
 
 
@@ -1156,19 +1146,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <!--sender name-->
-                <!--<TextView-->
-                <!--android:id="@+id/cm_outgoing_user_sent_text_view"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="right"-->
-                <!--android:layout_marginBottom="2dp"-->
-                <!--android:layout_marginRight="5dp"-->
-                <!--android:text="10:23"-->
-                <!--android:textColor="@color/chatActions"-->
-                <!--android:textSize="12dp" />-->
-
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:layout_width="match_parent"

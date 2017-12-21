@@ -1,7 +1,6 @@
 package com.offsidegame.offside.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -24,25 +23,16 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareButton;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardItem;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.ironsource.mediationsdk.IronSource;
 import com.offsidegame.offside.R;
-import com.offsidegame.offside.activities.SlotActivity;
 import com.offsidegame.offside.events.InGamePlayerAssetsUpdateEvent;
 import com.offsidegame.offside.events.QuestionAnsweredEvent;
-import com.offsidegame.offside.events.RewardEvent;
 import com.offsidegame.offside.helpers.ImageHelper;
 import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.Winner;
 
@@ -53,8 +43,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import static com.ironsource.mediationsdk.IronSource.isOfferwallAvailable;
 
 /**
  * Created by KFIR on 11/21/2016.
@@ -816,10 +804,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     viewHolder.incomingQuestionProcessedQuestionTitleTextView.setVisibility(View.VISIBLE);
 
                     for (int i = 0; i < viewHolder.answerRoots.length; i++) {
-//                        if(viewHolder.answerRoots[i].getBackground() != null)
-//                            viewHolder.answerRoots[i].getBackground().mutate().setAlpha(90);
-//                        int backgroundColorResourceId = context.getResources().getIdentifier("shape_bg_rectangle_bordered", "drawable", context.getPackageName());
-//                        viewHolder.answerRoots[i].setBackgroundResource(backgroundColorResourceId);
                         viewHolder.answerRoots[i].setOnClickListener(null);
                     }
 
@@ -827,18 +811,6 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                     if (playerAnswers.containsKey(questionId)) {
                         userAnswerId = playerAnswers.get(questionId).getAnswerId();
-
-//                        for (int i = 0; i < answers.length; i++) {
-//                            if (answers[i].getId().equals(userAnswerId)) {
-//                                final int answerNumber = i + 1;
-//                                final int backgroundColorResourceId = context.getResources().getIdentifier("answer" + answerNumber + "backgroundColor", "color", context.getPackageName());
-////                                if(viewHolder.answerRoots[i].getBackground() != null)
-////                                    viewHolder.answerRoots[i].getBackground().mutate().setAlpha(255);
-//                                viewHolder.answerRoots[i].setBackgroundResource(backgroundColorResourceId);
-//                                break;
-//                            }
-//
-//                        }
 
                     }
 
@@ -1103,6 +1075,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
             String messageText = viewHolder.chatMessage.getMessageText();
             viewHolder.incomingSocialFeedTextMessageTextView.setText(messageText);
+            YoYo.with(Techniques.Bounce).duration(2000).playOn(viewHolder.incomingSocialFeedPictureImageView);
 
             Bitmap bitmapImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.app_logo_10);
             shareOnFacebook(viewHolder.facebookShareButton, bitmapImage, messageText);

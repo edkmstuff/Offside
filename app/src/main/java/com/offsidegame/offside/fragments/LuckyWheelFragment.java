@@ -98,45 +98,59 @@ public class LuckyWheelFragment extends Fragment {
         rollWheelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                degree_old = degree%360;
-                r= new Random();
-                degree =r.nextInt(3600)+720;
-                Log.d("SIDEKICK","degree: "+ degree);
-                RotateAnimation rotate = new RotateAnimation(degree_old,degree
-                        ,RotateAnimation.RELATIVE_TO_SELF,0.5f,RotateAnimation.RELATIVE_TO_SELF,0.5f);
-                rotate.setDuration(3600);
-                rotate.setFillAfter(true);
-                rotate.setInterpolator(new DecelerateInterpolator());
-                rotate.setAnimationListener(new Animation.AnimationListener() {
-                    MediaPlayer mediaPlayer;
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-                        //Toast.makeText(getContext(),"Spinning...",Toast.LENGTH_SHORT).show();
-                        int soundResource = R.raw.wheel_spin_1;
-                        mediaPlayer = MediaPlayer.create(getContext(), soundResource);
-                        mediaPlayer.start();
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        String message = prizeEarned(360-(degree%360));
-                        //Toast.makeText(getContext(),message,Toast.LENGTH_LONG).show();
-                        mediaPlayer.stop();
-
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-                });
-                wheelImageView.startAnimation(rotate);
+                doSpin();
 
             }
         });
+
+        wheelImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doSpin();
+
+            }
+        });
+
+    }
+
+    private void doSpin(){
+
+        degree_old = degree%360;
+        r= new Random();
+        degree =r.nextInt(3600)+720;
+        //Log.d("SIDEKICK","degree: "+ degree);
+        RotateAnimation rotate = new RotateAnimation(degree_old,degree
+                ,RotateAnimation.RELATIVE_TO_SELF,0.5f,RotateAnimation.RELATIVE_TO_SELF,0.5f);
+        rotate.setDuration(3600);
+        rotate.setFillAfter(true);
+        rotate.setInterpolator(new DecelerateInterpolator());
+        rotate.setAnimationListener(new Animation.AnimationListener() {
+            MediaPlayer mediaPlayer;
+            @Override
+            public void onAnimationStart(Animation animation) {
+                //Toast.makeText(getContext(),"Spinning...",Toast.LENGTH_SHORT).show();
+                int soundResource = R.raw.wheel_spin_1;
+                mediaPlayer = MediaPlayer.create(getContext(), soundResource);
+                mediaPlayer.start();
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                String message = prizeEarned(360-(degree%360));
+                //Toast.makeText(getContext(),message,Toast.LENGTH_LONG).show();
+                mediaPlayer.stop();
+                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
+
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        wheelImageView.startAnimation(rotate);
 
     }
 

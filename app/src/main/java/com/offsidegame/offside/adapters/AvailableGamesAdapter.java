@@ -229,7 +229,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                             }
                             else
                             {
-                                EventBus.getDefault().post(new NotEnoughAssetsEvent(balance,entranceFee,OffsideApplication.COINS));
+                                EventBus.getDefault().post(new NotEnoughAssetsEvent(balance,entranceFee,OffsideApplication.COINS, true));
 
                             }
 
@@ -275,7 +275,7 @@ public class AvailableGamesAdapter extends BaseAdapter {
                                 }
                                 else
                                 {
-                                    EventBus.getDefault().post(new NotEnoughAssetsEvent(balance,entranceFee, OffsideApplication.COINS));
+                                    EventBus.getDefault().post(new NotEnoughAssetsEvent(balance,entranceFee, OffsideApplication.COINS, true));
 
                                 }
 

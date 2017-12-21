@@ -42,6 +42,7 @@ import com.offsidegame.offside.events.PrivateGroupDeletedEvent;
 import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.events.PrivateGroupUpdatedEvent;
 import com.offsidegame.offside.events.ScoreboardEvent;
+import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.AvailableGame;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
@@ -537,23 +538,39 @@ public class NetworkingService extends Service {
 
             boolean isAskedQuestion = messageType.equals(OffsideApplication.getMessageTypeAskedQuestion());
             boolean isCloseQuestion = messageType.equals(OffsideApplication.getMessageTypeClosedQuestion());
+            int soundResource;
 
             if (isAskedQuestion || isCloseQuestion) {
                 MediaPlayer player;
+                if(isAskedQuestion){
+                    soundResource = R.raw.human_whisle;
+                    player = MediaPlayer.create(getApplicationContext(), soundResource);
+                    player.start();
 
-                int soundResource = R.raw.human_whisle;
+                }
+
                 if (isCloseQuestion) {
                     final Gson gson = new GsonBuilder().serializeNulls().create();
                     Question question = gson.fromJson(message, Question.class);
-                    if (OffsideApplication.playerAnswers.containsKey(question.getId()) && OffsideApplication.playerAnswers.get(question.getId()).getAnswerId().equals(question.getCorrectAnswerId())) {
+                    AnswerIdentifier answerIdentifier = OffsideApplication.playerAnswers.containsKey(question.getId()) ? OffsideApplication.playerAnswers.get(question.getId()) : null;
+                    if(answerIdentifier==null)
+                        return;
+                    boolean isAnswerCorrect = answerIdentifier.getAnswerId().equals(question.getCorrectAnswerId());
+                    boolean isQuestionSkipped = answerIdentifier.isSkipped();
+                    if (isAnswerCorrect) {
                         soundResource = ((int) (Math.random() * 100)) % 2 == 0 ? R.raw.bravo : R.raw.hooray;
                     } else {
                         soundResource = R.raw.aww;
                     }
+
+                    if(!isQuestionSkipped){
+                        player = MediaPlayer.create(getApplicationContext(), soundResource);
+                        player.start();
+                    }
                 }
 
-                player = MediaPlayer.create(getApplicationContext(), soundResource);
-                player.start();
+
+
 
                 if (!OffsideApplication.isLobbyActivityVisible()) {
 
@@ -749,7 +766,7 @@ public class NetworkingService extends Service {
         sendToServer(json, method, stateKey);
     }
 
-    public void requestSaveLoggedInUser(String playerId, String name, String email, String imageUrl, String playerColor) {
+    public void requestSaveLoggedInUser(String playerId, String name, String email, String imageUrl, String playerColor, String deviceToken) {
         String stateKey = "loggedInUserReceived";
         currentStates.put(stateKey , false);
         String method = "RequestSaveLoggedInUser";
@@ -760,6 +777,7 @@ public class NetworkingService extends Service {
         params.put("email", email);
         params.put("imageUrl", imageUrl);
         params.put("playerColor", playerColor);
+        params.put("deviceToken", deviceToken);
         Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);

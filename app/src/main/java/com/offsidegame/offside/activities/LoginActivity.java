@@ -37,6 +37,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.PendingDynamicLinkData;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.events.CompletedHttpRequestEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
@@ -46,15 +47,12 @@ import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
-import com.offsidegame.offside.events.PlayerSettingsChangedEvent;
 import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.HttpHelper;
 import com.offsidegame.offside.helpers.ImageHelper;
-import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerAssets;
 import com.offsidegame.offside.models.PlayerModel;
-import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.User;
 
 import org.acra.ACRA;
@@ -90,6 +88,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private String TAG = "SIDEKICK";
     //edit value dialog
     private Dialog editValueDialog;
+    private String firebaseDeviceToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +99,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             getIds();
             loadingRoot.setVisibility(View.VISIBLE);
             versionTextView.setVisibility(View.VISIBLE);
-
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -188,18 +186,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             if (eventContext == context || eventContext == getApplicationContext()) {
                 //loadingRoot.setVisibility(View.GONE);
                 versionTextView.setVisibility(View.GONE);
-
-
-//                final Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        //loadingRoot.setVisibility(View.GONE);
-//                        versionTextView.setVisibility(View.GONE);
-//
-//                    }
-//                }, 1000);
-
 
                 if (isNetworkingServiceConnected() && !isInLoginProcess) {
                     login();
@@ -325,6 +311,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                 return;
 
             playerId = firebaseUser.getUid();
+            firebaseDeviceToken = FirebaseInstanceId.getInstance().getToken();
+            Log.d(TAG,"-----------firebaseDeviceToken: "+ firebaseDeviceToken);
 
             if (playerId != null && OffsideApplication.networkingService != null) {
                 CountDownLatch latch = new CountDownLatch(1);
@@ -376,8 +364,6 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         }
 
     }
-
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -448,14 +434,14 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             SharedPreferences.Editor editor = settings.edit();
             editor.putString(getString(R.string.player_profile_picture_url_key), playerProfilePictureUrl);
             editor.commit();
-            String playerColor = null;
+            String playerColor;
             if (playerColorId == 0) {
                 playerColorId = ImageHelper.getRandomColor();
 
             }
             playerColor = Formatter.colorNumberToHexaValue(context, playerColorId);
-            User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl, playerColor);
-            OffsideApplication.networkingService.requestSaveLoggedInUser(user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri(), user.getUserColor());
+            User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl, playerColor, firebaseDeviceToken);
+            OffsideApplication.networkingService.requestSaveLoggedInUser(user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri(), user.getUserColor(), user.getDeviceToken());
 
 
         } catch (Exception ex) {
@@ -600,7 +586,18 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     public void startLobbyActivity() {
 
         loadingRoot.setVisibility(View.GONE);
+
+        //check if user clicked on notifcation
+        Intent notificationIntent = getIntent();
+        //Log.d(TAG,"notificationIntnet extra code: "+ notificationIntent.getStringExtra("code"));
+        String privateGameCode=null;
+        if(notificationIntent!=null)
+            privateGameCode = notificationIntent.getStringExtra("code");
+
         Intent intent = new Intent(context, LobbyActivity.class);
+        if(privateGameCode!=null)
+            intent.putExtra("code",privateGameCode);
+
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 

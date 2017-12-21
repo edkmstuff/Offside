@@ -94,7 +94,7 @@
     <string name="lbl_resume_game">RESUME</string>
     <string name="lbl_player_experience">My Level</string>
     <string name="lbl_no_group_selected">You did not select a group</string>
-    <string name="lbl_doubleup">DOUBLE UP</string>
+    <string name="lbl_doubleup">CLICK TO DOUBLE UP</string>
     <string name="lbl_congratulations">Congratulation!</string>
     <string name="lbl_pre_bonus_reward_message">You have just got yourself</string>
     <string name="lbl_close">CLOSE</string>

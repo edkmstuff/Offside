@@ -78,7 +78,7 @@
     <string name="lbl_resume_game">חזרה למשחק</string>
     <string name="lbl_player_experience">מה אני?</string>
     <string name="lbl_no_group_selected">לא נבחרה קבוצה</string>
-    <string name="lbl_doubleup">הכפל</string>
+    <string name="lbl_doubleup">לחץ עליי להכפיל</string>
     <string name="lbl_congratulations">אולה!</string>
     <string name="lbl_pre_bonus_reward_message">נוספו לך</string>
     <string name="lbl_close">סגור</string>
