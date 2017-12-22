@@ -312,7 +312,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
             playerId = firebaseUser.getUid();
             firebaseDeviceToken = FirebaseInstanceId.getInstance().getToken();
-            Log.d(TAG,"-----------firebaseDeviceToken: "+ firebaseDeviceToken);
+            //Log.d(TAG,"-----------firebaseDeviceToken: "+ firebaseDeviceToken);
 
             if (playerId != null && OffsideApplication.networkingService != null) {
                 CountDownLatch latch = new CountDownLatch(1);
@@ -396,9 +396,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    Log.d(TAG, "User profile image updated.");
-                                }
+//                                if (task.isSuccessful()) {
+//                                    //Log.d(TAG, "User profile image updated.");
+//                                }
                             }
                         });
 
@@ -712,9 +712,9 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d(TAG, "User profile updated.");
-                            }
+//                            if (task.isSuccessful()) {
+//                                Log.d(TAG, "User profile updated.");
+//                            }
                         }
                     });
 
