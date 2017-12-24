@@ -328,18 +328,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
             }
 
-            if (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) {
-                String dialogTitle = getString(R.string.lbl_set_player_nickname);
-                String dialogInstructions = getString(R.string.lbl_pick_you_nickname);
-                EventBus.getDefault().post(new EditValueEvent(dialogTitle, dialogInstructions, null, EditValueEvent.updatePlayerName));
+            handleUserImage();
 
-            } else {
-                playerDisplayName = firebaseUser.getDisplayName();
-                playerEmail = firebaseUser.getEmail();
-
-                handleUserImage();
-
-            }
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -348,7 +338,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    public void handleUserImage(){
+    public void handleUserImage() {
 
         playerProfilePictureUrl = FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl() == null ? null : FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl().toString();
 
@@ -372,41 +362,20 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         try {
             //pick a color for player to be used in his messages on the chat bubble.
             playerColorId = ImageHelper.getRandomColor();
+            playerDisplayName = firebaseUser.getDisplayName();
 
             isUserImageUrlValid = completedHttpRequestEvent.isUrlValid();
 
-            if (!isUserImageUrlValid) {
+            boolean userHasDisplayName = !(playerDisplayName == null || playerDisplayName.equals("") || playerDisplayName.length() == 0);
 
-                String displayName = playerDisplayName.toUpperCase();
-                String[] displayNameParts = displayName.trim().split(" ");
-                String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
-                Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context, playerColorId);
-                byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
-                String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
+            if (!isUserImageUrlValid && userHasDisplayName)
 
-                playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
-                OffsideApplication.networkingService.requestSaveImageInDatabase(playerId, imageString);
+                generateProfileImageAndSaveToFirebase();
 
-                //update user image in firebase
-                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                        .setPhotoUri(Uri.parse(playerProfilePictureUrl))
-                        .build();
+            else
 
-                firebaseUser.updateProfile(profileUpdates)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-//                                if (task.isSuccessful()) {
-//                                    //Log.d(TAG, "User profile image updated.");
-//                                }
-                            }
-                        });
+                 saveLoggedInUser();
 
-
-            } else {
-
-                saveLoggedInUser();
-            }
 
 
         } catch (Exception ex) {
@@ -414,6 +383,37 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         }
 
+
+    }
+
+    private void generateProfileImageAndSaveToFirebase() {
+
+        if (playerDisplayName.equals(""))
+            playerDisplayName = "NO NAME";
+        String displayName = playerDisplayName.toUpperCase();
+        String[] displayNameParts = displayName.trim().split(" ");
+        String initials = displayNameParts.length > 1 ? displayNameParts[0].substring(0, 1) + displayNameParts[1].substring(0, 1) : displayNameParts[0].substring(0, 1);
+        Bitmap profilePicture = ImageHelper.generateInitialsBasedProfileImage(initials, context, playerColorId);
+        byte[] profilePictureToSave = ImageHelper.getBytesFromBitmap(profilePicture);
+        String imageString = Base64.encodeToString(profilePictureToSave, Base64.NO_WRAP);
+
+        playerProfilePictureUrl = OffsideApplication.getInitialsProfilePictureUrl() + playerId;
+        OffsideApplication.networkingService.requestSaveImageInDatabase(playerId, imageString);
+
+        //update user image in firebase
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setPhotoUri(Uri.parse(playerProfilePictureUrl))
+                .build();
+
+        firebaseUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+//                                if (task.isSuccessful()) {
+//                                    //Log.d(TAG, "User profile image updated.");
+//                                }
+                    }
+                });
 
     }
 
@@ -439,6 +439,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                 playerColorId = ImageHelper.getRandomColor();
 
             }
+            playerEmail = firebaseUser.getEmail();
             playerColor = Formatter.colorNumberToHexaValue(context, playerColorId);
             User user = new User(playerId, playerDisplayName, playerEmail, playerProfilePictureUrl, playerColor, firebaseDeviceToken);
             OffsideApplication.networkingService.requestSaveLoggedInUser(user.getId(), user.getName(), user.getEmail(), user.getProfilePictureUri(), user.getUserColor(), user.getDeviceToken());
@@ -462,10 +463,20 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
             }
 
-
             OffsideApplication.setPlayerAssets(playerAssets);
 
-            analyzeDynamicLink();
+            //handle user display name
+            playerDisplayName = firebaseUser.getDisplayName();
+            playerEmail = firebaseUser.getEmail();
+
+            if (firebaseUser.getDisplayName() == null || firebaseUser.getDisplayName().equals("")) {
+                String dialogTitle = getString(R.string.lbl_set_player_nickname);
+                String dialogInstructions = getString(R.string.lbl_pick_you_nickname);
+                EventBus.getDefault().post(new EditValueEvent(dialogTitle, dialogInstructions, null, EditValueEvent.updatePlayerName));
+
+            } else
+                analyzeDynamicLink();
+
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
@@ -590,13 +601,13 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         //check if user clicked on notifcation
         Intent notificationIntent = getIntent();
         //Log.d(TAG,"notificationIntnet extra code: "+ notificationIntent.getStringExtra("code"));
-        String privateGameCode=null;
-        if(notificationIntent!=null)
+        String privateGameCode = null;
+        if (notificationIntent != null)
             privateGameCode = notificationIntent.getStringExtra("code");
 
         Intent intent = new Intent(context, LobbyActivity.class);
-        if(privateGameCode!=null)
-            intent.putExtra("code",privateGameCode);
+        if (privateGameCode != null)
+            intent.putExtra("code", privateGameCode);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -674,7 +685,8 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
                         if (playerId == null)
                             return;
-                        OffsideApplication.networkingService.RequestUpdatePlayerName(playerId, newValue);
+                        playerDisplayName = newValue;
+                        OffsideApplication.networkingService.requestUpdatePlayerName(playerId, playerDisplayName);
 
                     }
 
@@ -718,7 +730,10 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                         }
                     });
 
-            handleUserImage();
+            generateProfileImageAndSaveToFirebase();
+
+
+            analyzeDynamicLink();
 
 
         } catch (Exception ex) {

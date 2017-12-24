@@ -986,7 +986,7 @@ public class NetworkingService extends Service {
         sendToServer(json, method, stateKey);
     }
 
-    public void RequestUpdatePlayerName(String playerId, String playerName) {
+    public void requestUpdatePlayerName(String playerId, String playerName) {
         String stateKey = "playerNameUpdated";
         currentStates.put(stateKey , false);
         String method = "RequestUpdatePlayerName";

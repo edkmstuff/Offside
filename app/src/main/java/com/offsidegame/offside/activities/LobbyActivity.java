@@ -91,8 +91,6 @@ import java.io.Serializable;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
 
 public class LobbyActivity extends AppCompatActivity implements Serializable {
 
@@ -1443,7 +1441,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                         if (playerId == null)
                             return;
-                        OffsideApplication.networkingService.RequestUpdatePlayerName(playerId, newValue);
+                        OffsideApplication.networkingService.requestUpdatePlayerName(playerId, newValue);
 
                     } else if (key == EditValueEvent.updateGroupName) {
                         PrivateGroup privateGroup = OffsideApplication.getSelectedPrivateGroup();
