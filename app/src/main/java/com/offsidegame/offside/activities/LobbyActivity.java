@@ -1180,6 +1180,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     }
                 });
 
+                PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
+
+                if(playerAssets!=null && playerAssets.getWheelSpinCredits()>0)
+                    getAssetsSlotMachineRoot.setVisibility(View.VISIBLE);
+                else
+                    getAssetsSlotMachineRoot.setVisibility(View.GONE);
+
                 getAssetsSlotMachineRoot.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
