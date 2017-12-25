@@ -1,54 +1,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context="com.offsidegame.offside.fragments.ShopFragment"
     android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_height="match_parent"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:weightSum="10"
-            android:gravity="center">
+            android:gravity="center"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
+                android:layout_height="wrap_content"
                 android:gravity="center">
                 <ImageView
-                    android:layout_width="300dp"
+                    android:layout_width="260dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/wheel_title"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="7"
+                android:layout_height="wrap_content"
                 android:gravity="center">
                 <RelativeLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    >
+                    android:gravity="center">
 
                     <ImageView
                         android:id="@+id/flw_wheel_image_view"
-                        android:layout_width="340dp"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/wheel_with_values"
-                        android:padding="40dp"
+                        android:layout_width="260dp"
+                        android:layout_height="260dp"
+                        android:src="@drawable/wheel_board"
+                        android:scaleType="centerInside"
+
                         />
                     <ImageView
-                        android:layout_width="340dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="260dp"
+                        android:layout_height="260dp"
                         android:src="@drawable/wheel_frame"
+                        android:scaleType="centerInside"
                         />
 
                 </RelativeLayout>
@@ -56,20 +55,22 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:gravity="center">
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="20dp">
+
                 <Button
                     android:id="@+id/flw_roll_wheel_button"
                     android:layout_width="200dp"
                     android:layout_height="45dp"
-                    android:text="FREE SPIN!"
-                    android:textColor="@color/colorBlack"
-                    android:fontFamily="@font/font_open_sans_hebrew_extra_bold"
-                    android:textAllCaps="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
                     android:background="@drawable/wheel_spin_button"
-                    android:textSize="@dimen/OffsideLargeText"
-                    />
+                    android:fontFamily="@font/font_open_sans_hebrew_extra_bold"
+                    android:text="FREE SPIN!"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="@dimen/OffsideLargeText" />
 
             </LinearLayout>
 

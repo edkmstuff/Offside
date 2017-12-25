@@ -9,8 +9,8 @@ android {
         applicationId "com.offsidegame.offside"
         minSdkVersion 19
         targetSdkVersion rootProject.ext.compileSdkVersion
-        versionCode 64
-        versionName "6.2.8"
+        versionCode 65
+        versionName "6.2.9"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -121,14 +121,13 @@ dependencies {
     compile 'com.rabbitmq:amqp-client:4.3.0'
     //compile 'com.ironsource.sdk:mediationsdk:6.7.3@jar'
 
-
-
     testCompile 'junit:junit:4.12'
-
 
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+
 
 
 

@@ -36,6 +36,7 @@ import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.integration.IntegrationHelper;
 import com.ironsource.mediationsdk.logger.IronSourceError;
 import com.ironsource.mediationsdk.model.Placement;
 import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
@@ -238,6 +239,14 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         public void onRewardedVideoAdClicked(Placement placement) {
             doWhereToGoNext = false;
         }
+
+
+//        public void onVideoAvailabilityChanged(boolean available){
+//            Log.d(TAG,"onVideoAvailabilityChanged"+ available);
+//
+//
+//        }
+
     };
     //</editor-fold>
 
@@ -271,7 +280,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             //IronSource.init(this, "6aa86bd5", IronSource.AD_UNIT.OFFERWALL);
 
             //only run on development to verify if Ads-Network are configured correctly on IronSOurce management UI
-            //IntegrationHelper.validateIntegration(this);
+            IntegrationHelper.validateIntegration(this);
 
 
         } catch (Exception ex) {
@@ -572,16 +581,27 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             updatePlayerAssets(playerAssets);
 
             Intent intent = getIntent();
-            String privateGameCode=null;
-            if(intent!=null)
-                privateGameCode= intent.getStringExtra("code");
-            if(privateGameCode!=null)
-                OffsideApplication.networkingService.RequestPrivateGameInfoByCode(playerId, privateGameCode);
+            String privateGameCode;
+            String action;
+            if(intent!=null){
 
-            else if (!isGroupInviteExecuted && doWhereToGoNext)
-                whereToGoNext();
-            else
-                EventBus.getDefault().post(new LoadingEvent(false, null));
+                privateGameCode= intent.getStringExtra("code");
+                action = intent.getStringExtra("action");
+
+                if(privateGameCode!=null) {
+                    OffsideApplication.networkingService.RequestPrivateGameInfoByCode(playerId, privateGameCode);
+                }else if(action!=null && action.equalsIgnoreCase("FreeSpin") && playerAssets.getWheelSpinCredits()>0)
+                {
+                    luckyWheelFragment = LuckyWheelFragment.newInstance();
+                    replaceFragment(luckyWheelFragment);
+
+                }
+                else if (!isGroupInviteExecuted && doWhereToGoNext)
+                    whereToGoNext();
+                else
+                    EventBus.getDefault().post(new LoadingEvent(false, null));
+
+            }
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -1229,14 +1249,23 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     private void loadRewardVideo(String placementName) {
 
-        String message;
-        boolean isRewardedVideoPlacementCapped = IronSource.isRewardedVideoPlacementCapped(placementName);
-        if(!isRewardedVideoPlacementCapped)
-            IronSource.showRewardedVideo(placementName);
-        else{
-            message="Exceed video watches per day for " + placementName;
-            Snackbar.make(playerInfoRoot, message, Snackbar.LENGTH_SHORT).show();
+        try
+        {
+            String message;
+            boolean isRewardedVideoPlacementCapped = IronSource.isRewardedVideoPlacementCapped(placementName);
+            if(!isRewardedVideoPlacementCapped)
+                IronSource.showRewardedVideo(placementName);
+            else{
+                message="Exceed video watches per day for " + placementName;
+                Snackbar.make(playerInfoRoot, message, Snackbar.LENGTH_SHORT).show();
+            }
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
         }
+
 
 
     }
