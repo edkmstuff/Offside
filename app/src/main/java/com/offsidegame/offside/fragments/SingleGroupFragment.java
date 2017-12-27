@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -67,10 +68,10 @@ public class SingleGroupFragment extends Fragment {
     private TextView singleGroupPositionOutOfTextView;
     private ListView singleGroupLeagueListView;
     private TextView groupNavigationGroupNameTextView;
-    private TextView groupNavigationLeftButtonTextView;
-    private TextView groupNavigationRightButtonTextView;
-    //    private ImageView groupNavigationLeftButtonImageView;
-//    private ImageView groupNavigationRightButtonImageView;
+//    private TextView groupNavigationLeftButtonTextView;
+//    private TextView groupNavigationRightButtonTextView;
+    private ImageView groupNavigationLeftButtonImageView;
+    private ImageView groupNavigationRightButtonImageView;
     private TextView groupNavigationLastPlayedTextView;
     private TextView singleGroupGamesTabTextView;
     private TextView singleGroupLeagueTabTextView;
@@ -156,8 +157,8 @@ public class SingleGroupFragment extends Fragment {
         singleGroupLeagueListView = (ListView) view.findViewById(R.id.fsg_single_group_league_list_view);
         groupNavigationGroupNameTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_group_name_text_view);
 
-        groupNavigationLeftButtonTextView = view.findViewById(R.id.fsg_group_navigation_left_button_text_view);
-        groupNavigationRightButtonTextView = view.findViewById(R.id.fsg_group_navigation_right_button_text_view);
+        groupNavigationLeftButtonImageView = view.findViewById(R.id.fsg_group_navigation_left_button_image_view);
+        groupNavigationRightButtonImageView = view.findViewById(R.id.fsg_group_navigation_right_button_image_view);
         groupNavigationLastPlayedTextView = (TextView) view.findViewById(R.id.fsg_group_navigation_last_played_text_view);
 
         singleGroupGamesTabTextView = view.findViewById(R.id.fsg_single_group_games_text_view);
@@ -219,14 +220,14 @@ public class SingleGroupFragment extends Fragment {
             }
         });
 
-        groupNavigationLeftButtonTextView.setOnClickListener(new View.OnClickListener() {
+        groupNavigationLeftButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 navigateGroup(-1);
             }
         });
 
-        groupNavigationRightButtonTextView.setOnClickListener(new View.OnClickListener() {
+        groupNavigationRightButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 navigateGroup(1);
@@ -392,7 +393,8 @@ public class SingleGroupFragment extends Fragment {
                 return;
             }
             LeagueRecord[] leagueRecords = leaguesRecords.get(groupId);
-            LeagueAdapter leagueAdapter = new LeagueAdapter(getActivity(), new ArrayList<>(Arrays.asList(leagueRecords)));
+            PrivateGroup selectedGroup = OffsideApplication.getSelectedPrivateGroup();
+            LeagueAdapter leagueAdapter = new LeagueAdapter(getActivity(), new ArrayList<>(Arrays.asList(leagueRecords)), selectedGroup.getCreatedByUserId());
             singleGroupLeagueListView.setAdapter(leagueAdapter);
 
             final int selectedTabColor = ContextCompat.getColor(getContext(), R.color.navigationMenuSelectedItem);

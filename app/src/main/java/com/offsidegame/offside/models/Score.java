@@ -19,6 +19,9 @@ public class Score {
     @com.google.gson.annotations.SerializedName("PGC")
     private String privateGameCode;
 
+    @com.google.gson.annotations.SerializedName("SDI")
+    private ScoreDetailedInfo ScoreDetailedInfo;
+
     public int getPosition() {
         return position;
     }
@@ -57,5 +60,13 @@ public class Score {
 
     public void setPrivateGameCode(String privateGameCode) {
         this.privateGameCode = privateGameCode;
+    }
+
+    public com.offsidegame.offside.models.ScoreDetailedInfo getScoreDetailedInfo() {
+        return ScoreDetailedInfo;
+    }
+
+    public void setScoreDetailedInfo(com.offsidegame.offside.models.ScoreDetailedInfo scoreDetailedInfo) {
+        ScoreDetailedInfo = scoreDetailedInfo;
     }
 }

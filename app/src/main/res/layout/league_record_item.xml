@@ -21,10 +21,11 @@
         android:text="1"
         android:fontFamily="@font/font_open_sans_hebrew"/>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="30dp"
         android:layout_weight="1">
+
         <ImageView
             android:id="@+id/lr_player_image_view"
             android:layout_width="30dp"
@@ -32,8 +33,15 @@
             android:scaleType="centerCrop"
             android:fontFamily="@font/font_open_sans_hebrew"
             />
+        <ImageView
+            android:id="@+id/lr_creator_image_view"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/profile"
+            android:layout_gravity="center"/>
 
-    </LinearLayout>
+
+    </FrameLayout>
 
 
     <TextView
@@ -45,6 +53,8 @@
         android:text="1"
         android:lines="1"
         android:fontFamily="@font/font_open_sans_hebrew"/>
+
+
 
 
     <TextView

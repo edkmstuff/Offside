@@ -44,10 +44,12 @@ import com.offsidegame.offside.events.RewardEvent;
 import com.offsidegame.offside.events.ScoreboardEvent;
 import com.offsidegame.offside.helpers.Formatter;
 import com.offsidegame.offside.helpers.ImageHelper;
+import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.PlayerActivity;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
@@ -331,14 +333,14 @@ public class ChatFragment extends Fragment {
         powerItemsTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventBus.getDefault().post(new NotEnoughAssetsEvent(0, 1,OffsideApplication.POWER_ITEMS, false));
+                EventBus.getDefault().post(new NotEnoughAssetsEvent(0, 1, OffsideApplication.POWER_ITEMS, false));
             }
         });
 
         powerItemsImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EventBus.getDefault().post(new NotEnoughAssetsEvent(0, 1,OffsideApplication.POWER_ITEMS, false));
+                EventBus.getDefault().post(new NotEnoughAssetsEvent(0, 1, OffsideApplication.POWER_ITEMS, false));
             }
         });
 
@@ -927,59 +929,131 @@ public class ChatFragment extends Fragment {
     }
 
     private void generateScoreboard() {
-        scoreboardRoot.removeAllViewsInLayout();
+        try {
 
-        int numberOfPlayers = OffsideApplication.getScoreboard().getScores().length;
-        int previousRankCoins = 0;
-        int awardResId = 0;
 
-        for (Score score : OffsideApplication.getScoreboard().getScores()) {
+            scoreboardRoot.removeAllViewsInLayout();
 
-            ViewGroup layout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.scoreboard_item, scoreboardRoot, false);
+            int numberOfPlayers = OffsideApplication.getScoreboard().getScores().length;
+            int previousRankCoins = 0;
+            int awardResId = 0;
 
-            FrameLayout frameLayout = (FrameLayout) layout.getChildAt(0);
-            ImageView imageView = (ImageView) frameLayout.getChildAt(0);
-            TextView rankTextView = (TextView) frameLayout.getChildAt(1);
-            ImageView awardImageView = (ImageView) frameLayout.getChildAt(2);
-            TextView scoreTextView = (TextView) layout.getChildAt(1);
+            for (final Score score : OffsideApplication.getScoreboard().getScores()) {
 
-            int position = score.getPosition();
-            int coins = score.getOffsideCoins();
+                ViewGroup layout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.scoreboard_item, scoreboardRoot, false);
 
-            rankTextView.setText(String.format("%s", position));
-            ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), imageView, "LobbyActivity", true);
+                FrameLayout frameLayout = (FrameLayout) layout.getChildAt(0);
+                ImageView playerImageView = (ImageView) frameLayout.getChildAt(0);
+                TextView rankTextView = (TextView) frameLayout.getChildAt(1);
+                ImageView awardImageView = (ImageView) frameLayout.getChildAt(2);
+                TextView scoreTextView = (TextView) layout.getChildAt(1);
 
-            if (position < 4 && position < numberOfPlayers) {
+                int position = score.getPosition();
+                int coins = score.getOffsideCoins();
 
-                switch (position) {
-                    case 1:
-                        awardResId = R.mipmap.trophy_gold;
-                        break;
-                    case 2:
-                        if (coins != previousRankCoins)
-                            awardResId = R.mipmap.trophy_silver;
-                        break;
-                    case 3:
-                        if (coins != previousRankCoins)
-                            awardResId = R.mipmap.trophy_bronze;
-                        break;
-                    default:
-                        awardResId = 0;
+                rankTextView.setText(String.format("%s", position));
+                ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), playerImageView, "LobbyActivity", true);
+
+                if (position < 4 && position < numberOfPlayers) {
+
+                    switch (position) {
+                        case 1:
+                            awardResId = R.mipmap.trophy_gold;
+                            break;
+                        case 2:
+                            if (coins != previousRankCoins)
+                                awardResId = R.mipmap.trophy_silver;
+                            break;
+                        case 3:
+                            if (coins != previousRankCoins)
+                                awardResId = R.mipmap.trophy_bronze;
+                            break;
+                        default:
+                            awardResId = 0;
+
+                    }
+                    previousRankCoins = coins;
 
                 }
-                previousRankCoins = coins;
+                if (awardResId > 0 && position < numberOfPlayers && position < 4) {
+                    ImageHelper.loadImage(getContext(), awardImageView, awardResId, false);
+                    awardImageView.setVisibility(View.VISIBLE);
+                } else
+                    awardImageView.setVisibility(View.GONE);
 
+                String formattedScoreValue = Formatter.formatNumber(score.getOffsideCoins(), Formatter.intCommaSeparator);
+                scoreTextView.setText(formattedScoreValue);
+
+                //<editor-fold desc="SET CLICK EVENT">
+                playerImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        final Dialog playerDetailsDialog = new Dialog(getContext());
+                        playerDetailsDialog.setContentView(R.layout.dialog_in_game_player_activity);
+
+                        ImageView playerImageView = playerDetailsDialog.findViewById(R.id.digpa_player_image_view);
+                        ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), playerImageView, "ChatFragment", true);
+                        //ListView playerActivitiesListView = playerDetailsDialog.findViewById(R.id.digpa_player_activities_list_view);
+                        Button closeButton = playerDetailsDialog.findViewById(R.id.digpa_close_button);
+                        closeButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                playerDetailsDialog.cancel();
+                            }
+                        });
+                        try
+                        {
+//                            PlayerActivityAdapter playerActivityAdapter = new PlayerActivityAdapter(getContext(), score.getScoreDetailedInfo().getPlayerActivities());
+//                            playerActivitiesListView.setAdapter(playerActivityAdapter);
+
+                            LinearLayout playerActivitiesContainerRoot = playerDetailsDialog.findViewById(R.id.digpa_player_activities_container_root);
+                            playerActivitiesContainerRoot.removeAllViewsInLayout();
+                            for(PlayerActivity playerActivity : score.getScoreDetailedInfo().getPlayerActivities() ){
+
+                                ViewGroup activitiesLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.player_activity_item, playerActivitiesContainerRoot, false);
+                                ViewGroup layout = (ViewGroup) activitiesLayout.getChildAt(0);
+                                TextView questionTextTextView = (TextView) layout.getChildAt(0);
+                                TextView answerTextTextView = (TextView) layout.getChildAt(1);
+                                TextView betSizeTextView = (TextView) layout.getChildAt(2);
+                                TextView potentialEarnTextView = (TextView) layout.getChildAt(3);
+
+                                questionTextTextView.setText(playerActivity.getQuestionText());
+                                Answer answer = playerActivity.getAnswer();
+                                answerTextTextView.setText(answer!=null? answer.getAnswerText() : getString(R.string.lbl_not_answered) );
+                                AnswerIdentifier answerIdentifier = playerActivity.getAnswerIdentifier();
+                                int betSize = answerIdentifier!=null ? answerIdentifier.getBetSize(): 0;
+                                betSizeTextView.setText(String.format("%d",betSize));
+                                double multiplier = answer != null ? answer.getPointsMultiplier() : 0;
+                                potentialEarnTextView.setText(String.valueOf((int)Math.round(betSize*multiplier)));
+
+                                playerActivitiesContainerRoot.addView(activitiesLayout);
+
+                            }
+
+
+
+
+                            playerDetailsDialog.show();
+
+
+                        } catch (Exception ex) {
+                            ACRA.getErrorReporter().handleSilentException(ex);
+
+                        }
+
+
+
+                    }
+                });
+                //</editor-fold>
+
+
+                scoreboardRoot.addView(layout);
             }
-            if (awardResId > 0 && position < numberOfPlayers && position < 4) {
-                ImageHelper.loadImage(getContext(), awardImageView, awardResId, false);
-                awardImageView.setVisibility(View.VISIBLE);
-            } else
-                awardImageView.setVisibility(View.GONE);
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
 
-            String formattedScoreValue = Formatter.formatNumber(score.getOffsideCoins(), Formatter.intCommaSeparator);
-            scoreTextView.setText(formattedScoreValue);
-
-            scoreboardRoot.addView(layout);
         }
     }
 

@@ -113,6 +113,7 @@
     <string name="lbl_pick_new_name">בחר שם חדש</string>
     <string name="lbl_set_player_nickname">בחירת כינוי</string>
     <string name="lbl_pick_you_nickname">בחר שם במה</string>
+    <string name="lbl_not_answered">לא נענתה</string>
 
 
 </resources>
