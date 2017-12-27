@@ -11,9 +11,28 @@ import java.text.DecimalFormat;
 public class Formatter {
 
     public static String intCommaSeparator = "#,###,###.#";
+    public static String floatPercent = "##%";
 
 
     public static String formatNumber(Integer value, String format){
+
+        DecimalFormat formatter = new DecimalFormat(format);
+        String formattedValue="";
+        if(value==0)
+            formattedValue = "0";
+        else if(value<10000)
+            formattedValue = formatter.format(value);
+        else if(value<1000000){
+            formattedValue = formatter.format((float)value/1000) + "K";
+        }
+        else if(value<1000000000){
+            formattedValue = formatter.format((float)value/1000000) + "M";
+
+        }
+        return formattedValue;
+    }
+
+    public static String formatNumber(float value, String format){
 
         DecimalFormat formatter = new DecimalFormat(format);
         String formattedValue="";
