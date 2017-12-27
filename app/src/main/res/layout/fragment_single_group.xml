@@ -40,18 +40,18 @@
                     android:gravity="right">
 
                     <!-- LEFT TEXT-->
-                    <TextView
-                        android:id="@+id/fsg_group_navigation_left_button_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="\u003c"
-                        android:textColor="@color/colorWhite" />
+                    <!--<TextView-->
+                        <!--android:id="@+id/fsg_group_navigation_left_button_text_view"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="\u003c"-->
+                        <!--android:textColor="@color/colorWhite" />-->
 
-                    <!--<ImageView-->
-                    <!--android:id="@+id/fsg_group_navigation_left_button_image_view"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:src="@mipmap/ic_left" />-->
+                    <ImageView
+                    android:id="@+id/fsg_group_navigation_left_button_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_left" />
 
                 </LinearLayout>
 
@@ -103,17 +103,17 @@
                     android:gravity="left">
 
                     <!-- RIGHT TEXT-->
-                    <TextView
-                        android:id="@+id/fsg_group_navigation_right_button_text_view"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="\u003e"
-                        android:textColor="@color/colorWhite" />
-                    <!--<ImageView-->
-                    <!--android:id="@+id/fsg_group_navigation_right_button_image_view"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:src="@mipmap/ic_right" />-->
+                    <!--<TextView-->
+                        <!--android:id="@+id/fsg_group_navigation_right_button_text_view"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:text="\u003e"-->
+                        <!--android:textColor="@color/colorWhite" />-->
+                    <ImageView
+                    android:id="@+id/fsg_group_navigation_right_button_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_right" />
 
                 </LinearLayout>
 

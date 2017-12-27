@@ -29,10 +29,12 @@ import java.util.ArrayList;
 public class LeagueAdapter extends ArrayAdapter<LeagueRecord> {
 
     private Context context;
+    private String createdByUserId;
 
-    public LeagueAdapter(Context context, ArrayList<LeagueRecord> leagueRecords) {
+    public LeagueAdapter(Context context, ArrayList<LeagueRecord> leagueRecords, String createdByUserId) {
         super(context, 0, leagueRecords);
         this.context = context;
+        this.createdByUserId = createdByUserId;
     }
 
     private class ViewHolder {
@@ -43,6 +45,7 @@ public class LeagueAdapter extends ArrayAdapter<LeagueRecord> {
         public TextView leagueRecordPlayerNameTextView;
         public TextView leagueRecordPointsTextView;
         public TextView leagueRecordFactorizedPointsTextView;
+        public ImageView creatorImageView;
     }
 
 
@@ -55,12 +58,13 @@ public class LeagueAdapter extends ArrayAdapter<LeagueRecord> {
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.league_record_item, parent, false);
                 viewHolder = new ViewHolder();
 
-                viewHolder.leagueRecordRoot = (LinearLayout) convertView.findViewById(R.id.lr_root);
-                viewHolder.leagueRecordPositionTextView = (TextView) convertView.findViewById(R.id.lr_position_text_view);
-                viewHolder.leagueRecordProfilePictureImageView = (ImageView) convertView.findViewById(R.id.lr_player_image_view);
-                viewHolder.leagueRecordPlayerNameTextView = (TextView) convertView.findViewById(R.id.lr_player_name_text_view);
-                viewHolder.leagueRecordPointsTextView = (TextView) convertView.findViewById(R.id.lr_points_text_view);
-                viewHolder.leagueRecordFactorizedPointsTextView = (TextView) convertView.findViewById(R.id.lr_factorized_points_text_view);
+                viewHolder.leagueRecordRoot =  convertView.findViewById(R.id.lr_root);
+                viewHolder.leagueRecordPositionTextView =  convertView.findViewById(R.id.lr_position_text_view);
+                viewHolder.leagueRecordProfilePictureImageView =  convertView.findViewById(R.id.lr_player_image_view);
+                viewHolder.leagueRecordPlayerNameTextView = convertView.findViewById(R.id.lr_player_name_text_view);
+                viewHolder.leagueRecordPointsTextView =  convertView.findViewById(R.id.lr_points_text_view);
+                viewHolder.leagueRecordFactorizedPointsTextView = convertView.findViewById(R.id.lr_factorized_points_text_view);
+                viewHolder.creatorImageView = convertView.findViewById(R.id.lr_creator_image_view);
 
                 convertView.setTag(viewHolder);
 
@@ -74,7 +78,14 @@ public class LeagueAdapter extends ArrayAdapter<LeagueRecord> {
 
             viewHolder.leagueRecordRoot.setBackgroundResource(position%2 == 0? lightBackGround : darkBackground);
             viewHolder.leagueRecordPositionTextView.setText(String.format("%d",viewHolder.leagueRecord.getPosition()));
-            viewHolder.leagueRecordPlayerNameTextView.setText(viewHolder.leagueRecord.getPlayerName());
+
+            String playerName = viewHolder.leagueRecord.getPlayerName();
+            viewHolder.leagueRecordPlayerNameTextView.setText(playerName);
+            if(viewHolder.leagueRecord.getPlayerId().equals(createdByUserId))
+                viewHolder.creatorImageView.setVisibility(View.VISIBLE);
+            else
+                viewHolder.creatorImageView.setVisibility(View.GONE);
+
             String points = Formatter.formatNumber(viewHolder.leagueRecord.getPoints(),Formatter.intCommaSeparator);
             viewHolder.leagueRecordPointsTextView.setText(points);
             viewHolder.leagueRecordFactorizedPointsTextView.setText(String.format("%d",viewHolder.leagueRecord.getGamesCount()));

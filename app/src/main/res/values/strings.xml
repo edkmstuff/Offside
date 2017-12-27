@@ -129,5 +129,6 @@
     <string name="lbl_pick_new_name">Pick a new name</string>
     <string name="lbl_set_player_nickname">Change player nickname</string>
     <string name="lbl_pick_you_nickname">Pick your stage name</string>
+    <string name="lbl_not_answered">Skipped</string>
 
 </resources>

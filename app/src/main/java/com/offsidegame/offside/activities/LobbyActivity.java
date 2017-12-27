@@ -36,6 +36,7 @@ import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ironsource.mediationsdk.IronSource;
+import com.ironsource.mediationsdk.integration.IntegrationHelper;
 import com.ironsource.mediationsdk.logger.IronSourceError;
 import com.ironsource.mediationsdk.model.Placement;
 import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
@@ -134,12 +135,15 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private ShopFragment shopFragment;
     private NewsFragment newsFragment;
     private SettingsFragment settingsFragment;
-    Fragment luckyWheelFragment;
+    private Fragment luckyWheelFragment;
+
+    boolean isCurrentLoadedFragmentIsChatFragment=false;
     private int chatNavigationItemNotificationCount = 0;
 
     private Badge qBadgeView = null;
 
     private int REQUEST_INVITE = 100;
+
     private String TAG = "SIDEKICK";
 
     //reward dialog
@@ -163,7 +167,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
     private boolean isGroupInviteExecuted;
-    private boolean isInGameInvite = false;
+    private boolean isInviteToPrivateGame = false;
     private boolean doWhereToGoNext = true;
 
     //join with code dialog
@@ -238,6 +242,14 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         public void onRewardedVideoAdClicked(Placement placement) {
             doWhereToGoNext = false;
         }
+
+
+//        public void onVideoAvailabilityChanged(boolean available){
+//            Log.d(TAG,"onVideoAvailabilityChanged"+ available);
+//
+//
+//        }
+
     };
     //</editor-fold>
 
@@ -262,7 +274,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             setEvents();
             EventBus.getDefault().post(new LoadingEvent(true, "Starting"));
 
-            togglePlayerAssetsVisibility(true);
+            //togglePlayerAssetsVisibility(true);
 
             //Rewarded Video
             IronSource.init(this, "6aa86bd5", IronSource.AD_UNIT.REWARDED_VIDEO);
@@ -317,9 +329,11 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             }
         });
 
+
         balanceRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 onNotEnoughAssetsEventReceived(new NotEnoughAssetsEvent(0, 1, OffsideApplication.COINS, true));
 
 
@@ -344,7 +358,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                 settingsFragment = SettingsFragment.newInstance();
                 replaceFragment(settingsFragment);
-                togglePlayerAssetsVisibility(true);
+                //togglePlayerAssetsVisibility(true);
             }
         });
 
@@ -378,7 +392,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                             groupsFragment = GroupsFragment.newInstance();
                             replaceFragment(groupsFragment);
-                            togglePlayerAssetsVisibility(true);
+                            //togglePlayerAssetsVisibility(true);
                             toggleNavigationMenuVisibility(true);
                             return true;
 
@@ -386,7 +400,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                             playerFragment = PlayerFragment.newInstance();
                             replaceFragment(playerFragment);
-                            togglePlayerAssetsVisibility(true);
+                            //togglePlayerAssetsVisibility(true);
                             toggleNavigationMenuVisibility(true);
                             return true;
 
@@ -405,7 +419,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                                 chatNavigationItemNotificationCount = 0;
                                 chatFragment = ChatFragment.newInstance();
                                 replaceFragment(chatFragment);
-                                togglePlayerAssetsVisibility(false);
+                                //togglePlayerAssetsVisibility(false);
                                 toggleNavigationMenuVisibility(false);
                                 return true;
 
@@ -420,7 +434,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                             //bottomNavigation.setItemBackground(itemPosition, R.color.navigationMenuSelectedItem);
                             newsFragment = NewsFragment.newInstance();
                             replaceFragment(newsFragment);
-                            togglePlayerAssetsVisibility(false);
+                            //togglePlayerAssetsVisibility(false);
                             toggleNavigationMenuVisibility(true);
                             return true;
 
@@ -428,7 +442,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                             //bottomNavigation.setItemBackground(itemPosition, R.color.navigationMenuSelectedItem);
                             shopFragment = ShopFragment.newInstance();
                             replaceFragment(shopFragment);
-                            togglePlayerAssetsVisibility(true);
+                            //togglePlayerAssetsVisibility(true);
                             toggleNavigationMenuVisibility(true);
                             return true;
 
@@ -467,6 +481,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         try {
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.l_fragment_container_root, fragment, fragment.getTag()).commit();
+            isCurrentLoadedFragmentIsChatFragment = fragment.getClass().getSimpleName().equals("ChatFragment");
+            togglePlayerAssetsVisibility(!isCurrentLoadedFragmentIsChatFragment);
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -483,6 +499,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             super.onResume();
             IronSource.onResume(this);
             OffsideApplication.setIsLobbyActivityVisible(true);
+
+            togglePlayerAssetsVisibility(!isCurrentLoadedFragmentIsChatFragment);
 
             EventBus.getDefault().post(new NetworkingServiceBoundEvent(context));
 
@@ -572,16 +590,27 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             updatePlayerAssets(playerAssets);
 
             Intent intent = getIntent();
-            String privateGameCode=null;
-            if(intent!=null)
-                privateGameCode= intent.getStringExtra("code");
-            if(privateGameCode!=null)
-                OffsideApplication.networkingService.RequestPrivateGameInfoByCode(playerId, privateGameCode);
+            String privateGameCode;
+            String action;
+            if(intent!=null){
 
-            else if (!isGroupInviteExecuted && doWhereToGoNext)
-                whereToGoNext();
-            else
-                EventBus.getDefault().post(new LoadingEvent(false, null));
+                privateGameCode= intent.getStringExtra("code");
+                action = intent.getStringExtra("action");
+
+                if(privateGameCode!=null) {
+                    OffsideApplication.networkingService.RequestPrivateGameInfoByCode(playerId, privateGameCode);
+                }else if(action!=null && action.equalsIgnoreCase("FreeSpin") && playerAssets.getWheelSpinCredits()>0)
+                {
+                    luckyWheelFragment = LuckyWheelFragment.newInstance();
+                    replaceFragment(luckyWheelFragment);
+
+                }
+                else if (!isGroupInviteExecuted && doWhereToGoNext)
+                    whereToGoNext();
+                else
+                    EventBus.getDefault().post(new LoadingEvent(false, null));
+
+            }
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -617,7 +646,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName, true);
 
-            if (!isInGameInvite) {
+            if (!isInviteToPrivateGame) {
                 playerInfoRoot.setVisibility(View.VISIBLE);
 
             }
@@ -886,6 +915,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             String gameId = groupInviteEvent.getGameId();
             String privateGameId = groupInviteEvent.getPrivateGamaId();
             String playerId = groupInviteEvent.getInviterPlayerId();
+            isInviteToPrivateGame = groupInviteEvent.isInviteToPrivateGame();
 
             //OffsideApplication.networkingService.requestInviteFriend(playerId, groupId, gameId, privateGameId);
             startFirebaseInvite(groupId, groupName, gameId, privateGameId, playerId);
@@ -921,7 +951,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             if (privateGameId != null) {
                 String gameTitle = String.format("%s vs. %s", OffsideApplication.getGameInfo().getHomeTeam(), OffsideApplication.getGameInfo().getAwayTeam());
                 invitationMessage = String.format("\nOur group %s is watching\n %s. \nCome play Sidekick with us ", groupName, gameTitle);
-                isInGameInvite = true;
             } else if (groupId != null) {
                 invitationMessage = String.format("\nJoin my group %s \nand Let's play Sidekick", groupName);
             } else
@@ -998,7 +1027,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
                     int numberOfInvitations = ids.length;
                     String rewardType = "COINS";
-                    String rewardReason = "INVITE";
+                    String rewardReason = isInviteToPrivateGame ? "INVITE_TO_PRIVATE_GAME" : "INVITE";
                     if (numberOfInvitations > 0)
                         OffsideApplication.networkingService.requestToRewardPlayer(playerId, rewardType, rewardReason, numberOfInvitations);
                     for (String id : ids) {
@@ -1135,7 +1164,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             boolean hasEnoughAssets = notEnoughAssetsEvent.hasEnoughAssets();
 
             String assetName = notEnoughAssetsEvent.getAssetName();
-            boolean showLuckyWheel = notEnoughAssetsEvent.isIncludeLuckyWheel();
+            PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
+            boolean showLuckyWheel = notEnoughAssetsEvent.isIncludeLuckyWheel() && playerAssets!=null && playerAssets.getWheelSpinCredits()>0;
 
             if (!hasEnoughAssets) {
 
@@ -1159,6 +1189,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                         shortInAssetsDialog.cancel();
                     }
                 });
+
+
 
                 getAssetsSlotMachineRoot.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1229,14 +1261,23 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     private void loadRewardVideo(String placementName) {
 
-        String message;
-        boolean isRewardedVideoPlacementCapped = IronSource.isRewardedVideoPlacementCapped(placementName);
-        if(!isRewardedVideoPlacementCapped)
-            IronSource.showRewardedVideo(placementName);
-        else{
-            message="Exceed video watches per day for " + placementName;
-            Snackbar.make(playerInfoRoot, message, Snackbar.LENGTH_SHORT).show();
+        try
+        {
+            String message;
+            boolean isRewardedVideoPlacementCapped = IronSource.isRewardedVideoPlacementCapped(placementName);
+            if(!isRewardedVideoPlacementCapped)
+                IronSource.showRewardedVideo(placementName);
+            else{
+                message="Exceed video watches per day for " + placementName;
+                Snackbar.make(playerInfoRoot, message, Snackbar.LENGTH_SHORT).show();
+            }
+
+
+        } catch (Exception ex) {
+                    ACRA.getErrorReporter().handleSilentException(ex);
+
         }
+
 
 
     }

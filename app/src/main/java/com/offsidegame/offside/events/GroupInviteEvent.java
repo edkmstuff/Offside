@@ -60,4 +60,9 @@ public class GroupInviteEvent {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
+
+    public boolean isInviteToPrivateGame(){
+        return  privateGamaId!=null && gameId !=null;
+
+    }
 }

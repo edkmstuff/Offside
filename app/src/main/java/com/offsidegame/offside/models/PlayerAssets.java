@@ -24,6 +24,10 @@ public class PlayerAssets {
     @com.google.gson.annotations.SerializedName("PC")
     private String playerColor;
 
+    @com.google.gson.annotations.SerializedName("WSC")
+    private int wheelSpinCredits;
+
+
 
     public int getBalance() {
         return balance;
@@ -71,5 +75,14 @@ public class PlayerAssets {
 
     public void setPlayerColor(String playerColor) {
         this.playerColor = playerColor;
+    }
+
+
+    public int getWheelSpinCredits() {
+        return wheelSpinCredits;
+    }
+
+    public void setWheelSpinCredits(int wheelSpinCredits) {
+        this.wheelSpinCredits = wheelSpinCredits;
     }
 }

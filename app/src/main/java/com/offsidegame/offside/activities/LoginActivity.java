@@ -30,6 +30,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.auth.FirebaseAuth;
@@ -602,12 +603,16 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
         Intent notificationIntent = getIntent();
         //Log.d(TAG,"notificationIntnet extra code: "+ notificationIntent.getStringExtra("code"));
         String privateGameCode = null;
-        if (notificationIntent != null)
+        String action = null;
+        if (notificationIntent != null){
             privateGameCode = notificationIntent.getStringExtra("code");
-
+            action = notificationIntent.getStringExtra("action");
+        }
         Intent intent = new Intent(context, LobbyActivity.class);
         if (privateGameCode != null)
             intent.putExtra("code", privateGameCode);
+        if (action != null)
+            intent.putExtra("action", action);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
