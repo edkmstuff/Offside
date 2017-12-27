@@ -238,6 +238,7 @@ public class NetworkingService extends Service {
 
                 } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
+
                 } finally {
 
                     if (latch != null)
