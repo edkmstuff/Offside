@@ -13,8 +13,20 @@ public class ScoreDetailedInfo {
     @com.google.gson.annotations.SerializedName("PAC")
     private ArrayList<PlayerActivity> playerActivities;
 
-    public ScoreDetailedInfo(ArrayList<PlayerActivity> playerActivities) {
+    @com.google.gson.annotations.SerializedName("TQ")
+    private int totalQuestions;
+
+    @com.google.gson.annotations.SerializedName("TAQ")
+    private int totalAnsweredQuestions;
+
+    @com.google.gson.annotations.SerializedName("TCA")
+    private int totalCorrectAnswers;
+
+    public ScoreDetailedInfo(ArrayList<PlayerActivity> playerActivities, int totalQuestions, int totalAnsweredQuestions, int totalCorrectAnswers) {
         this.playerActivities = playerActivities;
+        this.totalQuestions = totalQuestions;
+        this.totalAnsweredQuestions = totalAnsweredQuestions;
+        this.totalCorrectAnswers = totalCorrectAnswers;
     }
 
     public ArrayList<PlayerActivity> getPlayerActivities() {
@@ -27,9 +39,9 @@ public class ScoreDetailedInfo {
             @Override
             public int compare(PlayerActivity playerActivity, PlayerActivity other) {
                 if (playerActivity.getQuestionStartTime().before(other.getQuestionStartTime()))
-                    return -1;
-                if (playerActivity.getQuestionStartTime().after(other.getQuestionStartTime()))
                     return 1;
+                if (playerActivity.getQuestionStartTime().after(other.getQuestionStartTime()))
+                    return -1;
 
                 return 0;
             }
@@ -41,5 +53,29 @@ public class ScoreDetailedInfo {
 
     public void setPlayerActivities(ArrayList<PlayerActivity> playerActivities) {
         this.playerActivities = playerActivities;
+    }
+
+    public int getTotalQuestions() {
+        return totalQuestions;
+    }
+
+    public void setTotalQuestions(int totalQuestions) {
+        this.totalQuestions = totalQuestions;
+    }
+
+    public int getTotalAnsweredQuestions() {
+        return totalAnsweredQuestions;
+    }
+
+    public void setTotalAnsweredQuestions(int totalAnsweredQuestions) {
+        this.totalAnsweredQuestions = totalAnsweredQuestions;
+    }
+
+    public int getTotalCorrectAnswers() {
+        return totalCorrectAnswers;
+    }
+
+    public void setTotalCorrectAnswers(int totalCorrectAnswers) {
+        this.totalCorrectAnswers = totalCorrectAnswers;
     }
 }

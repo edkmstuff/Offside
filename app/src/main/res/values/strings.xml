@@ -130,5 +130,8 @@
     <string name="lbl_set_player_nickname">Change player nickname</string>
     <string name="lbl_pick_you_nickname">Pick your stage name</string>
     <string name="lbl_not_answered">Skipped</string>
+    <string name="lbl_to_double_win">TO DOUBLE WIN</string>
+    <string name="lbl_use">USE</string>
+    <string name="lbl_disclaimer_for_winner">Disclaimer: Announced only if answered at least 50% of questions</string>
 
 </resources>

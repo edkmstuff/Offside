@@ -15,6 +15,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.view.inputmethod.InputMethodManager;
@@ -54,6 +56,7 @@ import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
 import com.offsidegame.offside.models.Score;
+import com.offsidegame.offside.models.ScoreDetailedInfo;
 import com.offsidegame.offside.models.Scoreboard;
 
 import org.acra.ACRA;
@@ -989,27 +992,39 @@ public class ChatFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
 
-                        final Dialog playerDetailsDialog = new Dialog(getContext());
-                        playerDetailsDialog.setContentView(R.layout.dialog_in_game_player_activity);
+                        final Dialog scoreDetailsDialog = new Dialog(getContext());
+                        scoreDetailsDialog.setContentView(R.layout.dialog_in_game_player_activity);
+                        ScoreDetailedInfo scoreDetailedInfo = score.getScoreDetailedInfo();
 
-                        ImageView playerImageView = playerDetailsDialog.findViewById(R.id.digpa_player_image_view);
-                        ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), playerImageView, "ChatFragment", true);
-                        //ListView playerActivitiesListView = playerDetailsDialog.findViewById(R.id.digpa_player_activities_list_view);
-                        Button closeButton = playerDetailsDialog.findViewById(R.id.digpa_close_button);
-                        closeButton.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                playerDetailsDialog.cancel();
-                            }
-                        });
-                        try
-                        {
-//                            PlayerActivityAdapter playerActivityAdapter = new PlayerActivityAdapter(getContext(), score.getScoreDetailedInfo().getPlayerActivities());
-//                            playerActivitiesListView.setAdapter(playerActivityAdapter);
+                        if (scoreDetailedInfo != null) {
 
-                            LinearLayout playerActivitiesContainerRoot = playerDetailsDialog.findViewById(R.id.digpa_player_activities_container_root);
+                            ImageView playerImageView = scoreDetailsDialog.findViewById(R.id.digpa_player_image_view);
+                            ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), playerImageView, "ChatFragment", true);
+
+                            TextView playerAccuracyTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_accuracy_text_view);
+                            TextView playerTotalAnsweredToTotalQuestionsAskedTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_total_answered_to_total_question_asked_ratio_text_view);
+
+                            int totalQuestions= scoreDetailedInfo.getTotalQuestions();
+                            int totalAnsweredQuestions = scoreDetailedInfo.getTotalAnsweredQuestions();
+                            int totalCorrectAnswers = scoreDetailedInfo.getTotalCorrectAnswers();
+
+                            float accuracy = totalAnsweredQuestions == 0 ? 0 : (float)totalCorrectAnswers/totalAnsweredQuestions;
+                            String formattedAccuracy = Formatter.formatNumber(accuracy,Formatter.floatPercent);
+
+                            playerAccuracyTextView.setText(formattedAccuracy);
+                            playerTotalAnsweredToTotalQuestionsAskedTextView.setText(String.format("%d/%d",totalAnsweredQuestions,totalQuestions));
+
+                            Button closeButton = scoreDetailsDialog.findViewById(R.id.digpa_close_button);
+                            closeButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    scoreDetailsDialog.cancel();
+                                }
+                            });
+
+                            LinearLayout playerActivitiesContainerRoot = scoreDetailsDialog.findViewById(R.id.digpa_player_activities_container_root);
                             playerActivitiesContainerRoot.removeAllViewsInLayout();
-                            for(PlayerActivity playerActivity : score.getScoreDetailedInfo().getPlayerActivities() ){
+                            for (PlayerActivity playerActivity : score.getScoreDetailedInfo().getPlayerActivities()) {
 
                                 ViewGroup activitiesLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.player_activity_item, playerActivitiesContainerRoot, false);
                                 ViewGroup layout = (ViewGroup) activitiesLayout.getChildAt(0);
@@ -1020,27 +1035,25 @@ public class ChatFragment extends Fragment {
 
                                 questionTextTextView.setText(playerActivity.getQuestionText());
                                 Answer answer = playerActivity.getAnswer();
-                                answerTextTextView.setText(answer!=null? answer.getAnswerText() : getString(R.string.lbl_not_answered) );
+                                answerTextTextView.setText(answer != null ? answer.getAnswerText() : getString(R.string.lbl_not_answered));
                                 AnswerIdentifier answerIdentifier = playerActivity.getAnswerIdentifier();
-                                int betSize = answerIdentifier!=null ? answerIdentifier.getBetSize(): 0;
-                                betSizeTextView.setText(String.format("%d",betSize));
+                                int betSize = answerIdentifier != null ? answerIdentifier.getBetSize() : 0;
+                                betSizeTextView.setText(String.format("%d", betSize));
                                 double multiplier = answer != null ? answer.getPointsMultiplier() : 0;
-                                potentialEarnTextView.setText(String.valueOf((int)Math.round(betSize*multiplier)));
+                                potentialEarnTextView.setText(String.valueOf((int) Math.round(betSize * multiplier)));
 
                                 playerActivitiesContainerRoot.addView(activitiesLayout);
 
                             }
+                            adjustDialogWidthToWindow(scoreDetailsDialog);
+                            scoreDetailsDialog.show();
 
 
 
-
-                            playerDetailsDialog.show();
-
-
-                        } catch (Exception ex) {
-                            ACRA.getErrorReporter().handleSilentException(ex);
 
                         }
+
+
 
 
 
@@ -1106,6 +1119,33 @@ public class ChatFragment extends Fragment {
 
 
     }
+
+    public void adjustDialogWidthToWindow(Dialog dialog) {
+
+        try {
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            Window window = dialog.getWindow();
+            lp.copyFrom(window.getAttributes());
+            //This makes the dialog take up the full width
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            window.setAttributes(lp);
+
+            int dialogWidth = lp.width;
+            int dialogHeight = lp.height;
+            int MAX_HEIGHT = 200;
+
+            if (dialogHeight > MAX_HEIGHT) {
+                dialog.getWindow().setLayout(dialogWidth, MAX_HEIGHT);
+            }
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+
+    }
+
+
 
 
 }

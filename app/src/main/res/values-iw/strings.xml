@@ -114,6 +114,9 @@
     <string name="lbl_set_player_nickname">בחירת כינוי</string>
     <string name="lbl_pick_you_nickname">בחר שם במה</string>
     <string name="lbl_not_answered">לא נענתה</string>
+    <string name="lbl_use">השתמש ב</string>
+    <string name="lbl_to_double_win">לזכייה כפולה</string>
+    <string name="lbl_disclaimer_for_winner">תנאי לזכיה הוא השתתפות בלפחות 50% מהשאלות</string>
 
 
 </resources>

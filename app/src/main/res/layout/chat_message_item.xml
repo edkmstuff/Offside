@@ -211,7 +211,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
                         android:textColor="@color/chatText"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
 
                         <LinearLayout
@@ -227,7 +227,18 @@
 
                                 android:text="@string/lbl_and_the_winner_is"
                                 android:textColor="@color/colorBlack"
-                                android:textSize="@dimen/OffsideMediumText" />
+                                android:textSize="@dimen/OffsideMediumText"
+                                android:fontFamily="@font/font_open_sans_hebrew"
+                                />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:gravity="center"
+                                android:text="@string/lbl_disclaimer_for_winner"
+                                android:textColor="@color/colorBlack"
+                                android:textSize="@dimen/OffsideExtraSmallText" />
 
 
                             <LinearLayout
@@ -368,16 +379,25 @@
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal"
                                     android:padding="5dp">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/lbl_use"
+                                        android:textColor="@color/colorBlack"
+                                        android:textSize="@dimen/OffsideMediumText"
+                                        android:fontFamily="@font/font_open_sans_hebrew_bold" />
 
                                     <ImageView
                                         android:layout_width="25dp"
                                         android:layout_height="25dp"
-                                        android:src="@mipmap/ic_soccer_ball" />
+                                        android:src="@mipmap/ic_soccer_ball"
+                                        android:layout_marginLeft="4dp"
+                                        android:layout_marginRight="4dp"/>
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="@string/lbl_doubleup"
+                                        android:text="@string/lbl_to_double_win"
                                         android:textColor="@color/colorBlack"
                                         android:textSize="@dimen/OffsideMediumText"
                                         android:fontFamily="@font/font_open_sans_hebrew_bold" />
@@ -1050,7 +1070,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
                         android:textColor="@color/chatText"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:gravity="center">
                         <LinearLayout
                             android:layout_width="match_parent"
