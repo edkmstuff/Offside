@@ -340,6 +340,8 @@ public class OffsideApplication extends Application {
             String oldPrivateGameId = OffsideApplication.getSelectedPrivateGameId();
             String oldRoutingKey = OffsideApplication.getPlayerId()+'-'+ oldPrivateGameId;
             OffsideApplication.networkingService.unBindExchange(oldRoutingKey, latch);
+            latch.await();
+            latch = new CountDownLatch(1);
             OffsideApplication.networkingService.unBindExchange(oldPrivateGameId, latch);
             latch.await();
 

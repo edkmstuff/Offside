@@ -9,8 +9,8 @@ android {
         applicationId "com.offsidegame.offside"
         minSdkVersion 19
         targetSdkVersion rootProject.ext.compileSdkVersion
-        versionCode 67
-        versionName "6.3.0"
+        versionCode 68
+        versionName "6.3.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -40,11 +40,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-            buildConfigField "String", "RABBITMQ_HOSTNAME_STRING", "\"10.0.0.17\""
-            buildConfigField "String", "GAME_SERVER_HOSTNAME_STRING", "\"10.0.0.17\""
-//            buildConfigField "String", "RABBITMQ_HOSTNAME_STRING", "\"sktestvm.westeurope.cloudapp.azure.com\""
-//            buildConfigField "String", "GAME_SERVER_HOSTNAME_STRING", "\"offside.azurewebsites.net\""
-
+//            buildConfigField "String", "RABBITMQ_HOSTNAME_STRING", "\"10.0.2.2\""
+//            buildConfigField "String", "GAME_SERVER_HOSTNAME_STRING", "\"10.0.2.2\""
+            buildConfigField "String", "RABBITMQ_HOSTNAME_STRING", "\"sktestvm.westeurope.cloudapp.azure.com\""
+            buildConfigField "String", "GAME_SERVER_HOSTNAME_STRING", "\"offside.azurewebsites.net\""
         }
 
 

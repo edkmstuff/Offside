@@ -1001,6 +1001,9 @@ public class ChatFragment extends Fragment {
                             ImageView playerImageView = scoreDetailsDialog.findViewById(R.id.digpa_player_image_view);
                             ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), playerImageView, "ChatFragment", true);
 
+                            TextView playerNameTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_name_text_view);
+                            playerNameTextView.setText(score.getName());
+
                             TextView playerAccuracyTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_accuracy_text_view);
                             TextView playerTotalAnsweredToTotalQuestionsAskedTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_total_answered_to_total_question_asked_ratio_text_view);
 
