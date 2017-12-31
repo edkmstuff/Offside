@@ -885,6 +885,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             bottomNavigation.setSelectedItemId(navigationEvent.getNavigationItemId());
 
 
+
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
