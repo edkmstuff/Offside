@@ -68,6 +68,8 @@ public class OffsideApplication extends Application {
     public static String COINS = "COINS";
     public static String POWER_ITEMS = "POWER_ITEMS";
 
+    public static int selectedGroupTabPosition = 0;
+
     /****************************DEVELOPMENT- LOCAL**************************/
 
 //    private static String initialsProfilePictureUrl = "http://10.0.2.2:8080/api/Offside/GetProfilePicture/";

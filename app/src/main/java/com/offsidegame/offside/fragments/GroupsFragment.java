@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.ViewPagerAdapter;
 import com.offsidegame.offside.models.OffsideApplication;
+import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.PrivateGroupsInfo;
 
 import org.acra.ACRA;
@@ -33,38 +34,39 @@ public class GroupsFragment extends Fragment {
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
     private String playerId;
+    private PrivateGroup selectedPrivateGroup;
 
 
-    public static GroupsFragment newInstance(){
+    public static GroupsFragment newInstance() {
         GroupsFragment groupsFragment = new GroupsFragment();
+
+        groupsFragment.selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
 
         return groupsFragment;
     }
 
     @Override
-    public void onResume(){
-        try
-        {
+    public void onResume() {
+        try {
             super.onResume();
             EventBus.getDefault().register(this);
             playerId = OffsideApplication.getPlayerId();
             OffsideApplication.networkingService.requestPrivateGroupsInfo(playerId);
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
     }
 
     @Override
-    public void onPause(){
-        try
-        {
+    public void onPause() {
+        try {
             super.onPause();
             EventBus.getDefault().unregister(this);
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -75,8 +77,7 @@ public class GroupsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        try
-        {
+        try {
             View view = inflater.inflate(R.layout.fragment_groups, container, false);
             getIDs(view);
             setEvents();
@@ -85,28 +86,23 @@ public class GroupsFragment extends Fragment {
 
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
-                    return null;
+            ACRA.getErrorReporter().handleSilentException(ex);
+            return null;
         }
 
     }
 
     private void getIDs(View view) {
 
-        groupsRoot =  view.findViewById(R.id.fg_groups_root);
+        groupsRoot = view.findViewById(R.id.fg_groups_root);
 
-        viewPager =  view.findViewById(R.id.fg_tabs_container_view_pager);
-        tabLayout =  view.findViewById(R.id.fg_groups_tab_layout);
+        viewPager = view.findViewById(R.id.fg_tabs_container_view_pager);
+        tabLayout = view.findViewById(R.id.fg_groups_tab_layout);
 
         viewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), getActivity(), viewPager, tabLayout);
         viewPager.setAdapter(viewPagerAdapter);
 
-        //createPrivateGroupButtonTextView = (TextView) view.findViewById(R.id.fg_create_private_group_button_text_view);
-        //createPrivateGroupImageView = (ImageView) view.findViewById(R.id.fg_create_private_group_image_view);
-
     }
-
-    int selectedTabPosition;
 
     private void setEvents() {
 
@@ -115,7 +111,9 @@ public class GroupsFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 super.onTabSelected(tab);
                 viewPager.setCurrentItem(tab.getPosition());
+                int selectedTabPosition=0;
                 selectedTabPosition = viewPager.getCurrentItem();
+                OffsideApplication.selectedGroupTabPosition = selectedTabPosition;
                 //viewPagerAdapter.refreshTabLayout(selectedTabPosition);
 
             }
@@ -125,16 +123,13 @@ public class GroupsFragment extends Fragment {
                 super.onTabUnselected(tab);
 
 
-
             }
         });
     }
 
 
-
     public void addPage(String groupType) {
-        try
-        {
+        try {
             Bundle bundle = new Bundle();
             bundle.putString(getString(R.string.key_group_type), groupType);
             PrivateGroupsFragment privateGroupsFragment = new PrivateGroupsFragment();
@@ -149,7 +144,7 @@ public class GroupsFragment extends Fragment {
 
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -166,16 +161,15 @@ public class GroupsFragment extends Fragment {
     }
 
     public void setupTabLayout() {
-        try
-        {
-            selectedTabPosition = viewPager.getCurrentItem();
+        try {
+           // selectedTabPosition = viewPager.getCurrentItem();
             for (int i = 0; i < tabLayout.getTabCount(); i++) {
                 tabLayout.getTabAt(i).setCustomView(viewPagerAdapter.getTabView(i));
             }
 
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -193,7 +187,10 @@ public class GroupsFragment extends Fragment {
                 OffsideApplication.setPrivateGroupsInfo(privateGroupsInfo);
 
                 addPagesToGroupsFragment();
-                viewPager.setCurrentItem(0);
+
+
+                viewPager.setCurrentItem(OffsideApplication.selectedGroupTabPosition);
+
 
                 groupsRoot.setVisibility(View.VISIBLE);
 

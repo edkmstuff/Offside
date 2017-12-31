@@ -8,9 +8,15 @@ import com.offsidegame.offside.R;
 
 public class NavigationEvent {
     private int navigationItemId;
+    private String groupType;
 
     public NavigationEvent(int navigationItemId) {
         this.navigationItemId = navigationItemId;
+    }
+
+    public NavigationEvent(int navigationItemId, String groupType) {
+        this.navigationItemId = navigationItemId;
+        this.groupType = groupType;
     }
 
 
@@ -19,28 +25,12 @@ public class NavigationEvent {
         //return getItemPositionByNavigationId();
     }
 
-    public int getItemPositionByNavigationId() {
 
-        switch (navigationItemId) {
-            case R.id.nav_action_groups:
-                return 0;
-            case R.id.nav_action_profile:
-                return 1;
+    public String getGroupType() {
+        return groupType;
+    }
 
-            case R.id.nav_action_play:
-                return 2;
-
-            case R.id.nav_action_news:
-
-                return 3;
-
-            case R.id.nav_action_shop:
-
-                return 4;
-        }
-
-        return -1;
-
-
+    public void setGroupType(String groupType) {
+        this.groupType = groupType;
     }
 }

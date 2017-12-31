@@ -45,7 +45,7 @@ public class PrivateGroupsFragment extends Fragment {
             //ImageView createPrivateGroupImageView = (ImageView) rootView.findViewById(R.id.fpg_create_private_group_image_view);
             FloatingActionButton createPrivateGroupFloatingActionButton = rootView.findViewById(R.id.fpg_create_private_group_floating_action_button);
             createPrivateGroupFloatingActionButton.setSize(30);
-            ListView listView = (ListView) rootView.findViewById(R.id.fpg_private_groups_list_view);
+            ListView listView = rootView.findViewById(R.id.fpg_private_groups_list_view);
             PrivateGroupAdapter privateGroupAdapter = new PrivateGroupAdapter(this.getActivity(), getPrivateGroups());
             listView.setAdapter(privateGroupAdapter);
 

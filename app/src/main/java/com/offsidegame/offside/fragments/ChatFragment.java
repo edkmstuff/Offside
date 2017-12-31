@@ -55,6 +55,7 @@ import com.offsidegame.offside.models.PlayerActivity;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
+import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.Score;
 import com.offsidegame.offside.models.ScoreDetailedInfo;
 import com.offsidegame.offside.models.Scoreboard;
@@ -275,13 +276,12 @@ public class ChatFragment extends Fragment {
         backNavigationButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
-//                PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
-//                if(selectedPrivateGroup==null || OffsideApplication.getPrivateGroupsInfo()==null)
+                //                PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
+//                if (selectedPrivateGroup != null)
 //                    EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
 //                else
-//                    EventBus.getDefault().post(selectedPrivateGroup);
+//                   EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups,selectedPrivateGroup.getGroupType()));
             }
         });
 
@@ -439,136 +439,9 @@ public class ChatFragment extends Fragment {
 //
 //        }
 
-
-        //<editor-fold desc="VIDEO AD">
-
-        //prepare watch video objects
-
-        // Use an activity context to get the rewarded video instance.
-//        rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(getContext());
-//        rewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
-//
-//            //<editor-fold desc="RewardedVideoAdListener Methods">
-//            @Override
-//            public void onRewarded(RewardItem reward) {
-//
-//                int rewardAmount = reward.getAmount();
-//                //Toast.makeText(context, "onRewarded! currency: " + reward.getType() + "  amount: " +  reward.getAmount(), Toast.LENGTH_SHORT).show();
-//                resetElementsVisibility();
-//                EventBus.getDefault().post(new RewardEvent(rewardAmount));
-//            }
-//
-//            @Override
-//            public void onRewardedVideoAdLeftApplication() {
-//                resetElementsVisibility();
-//            }
-//
-//            @Override
-//            public void onRewardedVideoAdClosed() {
-//                resetElementsVisibility();
-//
-//            }
-//
-//            @Override
-//            public void onRewardedVideoAdFailedToLoad(int errorCode) {
-//                resetElementsVisibility();
-//                Toast.makeText(getContext(), R.string.lbl_failed_to_load_video, Toast.LENGTH_SHORT).show();
-//
-//
-//            }
-//
-//            @Override
-//            public void onRewardedVideoAdLoaded() {
-//                try {
-//                    if (rewardedVideoAd.isLoaded()) {
-//                        rewardedVideoAd.show();
-//                    }
-//                    resetElementsVisibility();
-//
-//                } catch (Exception ex) {
-//
-//                    ACRA.getErrorReporter().handleException(ex);
-//
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onRewardedVideoAdOpened() {
-//                resetElementsVisibility();
-//            }
-//
-//            @Override
-//            public void onRewardedVideoStarted() {
-//                resetElementsVisibility();
-//            }
-//
-//            public void resetElementsVisibility() {
-//                actionsFlowLayout.setVisibility(View.VISIBLE);
-//                rewardVideoLoadingRoot.setVisibility(View.GONE);
-//            }
-//            //</editor-fold>
-//
-//        });
-//
-//        actionWatchVideoRoot.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                PlayerModel player = OffsideApplication.getGameInfo().getPlayer();
-//                if (player == null)
-//                    return;
-//                if (player.getRewardVideoWatchCount() < OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame()) {
-//                    loadingVideoTextView.setText("Loading " + Integer.toString(player.getRewardVideoWatchCount() + 1) + " of " + Integer.toString(OffsideApplication.getGameInfo().getMaxAllowedRewardVideosWatchPerGame()) + " allowed videos");
-//                    actionsFlowLayout.setVisibility(View.GONE);
-//                    rewardVideoLoadingRoot.setVisibility(View.VISIBLE);
-//
-//                    loadRewardedVideoAd();
-//                } else {
-//                    Toast.makeText(getContext(), R.string.lbl_exceed_allowed_reward_video_watch_message, Toast.LENGTH_SHORT).show();
-//                }
-//
-//
-//            }
-//        });
-        //</editor-fold>
-
-        //<editor-fold desc="exit game">
-//        actionExitGameRoot.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String androidDeviceId = OffsideApplication.getAndroidDeviceId();
-//                OffsideApplication.networkingService.quitGame(gameId, playerId, androidDeviceId);
-//                chatActionsButton.performClick();
-//                SharedPreferences settings = getContext().getSharedPreferences(getString(R.string.preference_name), 0);
-//                SharedPreferences.Editor editor = settings.edit();
-//
-//                editor.putString(getString(R.string.game_id_key), null);
-//                editor.putString(getString(R.string.private_game_id_key), null);
-//                editor.putString(getString(R.string.private_group_id_key), null);
-//                editor.putString(getString(R.string.private_game_title_key), null);
-//                editor.putString(getString(R.string.home_team_key), null);
-//                editor.putString(getString(R.string.away_team_key), null);
-//
-//                editor.commit();
-//                Intent intent = new Intent(getContext(), LobbyActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-
-
-        //</editor-fold>
-
-
         //</editor-fold>
 
         //</editor-fold>
-
-
-        //loadRewardedVideoAd();
-
-//        actionsFlowLayout.setVisibility(View.VISIBLE);
-//        rewardVideoLoadingRoot.setVisibility(View.GONE);
 
 
     }
@@ -629,61 +502,6 @@ public class ChatFragment extends Fragment {
             return false;
         }
     }
-
-    private void loadRewardedVideoAd() {
-        try {
-
-            //Google Firebase Ad-Mob
-            String rewardedVideoAdAppUnitId = getContext().getString(R.string.rewarded_video_ad_unit_id_key);
-
-//            if (rewardedVideoAd == null)
-//                return;
-//
-//            if (!rewardedVideoAd.isLoaded())
-//                rewardedVideoAd.loadAd(rewardedVideoAdAppUnitId, new AdRequest.Builder().build());
-
-//IronSource
-//            boolean isIronSourceRewardVideoAvailable = IronSource.isRewardedVideoAvailable();
-//            if(isIronSourceRewardVideoAvailable)
-//                IronSource.showRewardedVideo("DefaultRewardedVideo");
-
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-
-
-    }
-
-
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onPlayerJoinedPrivateGame(JoinGameEvent joinGameEvent) {
-//        try {
-//
-//            GameInfo gameInfo = joinGameEvent.getGameInfo();
-//
-//            if (gameInfo == null) {
-//                return;
-//            }
-//
-//            String gameId = gameInfo.getGameId();
-//            String privateGameId = gameInfo.getPrivateGameId();
-//            String privateGroupId = OffsideApplication.getSelectedPrivateGroupId();
-//
-//            OffsideApplication.setGameInfo(gameInfo);
-//
-//            OffsideApplication.setUserPreferences(privateGroupId,gameId,privateGameId);
-//
-//            init();
-//
-//            OffsideApplication.networkingService.requestGetChatMessages(playerId, gameId, privateGameId,  androidDeviceId);
-//
-//
-//        } catch (Exception ex) {
-//            ACRA.getErrorReporter().handleSilentException(ex);
-//        }
-//    }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveChat(ChatEvent chatEvent) {
@@ -1007,15 +825,15 @@ public class ChatFragment extends Fragment {
                             TextView playerAccuracyTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_accuracy_text_view);
                             TextView playerTotalAnsweredToTotalQuestionsAskedTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_total_answered_to_total_question_asked_ratio_text_view);
 
-                            int totalQuestions= scoreDetailedInfo.getTotalQuestions();
+                            int totalQuestions = scoreDetailedInfo.getTotalQuestions();
                             int totalAnsweredQuestions = scoreDetailedInfo.getTotalAnsweredQuestions();
                             int totalCorrectAnswers = scoreDetailedInfo.getTotalCorrectAnswers();
 
-                            float accuracy = totalAnsweredQuestions == 0 ? 0 : (float)totalCorrectAnswers/totalAnsweredQuestions;
-                            String formattedAccuracy = Formatter.formatNumber(accuracy,Formatter.floatPercent);
+                            float accuracy = totalAnsweredQuestions == 0 ? 0 : (float) totalCorrectAnswers / totalAnsweredQuestions;
+                            String formattedAccuracy = Formatter.formatNumber(accuracy, Formatter.floatPercent);
 
                             playerAccuracyTextView.setText(formattedAccuracy);
-                            playerTotalAnsweredToTotalQuestionsAskedTextView.setText(String.format("%d/%d",totalAnsweredQuestions,totalQuestions));
+                            playerTotalAnsweredToTotalQuestionsAskedTextView.setText(String.format("%d/%d", totalAnsweredQuestions, totalQuestions));
 
                             Button closeButton = scoreDetailsDialog.findViewById(R.id.digpa_close_button);
                             closeButton.setOnClickListener(new View.OnClickListener() {
@@ -1052,12 +870,7 @@ public class ChatFragment extends Fragment {
                             scoreDetailsDialog.show();
 
 
-
-
                         }
-
-
-
 
 
                     }
@@ -1147,8 +960,6 @@ public class ChatFragment extends Fragment {
         }
 
     }
-
-
 
 
 }
