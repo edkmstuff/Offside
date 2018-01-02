@@ -38,6 +38,7 @@ import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
 import com.offsidegame.offside.events.InGamePlayerAssetsUpdateEvent;
 import com.offsidegame.offside.events.NavigationEvent;
+import com.offsidegame.offside.events.NetworkingErrorFixedEvent;
 import com.offsidegame.offside.events.NotEnoughAssetsEvent;
 import com.offsidegame.offside.events.PlayerModelEvent;
 import com.offsidegame.offside.events.PositionEvent;
@@ -55,7 +56,6 @@ import com.offsidegame.offside.models.PlayerActivity;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
-import com.offsidegame.offside.models.PrivateGroup;
 import com.offsidegame.offside.models.Score;
 import com.offsidegame.offside.models.ScoreDetailedInfo;
 import com.offsidegame.offside.models.Scoreboard;
@@ -907,6 +907,17 @@ public class ChatFragment extends Fragment {
 
         }
 
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNetworkingErrorReceived(NetworkingErrorFixedEvent networkingErrorFixedEvent) {
+        try {
+            init();
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
 
     }
 

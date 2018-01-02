@@ -27,7 +27,7 @@ import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.LoadingEvent;
-import com.offsidegame.offside.events.NetworkingErrorEvent;
+import com.offsidegame.offside.events.NetworkingErrorFixedEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
 import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
@@ -71,13 +71,11 @@ import com.rabbitmq.client.RecoverableConnection;
 import com.rabbitmq.client.RecoveryListener;
 import com.rabbitmq.client.ShutdownListener;
 import com.rabbitmq.client.ShutdownSignalException;
-import com.rabbitmq.client.SocketConfigurator;
 
 import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
@@ -114,6 +112,7 @@ public class NetworkingService extends Service {
 
 
     private Map<String, Boolean> currentStates = new HashMap<>();
+    private Map<String, Boolean> currentRoutingKeys = new HashMap<>();
 
 
 
@@ -220,16 +219,18 @@ public class NetworkingService extends Service {
                     connection.addRecoveryListener(new RecoveryListener() {
                         @Override
                         public void handleRecovery(Recoverable recoverable) {
-                            EventBus.getDefault().post(new LoadingEvent(true,"Done!"));
-                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
+//                            EventBus.getDefault().post(new LoadingEvent(true,"Done!"));
+//                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                            startActivity(intent);
+
+                            EventBus.getDefault().post(new NetworkingErrorFixedEvent(null));
                         }
 
                         @Override
                         public void handleRecoveryStarted(Recoverable recoverable) {
-                            EventBus.getDefault().post(new LoadingEvent(true,"Disconnected. Working on it..."));
+                            //EventBus.getDefault().post(new LoadingEvent(true,"Disconnected. Working on it..."));
                         }
                     });
 
@@ -269,7 +270,7 @@ public class NetworkingService extends Service {
         }
     }
 
-    public void createListenerQueue(final String queueName, final CountDownLatch latch) {
+    public void createQueue(final String queueName, final CountDownLatch latch) {
 
         try {
             new Thread(new Runnable() {
@@ -308,7 +309,7 @@ public class NetworkingService extends Service {
 
     private String consumerTag = null;
 
-    public void listenToExchange(final String routingKey, final CountDownLatch latch) {
+    public void bindToRoutingKey(final String routingKey, final CountDownLatch latch) {
 
         new Thread(new Runnable() {
             @Override
@@ -317,6 +318,8 @@ public class NetworkingService extends Service {
 
                     if (routingKey == null)
                         return;
+
+                    currentRoutingKeys.put(routingKey,true);
 
                     channel.exchangeDeclare(SERVER_TO_CLIENTS_EXCHANGE_NAME, "direct");
                     channel.queueBind(listenerQueueName,SERVER_TO_CLIENTS_EXCHANGE_NAME, routingKey);
@@ -349,7 +352,7 @@ public class NetworkingService extends Service {
 
     }
 
-    public void unBindExchange(final String routingKey, final CountDownLatch latch) {
+    public void unBindRoutingKey(final String routingKey, final CountDownLatch latch) {
 
         new Thread(new Runnable() {
             @Override
@@ -357,6 +360,8 @@ public class NetworkingService extends Service {
                 try {
                     if (routingKey == null || listenerQueueName == null)
                         return;
+
+                    currentRoutingKeys.remove(routingKey);
 
                     channel.queueUnbind(listenerQueueName,SERVER_TO_CLIENTS_EXCHANGE_NAME,  routingKey);
 
@@ -373,7 +378,6 @@ public class NetworkingService extends Service {
         }).start();
 
     }
-
 
     public void stopListening() {
 
@@ -395,10 +399,31 @@ public class NetworkingService extends Service {
                 } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
                 }
+
             }
         }).start();
 
     }
+
+//    private void recoverConnectionAndRedoRequest(String json, String method, String stateKey)  {
+//        try {
+//            //this will stop before starting
+//            startRabbitMq();
+//            CountDownLatch latch = new CountDownLatch(1);
+//            createQueue(listenerQueueName, latch);
+//            Set<String> keys = currentRoutingKeys.keySet();
+//            for (String key : keys) {
+//                latch = new CountDownLatch(1);
+//                bindToRoutingKey(key, latch);
+//            }
+//        }
+//        catch (Exception ex){
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//        }
+//
+//
+//
+//    }
 
 
     public void onServerMessage(String message, String model) {
@@ -628,8 +653,6 @@ public class NetworkingService extends Service {
     }
 
     private void sendToServer(final String json, final String method, final String stateKey) {
-
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -645,8 +668,13 @@ public class NetworkingService extends Service {
                         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                if (!currentStates.get(stateKey))
-                                    EventBus.getDefault().post(new NetworkingErrorEvent(method));
+                                if (!currentStates.get(stateKey)) {
+                                    //recoverConnectionAndRedoRequest(json, method, stateKey);
+                                    //EventBus.getDefault().post(new NetworkingErrorFixedEvent(method));
+                                }
+                                else{
+
+                                }
                             }
                         }, sendToServerErrorDelay);
                     }

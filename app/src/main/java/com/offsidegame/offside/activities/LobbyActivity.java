@@ -36,7 +36,6 @@ import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ironsource.mediationsdk.IronSource;
-import com.ironsource.mediationsdk.integration.IntegrationHelper;
 import com.ironsource.mediationsdk.logger.IronSourceError;
 import com.ironsource.mediationsdk.model.Placement;
 import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
@@ -51,7 +50,6 @@ import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.JoinGameWithCodeEvent;
 import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.events.NavigationEvent;
-import com.offsidegame.offside.events.NetworkingErrorEvent;
 import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
 import com.offsidegame.offside.events.NotEnoughAssetsEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
@@ -1532,20 +1530,20 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onNetworkingErrorReceived(NetworkingErrorEvent networkingErrorEvent) {
-        try {
-            EventBus.getDefault().post(new LoadingEvent(false, null));
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-
-        } catch (Exception ex) {
-            ACRA.getErrorReporter().handleSilentException(ex);
-        }
-
-    }
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onNetworkingErrorReceived(NetworkingErrorFixedEvent networkingErrorEvent) {
+//        try {
+//            EventBus.getDefault().post(new LoadingEvent(false, null));
+//            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+//
+//        } catch (Exception ex) {
+//            ACRA.getErrorReporter().handleSilentException(ex);
+//        }
+//
+//    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPrivateGroupUpdatedReceived(PrivateGroupUpdatedEvent privateGroupUpdatedEvent) {

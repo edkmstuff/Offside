@@ -8,7 +8,6 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.util.Log;
 
 import com.offsidegame.offside.BuildConfig;
 import com.offsidegame.offside.R;
@@ -292,7 +291,7 @@ public class OffsideApplication extends Application {
         String oldPlayerId = OffsideApplication.getPlayerId();
         OffsideApplication.playerAssets = playerAssets;
         String newPlayerId = OffsideApplication.getPlayerId();
-        OffsideApplication.networkingService.listenToExchange(newPlayerId, latch);
+        OffsideApplication.networkingService.bindToRoutingKey(newPlayerId, latch);
         try {
             latch.await();
         } catch (Exception ex) {
@@ -309,13 +308,13 @@ public class OffsideApplication extends Application {
         try {
             CountDownLatch latch = new CountDownLatch(1);
             String oldGameId = OffsideApplication.getSelectedGameId();
-            OffsideApplication.networkingService.unBindExchange(oldGameId,latch);
+            OffsideApplication.networkingService.unBindRoutingKey(oldGameId,latch);
             latch.await();
 
             latch = new CountDownLatch(1);
             OffsideApplication.selectedAvailableGame = selectedAvailableGame;
             String newGameId = OffsideApplication.getSelectedGameId();
-            OffsideApplication.networkingService.listenToExchange(newGameId, latch);
+            OffsideApplication.networkingService.bindToRoutingKey(newGameId, latch);
             latch.await();
 
         } catch (Exception ex) {
@@ -341,18 +340,18 @@ public class OffsideApplication extends Application {
 
             String oldPrivateGameId = OffsideApplication.getSelectedPrivateGameId();
             String oldRoutingKey = OffsideApplication.getPlayerId()+'-'+ oldPrivateGameId;
-            OffsideApplication.networkingService.unBindExchange(oldRoutingKey, latch);
+            OffsideApplication.networkingService.unBindRoutingKey(oldRoutingKey, latch);
             latch.await();
             latch = new CountDownLatch(1);
-            OffsideApplication.networkingService.unBindExchange(oldPrivateGameId, latch);
+            OffsideApplication.networkingService.unBindRoutingKey(oldPrivateGameId, latch);
             latch.await();
 
             latch = new CountDownLatch(1);
             OffsideApplication.selectedPrivateGameId = selectedPrivateGameId;
             String newPrivateGameId = OffsideApplication.getSelectedPrivateGameId();
             String routingKey = OffsideApplication.getPlayerId()+'-'+ newPrivateGameId;
-            OffsideApplication.networkingService.listenToExchange(routingKey, latch);
-            OffsideApplication.networkingService.listenToExchange(newPrivateGameId, latch);
+            OffsideApplication.networkingService.bindToRoutingKey(routingKey, latch);
+            OffsideApplication.networkingService.bindToRoutingKey(newPrivateGameId, latch);
             latch.await();
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);

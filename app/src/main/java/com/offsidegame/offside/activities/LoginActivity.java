@@ -30,7 +30,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.appinvite.FirebaseAppInvite;
 import com.google.firebase.auth.FirebaseAuth;
@@ -317,14 +316,14 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
             if (playerId != null && OffsideApplication.networkingService != null) {
                 CountDownLatch latch = new CountDownLatch(1);
-                OffsideApplication.networkingService.createListenerQueue(playerId, latch);
+                OffsideApplication.networkingService.createQueue(playerId, latch);
                 latch.await();
 
 
             }
             if (playerId != null && OffsideApplication.networkingService != null) {
                 CountDownLatch latch = new CountDownLatch(1);
-                OffsideApplication.networkingService.listenToExchange(playerId, latch);
+                OffsideApplication.networkingService.bindToRoutingKey(playerId, latch);
                 latch.await();
 
             }

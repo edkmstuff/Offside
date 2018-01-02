@@ -1,79 +1,5 @@
 package com.offsidegame.offside.helpers;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.media.MediaPlayer;
-import android.os.Binder;
-import android.os.Handler;
-import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.offsidegame.offside.R;
-import com.offsidegame.offside.activities.LobbyActivity;
-import com.offsidegame.offside.events.AvailableGameEvent;
-import com.offsidegame.offside.events.ChatEvent;
-import com.offsidegame.offside.events.ChatMessageEvent;
-import com.offsidegame.offside.events.ConnectionEvent;
-import com.offsidegame.offside.events.FriendInviteReceivedEvent;
-import com.offsidegame.offside.events.JoinGameEvent;
-import com.offsidegame.offside.events.NetworkingErrorEvent;
-import com.offsidegame.offside.events.NetworkingServiceBoundEvent;
-import com.offsidegame.offside.events.NotificationBubbleEvent;
-import com.offsidegame.offside.events.PlayerImageSavedEvent;
-import com.offsidegame.offside.events.PlayerJoinPrivateGroupEvent;
-import com.offsidegame.offside.events.PlayerModelEvent;
-import com.offsidegame.offside.events.PlayerRewardedReceivedEvent;
-import com.offsidegame.offside.events.PositionEvent;
-import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
-import com.offsidegame.offside.events.PrivateGroupChangedEvent;
-import com.offsidegame.offside.events.PrivateGroupCreatedEvent;
-import com.offsidegame.offside.events.PrivateGroupDeletedEvent;
-import com.offsidegame.offside.events.PrivateGroupEvent;
-import com.offsidegame.offside.events.ScoreboardEvent;
-import com.offsidegame.offside.models.AvailableGame;
-import com.offsidegame.offside.models.Chat;
-import com.offsidegame.offside.models.ChatMessage;
-import com.offsidegame.offside.models.GameInfo;
-import com.offsidegame.offside.models.LeagueRecord;
-import com.offsidegame.offside.models.OffsideApplication;
-import com.offsidegame.offside.models.PlayerAssets;
-import com.offsidegame.offside.models.PlayerModel;
-import com.offsidegame.offside.models.Position;
-import com.offsidegame.offside.models.PostAnswerRequestInfo;
-import com.offsidegame.offside.models.PrivateGroup;
-import com.offsidegame.offside.models.PrivateGroupsInfo;
-import com.offsidegame.offside.models.Question;
-import com.offsidegame.offside.models.Scoreboard;
-import com.offsidegame.offside.models.User;
-import com.offsidegame.offside.models.UserProfileInfo;
-
-import org.acra.ACRA;
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.Date;
-
-import microsoft.aspnet.signalr.client.Action;
-import microsoft.aspnet.signalr.client.ConnectionState;
-import microsoft.aspnet.signalr.client.ErrorCallback;
-import microsoft.aspnet.signalr.client.Platform;
-import microsoft.aspnet.signalr.client.SignalRFuture;
-import microsoft.aspnet.signalr.client.StateChangedCallback;
-import microsoft.aspnet.signalr.client.http.android.AndroidPlatformComponent;
-import microsoft.aspnet.signalr.client.hubs.HubConnection;
-import microsoft.aspnet.signalr.client.hubs.HubProxy;
-import microsoft.aspnet.signalr.client.hubs.SubscriptionHandler1;
-import microsoft.aspnet.signalr.client.transport.ClientTransport;
-import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
-
 
 /**
  * Created by KFIR on 11/15/2016.
@@ -614,7 +540,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!availableGameReceived)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGame"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestAvailableGame"));
 //                    }
 //                }, 15000);
 //
@@ -622,7 +548,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGame"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestAvailableGame"));
 //            }
 //        });
 //    }
@@ -641,7 +567,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!privateGameCreated)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestCreatePrivateGame"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestCreatePrivateGame"));
 //                    }
 //                }, 15000);
 //
@@ -649,7 +575,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestCreatePrivateGame"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestCreatePrivateGame"));
 //            }
 //        });
 //    }
@@ -667,7 +593,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!answerAccepted)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestPostAnswer"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestPostAnswer"));
 //                    }
 //                }, 15000);
 //
@@ -675,7 +601,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestPostAnswer"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestPostAnswer"));
 //            }
 //        });
 //
@@ -693,7 +619,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!scoreboardReceived)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestGetScoreboard"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestGetScoreboard"));
 //                    }
 //                }, 15000);
 //
@@ -701,7 +627,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestGetScoreboard"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestGetScoreboard"));
 //            }
 //        });
 //    }
@@ -720,7 +646,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!chatMessagesReceived)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("requestGetChatMessages"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("requestGetChatMessages"));
 //                    }
 //                }, 15000);
 //
@@ -728,7 +654,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("requestGetChatMessages"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("requestGetChatMessages"));
 //            }
 //        });
 //
@@ -746,7 +672,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!chatMessageReceived)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestSendChatMessage"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestSendChatMessage"));
 //                    }
 //                }, 15000);
 //
@@ -754,7 +680,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestSendChatMessage"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestSendChatMessage"));
 //            }
 //        });
 //
@@ -774,7 +700,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!loggedInUserReceived)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestSaveLoggedInUser"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestSaveLoggedInUser"));
 //                    }
 //                }, 15000);
 //
@@ -782,7 +708,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestSaveLoggedInUser"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestSaveLoggedInUser"));
 //            }
 //        });
 //
@@ -822,7 +748,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!playerImageSaved)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestSaveImageInDatabase"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestSaveImageInDatabase"));
 //                    }
 //                }, 15000);
 //
@@ -830,7 +756,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestSaveImageInDatabase"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestSaveImageInDatabase"));
 //            }
 //        });
 //    }
@@ -846,7 +772,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!privateGroupsReceived)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestPrivateGroupsInfo"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestPrivateGroupsInfo"));
 //                    }
 //                }, 15000);
 //
@@ -854,7 +780,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestPrivateGroupsInfo"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestPrivateGroupsInfo"));
 //            }
 //        });
 //    }
@@ -870,7 +796,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!availableGamesReceived)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGames"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestAvailableGames"));
 //                    }
 //                }, 15000);
 //
@@ -878,7 +804,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestAvailableGames"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestAvailableGames"));
 //            }
 //        });
 //
@@ -895,7 +821,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!privateGroupCreated)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestCreatePrivateGroup"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestCreatePrivateGroup"));
 //                    }
 //                }, 15000);
 //
@@ -903,7 +829,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestCreatePrivateGroup"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestCreatePrivateGroup"));
 //            }
 //        });
 //
@@ -922,7 +848,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!playerJoinedPrivateGame)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestJoinPrivateGame"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestJoinPrivateGame"));
 //                    }
 //                }, 15000);
 //
@@ -930,7 +856,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestJoinPrivateGame"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestJoinPrivateGame"));
 //            }
 //        });
 //
@@ -948,14 +874,14 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!userProfileInfoReceived)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestUserProfile"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestUserProfile"));
 //                    }
 //                }, 15000);
 //            }
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestUserProfile"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestUserProfile"));
 //            }
 //        });
 //    }
@@ -971,14 +897,14 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!leagueRecordsReceived)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestLeagueRecords"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestLeagueRecords"));
 //                    }
 //                }, 15000);
 //            }
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestLeagueRecords"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestLeagueRecords"));
 //            }
 //        });
 //    }
@@ -995,14 +921,14 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!playerAssetsReceived)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestPlayerAssets"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestPlayerAssets"));
 //                    }
 //                }, 15000);
 //            }
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestPlayerAssets"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestPlayerAssets"));
 //            }
 //        });
 //    }
@@ -1018,14 +944,14 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!friendInviteReceived)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestInviteFriend"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestInviteFriend"));
 //                    }
 //                }, 15000);
 //            }
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestInviteFriend"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestInviteFriend"));
 //            }
 //        });
 //    }
@@ -1041,14 +967,14 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!privateGroupReceived)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestPrivateGroup"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestPrivateGroup"));
 //                    }
 //                }, 15000);
 //            }
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestPrivateGroup"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestPrivateGroup"));
 //            }
 //        });
 //    }
@@ -1065,14 +991,14 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!privateGroupDeleted)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestDeletePrivateGroup"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestDeletePrivateGroup"));
 //                    }
 //                }, 15000);
 //            }
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestDeletePrivateGroup"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestDeletePrivateGroup"));
 //            }
 //        });
 //    }
@@ -1088,14 +1014,14 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!playerJoinPrivateGroupReceived)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestJoinPrivateGroup"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestJoinPrivateGroup"));
 //                    }
 //                }, 15000);
 //            }
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestJoinPrivateGroup"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestJoinPrivateGroup"));
 //            }
 //        });
 //    }
@@ -1113,7 +1039,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //                    @Override
 //                    public void run() {
 //                        if (!playerRewardSaved)
-//                            EventBus.getDefault().post(new NetworkingErrorEvent("RequestToRewardPlayer"));
+//                            EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestToRewardPlayer"));
 //                    }
 //                }, 15000);
 //
@@ -1121,7 +1047,7 @@ import microsoft.aspnet.signalr.client.transport.ServerSentEventsTransport;
 //        }).onError(new ErrorCallback() {
 //            @Override
 //            public void onError(Throwable error) {
-//                EventBus.getDefault().post(new NetworkingErrorEvent("RequestToRewardPlayer"));
+//                EventBus.getDefault().post(new NetworkingErrorFixedEvent("RequestToRewardPlayer"));
 //            }
 //        });
 //    }
