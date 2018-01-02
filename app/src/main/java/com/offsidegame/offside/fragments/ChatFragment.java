@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -277,11 +278,6 @@ public class ChatFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
-                //                PrivateGroup selectedPrivateGroup = OffsideApplication.getSelectedPrivateGroup();
-//                if (selectedPrivateGroup != null)
-//                    EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups));
-//                else
-//                   EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_groups,selectedPrivateGroup.getGroupType()));
             }
         });
 
@@ -377,6 +373,21 @@ public class ChatFragment extends Fragment {
             public void onClick(View view) {
                 //hide keypad
                 hideKeypad();
+            }
+        });
+
+        playerPictureImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Scoreboard scoreboard = OffsideApplication.getScoreboard();
+                if(scoreboard==null)
+                    return;
+                Score score = scoreboard.getScoreByPlayerId(playerId);
+                if(score==null)
+                    return;
+
+                showPlayerInGameActivityDialog(score.getScoreDetailedInfo(),score.getImageUrl(),score.getName());
             }
         });
 
@@ -679,10 +690,10 @@ public class ChatFragment extends Fragment {
                 int oldOffsideCoinsValue = currentPlayer.getOffsideCoins();
                 int newOffsideCoinsValue = updatedPlayer.getOffsideCoins();
                 offsideCoins = newOffsideCoinsValue;
+                OffsideApplication.getGameInfo().getPlayer().setOffsideCoins(offsideCoins);
                 String formattedCoinsValue = Formatter.formatNumber(offsideCoins, Formatter.intCommaSeparator);
                 offsideCoinsTextView.setText(formattedCoinsValue);
                 if (newOffsideCoinsValue != oldOffsideCoinsValue) {
-                    //offsideCoinsImageView.animate().rotationXBy(360.0f).setDuration(1000).start();
                     YoYo.with(Techniques.BounceIn).playOn(offsideCoinsImageView);
                 }
 
@@ -737,7 +748,6 @@ public class ChatFragment extends Fragment {
                 return;
 
             OffsideApplication.setScoreboard(scoreboard);
-
 
             generateScoreboard();
 
@@ -810,67 +820,7 @@ public class ChatFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
 
-                        final Dialog scoreDetailsDialog = new Dialog(getContext());
-                        scoreDetailsDialog.setContentView(R.layout.dialog_in_game_player_activity);
-                        ScoreDetailedInfo scoreDetailedInfo = score.getScoreDetailedInfo();
-
-                        if (scoreDetailedInfo != null) {
-
-                            ImageView playerImageView = scoreDetailsDialog.findViewById(R.id.digpa_player_image_view);
-                            ImageHelper.loadImage(((Activity) getContext()), score.getImageUrl(), playerImageView, "ChatFragment", true);
-
-                            TextView playerNameTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_name_text_view);
-                            playerNameTextView.setText(score.getName());
-
-                            TextView playerAccuracyTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_accuracy_text_view);
-                            TextView playerTotalAnsweredToTotalQuestionsAskedTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_total_answered_to_total_question_asked_ratio_text_view);
-
-                            int totalQuestions = scoreDetailedInfo.getTotalQuestions();
-                            int totalAnsweredQuestions = scoreDetailedInfo.getTotalAnsweredQuestions();
-                            int totalCorrectAnswers = scoreDetailedInfo.getTotalCorrectAnswers();
-
-                            float accuracy = totalAnsweredQuestions == 0 ? 0 : (float) totalCorrectAnswers / totalAnsweredQuestions;
-                            String formattedAccuracy = Formatter.formatNumber(accuracy, Formatter.floatPercent);
-
-                            playerAccuracyTextView.setText(formattedAccuracy);
-                            playerTotalAnsweredToTotalQuestionsAskedTextView.setText(String.format("%d/%d", totalAnsweredQuestions, totalQuestions));
-
-                            Button closeButton = scoreDetailsDialog.findViewById(R.id.digpa_close_button);
-                            closeButton.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    scoreDetailsDialog.cancel();
-                                }
-                            });
-
-                            LinearLayout playerActivitiesContainerRoot = scoreDetailsDialog.findViewById(R.id.digpa_player_activities_container_root);
-                            playerActivitiesContainerRoot.removeAllViewsInLayout();
-                            for (PlayerActivity playerActivity : score.getScoreDetailedInfo().getPlayerActivities()) {
-
-                                ViewGroup activitiesLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.player_activity_item, playerActivitiesContainerRoot, false);
-                                ViewGroup layout = (ViewGroup) activitiesLayout.getChildAt(0);
-                                TextView questionTextTextView = (TextView) layout.getChildAt(0);
-                                TextView answerTextTextView = (TextView) layout.getChildAt(1);
-                                TextView betSizeTextView = (TextView) layout.getChildAt(2);
-                                TextView potentialEarnTextView = (TextView) layout.getChildAt(3);
-
-                                questionTextTextView.setText(playerActivity.getQuestionText());
-                                Answer answer = playerActivity.getAnswer();
-                                answerTextTextView.setText(answer != null ? answer.getAnswerText() : getString(R.string.lbl_not_answered));
-                                AnswerIdentifier answerIdentifier = playerActivity.getAnswerIdentifier();
-                                int betSize = answerIdentifier != null ? answerIdentifier.getBetSize() : 0;
-                                betSizeTextView.setText(String.format("%d", betSize));
-                                double multiplier = answer != null ? answer.getPointsMultiplier() : 0;
-                                potentialEarnTextView.setText(String.valueOf((int) Math.round(betSize * multiplier)));
-
-                                playerActivitiesContainerRoot.addView(activitiesLayout);
-
-                            }
-                            adjustDialogWidthToWindow(scoreDetailsDialog);
-                            scoreDetailsDialog.show();
-
-
-                        }
+                        showPlayerInGameActivityDialog(score.getScoreDetailedInfo(),score.getImageUrl(),score.getName());
 
 
                     }
@@ -884,6 +834,81 @@ public class ChatFragment extends Fragment {
             ACRA.getErrorReporter().handleSilentException(ex);
 
         }
+    }
+
+    public void showPlayerInGameActivityDialog(ScoreDetailedInfo scoreDetailedInfo, String playerImageUrl, String playerName){
+
+        final Dialog scoreDetailsDialog = new Dialog(getContext());
+        scoreDetailsDialog.setContentView(R.layout.dialog_in_game_player_activity);
+
+        if (scoreDetailedInfo != null) {
+
+            ImageView playerImageView = scoreDetailsDialog.findViewById(R.id.digpa_player_image_view);
+            ImageHelper.loadImage(((Activity) getContext()), playerImageUrl, playerImageView, "ChatFragment", true);
+
+            TextView playerNameTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_name_text_view);
+            playerNameTextView.setText(playerName);
+
+//            TextView playerAccuracyTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_accuracy_text_view);
+//            TextView playerTotalAnsweredToTotalQuestionsAskedTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_total_answered_to_total_question_asked_ratio_text_view);
+
+//            int totalQuestions = scoreDetailedInfo.getTotalQuestions();
+//            int totalAnsweredQuestions = scoreDetailedInfo.getTotalAnsweredQuestions();
+//            int totalCorrectAnswers = scoreDetailedInfo.getTotalCorrectAnswers();
+
+//            float accuracy = totalAnsweredQuestions == 0 ? 0 : (float) totalCorrectAnswers / totalAnsweredQuestions;
+//            String formattedAccuracy = Formatter.formatNumber(accuracy, Formatter.floatPercent);
+//
+//            playerAccuracyTextView.setText(formattedAccuracy);
+//            playerTotalAnsweredToTotalQuestionsAskedTextView.setText(String.format("%d/%d", totalAnsweredQuestions, totalQuestions));
+
+            Button closeButton = scoreDetailsDialog.findViewById(R.id.digpa_close_button);
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    scoreDetailsDialog.cancel();
+                }
+            });
+
+            LinearLayout playerActivitiesContainerRoot = scoreDetailsDialog.findViewById(R.id.digpa_player_activities_container_root);
+            playerActivitiesContainerRoot.removeAllViewsInLayout();
+            int totalPotentialEarnings=0;
+            for (PlayerActivity playerActivity : scoreDetailedInfo.getPlayerActivities()) {
+
+                ViewGroup activitiesLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.player_activity_item, playerActivitiesContainerRoot, false);
+                ViewGroup layout = (ViewGroup) activitiesLayout.getChildAt(0);
+                TextView questionTextTextView = (TextView) layout.getChildAt(0);
+                TextView answerTextTextView = (TextView) layout.getChildAt(1);
+                TextView betSizeTextView = (TextView) layout.getChildAt(2);
+                TextView potentialEarnTextView = (TextView) layout.getChildAt(3);
+
+                questionTextTextView.setText(playerActivity.getQuestionText());
+                Answer answer = playerActivity.getAnswer();
+                answerTextTextView.setText(answer != null ? answer.getAnswerText() : getString(R.string.lbl_not_answered));
+                AnswerIdentifier answerIdentifier = playerActivity.getAnswerIdentifier();
+                int betSize = answerIdentifier != null ? answerIdentifier.getBetSize() : 0;
+                betSizeTextView.setText(String.format("%d", betSize));
+                double multiplier = answer != null ? answer.getPointsMultiplier() : 0;
+                int roundedPotentialEarnings = (int) Math.round(betSize * multiplier);
+                totalPotentialEarnings += roundedPotentialEarnings;
+                potentialEarnTextView.setText(String.valueOf(roundedPotentialEarnings));
+
+                playerActivitiesContainerRoot.addView(activitiesLayout);
+
+            }
+
+            TextView playerTotalPotentialEarningsTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_total_potential_earnings_text_view);
+            //double totalPotentialEarnings = scoreDetailedInfo.getTotalPotentialEarnings();
+            String formattedTotalPotentialEarnings = Formatter.formatNumber(Math.round(totalPotentialEarnings),Formatter.intCommaSeparator);
+            playerTotalPotentialEarningsTextView.setText(formattedTotalPotentialEarnings);
+
+            adjustDialogWidthToWindow(scoreDetailsDialog);
+            scoreDetailsDialog.show();
+
+
+        }
+
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

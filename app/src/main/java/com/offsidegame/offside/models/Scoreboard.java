@@ -17,4 +17,14 @@ public class Scoreboard {
     public boolean isForceUpdate() {
         return forceUpdate;
     }
+
+    public Score getScoreByPlayerId(String playerId){
+        for(int i=0;i<scores.length;i++){
+            if(scores[i].getPlayerId().equals(playerId))
+                return scores[i];
+        }
+
+        return null;
+
+    }
 }

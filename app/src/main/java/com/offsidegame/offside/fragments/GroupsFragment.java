@@ -111,7 +111,7 @@ public class GroupsFragment extends Fragment {
             public void onTabSelected(TabLayout.Tab tab) {
                 super.onTabSelected(tab);
                 viewPager.setCurrentItem(tab.getPosition());
-                int selectedTabPosition=0;
+                int selectedTabPosition;
                 selectedTabPosition = viewPager.getCurrentItem();
                 OffsideApplication.selectedGroupTabPosition = selectedTabPosition;
                 //viewPagerAdapter.refreshTabLayout(selectedTabPosition);

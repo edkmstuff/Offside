@@ -46,6 +46,7 @@ import com.offsidegame.offside.events.CannotJoinPrivateGameEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
 import com.offsidegame.offside.events.EditValueEvent;
 import com.offsidegame.offside.events.GroupInviteEvent;
+import com.offsidegame.offside.events.InGamePlayerAssetsUpdateEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
 import com.offsidegame.offside.events.JoinGameWithCodeEvent;
 import com.offsidegame.offside.events.LoadingEvent;
@@ -210,7 +211,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         @Override
         public void onRewardedVideoAdEnded() {
-
+            Log.d(TAG, "onRewardedVideoAdEnded called");
 
         }
 
@@ -632,6 +633,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             OffsideApplication.setPlayerAssets(playerAssets);
 
+            EventBus.getDefault().post(new InGamePlayerAssetsUpdateEvent(InGamePlayerAssetsUpdateEvent.assetTypePowerItems,currentPowerItems,playerAssets.getPowerItems()));
+
             //update player stuff
             int balance = playerAssets.getBalance();
             int powerItems = playerAssets.getPowerItems();
@@ -644,8 +647,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             ImageHelper.loadImage(thisActivity, playerProfilePictureUrl, playerPictureImageView, activityName, true);
 
-            if (!isInviteToPrivateGame) {
-                playerInfoRoot.setVisibility(View.VISIBLE);
+            if (!(isInviteToPrivateGame || isCurrentLoadedFragmentIsChatFragment)) {
+                togglePlayerAssetsVisibility(true);
 
             }
             if(currentBalance!=balance)
@@ -671,6 +674,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
 
     }
+
 
     public void whereToGoNext() {
         try {

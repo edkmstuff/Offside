@@ -133,5 +133,10 @@
     <string name="lbl_to_double_win">TO DOUBLE WIN</string>
     <string name="lbl_use">USE</string>
     <string name="lbl_disclaimer_for_winner">Disclaimer: Announced only if answered at least 50% of questions</string>
+    <string name="lbl_question">Question</string>
+    <string name="lbl_answer">Answer</string>
+    <string name="lbl_bet">Bet</string>
+    <string name="lbl_can_earn">Can Earn</string>
+    <string name="lbl_total_potential_earnings">Total</string>
 
 </resources>

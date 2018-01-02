@@ -153,6 +153,13 @@
 
     </style>
 
+    <style name="playerActivitySumItemTitleText">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/OffsideExtraSmallText</item>
+        <item name="android:fontFamily">@font/open_sans_hebrew_light</item>
+
+    </style>
+
     <style name="playerActivityText">
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:textSize">@dimen/OffsideSmallText</item>
