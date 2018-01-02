@@ -49,7 +49,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:orientation="vertical">
 
                     <!--sender name-->
@@ -264,7 +263,7 @@
                         android:paddingRight="10dp"
                         android:paddingTop="5dp"
                         android:textColor="@color/chatText"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <LinearLayout
                             android:id="@+id/cm_incoming_time_to_answer_root"
@@ -378,7 +377,8 @@
                                     android:layout_marginRight="5dp"
                                     android:gravity="center_vertical"
                                     android:orientation="horizontal"
-                                    android:padding="5dp">
+                                    android:padding="5dp"
+                                    android:layoutDirection="locale">
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -1147,13 +1147,12 @@
             android:id="@+id/cm_outgoing_messages_root"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:orientation="horizontal"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:background="@drawable/shape_bg_outgoing_bubble"
             android:layout_gravity="right"
-            android:visibility="visible"
+
             >
 
             <ImageView
@@ -1167,7 +1166,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="gone">
+                >
 
                 <LinearLayout
                     android:layout_width="match_parent"

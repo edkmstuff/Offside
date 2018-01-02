@@ -27,12 +27,13 @@ public class ScoreDetailedInfo {
         this.totalQuestions = totalQuestions;
         this.totalAnsweredQuestions = totalAnsweredQuestions;
         this.totalCorrectAnswers = totalCorrectAnswers;
+
     }
 
     public ArrayList<PlayerActivity> getPlayerActivities() {
 
-        if(playerActivities==null)
-            playerActivities = new ArrayList<PlayerActivity>();
+        if (playerActivities == null)
+            playerActivities = new ArrayList();
 
 
         Collections.sort(playerActivities, new Comparator<PlayerActivity>() {
@@ -78,4 +79,23 @@ public class ScoreDetailedInfo {
     public void setTotalCorrectAnswers(int totalCorrectAnswers) {
         this.totalCorrectAnswers = totalCorrectAnswers;
     }
+
+//    public double getTotalPotentialEarnings() {
+//
+//        double potentialEarnings = 0;
+//        for (PlayerActivity playerActivity : playerActivities) {
+//            Answer answer = playerActivity.getAnswer();
+//            double pointsMultiplier = answer != null ? answer.getPointsMultiplier() : 0;
+//
+//            AnswerIdentifier answerIdentifier = playerActivity.getAnswerIdentifier();
+//            int betSize = answerIdentifier != null ? answerIdentifier.getBetSize() : 0;
+//
+//            potentialEarnings =  potentialEarnings+(pointsMultiplier * betSize);
+//        }
+//
+//        return potentialEarnings;
+//
+//    }
+
+
 }

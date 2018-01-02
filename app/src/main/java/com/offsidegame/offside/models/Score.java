@@ -10,6 +10,9 @@ public class Score {
     @com.google.gson.annotations.SerializedName("N")
     private String name;
 
+    @com.google.gson.annotations.SerializedName("PI")
+    private String playerId;
+
     @com.google.gson.annotations.SerializedName("IU")
     private String imageUrl;
 
@@ -68,5 +71,13 @@ public class Score {
 
     public void setScoreDetailedInfo(com.offsidegame.offside.models.ScoreDetailedInfo scoreDetailedInfo) {
         ScoreDetailedInfo = scoreDetailedInfo;
+    }
+
+    public String getPlayerId() {
+        return playerId;
+    }
+
+    public void setPlayerId(String playerId) {
+        this.playerId = playerId;
     }
 }

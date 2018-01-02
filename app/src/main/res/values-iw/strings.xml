@@ -117,6 +117,11 @@
     <string name="lbl_use">השתמש ב</string>
     <string name="lbl_to_double_win">לזכייה כפולה</string>
     <string name="lbl_disclaimer_for_winner">תנאי לזכיה הוא השתתפות בלפחות 50% מהשאלות</string>
+    <string name="lbl_question">שאלה</string>
+    <string name="lbl_answer">תשובה</string>
+    <string name="lbl_bet">הימור</string>
+    <string name="lbl_can_earn">רווח אפשרי</string>
+    <string name="lbl_total_potential_earnings">סכום</string>
 
 
 </resources>
