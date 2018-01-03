@@ -136,7 +136,7 @@
     <string name="lbl_question">Question</string>
     <string name="lbl_answer">Answer</string>
     <string name="lbl_bet">Bet</string>
-    <string name="lbl_can_earn">Can Earn</string>
+    <string name="lbl_can_earn">Potential Earnings</string>
     <string name="lbl_total_potential_earnings">Total</string>
 
 </resources>

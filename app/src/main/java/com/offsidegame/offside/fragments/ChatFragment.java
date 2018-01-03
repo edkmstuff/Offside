@@ -323,7 +323,7 @@ public class ChatFragment extends Fragment {
                     //hide keypad
                     hideKeypad();
 
-                    //OffsideApplication.networkingService.requestSendChatMessage(playerId, gameId, privateGameId, message);
+                    OffsideApplication.networkingService.requestSendChatMessage(playerId, gameId, privateGameId, message);
 
 
                 }

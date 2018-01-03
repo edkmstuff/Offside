@@ -15,7 +15,6 @@
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
         android:background="@drawable/bg_button_dialog"
-        android:weightSum="2"
         android:layout_marginLeft="1dp"
         android:layout_marginRight="0dp"
         android:layoutDirection="locale"
@@ -42,73 +41,50 @@
                 android:layout_gravity="left|center_vertical"
                 android:text="player name"
                 android:paddingLeft="8dp"
-                style="@style/playerActivityTitleText"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="end"
-            >
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/lbl_total_potential_earnings"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    style="@style/playerActivitySumItemTitleText"
-
-                    />
-                <TextView
-                android:id="@+id/digpa_player_total_potential_earnings_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:text="200"
                 style="@style/playerActivityTitleText"
-
                 />
-
-            </LinearLayout>
-
-
-
-
-
-
-
-            <!--<TextView-->
-                <!--android:id="@+id/digpa_player_accuracy_text_view"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="50%"-->
-                <!--android:paddingLeft="8dp"-->
-                <!--android:paddingRight="8dp"-->
-                <!--style="@style/playerActivityTitleText"-->
-                <!--/>-->
-            <!--<TextView-->
-                <!--android:id="@+id/digpa_player_total_answered_to_total_question_asked_ratio_text_view"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:paddingLeft="8dp"-->
-                <!--android:paddingRight="8dp"-->
-                <!--android:text="10/20"-->
-                <!--style="@style/playerActivityTitleText"-->
-                <!--/>-->
-
         </LinearLayout>
+
+        <!--<LinearLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:gravity="end"-->
+            <!--&gt;-->
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical"-->
+                <!--android:gravity="center"-->
+
+                <!--&gt;-->
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="@string/lbl_total_potential_earnings"-->
+                    <!--android:paddingLeft="8dp"-->
+                    <!--android:paddingRight="8dp"-->
+                    <!--style="@style/playerActivitySumItemTitleText"-->
+
+                    <!--/>-->
+                <!--<TextView-->
+                <!--android:id="@+id/digpa_player_total_potential_earnings_text_view"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:paddingLeft="8dp"-->
+                <!--android:paddingRight="8dp"-->
+                <!--android:text="200"-->
+                <!--style="@style/playerActivityTitleText"-->
+
+                <!--/>-->
+
+            <!--</LinearLayout>-->
+
+
+        <!--</LinearLayout>-->
 
 
 
@@ -155,7 +131,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/lbl_can_earn"
-            android:lines="1"
+            android:lines="2"
             style= "@style/playerActivityText"/>
 
     </LinearLayout>
@@ -186,6 +162,43 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:layoutDirection="locale"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginTop="2dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            >
+
+            <TextView
+                android:id="@+id/digpa_player_total_potential_earnings_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingEnd="8dp"
+
+                android:text="200"
+                style= "@style/playerActivityTextSumValue"
+
+                />
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
 
 
         <Button

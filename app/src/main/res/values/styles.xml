@@ -168,6 +168,16 @@
         <item name="android:paddingTop">2dp</item>
         <item name="android:paddingBottom">2dp</item>
 
+    </style>
+
+    <style name="playerActivityTextSumValue">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/OffsideSmallText</item>
+        <item name="android:fontFamily">@font/open_sans_hebrew_bold</item>
+        <item name="android:gravity">center|center_vertical</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+
 
     </style>
 
