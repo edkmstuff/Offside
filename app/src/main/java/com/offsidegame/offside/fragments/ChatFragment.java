@@ -318,11 +318,14 @@ public class ChatFragment extends Fragment {
             public void onClick(View view) {
                 String message = chatMessageEditText.getText().toString();
                 if (message != null && message.length() > 0) {
-                    OffsideApplication.networkingService.requestSendChatMessage(playerId, gameId, privateGameId, message);
                     //clear text
                     chatMessageEditText.setText("");
                     //hide keypad
                     hideKeypad();
+
+                    //OffsideApplication.networkingService.requestSendChatMessage(playerId, gameId, privateGameId, message);
+
+
                 }
 
 
