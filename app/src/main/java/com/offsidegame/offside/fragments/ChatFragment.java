@@ -725,27 +725,27 @@ public class ChatFragment extends Fragment {
             if (scores == null || scores.length == 0)
                 return;
 
-
+            //not needed since playerActivities in the scoreboard is changing on any question/answer activity
             //check if scoreboard was changed
-            Scoreboard currentScoreboard = OffsideApplication.getScoreboard();
+//            Scoreboard currentScoreboard = OffsideApplication.getScoreboard();
 
-            boolean isScoreboardsEquals = false;
-            if (!scoreboard.isForceUpdate() && currentScoreboard != null && currentScoreboard.getScores() != null && currentScoreboard.getScores().length == scores.length) {
-                Score[] currentScores = currentScoreboard.getScores();
-                for (int i = 0; i < currentScores.length; i++) {
-                    boolean isEqualScore = currentScores[i].getImageUrl().equals(scores[i].getImageUrl()) &&
-                            currentScores[i].getPosition() == scores[i].getPosition() &&
-                            currentScores[i].getOffsideCoins() == scores[i].getOffsideCoins();
-
-                    if (!isEqualScore)
-                        break;
-                    if (i == currentScores.length - 1)
-                        isScoreboardsEquals = true;
-                }
-
-            }
-            if (isScoreboardsEquals)
-                return;
+//            boolean isScoreboardsEquals = false;
+//            if (!scoreboard.isForceUpdate() && currentScoreboard != null && currentScoreboard.getScores() != null && currentScoreboard.getScores().length == scores.length) {
+//                Score[] currentScores = currentScoreboard.getScores();
+//                for (int i = 0; i < currentScores.length; i++) {
+//                    boolean isEqualScore = currentScores[i].getImageUrl().equals(scores[i].getImageUrl()) &&
+//                            currentScores[i].getPosition() == scores[i].getPosition() &&
+//                            currentScores[i].getOffsideCoins() == scores[i].getOffsideCoins();
+//
+//                    if (!isEqualScore)
+//                        break;
+//                    if (i == currentScores.length - 1)
+//                        isScoreboardsEquals = true;
+//                }
+//
+//            }
+//            if (isScoreboardsEquals)
+//                return;
 
             OffsideApplication.setScoreboard(scoreboard);
 
