@@ -673,7 +673,7 @@ public class NetworkingService extends Service {
                                     //EventBus.getDefault().post(new NetworkingErrorFixedEvent(method));
                                 }
                                 else{
-
+//
                                 }
                             }
                         }, sendToServerErrorDelay);
