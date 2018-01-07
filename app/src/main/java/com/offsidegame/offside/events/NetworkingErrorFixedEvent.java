@@ -5,17 +5,18 @@ package com.offsidegame.offside.events;
  */
 
 public class NetworkingErrorFixedEvent {
-    private String error = "";
+    private boolean isError = false;
 
-    public NetworkingErrorFixedEvent(String error) {
-        this.error = error;
+    public NetworkingErrorFixedEvent(boolean isError) {
+        this.isError = isError;
     }
 
-    public String getError() {
-        return error;
+
+    public boolean isError() {
+        return isError;
     }
 
-    public void setError(String error) {
-        this.error = error;
+    public void setError(boolean error) {
+        isError = error;
     }
 }

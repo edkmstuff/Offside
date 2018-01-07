@@ -15,6 +15,26 @@
         android:orientation="vertical"
         >
 
+        <LinearLayout
+            android:id="@+id/fc_disconnected_message_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+
+
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/disconnectedBackgroundColor"
+                android:textColor="@color/colorWhite"
+                android:padding="2dp"
+                android:text="Disconnected"
+
+                />
+
+        </LinearLayout>
         <!--group name-->
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,7 +66,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="8"
+                android:orientation="vertical"
                 android:gravity="center">
+
 
                 <TextView
                     android:id="@+id/fc_private_game_name_text_view"

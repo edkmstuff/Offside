@@ -144,6 +144,9 @@ public class ChatFragment extends Fragment {
     private Button dialogOkButton;
     private Button dialogCancelButton;
 
+
+    private LinearLayout disconnectedMessageRoot;
+
     //</editor-fold>
 
     public static ChatFragment newInstance() {
@@ -269,6 +272,8 @@ public class ChatFragment extends Fragment {
         backNavigationButtonImageView = view.findViewById(R.id.fsg_back_navigation_button_image_view);
         exitButtonImageView = view.findViewById(R.id.fc_exit_button_image_view);
 
+        disconnectedMessageRoot = view.findViewById(R.id.fc_disconnected_message_root);
+
     }
 
 
@@ -384,13 +389,13 @@ public class ChatFragment extends Fragment {
             public void onClick(View view) {
 
                 Scoreboard scoreboard = OffsideApplication.getScoreboard();
-                if(scoreboard==null)
+                if (scoreboard == null)
                     return;
                 Score score = scoreboard.getScoreByPlayerId(playerId);
-                if(score==null)
+                if (score == null)
                     return;
 
-                showPlayerInGameActivityDialog(score.getScoreDetailedInfo(),score.getImageUrl(),score.getName());
+                showPlayerInGameActivityDialog(score.getScoreDetailedInfo(), score.getImageUrl(), score.getName());
             }
         });
 
@@ -823,7 +828,7 @@ public class ChatFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
 
-                        showPlayerInGameActivityDialog(score.getScoreDetailedInfo(),score.getImageUrl(),score.getName());
+                        showPlayerInGameActivityDialog(score.getScoreDetailedInfo(), score.getImageUrl(), score.getName());
 
 
                     }
@@ -839,7 +844,7 @@ public class ChatFragment extends Fragment {
         }
     }
 
-    public void showPlayerInGameActivityDialog(ScoreDetailedInfo scoreDetailedInfo, String playerImageUrl, String playerName){
+    public void showPlayerInGameActivityDialog(ScoreDetailedInfo scoreDetailedInfo, String playerImageUrl, String playerName) {
 
         final Dialog scoreDetailsDialog = new Dialog(getContext());
         scoreDetailsDialog.setContentView(R.layout.dialog_in_game_player_activity);
@@ -875,7 +880,7 @@ public class ChatFragment extends Fragment {
 
             LinearLayout playerActivitiesContainerRoot = scoreDetailsDialog.findViewById(R.id.digpa_player_activities_container_root);
             playerActivitiesContainerRoot.removeAllViewsInLayout();
-            int totalPotentialEarnings=0;
+            int totalPotentialEarnings = 0;
             for (PlayerActivity playerActivity : scoreDetailedInfo.getPlayerActivities()) {
 
                 ViewGroup activitiesLayout = (ViewGroup) LayoutInflater.from(getContext()).inflate(R.layout.player_activity_item, playerActivitiesContainerRoot, false);
@@ -902,7 +907,7 @@ public class ChatFragment extends Fragment {
 
             TextView playerTotalPotentialEarningsTextView = scoreDetailsDialog.findViewById(R.id.digpa_player_total_potential_earnings_text_view);
             //double totalPotentialEarnings = scoreDetailedInfo.getTotalPotentialEarnings();
-            String formattedTotalPotentialEarnings = Formatter.formatNumber(Math.round(totalPotentialEarnings),Formatter.intCommaSeparator);
+            String formattedTotalPotentialEarnings = Formatter.formatNumber(Math.round(totalPotentialEarnings), Formatter.intCommaSeparator);
             playerTotalPotentialEarningsTextView.setText(formattedTotalPotentialEarnings);
 
             adjustDialogWidthToWindow(scoreDetailsDialog);
@@ -941,7 +946,13 @@ public class ChatFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNetworkingErrorReceived(NetworkingErrorFixedEvent networkingErrorFixedEvent) {
         try {
-            init();
+            if (networkingErrorFixedEvent.isError()) {
+                disconnectedMessageRoot.setVisibility(View.VISIBLE);
+
+            } else {
+                disconnectedMessageRoot.setVisibility(View.GONE);
+                init();
+            }
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);

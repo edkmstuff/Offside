@@ -15,6 +15,8 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
+import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.offsidegame.offside.BuildConfig;
@@ -78,6 +80,7 @@ import org.greenrobot.eventbus.EventBus;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 
@@ -87,6 +90,7 @@ import java.util.concurrent.CountDownLatch;
 
 public class NetworkingService extends Service {
 
+    private int reconnectAttempts = 1;
     private RecoverableConnection connection;
     private Channel channel;
     private String listenerQueueName;
@@ -95,7 +99,7 @@ public class NetworkingService extends Service {
     private String userName = "kfir";
 
     /****************************DEVELOPMENT**************************/
-   // private String hostName = "10.0.2.2";
+    // private String hostName = "10.0.2.2";
     //private String hostName = "192.168.1.140";
 //    private String hostName = "10.0.0.17";
 
@@ -110,43 +114,39 @@ public class NetworkingService extends Service {
     private int mId = -1;
 
 
-
     private Map<String, Boolean> currentStates = new HashMap<>();
     private Map<String, Boolean> currentRoutingKeys = new HashMap<>();
 
 
-
-
-
     public NetworkingService() {
 
-        currentStates.put("chatMessagesReceived",false);
-        currentStates.put("chatMessageReceived",false);
-        currentStates.put("scoreboardReceived",false);
-        currentStates.put("playerDataReceived",false); //no request from client, only push from server
-        currentStates.put("positionReceived",false); //no request from client, only push from server
-        currentStates.put("answerAccepted",false);
-        currentStates.put("privateGroupCreated",false);
-        currentStates.put("privateGroupReceived",false);
-        currentStates.put("privateGroupChangedReceived",false); //no request from client, only push from server
-        currentStates.put("availableGamesReceived",false);
-        currentStates.put("leagueRecordsReceived",false);
-        currentStates.put("privateGameCreated",false);
-        currentStates.put("playerJoinedPrivateGame",false);
-        currentStates.put("loggedInUserReceived",false);
-        currentStates.put("userProfileInfoReceived",false);
-        currentStates.put("playerAssetsReceived",false);
-        currentStates.put("availableGameReceived",false);
-        currentStates.put("friendInviteReceived",false);
-        currentStates.put("playerImageSaved",false);
-        currentStates.put("privateGroupsReceived",false);
-        currentStates.put("privateGroupDeleted",false);
-        currentStates.put("playerJoinPrivateGroupReceived",false);
-        currentStates.put("playerRewardSaved",false);
-        currentStates.put("playerQuitPrivateGame",false);
-        currentStates.put("playerJoinedPrivateGameByCode",false);
-        currentStates.put("privateGroupUpdatedReceived",false);
-        currentStates.put("playerNameUpdatedReceived",false);
+        currentStates.put("chatMessagesReceived", false);
+        currentStates.put("chatMessageReceived", false);
+        currentStates.put("scoreboardReceived", false);
+        currentStates.put("playerDataReceived", false); //no request from client, only push from server
+        currentStates.put("positionReceived", false); //no request from client, only push from server
+        currentStates.put("answerAccepted", false);
+        currentStates.put("privateGroupCreated", false);
+        currentStates.put("privateGroupReceived", false);
+        currentStates.put("privateGroupChangedReceived", false); //no request from client, only push from server
+        currentStates.put("availableGamesReceived", false);
+        currentStates.put("leagueRecordsReceived", false);
+        currentStates.put("privateGameCreated", false);
+        currentStates.put("playerJoinedPrivateGame", false);
+        currentStates.put("loggedInUserReceived", false);
+        currentStates.put("userProfileInfoReceived", false);
+        currentStates.put("playerAssetsReceived", false);
+        currentStates.put("availableGameReceived", false);
+        currentStates.put("friendInviteReceived", false);
+        currentStates.put("playerImageSaved", false);
+        currentStates.put("privateGroupsReceived", false);
+        currentStates.put("privateGroupDeleted", false);
+        currentStates.put("playerJoinPrivateGroupReceived", false);
+        currentStates.put("playerRewardSaved", false);
+        currentStates.put("playerQuitPrivateGame", false);
+        currentStates.put("playerJoinedPrivateGameByCode", false);
+        currentStates.put("privateGroupUpdatedReceived", false);
+        currentStates.put("playerNameUpdatedReceived", false);
 
 
     }
@@ -159,11 +159,14 @@ public class NetworkingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int result = super.onStartCommand(intent, flags, startId);
+        CountDownLatch latch = new CountDownLatch(1);
         try {
-            startRabbitMq();
+            startRabbitMq(latch);
+            latch.await();
         } catch (InterruptedException ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
+
         return result;
     }
 
@@ -177,7 +180,9 @@ public class NetworkingService extends Service {
     public IBinder onBind(Intent intent) {
 
         try {
-            startRabbitMq();
+            CountDownLatch latch = new CountDownLatch(1);
+            startRabbitMq(latch);
+            latch.await();
             //ACRA.getErrorReporter().putCustomData("RabbitMqHostName", hostName);
         } catch (InterruptedException ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -186,8 +191,8 @@ public class NetworkingService extends Service {
         return binder;
     }
 
-    private void startRabbitMq() throws InterruptedException {
-        final CountDownLatch latch = new CountDownLatch(1);
+    private void startRabbitMq(final CountDownLatch latch) throws InterruptedException {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -225,25 +230,44 @@ public class NetworkingService extends Service {
 //                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                            startActivity(intent);
 
-                            EventBus.getDefault().post(new NetworkingErrorFixedEvent(null));
+                            EventBus.getDefault().post(new NetworkingErrorFixedEvent(false));
                         }
 
                         @Override
                         public void handleRecoveryStarted(Recoverable recoverable) {
+                            EventBus.getDefault().post(new NetworkingErrorFixedEvent(true));
                             //EventBus.getDefault().post(new LoadingEvent(true,"Disconnected. Working on it..."));
                         }
                     });
 
+                    if (latch != null)
+                        latch.countDown();
 
+                    reconnectAttempts = 1;
 
 
                 } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
+                    try {
+                        Thread.sleep(2000);
+                    } catch (Exception ex1) {
 
-                } finally {
+                    }
 
-                    if (latch != null)
-                        latch.countDown();
+                    try{
+
+                    //    Toast.makeText(getApplicationContext(), "connecting..." , Toast.LENGTH_LONG);
+                        reconnectAttempts ++;
+
+
+                        if (reconnectAttempts <= 30)
+                            startRabbitMq(latch);
+                    }
+                    catch (Exception ex2){
+                        ACRA.getErrorReporter().handleSilentException(ex2);
+
+                    }
+
 
                 }
 
@@ -319,10 +343,10 @@ public class NetworkingService extends Service {
                     if (routingKey == null)
                         return;
 
-                    currentRoutingKeys.put(routingKey,true);
+                    currentRoutingKeys.put(routingKey, true);
 
                     channel.exchangeDeclare(SERVER_TO_CLIENTS_EXCHANGE_NAME, "direct");
-                    channel.queueBind(listenerQueueName,SERVER_TO_CLIENTS_EXCHANGE_NAME, routingKey);
+                    channel.queueBind(listenerQueueName, SERVER_TO_CLIENTS_EXCHANGE_NAME, routingKey);
 
                     if (consumerTag != null)
                         return;
@@ -363,7 +387,7 @@ public class NetworkingService extends Service {
 
                     currentRoutingKeys.remove(routingKey);
 
-                    channel.queueUnbind(listenerQueueName,SERVER_TO_CLIENTS_EXCHANGE_NAME,  routingKey);
+                    channel.queueUnbind(listenerQueueName, SERVER_TO_CLIENTS_EXCHANGE_NAME, routingKey);
 
                 } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
@@ -405,30 +429,39 @@ public class NetworkingService extends Service {
 
     }
 
-//    private void recoverConnectionAndRedoRequest(String json, String method, String stateKey)  {
-//        try {
-//            //this will stop before starting
-//            startRabbitMq();
-//            CountDownLatch latch = new CountDownLatch(1);
-//            createQueue(listenerQueueName, latch);
-//            Set<String> keys = currentRoutingKeys.keySet();
-//            for (String key : keys) {
-//                latch = new CountDownLatch(1);
-//                bindToRoutingKey(key, latch);
-//            }
-//        }
-//        catch (Exception ex){
-//            ACRA.getErrorReporter().handleSilentException(ex);
-//        }
-//
-//
-//
-//    }
+    private void recoverConnectionAndRedoRequest(String json, String method, String stateKey)  {
+        try {
+            CountDownLatch latch = new CountDownLatch(1);
+            //this will stop before starting
+            startRabbitMq(latch);
+            latch.await();
+
+            latch = new CountDownLatch(1);
+            createQueue(listenerQueueName, latch);
+            latch.await();
+
+            Set<String> keys = currentRoutingKeys.keySet();
+            for (String key : keys) {
+                latch = new CountDownLatch(1);
+                bindToRoutingKey(key, latch);
+                latch.await();
+            }
+
+            if (json != null && method != null && stateKey != null)
+                sendToServer(json, method, stateKey);
+
+        }
+        catch (Exception ex){
+            ACRA.getErrorReporter().handleSilentException(ex);
+        }
+
+
+
+    }
 
 
     public void onServerMessage(String message, String model) {
-        try
-        {
+        try {
             final Gson gson = new GsonBuilder().serializeNulls().create();
 
             if (message.equals("ChatMessagesReceived")) {
@@ -437,120 +470,120 @@ public class NetworkingService extends Service {
                 EventBus.getDefault().post(new ChatEvent(chat));
             } else if (message.equals("ChatMessageReceived")) {
                 ChatMessage chatMessage = gson.fromJson(model, ChatMessage.class);
-                currentStates.put("chatMessageReceived" , true);
+                currentStates.put("chatMessageReceived", true);
                 fireNotification(chatMessage.getMessageType(), chatMessage.getMessageText());
                 EventBus.getDefault().post(new ChatMessageEvent(chatMessage));
                 EventBus.getDefault().post(new NotificationBubbleEvent(NotificationBubbleEvent.navigationItemChat));
             } else if (message.equals("ScoreboardReceived")) {
                 Scoreboard scoreboard = gson.fromJson(model, Scoreboard.class);
-                currentStates.put("scoreboardReceived" , true);
+                currentStates.put("scoreboardReceived", true);
                 EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
             } else if (message.equals("PlayerDataReceived")) {
                 PlayerModel playerModel = gson.fromJson(model, PlayerModel.class);
-                currentStates.put("playerDataReceived" , true);
+                currentStates.put("playerDataReceived", true);
                 EventBus.getDefault().post(new PlayerModelEvent(playerModel));
             } else if (message.equals("PositionReceived")) {
                 Position position = gson.fromJson(model, Position.class);
-                currentStates.put("positionReceived" , true);
+                currentStates.put("positionReceived", true);
                 EventBus.getDefault().post(new PositionEvent(position));
             } else if (message.equals("AnswerAcceptedReceived")) {
                 PostAnswerRequestInfo postAnswerRequestInfo = gson.fromJson(model, PostAnswerRequestInfo.class);
-                currentStates.put("answerAccepted" , true);
+                currentStates.put("answerAccepted", true);
                 EventBus.getDefault().post(postAnswerRequestInfo);
             } else if (message.equals("PrivateGroupsReceived")) {
                 PrivateGroupsInfo privateGroupsInfo = gson.fromJson(model, PrivateGroupsInfo.class);
-                currentStates.put("privateGroupsReceived" , true);
+                currentStates.put("privateGroupsReceived", true);
                 EventBus.getDefault().post(privateGroupsInfo);
             } else if (message.equals("PrivateGroupCreated")) {
                 PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
-                currentStates.put("privateGroupCreated" , true);
+                currentStates.put("privateGroupCreated", true);
                 EventBus.getDefault().post(new PrivateGroupCreatedEvent(privateGroup));
             } else if (message.equals("PrivateGroupDeletedReceived")) {
                 KeyValue numberOfDeletedGroupsKeyValue = gson.fromJson(model, KeyValue.class);
                 Integer numberOfDeletedGroups = Integer.parseInt(numberOfDeletedGroupsKeyValue.getValue());
-                currentStates.put("privateGroupDeleted" , true);
+                currentStates.put("privateGroupDeleted", true);
                 EventBus.getDefault().post(new PrivateGroupDeletedEvent(numberOfDeletedGroups));
             } else if (message.equals("PlayerJoinedPrivateGroupReceived")) {
                 KeyValue numberOfPlayerAddedKeyValue = gson.fromJson(model, KeyValue.class);
                 Integer numberOfPlayerAdded = Integer.parseInt(numberOfPlayerAddedKeyValue.getValue());
-                currentStates.put("playerJoinPrivateGroupReceived" , true);
+                currentStates.put("playerJoinPrivateGroupReceived", true);
                 EventBus.getDefault().post(new PlayerJoinPrivateGroupEvent(numberOfPlayerAdded));
             } else if (message.equals("PrivateGroupReceived")) {
                 PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
-                currentStates.put("privateGroupReceived" , true);
+                currentStates.put("privateGroupReceived", true);
                 EventBus.getDefault().post(new PrivateGroupEvent(privateGroup));
             } else if (message.equals("PrivateGroupChangedReceived")) {
                 PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
-                currentStates.put("privateGroupChangedReceived" , true);
+                currentStates.put("privateGroupChangedReceived", true);
                 EventBus.getDefault().post(new PrivateGroupChangedEvent(privateGroup));
             } else if (message.equals("AvailableGamesReceived")) {
                 AvailableGame[] availableGames = gson.fromJson(model, AvailableGame[].class);
-                currentStates.put("availableGamesReceived" , true);
+                currentStates.put("availableGamesReceived", true);
                 EventBus.getDefault().post(availableGames);
             } else if (message.equals("LeagueRecordsReceived")) {
                 LeagueRecord[] leagueRecords = gson.fromJson(model, LeagueRecord[].class);
-                currentStates.put("leagueRecordsReceived" , true);
+                currentStates.put("leagueRecordsReceived", true);
                 EventBus.getDefault().post(leagueRecords);
             } else if (message.equals("PrivateGameCreated")) {
                 KeyValue privateGameIdKeyValue = gson.fromJson(model, KeyValue.class);
                 String privateGameId = privateGameIdKeyValue.getValue();
-                currentStates.put("privateGameCreated" , true);
+                currentStates.put("privateGameCreated", true);
                 EventBus.getDefault().post(new PrivateGameGeneratedEvent(privateGameId));
             } else if (message.equals("PlayerJoinedPrivateGame")) {
                 GameInfo gameInfo = gson.fromJson(model, GameInfo.class);
-                currentStates.put("playerJoinedPrivateGame" , true);
+                currentStates.put("playerJoinedPrivateGame", true);
                 EventBus.getDefault().post(new JoinGameEvent(gameInfo));
             } else if (message.equals("LoggedInUserReceived")) {
                 PlayerAssets playerAssets = gson.fromJson(model, PlayerAssets.class);
-                currentStates.put("loggedInUserReceived" , true);
+                currentStates.put("loggedInUserReceived", true);
                 EventBus.getDefault().post(playerAssets);
             } else if (message.equals("PlayerImageSaved")) {
                 KeyValue isPlayerImageSavedKeyValue = gson.fromJson(model, KeyValue.class);
                 Boolean isPlayerImageSaved = Boolean.parseBoolean(isPlayerImageSavedKeyValue.getValue());
-                currentStates.put("playerImageSaved" , true);
+                currentStates.put("playerImageSaved", true);
                 EventBus.getDefault().post(new PlayerImageSavedEvent(isPlayerImageSaved));
             } else if (message.equals("UserProfileInfoReceived")) {
                 UserProfileInfo userProfileInfo = gson.fromJson(model, UserProfileInfo.class);
-                currentStates.put("userProfileInfoReceived" , true);
+                currentStates.put("userProfileInfoReceived", true);
                 EventBus.getDefault().post(userProfileInfo);
             } else if (message.equals("PlayerAssetsReceived")) {
                 PlayerAssets playerAssets = gson.fromJson(model, PlayerAssets.class);
-                currentStates.put("playerAssetsReceived" , true);
+                currentStates.put("playerAssetsReceived", true);
                 EventBus.getDefault().post(playerAssets);
             } else if (message.equals("AvailableGameReceived")) {
                 AvailableGame availableGame = gson.fromJson(model, AvailableGame.class);
-                currentStates.put("availableGameReceived" , true);
+                currentStates.put("availableGameReceived", true);
                 EventBus.getDefault().post(new AvailableGameEvent(availableGame));
             } else if (message.equals("FriendInviteReceived")) {
                 KeyValue friendInviteCodeKeyValue = gson.fromJson(model, KeyValue.class);
                 String friendInviteCode = friendInviteCodeKeyValue.getValue();
-                currentStates.put("friendInviteReceived" , true);
+                currentStates.put("friendInviteReceived", true);
                 EventBus.getDefault().post(new FriendInviteReceivedEvent(friendInviteCode));
             } else if (message.equals("PlayerRewardedReceived")) {
                 RewardedPlayer rewardPlayer = gson.fromJson(model, RewardedPlayer.class);
-                currentStates.put("playerRewardSaved" , true);
+                currentStates.put("playerRewardSaved", true);
                 EventBus.getDefault().post(new PlayerRewardedReceivedEvent(rewardPlayer));
             } else if (message.equals("PlayerQuitPrivateGameReceived")) {
                 KeyValue playerWasRemovedFromPrivateGameKeyValue = gson.fromJson(model, KeyValue.class);
                 boolean playerWasRemovedFromPrivateGame = Boolean.parseBoolean(playerWasRemovedFromPrivateGameKeyValue.getValue());
-                currentStates.put("playerQuitPrivateGame" , true);
+                currentStates.put("playerQuitPrivateGame", true);
                 EventBus.getDefault().post(new PlayerQuitFromPrivateGameEvent(playerWasRemovedFromPrivateGame));
             } else if (message.equals("PrivateGameInfoByCodeReceived")) {
                 PrivateGameInfo privateGameInfo = gson.fromJson(model, PrivateGameInfo.class);
-                currentStates.put("playerJoinedPrivateGameByCode" , true);
+                currentStates.put("playerJoinedPrivateGameByCode", true);
                 EventBus.getDefault().post(privateGameInfo);
             } else if (message.equals("PrivateGroupUpdatedReceived")) {
                 PrivateGroup privateGroup = gson.fromJson(model, PrivateGroup.class);
-                currentStates.put("privateGroupUpdatedReceived" , true);
+                currentStates.put("privateGroupUpdatedReceived", true);
                 EventBus.getDefault().post(new PrivateGroupUpdatedEvent(privateGroup));
             } else if (message.equals("PlayerNameUpdatedReceived")) {
                 PlayerModel playerModel = gson.fromJson(model, PlayerModel.class);
-                currentStates.put("playerNameUpdatedReceived" , true);
+                currentStates.put("playerNameUpdatedReceived", true);
                 EventBus.getDefault().post(new PlayerModelEvent(playerModel));
             }
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
 
@@ -559,8 +592,7 @@ public class NetworkingService extends Service {
 
     private void fireNotification(String messageType, String message) {
 
-        try
-        {
+        try {
 
             boolean isAskedQuestion = messageType.equals(OffsideApplication.getMessageTypeAskedQuestion());
             boolean isCloseQuestion = messageType.equals(OffsideApplication.getMessageTypeClosedQuestion());
@@ -568,7 +600,7 @@ public class NetworkingService extends Service {
 
             if (isAskedQuestion || isCloseQuestion) {
                 MediaPlayer player;
-                if(isAskedQuestion){
+                if (isAskedQuestion) {
                     soundResource = R.raw.human_whisle;
                     player = MediaPlayer.create(getApplicationContext(), soundResource);
                     player.start();
@@ -579,7 +611,7 @@ public class NetworkingService extends Service {
                     final Gson gson = new GsonBuilder().serializeNulls().create();
                     Question question = gson.fromJson(message, Question.class);
                     AnswerIdentifier answerIdentifier = OffsideApplication.playerAnswers.containsKey(question.getId()) ? OffsideApplication.playerAnswers.get(question.getId()) : null;
-                    if(answerIdentifier==null)
+                    if (answerIdentifier == null)
                         return;
                     boolean isAnswerCorrect = answerIdentifier.getAnswerId().equals(question.getCorrectAnswerId());
                     boolean isQuestionSkipped = answerIdentifier.isSkipped();
@@ -589,13 +621,11 @@ public class NetworkingService extends Service {
                         soundResource = R.raw.aww;
                     }
 
-                    if(!isQuestionSkipped){
+                    if (!isQuestionSkipped) {
                         player = MediaPlayer.create(getApplicationContext(), soundResource);
                         player.start();
                     }
                 }
-
-
 
 
                 if (!OffsideApplication.isLobbyActivityVisible()) {
@@ -644,10 +674,9 @@ public class NetworkingService extends Service {
             }
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
-
 
 
     }
@@ -659,8 +688,10 @@ public class NetworkingService extends Service {
 
                 try {
 
-                    if (connection == null || !connection.isOpen() || channel == null || !channel.isOpen())
-                        return;
+                    if (connection == null || !connection.isOpen() || channel == null || !channel.isOpen()){
+                        recoverConnectionAndRedoRequest(null,null,null);
+                    }
+
                     channel.exchangeDeclare(CLIENTS_TO_SERVER_EXCHANGE_NAME, "fanout");
                     //channel.queueDeclare(CLIENTS_TO_SERVER_EXCHANGE_NAME, false, false, false, null);
                     channel.basicPublish(CLIENTS_TO_SERVER_EXCHANGE_NAME, "", null, json.getBytes("UTF-8"));
@@ -671,8 +702,7 @@ public class NetworkingService extends Service {
                                 if (!currentStates.get(stateKey)) {
                                     //recoverConnectionAndRedoRequest(json, method, stateKey);
                                     //EventBus.getDefault().post(new NetworkingErrorFixedEvent(method));
-                                }
-                                else{
+                                } else {
 //
                                 }
                             }
@@ -692,7 +722,7 @@ public class NetworkingService extends Service {
 
     public void requestQuitFromPrivateGame(String playerId, String gameId, String privateGameId, String androidDeviceId) {
         String stateKey = "playerQuitPrivateGame";
-        currentStates.put(stateKey,false);
+        currentStates.put(stateKey, false);
         String method = "RequestQuitPrivateGame";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -707,7 +737,7 @@ public class NetworkingService extends Service {
 
     public void requestAvailableGame(String playerId, String gameId, String privateGameId) {
         String stateKey = "availableGameReceived";
-        currentStates.put(stateKey,false);
+        currentStates.put(stateKey, false);
         String method = "RequestAvailableGame";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -721,7 +751,7 @@ public class NetworkingService extends Service {
 
     public void requestCreatePrivateGame(String playerId, String gameId, String groupId, String selectedLanguage) {
         String stateKey = "privateGameCreated";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestCreatePrivateGame";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -736,7 +766,7 @@ public class NetworkingService extends Service {
 
     public void requestPostAnswer(final String playerId, final String gameId, final String privateGameId, final String questionId, final String answerId, final boolean isSkipped, final int betSize) {
         String stateKey = "answerAccepted";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestPostAnswer";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -767,7 +797,7 @@ public class NetworkingService extends Service {
     public void requestGetChatMessages(String playerId, String gameId, String privateGameId, String androidDeviceId) {
 
         String stateKey = "chatMessagesReceived";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestGetChatMessages";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -782,7 +812,7 @@ public class NetworkingService extends Service {
 
     public void requestSendChatMessage(String playerId, String gameId, String privateGameId, String message) {
         String stateKey = "chatMessageReceived";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestSendChatMessage";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -797,7 +827,7 @@ public class NetworkingService extends Service {
 
     public void requestSaveLoggedInUser(String playerId, String name, String email, String imageUrl, String playerColor, String deviceToken) {
         String stateKey = "loggedInUserReceived";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestSaveLoggedInUser";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -815,7 +845,7 @@ public class NetworkingService extends Service {
 
     public void requestSaveImageInDatabase(String playerId, String imageString) {
         String stateKey = "playerImageSaved";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestSaveImageInDatabase";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -828,7 +858,7 @@ public class NetworkingService extends Service {
 
     public void requestPrivateGroupsInfo(String playerId) {
         String stateKey = "privateGroupsReceived";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestPrivateGroupsInfo";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -840,7 +870,7 @@ public class NetworkingService extends Service {
 
     public void requestAvailableGames(String playerId, String groupId) {
         String stateKey = "availableGamesReceived";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestAvailableGames";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -853,7 +883,7 @@ public class NetworkingService extends Service {
 
     public void requestCreatePrivateGroup(String playerId, String groupName, String groupType) {
         String stateKey = "privateGroupCreated";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestCreatePrivateGroup";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -867,7 +897,7 @@ public class NetworkingService extends Service {
 
     public void requestJoinPrivateGame(String playerId, String gameId, String groupId, String privateGameId, String androidDeviceId) {
         String stateKey = "playerJoinedPrivateGame";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestJoinPrivateGame";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -883,7 +913,7 @@ public class NetworkingService extends Service {
 
     public void requestUserProfileData(String playerId) {
         String stateKey = "userProfileInfoReceived";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestUserProfile";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -895,7 +925,7 @@ public class NetworkingService extends Service {
 
     public void requestLeagueRecords(String playerId, String groupId) {
         String stateKey = "leagueRecordsReceived";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestLeagueRecords";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -908,7 +938,7 @@ public class NetworkingService extends Service {
 
     public void requestPlayerAssets(String playerId) {
         String stateKey = "playerAssetsReceived";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestPlayerAssets";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -920,7 +950,7 @@ public class NetworkingService extends Service {
 
     public void requestInviteFriend(String inviterPlayerId, String groupId, String gameId, String privateGameId) {
         String stateKey = "friendInviteReceived";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestInviteFriend";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -935,7 +965,7 @@ public class NetworkingService extends Service {
 
     public void requestPrivateGroup(String playerId, String groupId) {
         String stateKey = "privateGroupReceived";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestPrivateGroup";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -948,7 +978,7 @@ public class NetworkingService extends Service {
 
     public void requestDeletePrivateGroup(String playerId, String groupId) {
         String stateKey = "privateGroupDeleted";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestDeletePrivateGroup";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -961,7 +991,7 @@ public class NetworkingService extends Service {
 
     public void requestJoinPrivateGroup(String playerId, String groupId) {
         String stateKey = "playerJoinPrivateGroupReceived";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestJoinPrivateGroup";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -974,7 +1004,7 @@ public class NetworkingService extends Service {
 
     public void requestToRewardPlayer(String playerId, String rewardType, String rewardReason, int quantity) {
         String stateKey = "playerRewardSaved";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestToRewardPlayer";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -989,7 +1019,7 @@ public class NetworkingService extends Service {
 
     public void RequestPrivateGameInfoByCode(String playerId, String privateGameCode) {
         String stateKey = "playerJoinedPrivateGameByCode";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestPrivateGameInfoByCode";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -1002,7 +1032,7 @@ public class NetworkingService extends Service {
 
     public void RequestUpdatePrivateGroup(String playerId, String groupId, String groupName) {
         String stateKey = "privateGroupUpdated";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestUpdatePrivateGroup";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -1017,7 +1047,7 @@ public class NetworkingService extends Service {
 
     public void requestUpdatePlayerName(String playerId, String playerName) {
         String stateKey = "playerNameUpdated";
-        currentStates.put(stateKey , false);
+        currentStates.put(stateKey, false);
         String method = "RequestUpdatePlayerName";
         Map<String, String> params = new HashMap<>();
         params.put("method", method);
@@ -1028,10 +1058,6 @@ public class NetworkingService extends Service {
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
     }
-
-
-
-
 
 
     //</editor-fold>

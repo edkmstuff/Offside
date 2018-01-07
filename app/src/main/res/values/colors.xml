@@ -82,6 +82,7 @@
     <color name="defaultImageBackgroundColor6">#004D40</color>
 
     <color name="senderNameColor">#E57373</color>
+    <color name="disconnectedBackgroundColor">#FF5252</color>
 
     <color name="wheelBackgroundColorOdd">#00E676</color>
     <color name="wheelBackgroundColorEven">#69F0AE</color>
