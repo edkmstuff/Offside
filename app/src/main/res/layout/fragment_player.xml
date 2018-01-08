@@ -245,7 +245,6 @@
                             android:orientation="vertical"
                             android:layout_marginTop="6dp"
                             >
-                            <!--option 1-->
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -415,7 +414,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layoutDirection="rtl"
+                                android:layoutDirection="locale"
                                 android:orientation="horizontal"
                                 android:paddingBottom="10dp"
                                 android:paddingLeft="25dp"
