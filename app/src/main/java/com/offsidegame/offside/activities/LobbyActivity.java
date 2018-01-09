@@ -1590,7 +1590,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             if (updatedPlayer == null)
                 return;
 
-            //update playerName in playerAseets
+            //update playerName in playerAssets
             PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
             if (playerAssets != null)
                 playerAssets.setPlayerName(updatedPlayer.getUserName());
@@ -1603,11 +1603,12 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     currentPlayer.setUserName(updatedPlayer.getUserName());
 
             }
-
-            editValueDialog.cancel();
-
-            //to update the ui PlayerFragment;
-            EventBus.getDefault().post(new PlayerSettingsChangedEvent(updatedPlayer));
+            //if player update is triggered by name change
+            if(editValueDialog !=null && editValueDialog.isShowing()){
+                editValueDialog.cancel();
+                //to update the ui PlayerFragment;
+                EventBus.getDefault().post(new PlayerSettingsChangedEvent(updatedPlayer));
+            }
 
 
         } catch (Exception ex) {
