@@ -717,25 +717,25 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
             if (updatedPlayer == null)
                 return;
 
-            editValueDialog.cancel();
+            if(editValueDialog!=null){
+                editValueDialog.cancel();
 
+                UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(updatedPlayer.getUserName())
+                        .build();
 
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(updatedPlayer.getUserName())
-                    .build();
-
-            firebaseUser.updateProfile(profileUpdates)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
+                firebaseUser.updateProfile(profileUpdates)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
 //                            if (task.isSuccessful()) {
 //                                Log.d(TAG, "User profile updated.");
 //                            }
-                        }
-                    });
+                            }
+                        });
 
-            generateProfileImageAndSaveToFirebase();
-
+                generateProfileImageAndSaveToFirebase();
+            }
 
             analyzeDynamicLink();
 

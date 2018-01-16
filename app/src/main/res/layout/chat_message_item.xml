@@ -1049,18 +1049,6 @@
                             android:text="You earned 100 assetType" />
 
 
-                        <TextView
-                            android:id="@+id/cm_incoming_feedback_player_text_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:padding="6dp"
-                            android:text="Good job!"
-                            style="@style/closedQuestionText"
-
-
-                            />
-
                     </LinearLayout>
 
                     <!--Social feed message root-->

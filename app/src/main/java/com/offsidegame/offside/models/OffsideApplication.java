@@ -48,6 +48,7 @@ public class OffsideApplication extends Application {
 
     private static Context context;
     private static String version = BuildConfig.VERSION_NAME;
+    private static int versionCode = BuildConfig.VERSION_CODE;
     private static boolean isPlayerQuitGame = false;
     private static String messageTypeText = "TEXT";
     private static String messageTypeAskedQuestion = "ASKED_QUESTION";
@@ -56,11 +57,15 @@ public class OffsideApplication extends Application {
     private static String messageTypeGetCoins = "GET_COINS";
     private static String messageTypeWinner = "WINNER";
     private static String messageTypeSocialFeed = "SOCIAL_FEED";
-    private static String questionTypeDebate = "Debate";
-    private static String inGamePhaseName = "GamePlay";
 
-    private static String questionTypePrediction = "Prediction";
+    private static String gamePlayPhaseName = "GamePlay";
+
     private static String questionTypeFun = "Fun";
+    private static String questionTypeMemory = "Memory";
+    private static String questionTypePrediction = "Prediction";
+    private static String questionTypeQuick = "Quick";
+    private static String questionTypeTrivia = "Trivia";
+    private static String questionTypeDebate = "Debate";
 
     private static String profileImageFileName = "profileImage.jpg";
 
@@ -215,8 +220,8 @@ public class OffsideApplication extends Application {
         OffsideApplication.scoreboard = scoreboard;
     }
 
-    public static String getInGamePhaseName() {
-        return inGamePhaseName;
+    public static String getGamePlayPhaseName() {
+        return gamePlayPhaseName;
     }
 
     public static String getQuestionTypePrediction() {
@@ -402,6 +407,19 @@ public class OffsideApplication extends Application {
     }
 
 
+    public static String getQuestionTypeMemory() {
+        return questionTypeMemory;
+    }
+
+    public static String getQuestionTypeQuick() {
+        return questionTypeQuick;
+    }
+
+    public static String getQuestionTypeTrivia() {
+        return questionTypeTrivia;
+    }
+
+
     public void onCreate() {
 
         try {
@@ -539,6 +557,10 @@ public class OffsideApplication extends Application {
 
     public static String getVersion() {
         return version == null ? "0.0" : version;
+    }
+
+    public static int getVersionCode() {
+        return versionCode;
     }
 
 

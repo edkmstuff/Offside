@@ -610,7 +610,7 @@ public class NetworkingService extends Service {
                 if (isCloseQuestion) {
                     final Gson gson = new GsonBuilder().serializeNulls().create();
                     Question question = gson.fromJson(message, Question.class);
-                    AnswerIdentifier answerIdentifier = OffsideApplication.playerAnswers.containsKey(question.getId()) ? OffsideApplication.playerAnswers.get(question.getId()) : null;
+                    AnswerIdentifier answerIdentifier = OffsideApplication.playerAnswers !=null && OffsideApplication.playerAnswers.containsKey(question.getId()) ? OffsideApplication.playerAnswers.get(question.getId()) : null;
                     if (answerIdentifier == null)
                         return;
                     boolean isAnswerCorrect = answerIdentifier.getAnswerId().equals(question.getCorrectAnswerId());
@@ -837,6 +837,7 @@ public class NetworkingService extends Service {
         params.put("imageUrl", imageUrl);
         params.put("playerColor", playerColor);
         params.put("deviceToken", deviceToken);
+        params.put("versionCode", String.valueOf(OffsideApplication.getVersionCode()));
         Gson gson = new GsonBuilder().serializeNulls().create();
         String json = gson.toJson(params);
         sendToServer(json, method, stateKey);
