@@ -40,10 +40,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
-//            buildConfigField "String", "RABBITMQ_HOSTNAME_STRING", "\"10.0.2.2\""
-//            buildConfigField "String", "GAME_SERVER_HOSTNAME_STRING", "\"10.0.2.2\""
-            buildConfigField "String", "RABBITMQ_HOSTNAME_STRING", "\"sktestvm.westeurope.cloudapp.azure.com\""
-            buildConfigField "String", "GAME_SERVER_HOSTNAME_STRING", "\"offside.azurewebsites.net\""
+            buildConfigField "String", "RABBITMQ_HOSTNAME_STRING", "\"10.0.2.2\""
+            buildConfigField "String", "GAME_SERVER_HOSTNAME_STRING", "\"10.0.2.2\""
+//            buildConfigField "String", "RABBITMQ_HOSTNAME_STRING", "\"sktestvm.westeurope.cloudapp.azure.com\""
+//            buildConfigField "String", "GAME_SERVER_HOSTNAME_STRING", "\"offside.azurewebsites.net\""
         }
 
 

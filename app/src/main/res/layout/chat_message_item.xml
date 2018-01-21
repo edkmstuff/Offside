@@ -350,6 +350,7 @@
                             android:layout_margin="1dp"
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
+                            android:lines="2"
                             android:text="which team will assetType next?"
                             android:fontFamily="@font/font_open_sans_hebrew"/>
 
@@ -779,6 +780,7 @@
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
                             android:text="which team will assetType next?"
+                            android:lines="2"
                             android:textColor="@color/colorBlack" />
 
                         <TextView
@@ -875,6 +877,7 @@
                             android:gravity="center"
                             android:paddingBottom="10dp"
                             android:paddingTop="10dp"
+                            android:lines="2"
                             android:text="which team will assetType next?"
                             android:textColor="@color/colorBlack" />
 
@@ -934,6 +937,7 @@
                             android:layout_marginRight="1dp"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
+                            android:lines="2"
                             android:text="which team will assetType next?" />
 
 
