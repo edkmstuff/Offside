@@ -9,8 +9,8 @@ android {
         applicationId "com.offsidegame.offside"
         minSdkVersion 19
         targetSdkVersion rootProject.ext.compileSdkVersion
-        versionCode 77
-        versionName "6.3.11"
+        versionCode 78
+        versionName "6.3.12"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -71,6 +71,7 @@ repositories {
             maven { url "https://maven.google.com"}
             maven { url "https://dl.bintray.com/ironsource-mobile/android-sdk"}
             maven { url "http://dl.bintray.com/ironsource-mobile/android-adapters"}
+
 
         }
     }

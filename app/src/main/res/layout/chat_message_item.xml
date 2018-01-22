@@ -317,27 +317,30 @@
                             android:id="@+id/cm_incoming_question_stat_root"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/chatIncomingFromBot"
-                            android:layoutDirection="locale"
-                            android:orientation="horizontal">
+                            android:layoutDirection="inherit"
+                            android:orientation="horizontal"
+                            android:padding="6dp"
+                            android:background="@color/colorWhite"
+                            android:layout_marginTop="2dp">
+
 
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:scaleType="centerInside"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:scaleType="centerCrop"
                                 android:src="@mipmap/ic_info" />
 
                             <TextView
                                 android:id="@+id/cm_incoming_question_stat_text_view"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="1dp"
-                                android:paddingBottom="10dp"
-                                android:paddingTop="10dp"
                                 android:text="this is the stats message"
                                 android:textColor="@color/colorBlack"
                                 android:textSize="@dimen/OffsideSmallText"
                                 android:fontFamily="@font/font_open_sans_hebrew"
+                                android:layout_marginLeft="6dp"
+                                android:layout_marginRight="6dp"
+                                android:layout_marginTop="4dp"
                                 />
                         </LinearLayout>
 
@@ -949,7 +952,7 @@
                             android:weightSum="2"
                             android:layout_marginTop="4dp"
                             >
-
+                            <!--bot answer-->
                             <LinearLayout
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -995,7 +998,7 @@
                                     />
 
                             </LinearLayout>
-
+                            <!--player answer-->
                             <LinearLayout
                                 android:id="@+id/cm_incoming_player_answer_root"
                                 android:layout_width="0dp"
@@ -1046,11 +1049,15 @@
                         <TextView
                             android:id="@+id/cm_incoming_correct_answer_return_text_view"
                             style="@style/closedQuestionText"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
                             android:layout_marginTop="6dp"
                             android:gravity="center"
-                            android:text="You earned 100 assetType" />
+                            android:layout_gravity="center"
+                            android:text="100"
+                            android:lines="1"
+                            android:background="@drawable/shape_bg_circle_coin"/>
+
 
 
                     </LinearLayout>

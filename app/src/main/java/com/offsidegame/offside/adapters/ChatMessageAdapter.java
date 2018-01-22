@@ -973,13 +973,21 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     viewHolder.incomingCorrectWrongTitleTextView.setText(context.getString(R.string.lbl_seems_like_you_skipped_this_question));
 
                     //viewHolder.incomingClosedQuestionRoot.setBackgroundResource(R.drawable.shape_bg_incoming_bubble_wrong);
-                    viewHolder.incomingCorrectAnswerReturnTextView.setText(context.getString(R.string.lbl_you_didnt_earn_points));
+                    //viewHolder.incomingCorrectAnswerReturnTextView.setText(context.getString(R.string.lbl_you_didnt_earn_points));
+                    viewHolder.incomingCorrectAnswerReturnTextView.setText(String.format("%d",0));
+                    viewHolder.incomingCorrectAnswerReturnTextView.setVisibility(View.GONE);
                     viewHolder.incomingPlayerAnswerRoot.setVisibility(View.GONE);
 
                 } else {
                     isUserAnswerCorrect = correctAnswer.getId().equals(userAnswerIdentifier.getAnswerId());
                     viewHolder.incomingCorrectWrongTitleTextView.setText(isUserAnswerCorrect ? context.getString(R.string.lbl_correct_answer_feedback) : context.getString(R.string.lbl_wrong_answer_feedback));
-                    viewHolder.incomingCorrectAnswerReturnTextView.setText(isUserAnswerCorrect ? context.getString(R.string.lbl_you_earned) + " " + userReturnValue + " " + context.getString(R.string.lbl_points) : context.getString(R.string.lbl_you_didnt_earn_points));
+                    //viewHolder.incomingCorrectAnswerReturnTextView.setText(isUserAnswerCorrect ? context.getString(R.string.lbl_you_earned) + " " + userReturnValue + " " + context.getString(R.string.lbl_points) : context.getString(R.string.lbl_you_didnt_earn_points));
+                    viewHolder.incomingCorrectAnswerReturnTextView.setText(String.format("%d",isUserAnswerCorrect ? userReturnValue: 0));
+                    if(isUserAnswerCorrect){
+                        viewHolder.incomingCorrectAnswerReturnTextView.setVisibility(View.VISIBLE);
+                        YoYo.with(Techniques.SlideOutUp).duration(3000).playOn(viewHolder.incomingCorrectAnswerReturnTextView);
+
+                    }
 
                     if (isUserAnswerCorrect) {
                         viewHolder.incomingCorrectWrongTitleTextView.setTextColor(ContextCompat.getColor(context, R.color.correctAnswerColor));
@@ -987,12 +995,12 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
                     } else {
 
-
                         viewHolder.incomingCorrectWrongTitleTextView.setTextColor(ContextCompat.getColor(context, R.color.wrongAnswerColor));
                         viewHolder.incomingCorrectAnswerTextView.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_correct);
                         viewHolder.incomingPlayerAnswerTextView.setBackgroundResource(R.drawable.shape_bg_rectangle_answer_wrong);
                         viewHolder.incomingPlayerAnswerTextView.setText(getAnswerText(viewHolder.question, userAnswerIdentifier.getAnswerId()));
                         //viewHolder.incomingFeedbackPlayerTextView.setText(context.getString(R.string.lbl_wrong_answer_encourage_feedback));
+                        viewHolder.incomingCorrectAnswerReturnTextView.setVisibility(View.GONE);
                         viewHolder.incomingPlayerAnswerRoot.setVisibility(View.VISIBLE);
                     }
                 }
@@ -1332,6 +1340,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             viewHolder.incomingGetCoinsLoadingRoot.setVisibility(View.GONE);
             viewHolder.incomingMissedQuestionRoot.setVisibility(View.GONE);
             viewHolder.incomingPlayerAnswerRoot.setVisibility(View.GONE);
+            viewHolder.incomingCorrectAnswerReturnTextView.setVisibility(View.GONE);
             viewHolder.incomingWinnerMessageRoot.setVisibility(View.GONE);
             viewHolder.incomingSelectedAnswerTextView.setVisibility(View.GONE);
             viewHolder.incomingAnswersRoot.setVisibility(View.GONE);
