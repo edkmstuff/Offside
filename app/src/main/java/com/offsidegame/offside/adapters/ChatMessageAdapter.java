@@ -9,9 +9,14 @@ import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.TranslateAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,7 +45,10 @@ import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -163,6 +171,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 
         public ImageView incomingSocialFeedPictureImageView;
         public ShareButton facebookShareButton;
+
 
 
         //</editor-fold>
@@ -985,7 +994,32 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     viewHolder.incomingCorrectAnswerReturnTextView.setText(String.format("%d",isUserAnswerCorrect ? userReturnValue: 0));
                     if(isUserAnswerCorrect){
                         viewHolder.incomingCorrectAnswerReturnTextView.setVisibility(View.VISIBLE);
-                        YoYo.with(Techniques.SlideOutUp).duration(3000).playOn(viewHolder.incomingCorrectAnswerReturnTextView);
+
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(new Date());
+                        int numberOfSeconds = 10;
+                        calendar.add(Calendar.SECOND, numberOfSeconds); //adding 10 sec to include latency
+                        Long nowDateInMillis = calendar.getTimeInMillis();
+                        Long messageSentTimeMillis = viewHolder.chatMessage.getSentTime().getTime();
+                        //Log.i("SIDEKICK_GAME", String.format("nowDateInMillis - messageSentTimeMillis: %d", nowDateInMillis - messageSentTimeMillis ));
+
+                        if (nowDateInMillis - messageSentTimeMillis < 20*1000 ) {
+                            YoYo.with(Techniques.SlideOutUp).duration(3000).playOn(viewHolder.incomingCorrectAnswerReturnTextView);
+//                            final TranslateAnimation translateAnimation = new TranslateAnimation(Animation.ABSOLUTE,0,
+//                                    Animation.ABSOLUTE,0,
+//                                    Animation.ABSOLUTE,0,Animation.ABSOLUTE,-800);
+//                            translateAnimation.setDuration(3000);
+//
+//                            final AnimationSet setAnimation = new AnimationSet(true);
+//                            setAnimation.setZAdjustment(Animation.ZORDER_TOP );
+//                            setAnimation.addAnimation(translateAnimation);
+//                            viewHolder.incomingCorrectAnswerReturnTextView.startAnimation(translateAnimation);
+                        }
+                            YoYo.with(Techniques.FadeIn).duration(1000).delay(500).playOn(viewHolder.incomingCorrectAnswerReturnTextView);
+
+
+
+
 
                     }
 
