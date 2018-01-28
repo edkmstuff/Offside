@@ -1,5 +1,6 @@
 package com.offsidegame.offside.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
@@ -8,9 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.offsidegame.offside.R;
@@ -259,18 +263,60 @@ public class AvailableGamesAdapter extends BaseAdapter {
                                 int balance = OffsideApplication.getPlayerAssets().getBalance();
                                 int entranceFee = viewHolder.availableGame.getEntranceFee();
                                 if(entranceFee<=balance){
-                                    OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
-                                    String gameId = viewHolder.availableGame.getGameId();
-                                    String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
-                                    String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
-                                    String privateGameContentLanguage;
-                                    //create the private game in hebrew if user's device locale set to hebrew, otherwise english
-                                    if(context.getResources().getConfiguration().locale.getDisplayLanguage().toString().equalsIgnoreCase(OffsideApplication.availableLanguages.get("he")))
-                                        privateGameContentLanguage = OffsideApplication.availableLanguages.get("he");
-                                    else
-                                        privateGameContentLanguage = OffsideApplication.availableLanguages.get("en");
-                                    OffsideApplication.networkingService.requestCreatePrivateGame(playerId, gameId, groupId,  privateGameContentLanguage);
-                                    EventBus.getDefault().post(new LoadingEvent(true,"Creating and joining to game"));
+
+                                    final Dialog gameSettingsDialog = new Dialog(context);
+                                    gameSettingsDialog.setContentView(R.layout.dialog_game_settings);
+
+                                    final RadioButton englishRadioButton = gameSettingsDialog.findViewById(R.id.dgs_english_radio_button);
+                                    final RadioButton hebrewRadioButton = gameSettingsDialog.findViewById(R.id.dgs_hebrew_radio_button);
+                                    Button doneButton = gameSettingsDialog.findViewById(R.id.dgs_done_button);
+
+                                    englishRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                        @Override
+                                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                                            if(b)
+                                                hebrewRadioButton.setChecked(false);
+                                        }
+                                    });
+
+                                    hebrewRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                        @Override
+                                        public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+
+                                            if(b)
+                                                englishRadioButton.setChecked(false);
+
+                                        }
+                                    });
+
+
+
+                                    doneButton.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+
+                                            String privateGameContentLanguage;
+                                            if(englishRadioButton.isChecked())
+                                                privateGameContentLanguage = OffsideApplication.availableLanguages.get("en");
+                                            else if(hebrewRadioButton.isChecked())
+                                                privateGameContentLanguage = OffsideApplication.availableLanguages.get("he");
+                                            else //default to hebrew
+                                                privateGameContentLanguage = OffsideApplication.availableLanguages.get("he");
+
+                                            OffsideApplication.setSelectedAvailableGame(viewHolder.availableGame);
+                                            String gameId = viewHolder.availableGame.getGameId();
+                                            String groupId = OffsideApplication.getSelectedPrivateGroup().getId();
+                                            String playerId = OffsideApplication.getPlayerAssets().getPlayerId();
+
+                                            OffsideApplication.networkingService.requestCreatePrivateGame(playerId, gameId, groupId,  privateGameContentLanguage);
+                                            EventBus.getDefault().post(new LoadingEvent(true,"Creating and joining to game"));
+                                            gameSettingsDialog.cancel();
+
+                                        }
+                                    });
+
+                                    gameSettingsDialog.show();
+
 
                                 }
                                 else

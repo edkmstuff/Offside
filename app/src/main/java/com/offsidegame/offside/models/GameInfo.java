@@ -12,6 +12,9 @@ public class GameInfo {
     @com.google.gson.annotations.SerializedName("PRGI")
     private String privateGameId;
 
+    @com.google.gson.annotations.SerializedName("PRGC")
+    private String privateGameCode;
+
     @com.google.gson.annotations.SerializedName("PGT")
     private String privateGameTitle;
 
@@ -110,5 +113,12 @@ public class GameInfo {
     }
 
 
+    public String getPrivateGameCode() {
+        return privateGameCode;
+    }
+
+    public void setPrivateGameCode(String privateGameCode) {
+        this.privateGameCode = privateGameCode;
+    }
 }
 

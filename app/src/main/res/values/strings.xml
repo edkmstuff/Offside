@@ -138,5 +138,10 @@
     <string name="lbl_bet">Bet</string>
     <string name="lbl_can_earn">Potential Earnings</string>
     <string name="lbl_total_potential_earnings">Total</string>
+    <string name="lbl_game_settings">GAME SETTINGS</string>
+    <string name="lbl_select_language">Select language</string>
+    <string name="lbl_done">DONE</string>
+    <string name="lbl_invite">Invite friends</string>
+    <string name="lbl_and_get_free_coins">and get free coins</string>
 
 </resources>

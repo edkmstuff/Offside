@@ -513,14 +513,7 @@ public class ChatFragment extends Fragment {
 
     }
 
-    private boolean isPackageInstalled(String packageName, PackageManager packageManager) {
-        try {
-            packageManager.getPackageInfo(packageName, 0);
-            return true;
-        } catch (PackageManager.NameNotFoundException e) {
-            return false;
-        }
-    }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveChat(ChatEvent chatEvent) {

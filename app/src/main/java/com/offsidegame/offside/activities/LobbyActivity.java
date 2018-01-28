@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -62,6 +63,7 @@ import com.offsidegame.offside.events.PrivateGameGeneratedEvent;
 import com.offsidegame.offside.events.PrivateGroupChangedEvent;
 import com.offsidegame.offside.events.PrivateGroupEvent;
 import com.offsidegame.offside.events.PrivateGroupUpdatedEvent;
+import com.offsidegame.offside.events.RequestToInviteEvent;
 import com.offsidegame.offside.fragments.ChatFragment;
 import com.offsidegame.offside.fragments.GroupsFragment;
 import com.offsidegame.offside.fragments.LuckyWheelFragment;
@@ -136,7 +138,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private SettingsFragment settingsFragment;
     private Fragment luckyWheelFragment;
 
-    boolean isCurrentLoadedFragmentIsChatFragment=false;
+    boolean isCurrentLoadedFragmentIsChatFragment = false;
     private int chatNavigationItemNotificationCount = 0;
 
     private Badge qBadgeView = null;
@@ -185,6 +187,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         private int rewardAmount;
         private String rewardType;
         private String rewardReason = "WATCH_VIDEO";
+
         @Override
         public void onRewardedVideoAdOpened() {
 
@@ -192,7 +195,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         @Override
         public void onRewardedVideoAdClosed() {
-            if(rewardAmount>0 && rewardName!=null)
+            if (rewardAmount > 0 && rewardName != null)
                 OffsideApplication.networkingService.requestToRewardPlayer(playerId, rewardType, rewardReason, rewardAmount);
             doWhereToGoNext = false;
 
@@ -220,11 +223,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             //Log.d(TAG, "onRewardedVideoAdRewarded: " + placement);
             rewardName = placement.getRewardName();
             rewardAmount = placement.getRewardAmount();
-            rewardType=null;
-            if(rewardName.equalsIgnoreCase("Coin")){
+            rewardType = null;
+            if (rewardName.equalsIgnoreCase("Coin")) {
                 rewardType = OffsideApplication.COINS;
-            }
-            else if(rewardName.equalsIgnoreCase("PowerItem")){
+            } else if (rewardName.equalsIgnoreCase("PowerItem")) {
                 rewardType = OffsideApplication.POWER_ITEMS;
             }
 
@@ -298,7 +300,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         playerPictureImageView = (ImageView) findViewById(R.id.l_player_picture_image_view);
         balanceRoot = (LinearLayout) findViewById(R.id.l_balance_root);
-        powerItemsRoot =  findViewById(R.id.l_power_items_root);
+        powerItemsRoot = findViewById(R.id.l_power_items_root);
         balanceTextView = (TextView) findViewById(R.id.l_balance_text_view);
         powerItemsTextView = (TextView) findViewById(R.id.l_power_items_text_view);
 
@@ -342,7 +344,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         powerItemsRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onNotEnoughAssetsEventReceived(new NotEnoughAssetsEvent(0, 1,OffsideApplication.POWER_ITEMS, true));
+                onNotEnoughAssetsEventReceived(new NotEnoughAssetsEvent(0, 1, OffsideApplication.POWER_ITEMS, true));
 
 
             }
@@ -591,20 +593,18 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             Intent intent = getIntent();
             String privateGameCode;
             String action;
-            if(intent!=null){
+            if (intent != null) {
 
-                privateGameCode= intent.getStringExtra("code");
+                privateGameCode = intent.getStringExtra("code");
                 action = intent.getStringExtra("action");
 
-                if(privateGameCode!=null) {
+                if (privateGameCode != null) {
                     OffsideApplication.networkingService.RequestPrivateGameInfoByCode(playerId, privateGameCode);
-                }else if(action!=null && action.equalsIgnoreCase("FreeSpin") && playerAssets.getWheelSpinCredits()>0)
-                {
+                } else if (action != null && action.equalsIgnoreCase("FreeSpin") && playerAssets.getWheelSpinCredits() > 0) {
                     luckyWheelFragment = LuckyWheelFragment.newInstance();
                     replaceFragment(luckyWheelFragment);
 
-                }
-                else if (!isGroupInviteExecuted && doWhereToGoNext)
+                } else if (!isGroupInviteExecuted && doWhereToGoNext)
                     whereToGoNext();
                 else
                     EventBus.getDefault().post(new LoadingEvent(false, null));
@@ -621,19 +621,19 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     public void updatePlayerAssets(PlayerAssets playerAssets) {
 
         try {
-            int currentPowerItems=0,currentBalance =0;
+            int currentPowerItems = 0, currentBalance = 0;
 
-            if(playerAssets==null)
+            if (playerAssets == null)
                 return;
 
-            if(OffsideApplication.getPlayerAssets()!=null){
+            if (OffsideApplication.getPlayerAssets() != null) {
                 currentPowerItems = OffsideApplication.getPlayerAssets().getPowerItems();
                 currentBalance = OffsideApplication.getPlayerAssets().getBalance();
             }
 
             OffsideApplication.setPlayerAssets(playerAssets);
 
-            EventBus.getDefault().post(new InGamePlayerAssetsUpdateEvent(InGamePlayerAssetsUpdateEvent.assetTypePowerItems,currentPowerItems,playerAssets.getPowerItems()));
+            EventBus.getDefault().post(new InGamePlayerAssetsUpdateEvent(InGamePlayerAssetsUpdateEvent.assetTypePowerItems, currentPowerItems, playerAssets.getPowerItems()));
 
             //update player stuff
             int balance = playerAssets.getBalance();
@@ -651,9 +651,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 togglePlayerAssetsVisibility(true);
 
             }
-            if(currentBalance!=balance)
+            if (currentBalance != balance)
                 YoYo.with(Techniques.StandUp.Bounce).duration(1000).playOn(balanceRoot);
-            if(currentPowerItems!=powerItems)
+            if (currentPowerItems != powerItems)
                 YoYo.with(Techniques.StandUp.Bounce).duration(1000).playOn(powerItemsRoot);
 
             //check balance
@@ -662,7 +662,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             boolean isLowCoinsInventory = balance < minRequiredBalance;
 
             if (isLowCoinsInventory) {
-                EventBus.getDefault().post(new NotEnoughAssetsEvent(balance, minRequiredBalance,OffsideApplication.COINS, true ));
+                EventBus.getDefault().post(new NotEnoughAssetsEvent(balance, minRequiredBalance, OffsideApplication.COINS, true));
 
             }
 
@@ -887,7 +887,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             bottomNavigation.setSelectedItemId(navigationEvent.getNavigationItemId());
 
 
-
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
@@ -912,17 +911,77 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     public void onGroupInvite(GroupInviteEvent groupInviteEvent) {
 
         try {
+
             isGroupInviteExecuted = true;
-            String groupId = groupInviteEvent.getGroupId();
-            String groupName = groupInviteEvent.getGroupName();
-            String gameId = groupInviteEvent.getGameId();
-            String privateGameId = groupInviteEvent.getPrivateGamaId();
-            String playerId = groupInviteEvent.getInviterPlayerId();
+            final String groupId = groupInviteEvent.getGroupId();
+            final String groupName = groupInviteEvent.getGroupName();
+            final String gameId = groupInviteEvent.getGameId();
+            final String privateGameId = groupInviteEvent.getPrivateGamaId();
+            final String playerId = groupInviteEvent.getInviterPlayerId();
             isInviteToPrivateGame = groupInviteEvent.isInviteToPrivateGame();
 
-            //OffsideApplication.networkingService.requestInviteFriend(playerId, groupId, gameId, privateGameId);
-            startFirebaseInvite(groupId, groupName, gameId, privateGameId, playerId);
-            //shareShortDynamicLink();
+
+            final Dialog inviteDialog = new Dialog(context);
+            inviteDialog.setContentView(R.layout.dialog_invite);
+
+            ImageView inviteByMailImageView = inviteDialog.findViewById(R.id.di_invite_by_mail_image_view);
+            ImageView inviteByWhatsappImageView = inviteDialog.findViewById(R.id.di_invite_by_whatsapp_image_view);
+            Button closeButton = inviteDialog.findViewById(R.id.di_close_button);
+
+            inviteByMailImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    startFirebaseInvite(groupId, groupName, gameId, privateGameId, playerId);
+                    inviteDialog.cancel();
+
+                }
+            });
+
+            inviteByWhatsappImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String shareMessage = getInvitationMessage(groupId, groupName, gameId, privateGameId, playerId);
+                    String dynamicLinkToDownloadApp = "https://tmg9s.app.goo.gl/kNgm";
+                    String inviteToPrivateGameMessage="";
+                    if (privateGameId != null && OffsideApplication.getGameInfo() != null ){
+                        StringBuilder sb =new StringBuilder();
+                        sb.append("\nYou can join us using this code: *");
+                        sb.append(OffsideApplication.getGameInfo().getPrivateGameCode());
+                        sb.append("*");
+                        inviteToPrivateGameMessage =sb.toString();
+                    }
+
+                    Intent sendIntent = new Intent();
+                    sendIntent.setAction(Intent.ACTION_SEND);
+                    sendIntent.setType("text/plain");
+
+                    PackageManager pm = context.getPackageManager();
+                    boolean isWhatsappInstalled = isPackageInstalled("com.whatsapp", pm);
+                    if (isWhatsappInstalled) {
+                        sendIntent.setPackage("com.whatsapp");
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage + "\n" + dynamicLinkToDownloadApp+ "\n"+ inviteToPrivateGameMessage );
+                    } else {
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage.replaceAll("[*]", ""));
+                    }
+
+                    startActivity(sendIntent);
+
+                    inviteDialog.cancel();
+                }
+            });
+
+            closeButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    inviteDialog.cancel();
+
+                }
+            });
+
+            adjustDialogWidthToWindow(inviteDialog);
+            inviteDialog.show();
 
 
         } catch (Exception ex) {
@@ -932,35 +991,54 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
+    private String getInvitationDeepLink(String groupId, String groupName, String gameId, String privateGameId, String inviterId) {
+
+        String deepLink;
+
+        StringBuilder sb = new StringBuilder(500); // Using default 16 character size
+        sb.append("https://tmg9s.app.goo.gl/?link=app://sidekickgame.com?");
+        sb.append("groupId=");
+        sb.append(groupId);
+        sb.append("&gameId=");
+        sb.append(gameId);
+        sb.append("&privateGameId=");
+        sb.append(privateGameId);
+        sb.append("&referrer=");
+        sb.append(inviterId);
+        sb.append("&apn=com.offsidegame.offside&ibi=com.offsidegame.offside.ios&isi=12345");
+
+        deepLink = sb.toString();
+        return deepLink;
+
+
+    }
+
+    private String getInvitationMessage(String groupId, String groupName, String gameId, String privateGameId, String inviterId) {
+
+        String invitationMessage;
+        String playerName = OffsideApplication.getPlayerAssets().getPlayerName();
+        if (privateGameId != null) {
+            String gameTitle = String.format("%s vs. %s", OffsideApplication.getGameInfo().getHomeTeam(), OffsideApplication.getGameInfo().getAwayTeam());
+            invitationMessage = String.format("\nOur group %s is watching\n %s. \nCome play Sidekick with us ", groupName, gameTitle);
+        } else if (groupId != null) {
+            invitationMessage = String.format("\nJoin my group %s \nand Let's play Sidekick", groupName);
+        } else
+            invitationMessage = String.format("\nLets' play Sidekick", playerName);
+
+        if (invitationMessage.length() > 90)
+            invitationMessage = invitationMessage.substring(0, 90);
+
+        return invitationMessage;
+
+    }
+
     private void startFirebaseInvite(String groupId, String groupName, String gameId, String privateGameId, String inviterId) {
 
         try {
-            StringBuilder sb = new StringBuilder(500); // Using default 16 character size
-            sb.append("https://tmg9s.app.goo.gl/?link=app://sidekickgame.com?");
-            sb.append("groupId=");
-            sb.append(groupId);
-            sb.append("&gameId=");
-            sb.append(gameId);
-            sb.append("&privateGameId=");
-            sb.append(privateGameId);
-            sb.append("&referrer=");
-            sb.append(inviterId);
-            sb.append("&apn=com.offsidegame.offside&ibi=com.offsidegame.offside.ios&isi=12345");
 
-            String deepLink = sb.toString();
+            String deepLink = getInvitationDeepLink(groupId, groupName, gameId, privateGameId, inviterId);
 
-            String invitationMessage;
-            String playerName = OffsideApplication.getPlayerAssets().getPlayerName();
-            if (privateGameId != null) {
-                String gameTitle = String.format("%s vs. %s", OffsideApplication.getGameInfo().getHomeTeam(), OffsideApplication.getGameInfo().getAwayTeam());
-                invitationMessage = String.format("\nOur group %s is watching\n %s. \nCome play Sidekick with us ", groupName, gameTitle);
-            } else if (groupId != null) {
-                invitationMessage = String.format("\nJoin my group %s \nand Let's play Sidekick", groupName);
-            } else
-                invitationMessage = String.format("\nLets' play Sidekick", playerName);
-
-            if (invitationMessage.length() > 90)
-                invitationMessage = invitationMessage.substring(0, 90);
+            String invitationMessage = getInvitationMessage(groupId, groupName, gameId, privateGameId, inviterId);
 
             Intent intent = new AppInviteInvitation.IntentBuilder("Invite friends")
                     .setMessage(invitationMessage)
@@ -1093,7 +1171,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         try {
             doWhereToGoNext = false;
             onLoadingEventReceived(new LoadingEvent(false, null));
-            if (playerRewardedReceivedEvent == null || playerRewardedReceivedEvent.getRewardedPlayer()==null)
+            if (playerRewardedReceivedEvent == null || playerRewardedReceivedEvent.getRewardedPlayer() == null)
                 return;
             final PlayerAssets playerAssets = playerRewardedReceivedEvent.getRewardedPlayer().getPlayerAssets();
             String rewardType = playerRewardedReceivedEvent.getRewardedPlayer().getRewardType();
@@ -1107,7 +1185,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             dialogueRewardValueTextView = rewardDialog.findViewById(R.id.dr_reward_value_text_view);
             rewardImageView = rewardDialog.findViewById(R.id.dr_reward_image_view);
-            if(rewardType.equalsIgnoreCase(OffsideApplication.POWER_ITEMS))
+            if (rewardType.equalsIgnoreCase(OffsideApplication.POWER_ITEMS))
                 rewardImageView.setImageResource(R.mipmap.ic_soccer_ball);
             else
                 rewardImageView.setImageResource(R.drawable.ic_coins_heap);
@@ -1168,7 +1246,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             String assetName = notEnoughAssetsEvent.getAssetName();
             PlayerAssets playerAssets = OffsideApplication.getPlayerAssets();
-            boolean showLuckyWheel = notEnoughAssetsEvent.isIncludeLuckyWheel() && playerAssets!=null && playerAssets.getWheelSpinCredits()>0;
+            boolean showLuckyWheel = notEnoughAssetsEvent.isIncludeLuckyWheel() && playerAssets != null && playerAssets.getWheelSpinCredits() > 0;
 
             if (!hasEnoughAssets) {
 
@@ -1194,7 +1272,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 });
 
 
-
                 getAssetsSlotMachineRoot.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -1207,9 +1284,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     }
                 });
 
-                if(assetName == OffsideApplication.COINS){
+                if (assetName == OffsideApplication.COINS) {
                     dialogCoinsTitleRoot.setVisibility(View.VISIBLE);
-                    final String placementName="GetMoreCoins";
+                    final String placementName = "GetMoreCoins";
                     getAssetsWatchVideoRoot.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -1219,11 +1296,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                         }
                     });
 
-                }
-
-                else if(assetName == OffsideApplication.POWER_ITEMS){
+                } else if (assetName == OffsideApplication.POWER_ITEMS) {
                     dialogPowerItemsTitleRoot.setVisibility(View.VISIBLE);
-                    final String placementName="GetMorePowerItems";
+                    final String placementName = "GetMorePowerItems";
                     getAssetsWatchVideoRoot.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -1242,7 +1317,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     }
                 });
 
-                if(showLuckyWheel)
+                if (showLuckyWheel)
                     getAssetsSlotMachineRoot.setVisibility(View.VISIBLE);
                 else
                     getAssetsSlotMachineRoot.setVisibility(View.GONE);
@@ -1264,23 +1339,21 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     private void loadRewardVideo(String placementName) {
 
-        try
-        {
+        try {
             String message;
             boolean isRewardedVideoPlacementCapped = IronSource.isRewardedVideoPlacementCapped(placementName);
-            if(!isRewardedVideoPlacementCapped)
+            if (!isRewardedVideoPlacementCapped)
                 IronSource.showRewardedVideo(placementName);
-            else{
-                message="Exceed video watches per day for " + placementName;
+            else {
+                message = "Exceed video watches per day for " + placementName;
                 Snackbar.make(playerInfoRoot, message, Snackbar.LENGTH_SHORT).show();
             }
 
 
         } catch (Exception ex) {
-                    ACRA.getErrorReporter().handleSilentException(ex);
+            ACRA.getErrorReporter().handleSilentException(ex);
 
         }
-
 
 
     }
@@ -1534,21 +1607,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onNetworkingErrorReceived(NetworkingErrorFixedEvent networkingErrorEvent) {
-//        try {
-//            EventBus.getDefault().post(new LoadingEvent(false, null));
-//            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(intent);
-//
-//        } catch (Exception ex) {
-//            ACRA.getErrorReporter().handleSilentException(ex);
-//        }
-//
-//    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPrivateGroupUpdatedReceived(PrivateGroupUpdatedEvent privateGroupUpdatedEvent) {
         try {
@@ -1604,7 +1662,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             }
             //if player update is triggered by name change
-            if(editValueDialog !=null && editValueDialog.isShowing()){
+            if (editValueDialog != null && editValueDialog.isShowing()) {
                 editValueDialog.cancel();
                 //to update the ui PlayerFragment;
                 EventBus.getDefault().post(new PlayerSettingsChangedEvent(updatedPlayer));
@@ -1616,6 +1674,16 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
         }
 
+    }
+
+
+    private boolean isPackageInstalled(String packageName, PackageManager packageManager) {
+        try {
+            packageManager.getPackageInfo(packageName, 0);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+            return false;
+        }
     }
 
 

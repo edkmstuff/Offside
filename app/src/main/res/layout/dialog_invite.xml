@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_dialog_congrats1"
+    >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_invite"
+            android:layout_gravity="center"
+            android:fontFamily="@font/font_open_sans_hebrew_extra_bold"
+            android:textSize="@dimen/OffsideLargeText"
+
+            />
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_and_get_free_coins"
+            android:layout_gravity="center"
+            android:fontFamily="@font/font_open_sans_hebrew"
+            android:textSize="@dimen/OffsideMediumText"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            >
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:weightSum="2"
+                >
+                <ImageView
+                    android:id="@+id/di_invite_by_mail_image_view"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/fui_ic_mail_white_24dp"
+
+                    android:scaleType="centerCrop"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                >
+                <ImageView
+                    android:id="@+id/di_invite_by_whatsapp_image_view"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:src="@drawable/ic_whatsapp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    />
+
+            </LinearLayout>
+
+
+
+
+
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/di_close_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_button_dialog"
+            android:gravity="center"
+
+            android:textSize="@dimen/OffsideLargeText"
+            android:fontFamily="@font/font_open_sans_hebrew"
+            android:text="@string/lbl_close"
+            android:layout_marginTop="10dp"/>
+
+
+
+
+
+
+
+</LinearLayout>
