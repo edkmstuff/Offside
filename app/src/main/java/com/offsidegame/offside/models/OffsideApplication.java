@@ -114,6 +114,7 @@ public class OffsideApplication extends Application {
     }
 
     private static String appLogoPictureUrl = "http://www.sidekickgame.com/img/logo.png";
+    private static String firebaseDynamicLinkToDownloadApp = "https://tmg9s.app.goo.gl/kNgm";
 
     private static GameInfo gameInfo;
 
@@ -417,6 +418,10 @@ public class OffsideApplication extends Application {
 
     public static String getQuestionTypeTrivia() {
         return questionTypeTrivia;
+    }
+
+    public static String getFirebaseDynamicLinkToDownloadApp() {
+        return firebaseDynamicLinkToDownloadApp;
     }
 
 

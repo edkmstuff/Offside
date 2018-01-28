@@ -144,6 +144,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
     private Badge qBadgeView = null;
 
     private int REQUEST_INVITE = 100;
+    private int REQUEST_INVITE_WHATSAPP = 200;
 
     private String TAG = "SIDEKICK";
 
@@ -943,14 +944,14 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 public void onClick(View view) {
 
                     String shareMessage = getInvitationMessage(groupId, groupName, gameId, privateGameId, playerId);
-                    String dynamicLinkToDownloadApp = "https://tmg9s.app.goo.gl/kNgm";
-                    String inviteToPrivateGameMessage="";
-                    if (privateGameId != null && OffsideApplication.getGameInfo() != null ){
-                        StringBuilder sb =new StringBuilder();
+                    String dynamicLinkToDownloadApp = OffsideApplication.getFirebaseDynamicLinkToDownloadApp();
+                    String inviteToPrivateGameMessage = "";
+                    if (privateGameId != null && OffsideApplication.getGameInfo() != null) {
+                        StringBuilder sb = new StringBuilder();
                         sb.append("\nYou can join us using this code: *");
                         sb.append(OffsideApplication.getGameInfo().getPrivateGameCode());
                         sb.append("*");
-                        inviteToPrivateGameMessage =sb.toString();
+                        inviteToPrivateGameMessage = sb.toString();
                     }
 
                     Intent sendIntent = new Intent();
@@ -961,12 +962,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     boolean isWhatsappInstalled = isPackageInstalled("com.whatsapp", pm);
                     if (isWhatsappInstalled) {
                         sendIntent.setPackage("com.whatsapp");
-                        sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage + "\n" + dynamicLinkToDownloadApp+ "\n"+ inviteToPrivateGameMessage );
+                        sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage + "\n" + dynamicLinkToDownloadApp + "\n" + inviteToPrivateGameMessage);
                     } else {
                         sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage.replaceAll("[*]", ""));
                     }
 
-                    startActivity(sendIntent);
+                    //startActivity(sendIntent);
+                    startActivityForResult(sendIntent, REQUEST_INVITE_WHATSAPP);
 
                     inviteDialog.cancel();
                 }
@@ -1106,18 +1108,25 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 if (resultCode == RESULT_OK) {
                     // Get the invitation IDs of all sent messages
                     String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
-                    int numberOfInvitations = ids.length;
+                    int numberOfInvitations = ids != null ? ids.length : 0;
                     String rewardType = "COINS";
                     String rewardReason = isInviteToPrivateGame ? "INVITE_TO_PRIVATE_GAME" : "INVITE";
                     if (numberOfInvitations > 0)
                         OffsideApplication.networkingService.requestToRewardPlayer(playerId, rewardType, rewardReason, numberOfInvitations);
-                    for (String id : ids) {
-                        Log.d(TAG, "onActivityResult: sent invitation " + id);
-                    }
+//                    for (String id : ids) {
+//                        Log.d(TAG, "onActivityResult: sent invitation " + id);
+//                    }
                 } else {
                     // Sending failed or it was canceled, show failure message to the user
                     Log.d(TAG, "invitation send failed");
                 }
+            }
+
+            if (requestCode == REQUEST_INVITE_WHATSAPP) {
+
+                String rewardType = "COINS";
+                String rewardReason = isInviteToPrivateGame ? "INVITE_TO_PRIVATE_GAME" : "INVITE";
+                OffsideApplication.networkingService.requestToRewardPlayer(playerId, rewardType, rewardReason, 1);
             }
 
 

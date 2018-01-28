@@ -1128,16 +1128,21 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
     public void shareOnFacebook(ShareButton facebookShareButton, Bitmap bitmapImage, String quote) {
 
         try {
+            StringBuilder hashTagSb = new StringBuilder();
+            hashTagSb.append("#Sidekick#soccer#livegame");
+            hashTagSb.append("#soccer");
+            hashTagSb.append("#livegame");
+
             StringBuilder sb = new StringBuilder();
 
             sb.append(quote);
             sb.append("\r\n");
             sb.append("\r\n");
-            sb.append("think you can bit me? come join!!!");
+            sb.append("think you can do better? come join us!!!");
             ShareLinkContent content = new ShareLinkContent.Builder()
-                    .setContentUrl(Uri.parse(OffsideApplication.getAppLogoPictureUrl()))
+                    .setContentUrl(Uri.parse(OffsideApplication.getFirebaseDynamicLinkToDownloadApp()))
                     .setShareHashtag(new ShareHashtag.Builder()
-                            .setHashtag("#Sidekick#soccer#livegame")
+                            .setHashtag(hashTagSb.toString())
                             .build())
                     //.setQuote(quote+"\r\n"+ "think you can bit me? come join!!!" )
                     .setQuote(sb.toString())

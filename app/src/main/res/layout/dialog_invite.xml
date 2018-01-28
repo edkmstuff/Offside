@@ -43,9 +43,10 @@
                 >
                 <ImageView
                     android:id="@+id/di_invite_by_mail_image_view"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/fui_ic_mail_white_24dp"
+                    android:layout_width="54dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/ic_mail"
+                    android:padding="6dp"
 
                     android:scaleType="centerCrop"
                     />
@@ -59,11 +60,12 @@
                 >
                 <ImageView
                     android:id="@+id/di_invite_by_whatsapp_image_view"
-                    android:layout_width="52dp"
-                    android:layout_height="52dp"
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
                     android:src="@drawable/ic_whatsapp"
                     android:layout_gravity="center"
                     android:scaleType="centerCrop"
+                    android:padding="6dp"
                     />
 
             </LinearLayout>
