@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -81,6 +82,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     private int playerColorId = 0;
     private boolean isUserImageUrlValid = false;
     private String playerEmail;
+    private LinearLayout loginRoot;
     private LinearLayout loadingRoot;
     private TextView versionTextView;
     private boolean isInLoginProcess = false;
@@ -89,6 +91,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     //edit value dialog
     private Dialog editValueDialog;
     private String firebaseDeviceToken;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
     }
 
     private void getIds() {
+        loginRoot = findViewById(R.id.l_login_root);
         loadingRoot = findViewById(R.id.shared_loading_root);
         versionTextView = findViewById(R.id.shared_version_text_view);
         versionTextView.setText(OffsideApplication.getVersion() == null ? "0.0" : OffsideApplication.getVersion());
@@ -528,26 +532,32 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
 //                                        ACRA.getErrorReporter().putCustomData("utl_6",url.toString() );
                                             Map<String, List<String>> dynamicLinkQueryPairs = HttpHelper.splitQuery(url);
-                                            String groupIdFromInvitation = dynamicLinkQueryPairs.get("groupId").get(0);
-                                            groupIdFromInvitation = groupIdFromInvitation.equalsIgnoreCase("null") ? null : groupIdFromInvitation;
-                                            String gameIdFromInvitation = dynamicLinkQueryPairs.get("gameId").get(0);
-                                            gameIdFromInvitation = gameIdFromInvitation.equalsIgnoreCase("null") ? null : gameIdFromInvitation;
-                                            String privateGameIdFromInvitation = dynamicLinkQueryPairs.get("privateGameId").get(0);
-                                            privateGameIdFromInvitation = privateGameIdFromInvitation.equalsIgnoreCase("null") ? null : privateGameIdFromInvitation;
+                                            if(dynamicLinkQueryPairs != null){
 
-//                                        ACRA.getErrorReporter().putCustomData("groupIdFromInvitation_6",groupIdFromInvitation );
-//                                        ACRA.getErrorReporter().putCustomData("gameIdFromInvitation_7",gameIdFromInvitation );
-//                                        ACRA.getErrorReporter().putCustomData("privateGameIdFromInvitation_8",privateGameIdFromInvitation );
+                                                String groupIdFromInvitation = dynamicLinkQueryPairs.get("groupId").get(0);
+                                                groupIdFromInvitation = groupIdFromInvitation.equalsIgnoreCase("null") ? null : groupIdFromInvitation;
+                                                String gameIdFromInvitation = dynamicLinkQueryPairs.get("gameId").get(0);
+                                                gameIdFromInvitation = gameIdFromInvitation.equalsIgnoreCase("null") ? null : gameIdFromInvitation;
+                                                String privateGameIdFromInvitation = dynamicLinkQueryPairs.get("privateGameId").get(0);
+                                                privateGameIdFromInvitation = privateGameIdFromInvitation.equalsIgnoreCase("null") ? null : privateGameIdFromInvitation;
 
-                                            //Add player to the group from which he was invited
-                                            if (groupIdFromInvitation == null)
-                                                return;
+                                                //Add player to the group from which he was invited
+                                                if (groupIdFromInvitation == null)
+                                                    return;
 
-                                            //Override userPreferences, as theses will be used when tryJoinSelectedAvailableGame will be executed (Lobby Activity)
-                                            if (gameIdFromInvitation != null && privateGameIdFromInvitation != null)
-                                                OffsideApplication.setUserPreferences(groupIdFromInvitation, gameIdFromInvitation, privateGameIdFromInvitation);
+                                                //Override userPreferences, as theses will be used when tryJoinSelectedAvailableGame will be executed (Lobby Activity)
+                                                if (gameIdFromInvitation != null && privateGameIdFromInvitation != null)
+                                                    OffsideApplication.setUserPreferences(groupIdFromInvitation, gameIdFromInvitation, privateGameIdFromInvitation);
 
-                                            OffsideApplication.networkingService.requestJoinPrivateGroup(playerId, groupIdFromInvitation);
+                                                OffsideApplication.networkingService.requestJoinPrivateGroup(playerId, groupIdFromInvitation);
+
+
+                                            }
+                                            else
+                                                failedJoinPrivateGameFromDynamicLink();
+
+
+
 
                                         } catch (UnsupportedEncodingException ex) {
                                             ACRA.getErrorReporter().handleSilentException(ex);
@@ -560,7 +570,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                                 }
 
                             } else {
-                                startLobbyActivity();
+                                failedJoinPrivateGameFromDynamicLink();
                             }
                         }
                     })
@@ -568,7 +578,7 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             Log.w(TAG, "analyzeDynamicLink:onFailure", e);
-                            startLobbyActivity();
+                            failedJoinPrivateGameFromDynamicLink();
                         }
                     });
 
@@ -577,6 +587,12 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         }
 
+
+    }
+
+    private void failedJoinPrivateGameFromDynamicLink(){
+
+        startLobbyActivity();
 
     }
 
@@ -598,20 +614,21 @@ public class LoginActivity extends AppCompatActivity implements Serializable {
 
         loadingRoot.setVisibility(View.GONE);
 
-        //check if user clicked on notifcation
+        //check if user clicked on notification
         Intent notificationIntent = getIntent();
-        //Log.d(TAG,"notificationIntnet extra code: "+ notificationIntent.getStringExtra("code"));
         String privateGameCode = null;
         String action = null;
         if (notificationIntent != null){
             privateGameCode = notificationIntent.getStringExtra("code");
             action = notificationIntent.getStringExtra("action");
         }
+
         Intent intent = new Intent(context, LobbyActivity.class);
         if (privateGameCode != null)
             intent.putExtra("code", privateGameCode);
         if (action != null)
             intent.putExtra("action", action);
+
 
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -605,7 +605,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     luckyWheelFragment = LuckyWheelFragment.newInstance();
                     replaceFragment(luckyWheelFragment);
 
-                } else if (!isGroupInviteExecuted && doWhereToGoNext)
+                }
+                else if (!isGroupInviteExecuted && doWhereToGoNext)
                     whereToGoNext();
                 else
                     EventBus.getDefault().post(new LoadingEvent(false, null));
@@ -945,6 +946,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
                     String shareMessage = getInvitationMessage(groupId, groupName, gameId, privateGameId, playerId);
                     String dynamicLinkToDownloadApp = OffsideApplication.getFirebaseDynamicLinkToDownloadApp();
+
+
                     String inviteToPrivateGameMessage = "";
                     if (privateGameId != null && OffsideApplication.getGameInfo() != null) {
                         StringBuilder sb = new StringBuilder();
@@ -952,6 +955,9 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                         sb.append(OffsideApplication.getGameInfo().getPrivateGameCode());
                         sb.append("*");
                         inviteToPrivateGameMessage = sb.toString();
+
+                        dynamicLinkToDownloadApp = dynamicLinkToDownloadApp + "?privateGameCode="+OffsideApplication.getGameInfo().getPrivateGameCode();
+
                     }
 
                     Intent sendIntent = new Intent();

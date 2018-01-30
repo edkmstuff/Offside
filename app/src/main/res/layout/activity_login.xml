@@ -8,6 +8,7 @@
     android:layoutDirection="ltr"
     android:orientation="vertical"
     tools:context="com.offsidegame.offside.activities.LoginActivity"
+    android:id="@+id/l_login_root"
     >
     <FrameLayout
         android:layout_width="match_parent"

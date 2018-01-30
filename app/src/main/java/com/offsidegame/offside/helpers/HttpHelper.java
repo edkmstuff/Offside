@@ -74,6 +74,8 @@ public class HttpHelper extends AsyncTask<Void,Void, Void> {
 
     public static Map<String, List<String>> splitQuery(URL url) throws UnsupportedEncodingException {
         final Map<String, List<String>> query_pairs = new LinkedHashMap<String, List<String>>();
+        if(url.getQuery()==null)
+            return null;
         final String[] pairs = url.getQuery().split("&");
         for (String pair : pairs) {
             final int idx = pair.indexOf("=");

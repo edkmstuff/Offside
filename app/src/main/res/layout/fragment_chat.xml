@@ -12,25 +12,24 @@
         android:id="@+id/fc_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/fc_disconnected_message_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:gravity="center"
 
 
-            android:gravity="center">
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/disconnectedBackgroundColor"
-                android:textColor="@color/colorWhite"
                 android:padding="2dp"
                 android:text="Disconnected"
+                android:textColor="@color/colorWhite"
 
                 />
 
@@ -56,9 +55,8 @@
                     android:id="@+id/fsg_back_navigation_button_image_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_left"
                     android:contentDescription="back"
-                    />
+                    android:src="@mipmap/ic_left" />
 
             </LinearLayout>
 
@@ -66,8 +64,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="8"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
 
                 <TextView
@@ -92,8 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:src="@drawable/exit_game"
-                    />
+                    android:src="@drawable/exit_game" />
 
             </LinearLayout>
 
@@ -103,8 +100,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <!-- players assets in game -->
             <LinearLayout
@@ -114,8 +110,7 @@
                 android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingBottom="4dp"
-                android:paddingTop="6dp"
-                >
+                android:paddingTop="6dp">
 
                 <!-- player status -->
                 <LinearLayout
@@ -231,23 +226,22 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:gravity="center"
-                android:paddingTop="2dp"
                 android:paddingBottom="2dp"
-                >
+                android:paddingTop="2dp">
 
                 <TextView
                     android:id="@+id/fc_game_title_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="team A vs. team B"
-                    android:textColor="@color/colorWhite"
                     android:fontFamily="@font/font_open_sans_hebrew_light"
-                    />
+                    android:text="team A vs. team B"
+                    android:textColor="@color/colorWhite" />
 
 
             </LinearLayout>
 
         </LinearLayout>
+
 
         <!-- scoreboard -->
         <LinearLayout
@@ -262,25 +256,25 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:animateLayoutChanges="true"
-                android:gravity="center_vertical"
-                android:layoutDirection="ltr"
-                android:orientation="vertical"
-                android:padding="5dp">
-                <ImageView
-                    android:id="@+id/fc_invite_friends_image_view"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
                     android:gravity="center_vertical"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_invite_friend"
-                    />
+                    android:layoutDirection="ltr"
+                    android:orientation="vertical"
+                    android:padding="5dp">
 
-            </LinearLayout>
+                    <ImageView
+                        android:id="@+id/fc_invite_friends_image_view"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:gravity="center_vertical"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_invite_friend" />
+
+                </LinearLayout>
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -294,20 +288,16 @@
                         android:gravity="center_vertical"
                         android:layoutDirection="ltr"
                         android:orientation="horizontal"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"></LinearLayout>
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"></LinearLayout>
 
                 </HorizontalScrollView>
 
             </LinearLayout>
 
-            <!-- separator line-->
-            <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="2dp"-->
-            <!--android:background="@color/chatText" />-->
 
         </LinearLayout>
+
 
         <!--chat content root-->
         <LinearLayout
@@ -348,8 +338,7 @@
                             android:layout_toLeftOf="@+id/chatSendButton"
                             android:background="@android:color/transparent"
                             android:hint="@string/lbl_type_message"
-                            android:inputType="textMultiLine"
-                            />
+                            android:inputType="textMultiLine" />
 
                     </LinearLayout>
 
@@ -422,114 +411,114 @@
 
                 <!--<org.apmem.tools.layouts.FlowLayout-->
 
-                    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-                    <!--android:id="@+id/fc_actions_flow_layout"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:background="@color/chatText"-->
-                    <!--android:visibility="gone">-->
+                <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+                <!--android:id="@+id/fc_actions_flow_layout"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@color/chatText"-->
+                <!--android:visibility="gone">-->
 
-                    <!--&lt;!&ndash;reload coins - lottery&ndash;&gt;-->
-                    <!--<LinearLayout-->
-                        <!--android:id="@+id/fc_action_reload_root"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_margin="5dp"-->
-                        <!--android:minHeight="80dp"-->
-                        <!--android:minWidth="80dp"-->
-                        <!--android:orientation="vertical"-->
-                        <!--android:visibility="gone">-->
+                <!--&lt;!&ndash;reload coins - lottery&ndash;&gt;-->
+                <!--<LinearLayout-->
+                <!--android:id="@+id/fc_action_reload_root"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:minHeight="80dp"-->
+                <!--android:minWidth="80dp"-->
+                <!--android:orientation="vertical"-->
+                <!--android:visibility="gone">-->
 
-                        <!--<ImageView-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_gravity="center_horizontal"-->
-                            <!--android:src="@mipmap/ic_action_reload" />-->
+                <!--<ImageView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:src="@mipmap/ic_action_reload" />-->
 
-                        <!--<TextView-->
-                            <!--style="@style/OffsideActionButton"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_gravity="bottom"-->
-                            <!--android:gravity="center"-->
-                            <!--android:text="@string/lbl_command_reload" />-->
+                <!--<TextView-->
+                <!--style="@style/OffsideActionButton"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="bottom"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/lbl_command_reload" />-->
 
-                    <!--</LinearLayout>-->
-                    <!--&lt;!&ndash;watch video&ndash;&gt;-->
-                    <!--<LinearLayout-->
-                        <!--android:id="@+id/fc_action_watch_video_root"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_margin="5dp"-->
+                <!--</LinearLayout>-->
+                <!--&lt;!&ndash;watch video&ndash;&gt;-->
+                <!--<LinearLayout-->
+                <!--android:id="@+id/fc_action_watch_video_root"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="5dp"-->
 
-                        <!--android:minHeight="80dp"-->
-                        <!--android:minWidth="80dp"-->
-                        <!--android:orientation="vertical"-->
-                        <!--android:visibility="gone">-->
+                <!--android:minHeight="80dp"-->
+                <!--android:minWidth="80dp"-->
+                <!--android:orientation="vertical"-->
+                <!--android:visibility="gone">-->
 
-                        <!--<ImageView-->
+                <!--<ImageView-->
 
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_gravity="center_horizontal"-->
-                            <!--android:src="@mipmap/ic_action_video_ad" />-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:src="@mipmap/ic_action_video_ad" />-->
 
-                        <!--<TextView-->
-                            <!--style="@style/OffsideActionButton"-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_gravity="bottom"-->
-                            <!--android:gravity="center"-->
-                            <!--android:text="@string/lbl_get_offside_coins" />-->
+                <!--<TextView-->
+                <!--style="@style/OffsideActionButton"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="bottom"-->
+                <!--android:gravity="center"-->
+                <!--android:text="@string/lbl_get_offside_coins" />-->
 
-                    <!--</LinearLayout>-->
+                <!--</LinearLayout>-->
 
-                    <!--&lt;!&ndash;Share On Facebook&ndash;&gt;-->
-                    <!--<LinearLayout-->
-                        <!--android:id="@+id/fc_action_share_on_facebook_root"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_margin="5dp"-->
-                        <!--android:minHeight="80dp"-->
-                        <!--android:minWidth="80dp"-->
-                        <!--android:orientation="vertical">-->
+                <!--&lt;!&ndash;Share On Facebook&ndash;&gt;-->
+                <!--<LinearLayout-->
+                <!--android:id="@+id/fc_action_share_on_facebook_root"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="5dp"-->
+                <!--android:minHeight="80dp"-->
+                <!--android:minWidth="80dp"-->
+                <!--android:orientation="vertical">-->
 
-                        <!--<com.facebook.share.widget.ShareButton-->
-                            <!--android:id="@+id/fc_facebook_share_button"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content" />-->
+                <!--<com.facebook.share.widget.ShareButton-->
+                <!--android:id="@+id/fc_facebook_share_button"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content" />-->
 
-                    <!--</LinearLayout>-->
+                <!--</LinearLayout>-->
 
 
                 <!--</org.apmem.tools.layouts.FlowLayout>-->
                 <!--Loading video progressbar-->
                 <!--<LinearLayout-->
-                    <!--android:id="@+id/fc_reward_video_loading_root"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:gravity="center"-->
-                    <!--android:orientation="vertical">-->
+                <!--android:id="@+id/fc_reward_video_loading_root"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:gravity="center"-->
+                <!--android:orientation="vertical">-->
 
-                    <!--<ProgressBar-->
-                        <!--style="?android:attr/progressBarStyleLarge"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="center">-->
+                <!--<ProgressBar-->
+                <!--style="?android:attr/progressBarStyleLarge"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center">-->
 
-                    <!--</ProgressBar>-->
+                <!--</ProgressBar>-->
 
-                    <!--<TextView-->
-                        <!--android:id="@+id/fc_loading_video_text_view"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_margin="1dp"-->
-                        <!--android:gravity="center"-->
-                        <!--android:paddingBottom="10dp"-->
-                        <!--android:paddingTop="10dp"-->
-                        <!--android:text="@string/lbl_loading_video"-->
-                        <!--android:textColor="@color/colorAccent"-->
-                        <!--android:textSize="@dimen/OffsideMediumText" />-->
+                <!--<TextView-->
+                <!--android:id="@+id/fc_loading_video_text_view"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_margin="1dp"-->
+                <!--android:gravity="center"-->
+                <!--android:paddingBottom="10dp"-->
+                <!--android:paddingTop="10dp"-->
+                <!--android:text="@string/lbl_loading_video"-->
+                <!--android:textColor="@color/colorAccent"-->
+                <!--android:textSize="@dimen/OffsideMediumText" />-->
 
                 <!--</LinearLayout>-->
             </LinearLayout>
