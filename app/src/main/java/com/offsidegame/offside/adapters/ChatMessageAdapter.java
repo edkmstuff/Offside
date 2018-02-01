@@ -642,76 +642,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                     }
 
 
-////                   //set on click event to bet options
-//                    for (int i = 0; i < viewHolder.betSizeOptionsRoots.length; i++) {
-//                        viewHolder.betSizeOptionsRoots[i].setTag(i);
-//                        viewHolder.betSizeOptionsRoots[i].setOnClickListener(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                int index = (int) view.getTag();
-//                                //update answers return value based on betSize
-//                                int betSize = playerMinBetSize * (index + 1);
-//                                for (int i = 0; i < answers.length; i++) {
-//                                    final int returnValue = (int) Math.round(answers[i].getPointsMultiplier() * betSize);
-//                                    viewHolder.answerReturnTextViews[i].setText(String.valueOf(returnValue));
-//                                    answers[i].setScore(returnValue);
-//                                    answers[i].setSelectedBetSize(betSize);
-//                                }
-//
-//                                //update betSize button background
-////                                for (int j = 0; j < viewHolder.betSizeOptionsRoots.length; j++) {
-////                                    if (j == index) {
-////                                        viewHolder.betSizeOptionsRoots[j].setBackgroundResource(R.drawable.shape_bg_rectangle_bordered);
-////                                        //viewHolder.betSizeOptionsRoots[j].setTextColor(ContextCompat.getColor(context, R.color.chatPrimary));
-////                                    } else {
-////                                        viewHolder.betSizeOptionsRoots[j].setBackgroundResource(R.drawable.shape_bg_rectangle_gray_no_border);
-////                                        //viewHolder.betSizeOptionsRoots[j].setTextColor(ContextCompat.getColor(context, R.color.chatPrimary));
-////                                    }
-////
-////                                }
-//
-//                                //update balance
-////                                int postBetOffsideCoins = OffsideApplication.getAssetType() - betSize;
-////                                viewHolder.incomingBalanceTextView.setText(String.valueOf(postBetOffsideCoins));
-//
-//                            }
-//                        });
-//
-//                        //viewHolder.betSizeOptionsRoots[i].setVisibility(View.INVISIBLE);
-//
-//                        //decide if to display a bet option, based on number of balls.
-//
-//                       boolean isHasMinRequiredCoinsToBet = playerMinBetSize >= gameMinBetSize;
-//
-////                        if (isHasMinRequiredCoinsToBet) {
-////                            viewHolder.betSizeOptionsRoots[i].setBackgroundResource(i == 0 ? R.drawable.shape_bg_rectangle_bordered : R.drawable.shape_bg_rectangle_gray_no_border);
-////                            viewHolder.betSizeOptionsRoots[i].setVisibility(View.VISIBLE);
-////                            if (i == 0)
-////                                viewHolder.betSizeOptionsRoots[0].performClick();
-////                            else if (!isAllowToDoubleup) {
-////                                viewHolder.betSizeOptionsRoots[i].setVisibility(View.GONE);
-////                                viewHolder.betSizeOptionsRoots[i].setOnClickListener(null);
-////                            }
-////
-////
-////                        } else {
-////                            viewHolder.betSizeOptionsRoots[i].setOnClickListener(null);
-////                        }
-//
-//
-//                    }
-
-
                     //set the timeToAskQuestion timer
                     //time to answer was attached to chat message and is updated in the server using timer
                     viewHolder.timeToAnswer = viewHolder.chatMessage.getTimeLeftToAnswer();
-                    //Log.i("offside","questionId : "+ viewHolder.question.getQuestionText() + "- timeToAnswer: "+String.valueOf(viewHolder.timeToAnswer));
-
-//                //in case user opened app in the middle of asked question
-//                // time to answer is taken from the chat
-//                int updatedTimeToAnswerFromChat = chatMessage.getTimeLeftToAnswer();
-//                if (updatedTimeToAnswerFromChat > 0)
-//                    timeToAnswer = updatedTimeToAnswerFromChat;
 
                     int progressBarMaxValue = viewHolder.timeToAnswer;
                     viewHolder.incomingTimeToAnswerProgressBar.setMax(progressBarMaxValue);

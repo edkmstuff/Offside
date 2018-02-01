@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/app_background"
     android:keepScreenOn="true"
     android:layoutDirection="ltr"
@@ -294,6 +295,72 @@
                 </HorizontalScrollView>
 
             </LinearLayout>
+
+
+        </LinearLayout>
+        <!--currcurrentQuestiontion-->
+        <LinearLayout
+            android:id="@+id/cf_current_question_root"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layoutDirection="locale"
+            android:padding="4dp"
+            android:background="@color/colorPrimary">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+                    <TextView
+                        android:id="@+id/cf_current_question_time_remaining_text_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0:00"
+                        android:textSize="10sp"
+                        android:layout_gravity="center" />
+                    <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                        android:id="@+id/cf_current_question_time_remaining_circular_progress_bar"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        app:cpb_background_progressbar_color="@color/colorGold"
+                        app:cpb_background_progressbar_width="5dp"
+                        app:cpb_progressbar_color="@color/colorPrimary"
+                        app:cpb_progressbar_width="10dp"
+                        app:cpb_progress="100"
+
+
+                        />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="4dp">
+                <TextView
+                    android:id="@+id/cf_current_question_text_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="this is the currentQuestionId"
+                    android:layout_gravity="start"/>
+                <TextView
+                    android:id="@+id/cf_current_question_player_answer_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="My answer"
+                    android:layout_gravity="start"/>
+            </LinearLayout>
+
+
 
 
         </LinearLayout>

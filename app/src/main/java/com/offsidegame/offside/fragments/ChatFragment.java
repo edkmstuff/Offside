@@ -5,14 +5,14 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.provider.Settings;
-import android.provider.SyncStateContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +32,9 @@ import android.widget.TextView;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.adapters.ChatMessageAdapter;
 import com.offsidegame.offside.events.ChatEvent;
@@ -52,11 +55,13 @@ import com.offsidegame.offside.models.Answer;
 import com.offsidegame.offside.models.AnswerIdentifier;
 import com.offsidegame.offside.models.Chat;
 import com.offsidegame.offside.models.ChatMessage;
+import com.offsidegame.offside.models.GameInfo;
 import com.offsidegame.offside.models.OffsideApplication;
 import com.offsidegame.offside.models.PlayerActivity;
 import com.offsidegame.offside.models.PlayerModel;
 import com.offsidegame.offside.models.Position;
 import com.offsidegame.offside.models.PostAnswerRequestInfo;
+import com.offsidegame.offside.models.Question;
 import com.offsidegame.offside.models.Score;
 import com.offsidegame.offside.models.ScoreDetailedInfo;
 import com.offsidegame.offside.models.Scoreboard;
@@ -67,6 +72,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 
 /**
@@ -147,6 +153,13 @@ public class ChatFragment extends Fragment {
 
     private LinearLayout disconnectedMessageRoot;
 
+    private LinearLayout currentQuestionRoot;
+    private TextView currentQuestionTimeRemainingTextView;
+    private CircularProgressBar currentQuestionTimeRemainingCircularProgressBar;
+    private TextView currentQuestionTextTextView;
+    private TextView currentQuestionPlayerAnswerTextView;
+    CountDownTimer countDownTimer;
+
     //</editor-fold>
 
     public static ChatFragment newInstance() {
@@ -207,6 +220,14 @@ public class ChatFragment extends Fragment {
 
         OffsideApplication.networkingService.requestGetChatMessages(playerId, gameId, privateGameId, androidDeviceId);
 
+        resetVisibility();
+
+
+
+    }
+
+    private void resetVisibility(){
+        currentQuestionRoot.setVisibility(View.GONE);
 
     }
 
@@ -273,6 +294,14 @@ public class ChatFragment extends Fragment {
         exitButtonImageView = view.findViewById(R.id.fc_exit_button_image_view);
 
         disconnectedMessageRoot = view.findViewById(R.id.fc_disconnected_message_root);
+
+        //currentQuestion
+        currentQuestionRoot = view.findViewById(R.id.cf_current_question_root);
+        currentQuestionTimeRemainingCircularProgressBar = view.findViewById(R.id.cf_current_question_time_remaining_circular_progress_bar);
+        currentQuestionTimeRemainingTextView = view.findViewById(R.id.cf_current_question_time_remaining_text_view);
+        currentQuestionTextTextView = view.findViewById(R.id.cf_current_question_text_text_view);
+        currentQuestionPlayerAnswerTextView = view.findViewById(R.id.cf_current_question_player_answer_text_view);
+
 
     }
 
@@ -399,65 +428,6 @@ public class ChatFragment extends Fragment {
             }
         });
 
-
-//        final Map<String, LinearLayout> actionButtons = new HashMap<String, LinearLayout>() {
-//            {
-//                put("!reload", actionReloadRoot);
-//            }
-//        };
-//
-//        for (String action : actionButtons.keySet()) {
-//
-//            final String command = action;
-//            final LinearLayout actionElement = actionButtons.get(action);
-//
-//            actionElement.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//
-//                    try {
-//                        if (!isActionMenuVisible)
-//                            return;
-//
-//                        if (command.equals("!share")) {
-//
-//                            PackageManager pm = getContext().getPackageManager();
-//                            boolean isWhatsappInstalled = isPackageInstalled("com.whatsapp", pm);
-//                            String shareMessage = "Yo! I am *Offsiding* with the gang, come join us using this code:   *" + OffsideApplication.getSelectedPrivateGameId() + "*";
-//                            Intent sendIntent = new Intent();
-//                            sendIntent.setAction(Intent.ACTION_SEND);
-//                            sendIntent.setType("text/plain");
-//                            if (isWhatsappInstalled) {
-//                                sendIntent.setPackage("com.whatsapp");
-//                                sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-//                            } else {
-//                                sendIntent.putExtra(Intent.EXTRA_TEXT, shareMessage.replaceAll("[*]", ""));
-//                            }
-//
-//                            startActivity(sendIntent);
-//
-//                        } else if (command.equals("!reload")) {
-//                            Intent intent = new Intent(getContext(), SlotActivity.class);
-//                            startActivity(intent);
-//
-//
-//                        } else {
-//                            OffsideApplication.networkingService.requestSendChatMessage(selectedAvailableGame.getGameId(), OffsideApplication.getSelectedPrivateGameId(), command, OffsideApplication.getPlayerAssets().getPlayerId());
-//                        }
-//
-//                        chatActionsButton.performClick();
-//
-//                    } catch (Exception ex) {
-//                        ACRA.getErrorReporter().handleSilentException(ex);
-//                        chatActionsButton.performClick();
-//                    }
-//
-//
-//                }
-//            });
-//
-//        }
-
         //</editor-fold>
 
         //</editor-fold>
@@ -514,7 +484,6 @@ public class ChatFragment extends Fragment {
     }
 
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveChat(ChatEvent chatEvent) {
 
@@ -522,10 +491,16 @@ public class ChatFragment extends Fragment {
 
             chat = new Chat(chatEvent.getChat());
             Scoreboard scoreboard = chat.getScoreboard();
-
             EventBus.getDefault().post(new ScoreboardEvent(scoreboard));
 
             EventBus.getDefault().post(new PositionEvent(chat.getPosition()));
+
+            ChatMessage currentQuestionChatMessage = chat.getCurrentQuestionChatMessage();
+            if(currentQuestionChatMessage==null)
+                currentQuestionRoot.setVisibility(View.GONE);
+
+            showCurrentQuestion(currentQuestionChatMessage);
+
 
             PlayerModel player = chat.getPlayer();
             if (player == null)
@@ -535,6 +510,8 @@ public class ChatFragment extends Fragment {
             OffsideApplication.playerAnswers = player.getPlayerAnswers();
 
             createNewChatAdapter(false);
+
+
             root.setVisibility(View.VISIBLE);
 
         } catch (Exception ex) {
@@ -548,7 +525,7 @@ public class ChatFragment extends Fragment {
     public void onReceiveChatMessage(ChatMessageEvent chatMessageEvent) {
 
         try {
-            ChatMessage message = chatMessageEvent.getChatMessage();
+            final ChatMessage message = chatMessageEvent.getChatMessage();
             message.startCountdownTimer();
 
             boolean isAdded = chat.addMessageIfNotAlreadyExists(message);
@@ -557,14 +534,15 @@ public class ChatFragment extends Fragment {
                 throw new Exception("Duplicate chat message. id: " + message.getId() + " content: " + message.getMessageText());
             }
 
+            showCurrentQuestion(message);
             //new message was added, notify data change
             if (messages != null && chatMessageAdapter != null) {
                 chatMessageAdapter.notifyDataSetChanged();
                 return;
             }
 
-
             createNewChatAdapter(false);
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -581,6 +559,105 @@ public class ChatFragment extends Fragment {
         chatMessageAdapter = new ChatMessageAdapter(getContext(), messages, OffsideApplication.playerAnswers);
         chatListView.setAdapter(chatMessageAdapter);
 
+    }
+
+    private void showCurrentQuestion(final ChatMessage message) {
+
+        try {
+            if(message==null)
+                return;
+            if (message.getMessageType().equals(OffsideApplication.getMessageTypeClosedQuestion())){
+                cancelTimer();
+                currentQuestionRoot.setVisibility(View.GONE);
+                return;
+            }
+
+            if (message.getMessageType().equals(OffsideApplication.getMessageTypeProcessedQuestion())) {
+
+                final Gson gson = new GsonBuilder().serializeNulls().create();
+                Question currentQuestion = gson.fromJson(message.getMessageText(), Question.class);
+                if (currentQuestion == null)
+                    return;
+                currentQuestionTextTextView.setText(currentQuestion.getQuestionText());
+                GameInfo gameInfo = OffsideApplication.getGameInfo();
+                if (gameInfo == null)
+                    return;
+                Map<String, AnswerIdentifier> playerAnswers = OffsideApplication.playerAnswers;
+                boolean isPlayerAnsweredQuestion =  playerAnswers!=null && playerAnswers.containsKey(currentQuestion.getId());
+                if (isPlayerAnsweredQuestion) {
+                    AnswerIdentifier answerIdentifier = playerAnswers.get(currentQuestion.getId());
+                    String playerAnswerText = getAnswerText(currentQuestion, answerIdentifier.getAnswerId());
+                    currentQuestionPlayerAnswerTextView.setText(playerAnswerText);
+                }
+
+                boolean isTimerRequired = (currentQuestion.getGamePhase().equals(OffsideApplication.getGamePlayPhaseName()) && (
+                        currentQuestion.getQuestionType().equals(OffsideApplication.getQuestionTypeFun()) ||
+                                currentQuestion.getQuestionType().equals(OffsideApplication.getQuestionTypePrediction()))
+                );
+
+                if (isTimerRequired) {
+
+
+                    final int timeToAnswer = message.getTimeLeftToAnswer();
+                    //Log.i("SIDE", "timetoanswer: " + String.valueOf(timeToAnswer));
+                    final int progressBarDuration = timeToAnswer;
+                    currentQuestionTimeRemainingCircularProgressBar.setProgressWithAnimation(0, progressBarDuration);
+
+                    if(timeToAnswer==0)
+                        currentQuestionTimeRemainingCircularProgressBar.setProgress(100);
+                    //timer of current question
+                    if (timeToAnswer > 0) {
+
+                        cancelTimer();
+
+                        countDownTimer = new CountDownTimer(timeToAnswer, 100) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
+                                message.setTimeLeftToAnswer((int) millisUntilFinished);
+                                //Log.i("SIDE", "timerId: " + String.valueOf(this.hashCode()) + "  - secondsLeft: " + Math.round((int) millisUntilFinished / 1000.0f));
+                                //Log.i("SIDE", "progresss: "+ String.valueOf(100 * (timeToAnswer - millisUntilFinished) / (float) timeToAnswer) );
+                                currentQuestionTimeRemainingCircularProgressBar.setProgressWithAnimation(100 * (timeToAnswer - millisUntilFinished) / (float) timeToAnswer, timeToAnswer/1000);
+
+                                String formattedTimerDisplay = formatTimerDisplay(millisUntilFinished);
+
+                                currentQuestionTimeRemainingTextView.setText(formattedTimerDisplay);
+//
+                            }
+
+                            @Override
+                            public void onFinish() {
+                                message.setTimeLeftToAnswer(0);
+                                currentQuestionTimeRemainingCircularProgressBar.setProgress(100);
+
+                            }
+                        }.start();
+
+                    }
+
+                    currentQuestionRoot.setVisibility(View.VISIBLE);
+                }
+                else{
+                    cancelTimer();
+                    currentQuestionRoot.setVisibility(View.GONE);
+                }
+
+            }
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+
+    }
+
+    private void cancelTimer() {
+
+        if (countDownTimer != null) {
+            //Log.i("offside", "CANCELLING!!! timerId: " + String.valueOf(viewHolder.countDownTimer.hashCode()));
+            countDownTimer.cancel();
+            countDownTimer = null;
+        }
     }
 
 
@@ -976,6 +1053,57 @@ public class ChatFragment extends Fragment {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
 
+
+    }
+
+    private String getAnswerText(Question question, String answerId) {
+
+        try {
+            String answerText = "";
+            Answer[] answers = question.getAnswers();
+            for (int i = 0; i < answers.length; i++) {
+                Answer answer = answers[i];
+                if (answer.getId().equals(answerId)) {
+                    answerText = answer.getAnswerText();
+                    break;
+                }
+
+            }
+            return answerText;
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+        return "";
+
+    }
+
+    private String formatTimerDisplay(long millisUntilFinished) {
+
+        try {
+            String timerDisplayFormat = "";
+
+            int min = (int) Math.floor(millisUntilFinished / 1000 / 60);
+            int sec = ((int) Math.floor(millisUntilFinished / 1000) % 60);
+            String minString = Integer.toString(min);
+            String secString = Integer.toString(sec);
+
+            if (min < 10)
+                minString = "0" + minString;
+            if (sec < 10)
+                secString = "0" + secString;
+
+            timerDisplayFormat = minString + ":" + secString;
+            return timerDisplayFormat;
+
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+            return Float.toString(millisUntilFinished);
+
+        }
 
     }
 

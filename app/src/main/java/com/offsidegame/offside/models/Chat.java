@@ -21,6 +21,9 @@ public class Chat {
     @com.google.gson.annotations.SerializedName("SB")
     private Scoreboard scoreboard;
 
+    @com.google.gson.annotations.SerializedName("CQCM")
+    private ChatMessage currentQuestionChatMessage;
+
     private HashMap<String,ChatMessage> chatMessagesDictionary;
 
     public Chat(Chat chat){
@@ -33,8 +36,7 @@ public class Chat {
             chatMessagesDictionary.put(cm.getId(),cm);
             cm.startCountdownTimer();
         }
-
-
+        currentQuestionChatMessage = chat.getCurrentQuestionChatMessage();
 
     }
 
@@ -87,5 +89,14 @@ public class Chat {
 
     public void setScoreboard(Scoreboard scoreboard) {
         this.scoreboard = scoreboard;
+    }
+
+
+    public ChatMessage getCurrentQuestionChatMessage() {
+        return currentQuestionChatMessage;
+    }
+
+    public void setCurrentQuestionChatMessage(ChatMessage currentQuestionChatMessage) {
+        this.currentQuestionChatMessage = currentQuestionChatMessage;
     }
 }

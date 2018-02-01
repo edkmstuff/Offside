@@ -31,7 +31,7 @@
     <string name="lbl_type_message">Message group</string>
     <string name="lbl_how_others_answered">Players answers</string>
     <string name="lbl_not_enough_coins_to_play">You need coins in order to play</string>
-    <string name="lbl_question_time_expired_message">Time is up for this question</string>
+    <string name="lbl_question_time_expired_message">Time is up for this currentQuestionId</string>
     <string name="lbl_we_have_an_answer">We have an answer</string>
     <string name="lbl_in_few_seconds_you_will_see_others_answers">In few seconds you will see what other thought</string>
 
@@ -39,7 +39,7 @@
     <!--googles test aduinitid-->
 
     <string name="lbl_you_can_get_coins_doing_one_of_the_following">Get coins</string>
-    <string name="lbl_new_question_is_waiting_for_you">New question is waiting for you</string>
+    <string name="lbl_new_question_is_waiting_for_you">New currentQuestionId is waiting for you</string>
     <string name="lbl_click_to_answer">Click to answer</string>
     <string name="lbl_click_to_view">Click to see</string>
     <string name="lbl_watch_short_video">Watch Video</string>
@@ -56,7 +56,7 @@
     <string name="lbl_is">correct answer</string>
     <string name="lbl_your_answer_was">Your answer</string>
     <string name="lbl_and_the_winner_is">And the winners are....</string>
-    <string name="lbl_seems_like_you_skipped_this_question">Seems like you skipped this question</string>
+    <string name="lbl_seems_like_you_skipped_this_question">Seems like you skipped this currentQuestionId</string>
     <string name="lbl_you_are_out_of_coins">You do not have enough coins to play, you will get more coins at halftime</string>
     <string name="lbl_game_is_active">GAME IS ON</string>
     <string name="lbl_no_playing_players">No active players</string>

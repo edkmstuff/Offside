@@ -252,7 +252,7 @@
 
                     </LinearLayout>
 
-                    <!--Asked or Processed question root-->
+                    <!--Asked or ProcescurrentQuestiontion root-->
                     <LinearLayout
                         android:id="@+id/cm_incoming_question_root"
                         android:layout_width="match_parent"
@@ -747,7 +747,7 @@
 
                         </LinearLayout>
 
-                        <!--processed question answers-->
+                        <!--procescurrentQuestiontion answers-->
                         <LinearLayout
                             android:id="@+id/cm_incoming_processed_question_answers_bars_root"
                             android:layout_width="match_parent"
@@ -758,7 +758,7 @@
 
                     </LinearLayout>
 
-                    <!--processing question root-->
+                    <!--processcurrentQuestiontion root-->
                     <LinearLayout
                         android:id="@+id/cm_incoming_processing_question_root"
                         android:layout_width="match_parent"
@@ -856,7 +856,7 @@
 
                     </LinearLayout>
 
-                    <!--Missed question root-->
+                    <!--MiscurrentQuestiontion root-->
                     <LinearLayout
                         android:id="@+id/cm_incoming_missed_question_root"
                         android:layout_width="match_parent"
@@ -894,7 +894,7 @@
                             android:textColor="@color/colorBlack" />
                     </LinearLayout>
 
-                    <!--closed question root-->
+                    <!--clocurrentQuestiontion root-->
                     <LinearLayout
 
                         android:id="@+id/cm_incoming_closed_question_root"

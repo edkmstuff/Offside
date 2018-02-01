@@ -21,7 +21,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:text="this is the question"
+            android:text="this is the currentQuestionId"
             style= "@style/playerActivityText"
             android:gravity="start|center_vertical"
             android:lines="2"
