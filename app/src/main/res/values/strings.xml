@@ -143,5 +143,6 @@
     <string name="lbl_done">DONE</string>
     <string name="lbl_invite">Invite friends</string>
     <string name="lbl_and_get_free_coins">and get free coins</string>
+    <string name="lbl_privacy_policy">Privacy Policy</string>
 
 </resources>

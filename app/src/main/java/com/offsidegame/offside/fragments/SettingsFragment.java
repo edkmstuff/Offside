@@ -2,6 +2,7 @@ package com.offsidegame.offside.fragments;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,8 @@ public class SettingsFragment extends Fragment {
     private LinearLayout signOutRoot;
     private LinearLayout backRoot;
     private LinearLayout joinGameWithCodeRoot;
+    private LinearLayout privacyPolicyRoot;
+
 
 
 
@@ -72,6 +75,7 @@ public class SettingsFragment extends Fragment {
             joinGameWithCodeRoot = rootView.findViewById(R.id.sf_join_game_with_code_root);
             signOutRoot = rootView.findViewById(R.id.sf_sign_out_root);
             backRoot = rootView.findViewById(R.id.sf_back_root);
+            privacyPolicyRoot = rootView.findViewById(R.id.sf_privacy_policy_root);
             final Context context = getContext();
 
             joinGameWithCodeRoot.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +115,16 @@ public class SettingsFragment extends Fragment {
                 public void onClick(View view) {
                     backToGroups();
 
+                }
+            });
+
+            privacyPolicyRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // opening a URL in a Browser in Android:
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.sidekickgame.com/privacy_policy.html"));
+                            startActivity(browserIntent);
                 }
             });
 
