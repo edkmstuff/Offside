@@ -574,6 +574,7 @@ public class ChatFragment extends Fragment {
 
             if (message.getMessageType().equals(OffsideApplication.getMessageTypeProcessedQuestion())) {
 
+                cancelTimer();
                 final Gson gson = new GsonBuilder().serializeNulls().create();
                 Question currentQuestion = gson.fromJson(message.getMessageText(), Question.class);
                 if (currentQuestion == null)
@@ -589,6 +590,9 @@ public class ChatFragment extends Fragment {
                     String playerAnswerText = getAnswerText(currentQuestion, answerIdentifier.getAnswerId());
                     currentQuestionPlayerAnswerTextView.setText(playerAnswerText);
                 }
+                else {
+                    currentQuestionPlayerAnswerTextView.setText(getString(R.string.lbl_not_answered));
+                }
 
                 boolean isTimerRequired = (currentQuestion.getGamePhase().equals(OffsideApplication.getGamePlayPhaseName()) && (
                         currentQuestion.getQuestionType().equals(OffsideApplication.getQuestionTypeFun()) ||
@@ -597,7 +601,7 @@ public class ChatFragment extends Fragment {
 
                 if (isTimerRequired) {
 
-
+                    cancelTimer();
                     final int timeToAnswer = message.getTimeLeftToAnswer();
                     //Log.i("SIDE", "timetoanswer: " + String.valueOf(timeToAnswer));
                     final int progressBarDuration = timeToAnswer;
@@ -608,14 +612,12 @@ public class ChatFragment extends Fragment {
                     //timer of current question
                     if (timeToAnswer > 0) {
 
-                        cancelTimer();
-
-                        countDownTimer = new CountDownTimer(timeToAnswer, 100) {
+                        countDownTimer = new CountDownTimer(timeToAnswer, 10) {
                             @Override
                             public void onTick(long millisUntilFinished) {
                                 message.setTimeLeftToAnswer((int) millisUntilFinished);
-                                //Log.i("SIDE", "timerId: " + String.valueOf(this.hashCode()) + "  - secondsLeft: " + Math.round((int) millisUntilFinished / 1000.0f));
-                                //Log.i("SIDE", "progresss: "+ String.valueOf(100 * (timeToAnswer - millisUntilFinished) / (float) timeToAnswer) );
+//                                Log.i("SIDE", "timerId: " + String.valueOf(this.hashCode()) + "  - secondsLeft: " + Math.round((int) millisUntilFinished / 1000.0f));
+//                                Log.i("SIDE", "progresss: "+ String.valueOf(100 * (timeToAnswer - millisUntilFinished) / (float) timeToAnswer) );
                                 currentQuestionTimeRemainingCircularProgressBar.setProgressWithAnimation(100 * (timeToAnswer - millisUntilFinished) / (float) timeToAnswer, timeToAnswer/1000);
 
                                 String formattedTimerDisplay = formatTimerDisplay(millisUntilFinished);
@@ -628,6 +630,7 @@ public class ChatFragment extends Fragment {
                             public void onFinish() {
                                 message.setTimeLeftToAnswer(0);
                                 currentQuestionTimeRemainingCircularProgressBar.setProgress(100);
+                                cancelTimer();
 
                             }
                         }.start();
@@ -654,7 +657,7 @@ public class ChatFragment extends Fragment {
     private void cancelTimer() {
 
         if (countDownTimer != null) {
-            //Log.i("offside", "CANCELLING!!! timerId: " + String.valueOf(viewHolder.countDownTimer.hashCode()));
+            //Log.i("SIDE", "CANCELLING!!! timerId: " + String.valueOf(countDownTimer.hashCode()));
             countDownTimer.cancel();
             countDownTimer = null;
         }

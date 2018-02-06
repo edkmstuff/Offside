@@ -4,6 +4,7 @@
     <dimen name="OffsideLargeText">26sp</dimen>
     <dimen name="OffsideMediumText">18sp</dimen>
     <dimen name="OffsideMediumSmallText">14sp</dimen>
+    <dimen name="OffsideSmallPlusText">12sp</dimen>
     <dimen name="OffsideSmallText">10sp</dimen>
     <dimen name="OffsideExtraSmallText">9sp</dimen>
     <dimen name="OffsideSuperExtraSmallText">6sp</dimen>

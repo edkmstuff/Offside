@@ -677,6 +677,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                 viewHolder.chatMessage.setTimeLeftToAnswer(0);
                                 viewHolder.incomingTimeToAnswerProgressBar.setProgress(0);
                                 boolean isAnswered = playerAnswers.containsKey(questionId);
+                                viewHolder.countDownTimer.cancel();
+                                viewHolder.countDownTimer = null;
                                 if (!isAnswered) {
 //                                    int answersCount = viewHolder.question.getAnswers().length;
 //                                    int selectedAnswerIndex = (int) (Math.floor(Math.random() * answersCount));
@@ -1106,8 +1108,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
         try {
             removeClickListenerFromAnswers(viewHolder);
             final ViewHolder myViewHolder = viewHolder;
-            viewHolder.countDownTimer.cancel();
-            viewHolder.countDownTimer = null;
+//            viewHolder.countDownTimer.cancel();
+//            viewHolder.countDownTimer = null;
 
             //final boolean isRandomlySelected = view == null;
             final boolean isSkipped = answer == null;
@@ -1142,9 +1144,8 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    //myViewHolder.incomingQuestionRoot.setVisibility(View.GONE);
-                    //myViewHolder.incomingProcessingQuestionRoot.setVisibility(View.VISIBLE);
-                    myViewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
+
+                    //myViewHolder.incomingTimeToAnswerRoot.setVisibility(View.GONE);
                     myViewHolder.incomingBetPanelRoot.setVisibility(View.GONE);
 
 
