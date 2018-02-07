@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.offsidegame.offside.fragments.ShopFragment">
+    tools:context="com.offsidegame.offside.fragments.ShopFragment"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -82,36 +83,36 @@
             android:background="@color/colorWhite" />
 
         <!--privacy policy-->
-        <LinearLayout
-            android:id="@+id/sf_privacy_policy_root"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center|start"
-            android:orientation="horizontal">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/sf_privacy_policy_root"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center|start"-->
+            <!--android:orientation="horizontal">-->
 
-            <ImageView
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:padding="8dp"
-                android:src="@mipmap/ic_privacy_policy"/>
+            <!--<ImageView-->
+                <!--android:layout_width="55dp"-->
+                <!--android:layout_height="55dp"-->
+                <!--android:padding="8dp"-->
+                <!--android:src="@mipmap/ic_privacy_policy"/>-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/lbl_privacy_policy"
-                android:textSize="22sp"
+            <!--<TextView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/lbl_privacy_policy"-->
+                <!--android:textSize="22sp"-->
 
 
-                />
+                <!--/>-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
-        <!-- separator line-->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:alpha="0.5"
-            android:background="@color/colorWhite" />
+        <!--&lt;!&ndash; separator line&ndash;&gt;-->
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="2dp"-->
+            <!--android:alpha="0.5"-->
+            <!--android:background="@color/colorWhite" />-->
 
 
         <!--back-->
@@ -146,6 +147,31 @@
             android:alpha="0.5"
             android:background="@color/colorWhite" />
 
+
+    </LinearLayout>
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:padding="4dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/sf_privacy_policy_root"
+            android:padding="4dp"
+            >
+
+            <TextView
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_privacy_policy"
+                android:gravity="center"
+                android:textColor="@color/colorDivider"
+                />
+
+        </LinearLayout>
 
     </LinearLayout>
 

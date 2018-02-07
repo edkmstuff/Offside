@@ -658,7 +658,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                             viewHolder.countDownTimer = null;
                         }
 
-                        viewHolder.countDownTimer = new CountDownTimer(viewHolder.timeToAnswer, 100) {
+                        viewHolder.countDownTimer = new CountDownTimer(viewHolder.timeToAnswer, 10) {
                             @Override
                             public void onTick(long millisUntilFinished) {
                                 viewHolder.chatMessage.setTimeLeftToAnswer((int) millisUntilFinished);
@@ -666,9 +666,16 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                 viewHolder.incomingTimeToAnswerProgressBar.setProgress(Math.round((float) millisUntilFinished));
 
                                 String formattedTimerDisplay = formatTimerDisplay(millisUntilFinished);
-
                                 viewHolder.incomingTimeToAnswerTextDisplayTextView.setText(formattedTimerDisplay);
-//
+
+                                if(viewHolder.chatMessage.getTimeLeftToAnswer()<=6000){
+                                    Drawable criticalColorDrawable = getContext().getResources().getDrawable(R.drawable.progress_bar_critical);
+                                    int criticalColor = getContext().getResources().getColor(R.color.progressBarCriticalColor);
+                                    viewHolder.incomingTimeToAnswerProgressBar.setProgressDrawable(criticalColorDrawable);
+                                    viewHolder.incomingTimeToAnswerTextDisplayTextView.setBackgroundColor(criticalColor);
+                                    viewHolder.incomingTimeToAnswerRoot.setBackgroundColor(criticalColor);
+                                }
+
                             }
 
                             @Override
@@ -831,7 +838,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                                 viewHolder.countDownTimer = null;
                             }
 
-                            viewHolder.countDownTimer = new CountDownTimer(viewHolder.timeToAnswer, 100) {
+                            viewHolder.countDownTimer = new CountDownTimer(viewHolder.timeToAnswer, 10) {
                                 @Override
                                 public void onTick(long millisUntilFinished) {
                                     String questionId = viewHolder.question.getId();
@@ -1328,6 +1335,13 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
             }
 
             viewHolder.incomingMessagesRoot.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+            //reset progressbar
+            Drawable criticalColor = getContext().getResources().getDrawable(R.drawable.progress_bar);
+            int colorPrimary = getContext().getResources().getColor(R.color.colorPrimary);
+            viewHolder.incomingTimeToAnswerProgressBar.setProgressDrawable(criticalColor);
+            viewHolder.incomingTimeToAnswerTextDisplayTextView.setBackgroundColor(colorPrimary);
+            viewHolder.incomingTimeToAnswerRoot.setBackgroundColor(colorPrimary);
 
 
         } catch (Exception ex) {

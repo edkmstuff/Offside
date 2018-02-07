@@ -39,7 +39,7 @@
     <!--googles test aduinitid-->
 
     <string name="lbl_you_can_get_coins_doing_one_of_the_following">Get coins</string>
-    <string name="lbl_new_question_is_waiting_for_you">New currentQuestionId is waiting for you</string>
+    <string name="lbl_new_question_is_waiting_for_you">New question is waiting for you</string>
     <string name="lbl_click_to_answer">Click to answer</string>
     <string name="lbl_click_to_view">Click to see</string>
     <string name="lbl_watch_short_video">Watch Video</string>

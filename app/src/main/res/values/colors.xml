@@ -72,6 +72,7 @@
     <color name="leagueRecordEvenSolid">#201c1c1c</color>
     <color name="leagueRecordOddSolid">#01cfc6c6</color>
 
+    <color name="progressBarCriticalColor">#E57373</color>
 
 
     <color name="defaultImageBackgroundColor1">#BA68C8</color>
@@ -86,6 +87,8 @@
 
     <color name="wheelBackgroundColorOdd">#00E676</color>
     <color name="wheelBackgroundColorEven">#69F0AE</color>
+
+
 
 
 

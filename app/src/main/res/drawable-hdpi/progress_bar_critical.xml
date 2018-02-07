@@ -8,7 +8,8 @@
     </item>
 
     <item
-        android:id="@android:id/progress">
+        android:id="@android:id/progress"
+        >
         <clip>
             <shape>
 
@@ -16,7 +17,7 @@
                     <!--android:startColor="#33FF33"-->
                     <!--android:endColor="#008000"-->
                     <!--android:angle="270" />-->
-                <solid android:color="@color/colorPrimary"/>
+                <solid android:color="@color/progressBarCriticalColor"/>
             </shape>
         </clip>
     </item>

@@ -566,6 +566,17 @@ public class ChatFragment extends Fragment {
         try {
             if(message==null)
                 return;
+
+            final Gson gson = new GsonBuilder().serializeNulls().create();
+            Question currentQuestion = gson.fromJson(message.getMessageText(), Question.class);
+
+            if (currentQuestion == null)
+                return;
+
+            if(!(currentQuestion.getQuestionType().equals(OffsideApplication.getQuestionTypePrediction())||
+                    currentQuestion.getQuestionType().equals(OffsideApplication.getQuestionTypeFun())))
+                return;
+
             if (message.getMessageType().equals(OffsideApplication.getMessageTypeClosedQuestion())){
                 cancelTimer();
                 currentQuestionRoot.setVisibility(View.GONE);
@@ -575,10 +586,6 @@ public class ChatFragment extends Fragment {
             if (message.getMessageType().equals(OffsideApplication.getMessageTypeProcessedQuestion())) {
 
                 cancelTimer();
-                final Gson gson = new GsonBuilder().serializeNulls().create();
-                Question currentQuestion = gson.fromJson(message.getMessageText(), Question.class);
-                if (currentQuestion == null)
-                    return;
                 currentQuestionTextTextView.setText(currentQuestion.getQuestionText());
                 GameInfo gameInfo = OffsideApplication.getGameInfo();
                 if (gameInfo == null)
