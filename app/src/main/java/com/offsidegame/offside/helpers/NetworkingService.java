@@ -15,20 +15,17 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.offsidegame.offside.BuildConfig;
 import com.offsidegame.offside.R;
 import com.offsidegame.offside.activities.LobbyActivity;
-import com.offsidegame.offside.activities.LoginActivity;
 import com.offsidegame.offside.events.AvailableGameEvent;
 import com.offsidegame.offside.events.ChatEvent;
 import com.offsidegame.offside.events.ChatMessageEvent;
 import com.offsidegame.offside.events.FriendInviteReceivedEvent;
 import com.offsidegame.offside.events.JoinGameEvent;
-import com.offsidegame.offside.events.LoadingEvent;
 import com.offsidegame.offside.events.NetworkingErrorFixedEvent;
 import com.offsidegame.offside.events.NotificationBubbleEvent;
 import com.offsidegame.offside.events.PlayerImageSavedEvent;
@@ -91,8 +88,10 @@ import java.util.concurrent.CountDownLatch;
 public class NetworkingService extends Service {
 
     private int reconnectAttempts = 1;
-    private RecoverableConnection connection;
-    private Channel channel;
+    private RecoverableConnection publishingConnection;
+    private RecoverableConnection consumingConnection;
+    private Channel publishingChannel;
+    private Channel consumingChannel;
     private String listenerQueueName;
 
     private String password = "kfir";
@@ -159,8 +158,8 @@ public class NetworkingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         int result = super.onStartCommand(intent, flags, startId);
-        CountDownLatch latch = new CountDownLatch(1);
         try {
+            CountDownLatch latch = new CountDownLatch(1);
             startRabbitMq(latch);
             latch.await();
         } catch (InterruptedException ex) {
@@ -183,7 +182,6 @@ public class NetworkingService extends Service {
             CountDownLatch latch = new CountDownLatch(1);
             startRabbitMq(latch);
             latch.await();
-            //ACRA.getErrorReporter().putCustomData("RabbitMqHostName", hostName);
         } catch (InterruptedException ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
@@ -198,8 +196,8 @@ public class NetworkingService extends Service {
             public void run() {
                 try {
                     stopRabbitMq();
-                    ConnectionFactory factory = new ConnectionFactory();
 
+                    ConnectionFactory factory = new ConnectionFactory();
                     factory.setHost(hostName);
                     factory.setUsername(userName);
                     factory.setPassword(password);
@@ -207,21 +205,35 @@ public class NetworkingService extends Service {
                     factory.setRequestedHeartbeat(10);
                     factory.setConnectionTimeout(10000);
 
-                    connection = (RecoverableConnection) factory.newConnection();
-                    channel = connection.createChannel();
+                    publishingConnection = (RecoverableConnection) factory.newConnection();
+                    consumingConnection = (RecoverableConnection) factory.newConnection();
+                    publishingChannel = publishingConnection.createChannel();
+                    consumingChannel = consumingConnection.createChannel();
 
-                    connection.addShutdownListener(new ShutdownListener() {
+                    publishingConnection.addShutdownListener(new ShutdownListener() {
                         @Override
                         public void shutdownCompleted(ShutdownSignalException cause) {
                             try {
-                                System.out.println("connection shutdownCompleted");
+                                System.out.println("publishingConnection shutdownCompleted");
                             } catch (Exception ex) {
                                 ACRA.getErrorReporter().handleSilentException(ex);
                             }
                         }
                     });
 
-                    connection.addRecoveryListener(new RecoveryListener() {
+                    consumingConnection.addShutdownListener(new ShutdownListener() {
+                        @Override
+                        public void shutdownCompleted(ShutdownSignalException cause) {
+                            try {
+                                System.out.println("consumingConnection shutdownCompleted");
+                            } catch (Exception ex) {
+                                ACRA.getErrorReporter().handleSilentException(ex);
+                            }
+                        }
+                    });
+
+
+                    publishingConnection.addRecoveryListener(new RecoveryListener() {
                         @Override
                         public void handleRecovery(Recoverable recoverable) {
 //                            EventBus.getDefault().post(new LoadingEvent(true,"Done!"));
@@ -239,6 +251,29 @@ public class NetworkingService extends Service {
                             //EventBus.getDefault().post(new LoadingEvent(true,"Disconnected. Working on it..."));
                         }
                     });
+
+
+                    consumingConnection.addRecoveryListener(new RecoveryListener() {
+                        @Override
+                        public void handleRecovery(Recoverable recoverable) {
+//                            EventBus.getDefault().post(new LoadingEvent(true,"Done!"));
+//                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                            startActivity(intent);
+
+                            EventBus.getDefault().post(new NetworkingErrorFixedEvent(false));
+                        }
+
+                        @Override
+                        public void handleRecoveryStarted(Recoverable recoverable) {
+                            EventBus.getDefault().post(new NetworkingErrorFixedEvent(true));
+                            //EventBus.getDefault().post(new LoadingEvent(true,"Disconnected. Working on it..."));
+                        }
+                    });
+
+                    consumingChannel.exchangeDeclare(SERVER_TO_CLIENTS_EXCHANGE_NAME, "direct");
+                    publishingChannel.exchangeDeclare(CLIENTS_TO_SERVER_EXCHANGE_NAME, "fanout");
 
                     if (latch != null)
                         latch.countDown();
@@ -278,16 +313,30 @@ public class NetworkingService extends Service {
 
     private void stopRabbitMq() {
 
-        if (channel != null && channel.isOpen()) {
+        if (publishingChannel != null && publishingChannel.isOpen()) {
             try {
-                channel.close();
+                publishingChannel.close();
             } catch (Exception ex) {
                 ACRA.getErrorReporter().handleSilentException(ex);
             }
         }
-        if (connection != null && connection.isOpen()) {
+        if (consumingChannel != null && consumingChannel.isOpen()) {
             try {
-                connection.close();
+                consumingChannel.close();
+            } catch (Exception ex) {
+                ACRA.getErrorReporter().handleSilentException(ex);
+            }
+        }
+        if (publishingConnection != null && publishingConnection.isOpen()) {
+            try {
+                publishingConnection.close();
+            } catch (Exception ex) {
+                ACRA.getErrorReporter().handleSilentException(ex);
+            }
+        }
+        if (consumingConnection != null && consumingConnection.isOpen()) {
+            try {
+                consumingConnection.close();
             } catch (Exception ex) {
                 ACRA.getErrorReporter().handleSilentException(ex);
             }
@@ -305,7 +354,7 @@ public class NetworkingService extends Service {
                             return;
                         if (queueName == null)
                             return;
-                        listenerQueueName = channel.queueDeclare(queueName, false, false, false, null).getQueue();
+                        listenerQueueName = consumingChannel.queueDeclare(queueName, false, false, false, null).getQueue();
 
 
                     } catch (Exception ex) {
@@ -345,13 +394,13 @@ public class NetworkingService extends Service {
 
                     currentRoutingKeys.put(routingKey, true);
 
-                    channel.exchangeDeclare(SERVER_TO_CLIENTS_EXCHANGE_NAME, "direct");
-                    channel.queueBind(listenerQueueName, SERVER_TO_CLIENTS_EXCHANGE_NAME, routingKey);
+
+                    consumingChannel.queueBind(listenerQueueName, SERVER_TO_CLIENTS_EXCHANGE_NAME, routingKey);
 
                     if (consumerTag != null)
                         return;
 
-                    consumerTag = channel.basicConsume(listenerQueueName, true, new DefaultConsumer(channel) {
+                    consumerTag = consumingChannel.basicConsume(listenerQueueName, true, new DefaultConsumer(consumingChannel) {
                         @Override
                         public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) throws IOException {
                             String json = new String(body, "UTF-8");
@@ -387,7 +436,7 @@ public class NetworkingService extends Service {
 
                     currentRoutingKeys.remove(routingKey);
 
-                    channel.queueUnbind(listenerQueueName, SERVER_TO_CLIENTS_EXCHANGE_NAME, routingKey);
+                    consumingChannel.queueUnbind(listenerQueueName, SERVER_TO_CLIENTS_EXCHANGE_NAME, routingKey);
 
                 } catch (Exception ex) {
                     ACRA.getErrorReporter().handleSilentException(ex);
@@ -410,12 +459,12 @@ public class NetworkingService extends Service {
             public void run() {
                 try {
                     if (consumerTag != null) {
-                        channel.basicCancel(consumerTag);
+                        consumingChannel.basicCancel(consumerTag);
                         consumerTag = null;
                     }
 
                     if (listenerQueueName != null) {
-                        channel.queueDelete(listenerQueueName);
+                        consumingChannel.queueDelete(listenerQueueName);
                         listenerQueueName = null;
 
                     }
@@ -688,13 +737,13 @@ public class NetworkingService extends Service {
 
                 try {
 
-                    if (connection == null || !connection.isOpen() || channel == null || !channel.isOpen()){
+                    if (publishingConnection == null || !publishingConnection.isOpen() || publishingChannel == null || !publishingChannel.isOpen()){
                         recoverConnectionAndRedoRequest(null,null,null);
                     }
 
-                    channel.exchangeDeclare(CLIENTS_TO_SERVER_EXCHANGE_NAME, "fanout");
-                    //channel.queueDeclare(CLIENTS_TO_SERVER_EXCHANGE_NAME, false, false, false, null);
-                    channel.basicPublish(CLIENTS_TO_SERVER_EXCHANGE_NAME, "", null, json.getBytes("UTF-8"));
+
+                    //publishingChannel.queueDeclare(CLIENTS_TO_SERVER_EXCHANGE_NAME, false, false, false, null);
+                    publishingChannel.basicPublish(CLIENTS_TO_SERVER_EXCHANGE_NAME, "", null, json.getBytes("UTF-8"));
                     if (method != null) {
                         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                             @Override
