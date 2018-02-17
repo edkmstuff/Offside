@@ -1,5 +1,6 @@
 package com.offsidegame.offside.adapters;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -946,8 +947,10 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                         //Log.i("SIDEKICK_GAME", String.format("nowDateInMillis - messageSentTimeMillis: %d", nowDateInMillis - messageSentTimeMillis ));
 
                         if (nowDateInMillis - messageSentTimeMillis < 20*1000 ) {
-                            YoYo.with(Techniques.SlideOutUp).duration(3000).playOn(viewHolder.incomingCorrectAnswerReturnTextView);
-//                            final TranslateAnimation translateAnimation = new TranslateAnimation(Animation.ABSOLUTE,0,
+                            YoYo.with(Techniques.SlideOutUp).pivot(100,100).duration(3000).playOn(viewHolder.incomingCorrectAnswerReturnTextView);
+
+
+                            //                            final TranslateAnimation translateAnimation = new TranslateAnimation(Animation.ABSOLUTE,0,
 //                                    Animation.ABSOLUTE,0,
 //                                    Animation.ABSOLUTE,0,Animation.ABSOLUTE,-800);
 //                            translateAnimation.setDuration(3000);
@@ -956,6 +959,9 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
 //                            setAnimation.setZAdjustment(Animation.ZORDER_TOP );
 //                            setAnimation.addAnimation(translateAnimation);
 //                            viewHolder.incomingCorrectAnswerReturnTextView.startAnimation(translateAnimation);
+
+
+
                         }
                             YoYo.with(Techniques.FadeIn).duration(1000).delay(500).playOn(viewHolder.incomingCorrectAnswerReturnTextView);
 
@@ -1088,6 +1094,7 @@ public class ChatMessageAdapter extends ArrayAdapter<ChatMessage> {
                             .build())
                     //.setQuote(quote+"\r\n"+ "think you can bit me? come join!!!" )
                     .setQuote(sb.toString())
+                    
                     .build();
 
 

@@ -614,11 +614,16 @@ public class ChatFragment extends Fragment {
                     final int progressBarDuration = timeToAnswer;
                     currentQuestionTimeRemainingCircularProgressBar.setProgressWithAnimation(0, progressBarDuration);
 
-                    if(timeToAnswer==0)
-                        currentQuestionTimeRemainingCircularProgressBar.setProgress(100);
+                    if(timeToAnswer==0){
+                        //currentQuestionTimeRemainingCircularProgressBar.setProgress(100);
+                        currentQuestionTimeRemainingCircularProgressBar.setVisibility(View.INVISIBLE);
+
+
+                    }
+
                     //timer of current question
                     if (timeToAnswer > 0) {
-
+                        currentQuestionTimeRemainingCircularProgressBar.setVisibility(View.VISIBLE);
                         countDownTimer = new CountDownTimer(timeToAnswer, 10) {
                             @Override
                             public void onTick(long millisUntilFinished) {
@@ -637,6 +642,7 @@ public class ChatFragment extends Fragment {
                             public void onFinish() {
                                 message.setTimeLeftToAnswer(0);
                                 currentQuestionTimeRemainingCircularProgressBar.setProgress(100);
+                                currentQuestionTimeRemainingCircularProgressBar.setVisibility(View.INVISIBLE);
                                 cancelTimer();
 
                             }

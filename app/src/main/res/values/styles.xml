@@ -177,9 +177,23 @@
         <item name="android:gravity">center|center_vertical</item>
         <item name="android:paddingTop">2dp</item>
         <item name="android:paddingBottom">2dp</item>
+    </style>
 
+    <style name="CurrentQuestionText">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/OffsideMediumSmallText</item>
+        <item name="android:fontFamily">@font/font_open_sans_hebrew</item>
+        <item name="android:layout_gravity">start</item>
 
     </style>
+    <style name="CurrentAnswerText">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/OffsideMediumSmallText</item>
+        <item name="android:fontFamily">@font/open_sans_hebrew_bold</item>
+        <item name="android:layout_gravity">start</item>
+
+    </style>
+
 
 
 

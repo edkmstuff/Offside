@@ -88,6 +88,12 @@
     <color name="wheelBackgroundColorOdd">#00E676</color>
     <color name="wheelBackgroundColorEven">#69F0AE</color>
 
+    <color name="currentQuestionBackgroundColor1">#257837</color>
+    <color name="currentQuestionBackgroundColor">#04805E</color>
+
+
+
+
 
 
 
