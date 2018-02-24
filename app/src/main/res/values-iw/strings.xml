@@ -115,7 +115,7 @@
     <string name="lbl_pick_you_nickname">בחר שם במה</string>
     <string name="lbl_not_answered">לא נענתה</string>
     <string name="lbl_use">השתמש ב</string>
-    <string name="lbl_to_double_win">לזכייה כפולה</string>
+    <string name="lbl_to_double_win">לחץ כאן להימור כפול</string>
     <string name="lbl_disclaimer_for_winner">תנאי לזכיה הוא השתתפות בלפחות 50% מהשאלות</string>
     <string name="lbl_question">שאלה</string>
     <string name="lbl_answer">תשובה</string>
@@ -128,6 +128,19 @@
     <string name="lbl_invite">הזמן חברים</string>
     <string name="lbl_and_get_free_coins">ותזכה במטבעות</string>
     <string name="lbl_privacy_policy">מדיניות פרטיות</string>
+    <string name="lbl_walkthrough_groups_desc">פתח קבוצה, הזמן חברים, בחר את המשחק וקדימה לשחק. האם תזכה להוביל את הטבלה?</string>
+
+    <string name="lbl_walkthrough_profile_desc">איך שיחקת במשחק האחרון? כמה גביעים כבר הוספת לארון הגביעים שלך? לאיזה דרגת מומחיות הגעת? במילים אחרות כמה טוב אתה במשחק הזה? כל התשובות כאן</string>
+
+    <string name="lbl_walkthrough_shop_desc">חזק את עצמך עם מטבעות נוספים וכמה כדורים שייתנו לך יתרון במשחק</string>
+    <string name="lbl_walkthrough_play_desc">הצטרף חזרה למשחק האחרון ששיחקת</string>
+    <string name="lbl_walkthrough_groups_title">התחבר</string>
+    <string name="lbl_walkthrguoh_profile_title">איך אתה</string>
+    <string name="lbl_walkthrough_play_title">שחק</string>
+    <string name="lbl_walkthrough_shop_title">החנות</string>
+    <string name="lbl_next">הבא</string>
+    <string name="lbl_finish">סיים</string>
+    <string name="lbl_back">הקודם</string>
 
 
 </resources>

@@ -372,7 +372,9 @@
                                 android:layout_marginTop="5dp"
                                 android:background="@drawable/shape_bg_button_double_up"
                                 android:gravity="center"
-                                android:orientation="horizontal">
+                                android:orientation="horizontal"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp">
 
 
                                 <LinearLayout
@@ -384,13 +386,13 @@
                                     android:orientation="horizontal"
                                     android:padding="5dp"
                                     android:layoutDirection="locale">
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/lbl_use"
-                                        android:textColor="@color/colorBlack"
-                                        android:textSize="@dimen/OffsideMediumText"
-                                        android:fontFamily="@font/font_open_sans_hebrew_bold" />
+                                    <!--<TextView-->
+                                        <!--android:layout_width="wrap_content"-->
+                                        <!--android:layout_height="wrap_content"-->
+                                        <!--android:text="@string/lbl_use"-->
+                                        <!--android:textColor="@color/colorBlack"-->
+                                        <!--android:textSize="@dimen/OffsideMediumText"-->
+                                        <!--android:fontFamily="@font/font_open_sans_hebrew_bold" />-->
 
                                     <ImageView
                                         android:layout_width="25dp"
@@ -405,7 +407,10 @@
                                         android:text="@string/lbl_to_double_win"
                                         android:textColor="@color/colorBlack"
                                         android:textSize="@dimen/OffsideMediumText"
-                                        android:fontFamily="@font/font_open_sans_hebrew_bold" />
+                                        android:fontFamily="@font/font_open_sans_hebrew_bold"
+                                        android:textAllCaps="true"
+                                        android:gravity="center"/>
+
 
                                 </LinearLayout>
 
@@ -1155,7 +1160,7 @@
             android:layout_marginRight="5dp"
             android:background="@drawable/shape_bg_outgoing_bubble"
             android:layout_gravity="right"
-            android:visibility="gone"
+            android:visibility="visible"
 
             >
 

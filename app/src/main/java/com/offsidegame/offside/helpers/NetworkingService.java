@@ -643,6 +643,9 @@ public class NetworkingService extends Service {
 
         try {
 
+            if(messageType==null || message==null)
+                return;
+
             boolean isAskedQuestion = messageType.equals(OffsideApplication.getMessageTypeAskedQuestion());
             boolean isCloseQuestion = messageType.equals(OffsideApplication.getMessageTypeClosedQuestion());
             int soundResource;

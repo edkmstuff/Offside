@@ -18,7 +18,7 @@
     <color name="chatPrimary">#28408F</color>
     <!--<color name="chatIncoming">#E3F2FD</color>-->
     <color name="chatIncomingFromBot">#F6F3F2</color>
-    <color name="chatOutgoing">#F6F3F2</color>
+    <color name="chatOutgoing">#E3F2FD</color>
     <color name="chatActions">#BDBDBD</color>
     <color name="chatText">#5B5B5B</color>
 

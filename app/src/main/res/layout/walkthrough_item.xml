@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="25dp"
+    android:background="@color/leagueRecordOddGradientStart"
+
+    >
+
+    <ImageView
+        android:id="@+id/wti_image_image_view"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="42dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/groups" />
+
+    <TextView
+        android:id="@+id/wti_heading_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wti_image_image_view"
+        android:layout_centerHorizontal="true"
+        android:text="CONNECT"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/font_open_sans_hebrew_extra_bold"
+        android:textSize="@dimen/OffsideMediumText" />
+
+    <TextView
+        android:id="@+id/wti_description_text_view"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+
+        android:layout_below="@+id/wti_heading_text_view"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="51dp"
+        android:fontFamily="@font/font_open_sans_hebrew_light"
+        android:gravity="center"
+
+        android:lines="5"
+        android:text="Create teams and invite friends to join. Check out for games and where your are ranked among your friends"
+        android:textSize="@dimen/OffsideMediumText" />
+
+
+</RelativeLayout>

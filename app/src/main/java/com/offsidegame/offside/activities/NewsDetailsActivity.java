@@ -71,7 +71,7 @@ public class NewsDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 OffsideApplication.setIsBackFromNewsFeed(true);
-                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_news));
+//                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_news));
                 finish();
             }
         });

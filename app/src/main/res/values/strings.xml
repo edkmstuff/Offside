@@ -130,7 +130,7 @@
     <string name="lbl_set_player_nickname">Change player nickname</string>
     <string name="lbl_pick_you_nickname">Pick your stage name</string>
     <string name="lbl_not_answered">Skipped</string>
-    <string name="lbl_to_double_win">TO DOUBLE WIN</string>
+    <string name="lbl_to_double_win">click here double bet</string>
     <string name="lbl_use">USE</string>
     <string name="lbl_disclaimer_for_winner">Disclaimer: Announced only if answered at least 50% of questions</string>
     <string name="lbl_question">Question</string>
@@ -144,5 +144,17 @@
     <string name="lbl_invite">Invite friends</string>
     <string name="lbl_and_get_free_coins">and get free coins</string>
     <string name="lbl_privacy_policy">Privacy Policy</string>
+    <string name="lbl_walkthrough_groups_desc">Create teams and invite friends to join. Check out for games and where your are ranked among your friends</string>
+    <string name="lbl_walkthrough_profile_desc">Check out your profile, latest game results, cups won, level of expertise and in matter of fact how great you are in this game</string>
+    <string name="lbl_walkthrough_shop_desc">Buy more coins and power items</string>
+    <string name="lbl_walkthrough_play_desc">Join back to the game you are currently playing</string>
+    <string name="lbl_walkthrough_groups_title">CONNECT</string>
+    <string name="lbl_walkthrguoh_profile_title">YOU</string>
+    <string name="lbl_walkthrough_play_title">COMPETE</string>
+    <string name="lbl_walkthrough_shop_title">SHOP</string>
+    <string name="lbl_next">NEXT</string>
+    <string name="lbl_finish">FINISH</string>
+    <string name="lbl_back">BACK</string>
+    <string name="key_showWalkthrough" translatable="false">showWalkthrough</string>
 
 </resources>

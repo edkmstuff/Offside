@@ -223,10 +223,9 @@ public class ChatFragment extends Fragment {
         resetVisibility();
 
 
-
     }
 
-    private void resetVisibility(){
+    private void resetVisibility() {
         currentQuestionRoot.setVisibility(View.GONE);
 
     }
@@ -496,7 +495,7 @@ public class ChatFragment extends Fragment {
             EventBus.getDefault().post(new PositionEvent(chat.getPosition()));
 
             ChatMessage currentQuestionChatMessage = chat.getCurrentQuestionChatMessage();
-            if(currentQuestionChatMessage==null)
+            if (currentQuestionChatMessage == null)
                 currentQuestionRoot.setVisibility(View.GONE);
 
             showCurrentQuestion(currentQuestionChatMessage);
@@ -534,6 +533,7 @@ public class ChatFragment extends Fragment {
                 throw new Exception("Duplicate chat message. id: " + message.getId() + " content: " + message.getMessageText());
             }
 
+
             showCurrentQuestion(message);
             //new message was added, notify data change
             if (messages != null && chatMessageAdapter != null) {
@@ -564,7 +564,15 @@ public class ChatFragment extends Fragment {
     private void showCurrentQuestion(final ChatMessage message) {
 
         try {
-            if(message==null)
+            if (message == null)
+                return;
+
+            boolean isThisAQuestionMessage = (message.getMessageType().equals(OffsideApplication.getMessageTypeProcessedQuestion()) ||
+                    message.getMessageType().equals(OffsideApplication.getMessageTypeClosedQuestion()) ||
+                    message.getMessageType().equals(OffsideApplication.getMessageTypeAskedQuestion())
+            );
+
+            if(!isThisAQuestionMessage)
                 return;
 
             final Gson gson = new GsonBuilder().serializeNulls().create();
@@ -573,11 +581,11 @@ public class ChatFragment extends Fragment {
             if (currentQuestion == null)
                 return;
 
-            if(!(currentQuestion.getQuestionType().equals(OffsideApplication.getQuestionTypePrediction())||
+            if (!(currentQuestion.getQuestionType().equals(OffsideApplication.getQuestionTypePrediction()) ||
                     currentQuestion.getQuestionType().equals(OffsideApplication.getQuestionTypeFun())))
                 return;
 
-            if (message.getMessageType().equals(OffsideApplication.getMessageTypeClosedQuestion())){
+            if (message.getMessageType().equals(OffsideApplication.getMessageTypeClosedQuestion())) {
                 cancelTimer();
                 currentQuestionRoot.setVisibility(View.GONE);
                 return;
@@ -591,13 +599,12 @@ public class ChatFragment extends Fragment {
                 if (gameInfo == null)
                     return;
                 Map<String, AnswerIdentifier> playerAnswers = OffsideApplication.playerAnswers;
-                boolean isPlayerAnsweredQuestion =  playerAnswers!=null && playerAnswers.containsKey(currentQuestion.getId());
+                boolean isPlayerAnsweredQuestion = playerAnswers != null && playerAnswers.containsKey(currentQuestion.getId());
                 if (isPlayerAnsweredQuestion) {
                     AnswerIdentifier answerIdentifier = playerAnswers.get(currentQuestion.getId());
                     String playerAnswerText = getAnswerText(currentQuestion, answerIdentifier.getAnswerId());
                     currentQuestionPlayerAnswerTextView.setText(playerAnswerText);
-                }
-                else {
+                } else {
                     currentQuestionPlayerAnswerTextView.setText(getString(R.string.lbl_not_answered));
                 }
 
@@ -614,7 +621,7 @@ public class ChatFragment extends Fragment {
                     final int progressBarDuration = timeToAnswer;
                     currentQuestionTimeRemainingCircularProgressBar.setProgressWithAnimation(0, progressBarDuration);
 
-                    if(timeToAnswer==0){
+                    if (timeToAnswer == 0) {
                         //currentQuestionTimeRemainingCircularProgressBar.setProgress(100);
                         currentQuestionTimeRemainingCircularProgressBar.setVisibility(View.INVISIBLE);
 
@@ -630,7 +637,7 @@ public class ChatFragment extends Fragment {
                                 message.setTimeLeftToAnswer((int) millisUntilFinished);
 //                                Log.i("SIDE", "timerId: " + String.valueOf(this.hashCode()) + "  - secondsLeft: " + Math.round((int) millisUntilFinished / 1000.0f));
 //                                Log.i("SIDE", "progresss: "+ String.valueOf(100 * (timeToAnswer - millisUntilFinished) / (float) timeToAnswer) );
-                                currentQuestionTimeRemainingCircularProgressBar.setProgressWithAnimation(100 * (timeToAnswer - millisUntilFinished) / (float) timeToAnswer, timeToAnswer/1000);
+                                currentQuestionTimeRemainingCircularProgressBar.setProgressWithAnimation(100 * (timeToAnswer - millisUntilFinished) / (float) timeToAnswer, timeToAnswer / 1000);
 
                                 String formattedTimerDisplay = formatTimerDisplay(millisUntilFinished);
 
@@ -651,8 +658,7 @@ public class ChatFragment extends Fragment {
                     }
 
                     currentQuestionRoot.setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     cancelTimer();
                     currentQuestionRoot.setVisibility(View.GONE);
                 }

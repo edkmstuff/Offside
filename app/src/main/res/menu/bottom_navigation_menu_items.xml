@@ -19,11 +19,11 @@
         android:icon="@drawable/play"
         android:title="@string/lbl_play"></item>
 
-    <item
-        android:id="@+id/nav_action_news"
+    <!--<item-->
+        <!--android:id="@+id/nav_action_news"-->
 
-        android:icon="@drawable/news_icon"
-        android:title="@string/lbl_news"></item>
+        <!--android:icon="@drawable/news_icon"-->
+        <!--android:title="@string/lbl_news"></item>-->
 
     <!--<item-->
     <!--android:id="@+id/nav_action_settings"-->

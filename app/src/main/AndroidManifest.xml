@@ -86,7 +86,7 @@
             android:name=".activities.CreatePrivateGroupActivity"
             android:label="Crate Group"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.NewsDetailsActivity" />
+        <!--<activity android:name=".activities.NewsDetailsActivity" />-->
 
         <service
             android:name=".helpers.NetworkingService"

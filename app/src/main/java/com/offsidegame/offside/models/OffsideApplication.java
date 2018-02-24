@@ -521,6 +521,7 @@ public class OffsideApplication extends Application {
             editor.putString(context.getString(R.string.game_id_key), null);
             editor.putString(context.getString(R.string.private_group_id_key), null);
             editor.putString(context.getString(R.string.private_game_id_key), null);
+            editor.putBoolean(context.getString(R.string.key_showWalkthrough),true);
 
             editor.commit();
 
@@ -533,6 +534,8 @@ public class OffsideApplication extends Application {
             OffsideApplication.setGameInfo(null);
             OffsideApplication.setPrivateGroupsInfo(null);
             OffsideApplication.setUserProfileInfo(null);
+
+
 
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
@@ -549,6 +552,22 @@ public class OffsideApplication extends Application {
             editor.putString(context.getString(R.string.game_id_key), gameId);
             editor.putString(context.getString(R.string.private_group_id_key), groupId);
             editor.putString(context.getString(R.string.private_game_id_key), privateGameId);
+
+            editor.commit();
+
+        } catch (Exception ex) {
+            ACRA.getErrorReporter().handleSilentException(ex);
+
+        }
+
+    }
+
+    public static void setUserPreferencesShowWalkthrough(boolean isRequired) {
+        try {
+            SharedPreferences settings = getContext().getSharedPreferences(context.getString(R.string.preference_name), 0);
+            SharedPreferences.Editor editor = settings.edit();
+
+            editor.putBoolean(context.getString(R.string.key_showWalkthrough), isRequired);
 
             editor.commit();
 

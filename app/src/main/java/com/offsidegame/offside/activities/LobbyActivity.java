@@ -16,8 +16,10 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
@@ -28,6 +30,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +45,7 @@ import com.ironsource.mediationsdk.model.Placement;
 import com.ironsource.mediationsdk.sdk.RewardedVideoListener;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.offsidegame.offside.R;
+import com.offsidegame.offside.adapters.SliderAdapter;
 import com.offsidegame.offside.events.AvailableGameEvent;
 import com.offsidegame.offside.events.CannotJoinPrivateGameEvent;
 import com.offsidegame.offside.events.ConnectionEvent;
@@ -87,6 +91,7 @@ import org.acra.ACRA;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.w3c.dom.Text;
 
 import java.io.Serializable;
 
@@ -179,6 +184,16 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     //edit value dialog
     private Dialog editValueDialog;
+
+    private RelativeLayout walkthroughRoot;
+    private ViewPager slideViewPager;
+    private LinearLayout dotsRoot;
+    private TextView [] dots;
+    private SliderAdapter sliderAdapter;
+    private Button previousButton;
+    private Button nextButton;
+    private int currentWalkthroughPage;
+
 
     //</editor-fold>
 
@@ -274,6 +289,23 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             getIDs();
             setEvents();
+
+            if(settings.getBoolean(context.getString(R.string.key_showWalkthrough),true)){
+                addDotsIndicator(0);
+                slideViewPager.addOnPageChangeListener(viewListener);
+
+                sliderAdapter = new SliderAdapter(this);
+                slideViewPager.setAdapter(sliderAdapter);
+                OffsideApplication.setUserPreferencesShowWalkthrough(false);
+            }
+            else {
+                walkthroughRoot.setVisibility(View.GONE);
+                nextButton.setVisibility(View.GONE);
+
+
+            }
+
+
             EventBus.getDefault().post(new LoadingEvent(true, "Starting"));
 
             //togglePlayerAssetsVisibility(true);
@@ -288,6 +320,8 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             //IntegrationHelper.validateIntegration(this);
 
 
+
+
         } catch (Exception ex) {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
@@ -297,13 +331,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     private void getIDs() {
 
-        playerInfoRoot = (LinearLayout) findViewById(R.id.l_player_info_root);
+        playerInfoRoot =  findViewById(R.id.l_player_info_root);
 
-        playerPictureImageView = (ImageView) findViewById(R.id.l_player_picture_image_view);
-        balanceRoot = (LinearLayout) findViewById(R.id.l_balance_root);
+        playerPictureImageView =  findViewById(R.id.l_player_picture_image_view);
+        balanceRoot =  findViewById(R.id.l_balance_root);
         powerItemsRoot = findViewById(R.id.l_power_items_root);
-        balanceTextView = (TextView) findViewById(R.id.l_balance_text_view);
-        powerItemsTextView = (TextView) findViewById(R.id.l_power_items_text_view);
+        balanceTextView =  findViewById(R.id.l_balance_text_view);
+        powerItemsTextView =  findViewById(R.id.l_power_items_text_view);
 
         settingsButtonImageView = findViewById(R.id.l_settings_button_image_view);
         loadingRoot = findViewById(R.id.shared_loading_root);
@@ -317,6 +351,12 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         int iconSize = 36;
         bottomNavigation.setIconSize(iconSize, iconSize);
         bottomNavigation.setItemHeight(BottomNavigationViewEx.dp2px(this, iconSize + 16));
+
+        walkthroughRoot = findViewById(R.id.l_walkthrough_root);
+        slideViewPager = findViewById(R.id.l_walkthrough_view_pager);
+        dotsRoot = findViewById(R.id.l_dots_root);
+        previousButton = findViewById(R.id.l_previous_button);
+        nextButton = findViewById(R.id.l_next_button);
 
 
     }
@@ -361,6 +401,22 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                 settingsFragment = SettingsFragment.newInstance();
                 replaceFragment(settingsFragment);
                 //togglePlayerAssetsVisibility(true);
+            }
+        });
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                slideViewPager.setCurrentItem(currentWalkthroughPage+1);
+
+            }
+        });
+
+        previousButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                slideViewPager.setCurrentItem(currentWalkthroughPage - 1);
+
             }
         });
 
@@ -432,13 +488,13 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                             }
 
 
-                        case R.id.nav_action_news:
-                            //bottomNavigation.setItemBackground(itemPosition, R.color.navigationMenuSelectedItem);
-                            newsFragment = NewsFragment.newInstance();
-                            replaceFragment(newsFragment);
-                            //togglePlayerAssetsVisibility(false);
-                            toggleNavigationMenuVisibility(true);
-                            return true;
+//                        case R.id.nav_action_news:
+//                            //bottomNavigation.setItemBackground(itemPosition, R.color.navigationMenuSelectedItem);
+//                            newsFragment = NewsFragment.newInstance();
+//                            replaceFragment(newsFragment);
+//                            //togglePlayerAssetsVisibility(false);
+//                            toggleNavigationMenuVisibility(true);
+//                            return true;
 
                         case R.id.nav_action_shop:
                             //bottomNavigation.setItemBackground(itemPosition, R.color.navigationMenuSelectedItem);
@@ -688,7 +744,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
             Intent intent = getIntent();
             boolean showGroups = intent.getBooleanExtra("showGroups", false);
-            boolean showNewsFeed = OffsideApplication.isBackFromNewsFeed();
+            //boolean showNewsFeed = OffsideApplication.isBackFromNewsFeed();
             boolean isBackFromCreatePrivateGroup = OffsideApplication.isIsBackFromCreatePrivateGroup();
 
             if (showGroups || !userRequiresRejoin) {
@@ -701,10 +757,10 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
                     }
                 }, 500);
 
-            } else if (showNewsFeed) {
-                OffsideApplication.setIsBackFromNewsFeed(false);
-                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_news));
-                EventBus.getDefault().post(new LoadingEvent(false, null));
+//            } else if (showNewsFeed) {
+//                OffsideApplication.setIsBackFromNewsFeed(false);
+//                EventBus.getDefault().post(new NavigationEvent(R.id.nav_action_news));
+//                EventBus.getDefault().post(new LoadingEvent(false, null));
 
             } else if (isBackFromCreatePrivateGroup) {
                 OffsideApplication.setIsBackFromCreatePrivateGroup(false);
@@ -881,7 +937,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveNavigation(NavigationEvent navigationEvent) {
         try {
@@ -893,7 +948,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onConnectionEvent(ConnectionEvent connectionEvent) {
@@ -907,7 +961,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             ACRA.getErrorReporter().handleSilentException(ex);
         }
     }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onGroupInvite(GroupInviteEvent groupInviteEvent) {
@@ -1248,7 +1301,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
         }
 
     }
-    //</editor-fold>
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onNotEnoughAssetsEventReceived(NotEnoughAssetsEvent notEnoughAssetsEvent) {
@@ -1654,7 +1706,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlayerModelReceived(PlayerModelEvent playerModelEvent) {
         try {
@@ -1691,6 +1742,7 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
+    //</editor-fold>
 
     private boolean isPackageInstalled(String packageName, PackageManager packageManager) {
         try {
@@ -1700,7 +1752,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
             return false;
         }
     }
-
 
     public void adjustDialogWidthToWindow(Dialog dialog) {
 
@@ -1720,7 +1771,6 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
-
     @Override
     public void onBackPressed() {
         try {
@@ -1739,5 +1789,88 @@ public class LobbyActivity extends AppCompatActivity implements Serializable {
 
     }
 
+    public void addDotsIndicator(int position){
+
+        dots = new TextView[4];
+        dotsRoot.removeAllViews();
+        for(int i=0;i<dots.length;i++){
+            dots[i] =  new TextView(this);
+            dots[i].setText(Html.fromHtml("&#8226;"));
+            dots[i].setTextSize(35);
+            dots[i].setTextColor(getResources().getColor(R.color.colorWhiteSemiTransparent));
+            dotsRoot.addView(dots[i]);
+
+        }
+
+        if(dots.length>0){
+            dots[position].setTextColor(getResources().getColor(R.color.colorWhite));
+        }
+
+    }
+
+    ViewPager.OnPageChangeListener viewListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            addDotsIndicator(position);
+            currentWalkthroughPage=position;
+            if(position==0){
+                nextButton.setEnabled(true);
+                previousButton.setEnabled(false);
+                previousButton.setVisibility(View.INVISIBLE);
+
+                nextButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        slideViewPager.setCurrentItem(currentWalkthroughPage+1);
+
+                    }
+                });
+
+                nextButton.setText(R.string.lbl_next);
+                previousButton.setText("");
+
+            } else if(position==dots.length - 1){
+                nextButton.setEnabled(true);
+                previousButton.setEnabled(true);
+                previousButton.setVisibility(View.VISIBLE);
+
+                nextButton.setText(R.string.lbl_finish);
+                nextButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        walkthroughRoot.setVisibility(View.GONE);
+                        nextButton.setVisibility(View.GONE);
+
+                    }
+                });
+                previousButton.setText(R.string.lbl_back);
+            } else {
+
+                nextButton.setEnabled(true);
+                previousButton.setEnabled(true);
+                previousButton.setVisibility(View.VISIBLE);
+                nextButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        slideViewPager.setCurrentItem(currentWalkthroughPage+1);
+
+                    }
+                });
+
+                nextButton.setText(R.string.lbl_next);
+                previousButton.setText(R.string.lbl_back);
+
+            }
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
+    };
 
 }

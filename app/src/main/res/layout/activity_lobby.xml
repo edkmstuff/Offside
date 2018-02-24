@@ -22,8 +22,11 @@
             android:id="@+id/l_lobby_root"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+
+            >
             <!--player info and settings-->
+
             <LinearLayout
                 android:id="@+id/l_player_info_root"
                 android:layout_width="match_parent"
@@ -37,8 +40,8 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:layout_weight="9"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <!-- profile picture-->
@@ -49,9 +52,8 @@
                         android:gravity="center"
                         android:layoutDirection="rtl"
                         android:orientation="horizontal"
-                        android:paddingTop="4dp"
                         android:paddingBottom="4dp"
-                        >
+                        android:paddingTop="4dp">
 
 
                         <ImageView
@@ -59,8 +61,7 @@
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:scaleType="centerCrop"
-                            android:src="@drawable/profile"
-                            />
+                            android:src="@drawable/profile" />
 
                     </LinearLayout>
 
@@ -75,8 +76,8 @@
                         android:gravity="center"
                         android:layoutDirection="rtl"
                         android:orientation="horizontal"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp">
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp">
 
                         <TextView
                             android:id="@+id/l_power_items_text_view"
@@ -89,8 +90,7 @@
                             android:paddingRight="16dp"
                             android:text="0"
                             android:textColor="@color/colorWhite"
-                            android:textSize="18sp"
-                            />
+                            android:textSize="18sp" />
 
                         <ImageView
                             android:id="@+id/c_power_item_image_view"
@@ -109,10 +109,8 @@
                         android:gravity="center"
                         android:layoutDirection="rtl"
                         android:orientation="horizontal"
-                        android:paddingTop="4dp"
                         android:paddingBottom="4dp"
-                        >
-
+                        android:paddingTop="4dp">
 
 
                         <TextView
@@ -121,14 +119,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="-18dp"
                             android:background="@drawable/bg_assets_coins"
+                            android:gravity="center"
                             android:paddingBottom="2dp"
                             android:paddingLeft="24dp"
                             android:paddingRight="44dp"
                             android:paddingTop="2dp"
                             android:text="0"
                             android:textColor="@color/colorWhite"
-                            android:textSize="18sp"
-                            android:gravity="center"/>
+                            android:textSize="18sp" />
 
                         <ImageView
                             android:id="@+id/c_offside_coins_image_view"
@@ -142,117 +140,6 @@
 
                 </LinearLayout>
 
-                <!-- alternative player status: logo at left , align to left  -->
-                <!--<LinearLayout-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="10"-->
-
-                <!--android:orientation="horizontal">-->
-
-                <!--&lt;!&ndash; profile picture&ndash;&gt;-->
-                <!--<LinearLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_gravity="right"-->
-                <!--android:layout_marginLeft="2dp"-->
-                <!--android:gravity="center"-->
-                <!--android:layoutDirection="rtl"-->
-                <!--android:orientation="horizontal">-->
-
-
-                <!--<ImageView-->
-                <!--android:id="@+id/l_player_picture_image_view"-->
-                <!--android:layout_width="22dp"-->
-                <!--android:layout_height="22dp"-->
-                <!--android:scaleType="centerCrop"-->
-                <!--android:src="@mipmap/ic_profile"-->
-                <!--/>-->
-
-                <!--</LinearLayout>-->
-
-                <!--&lt;!&ndash; powers&ndash;&gt;-->
-                <!--<LinearLayout-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_gravity="right"-->
-                <!--android:layout_marginLeft="2dp"-->
-                <!--android:gravity="center"-->
-                <!--android:layoutDirection="rtl"-->
-                <!--android:orientation="horizontal">-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/l_power_items_text_view"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="-14dp"-->
-                <!--android:background="#50000000"-->
-                <!--android:paddingBottom="2dp"-->
-                <!--android:paddingLeft="15dp"-->
-                <!--android:paddingRight="5dp"-->
-                <!--android:paddingTop="2dp"-->
-                <!--android:text="2"-->
-                <!--android:textColor="@color/colorWhite" />-->
-
-                <!--<ImageView-->
-                <!--android:id="@+id/c_power_item_image_view"-->
-                <!--android:layout_width="24dp"-->
-                <!--android:layout_height="24dp"-->
-                <!--android:scaleType="centerCrop"-->
-                <!--android:src="@mipmap/ic_soccer_ball" />-->
-
-                <!--</LinearLayout>-->
-
-                <!--&lt;!&ndash; coins &ndash;&gt;-->
-                <!--<LinearLayout-->
-                <!--android:id="@+id/l_balance_root"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:layout_marginLeft="2dp"-->
-                <!--android:gravity="center"-->
-                <!--android:layoutDirection="rtl"-->
-                <!--android:orientation="horizontal">-->
-
-
-                <!--<TextView-->
-                <!--android:layout_width="wrap_content"-->
-
-                <!--android:layout_height="wrap_content"-->
-                <!--android:background="@color/colorButton"-->
-                <!--android:gravity="center"-->
-                <!--android:minWidth="20dp"-->
-                <!--android:padding="2dp"-->
-                <!--android:text="+"-->
-                <!--android:textColor="@color/colorWhite"-->
-
-
-                <!--/>-->
-
-                <!--<TextView-->
-                <!--android:id="@+id/l_balance_text_view"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="-12dp"-->
-                <!--android:background="#50000000"-->
-                <!--android:paddingBottom="2dp"-->
-                <!--android:paddingLeft="12dp"-->
-                <!--android:paddingRight="5dp"-->
-                <!--android:paddingTop="2dp"-->
-                <!--android:text="4000"-->
-                <!--android:textColor="@color/colorWhite" />-->
-
-                <!--<ImageView-->
-                <!--android:id="@+id/c_offside_coins_image_view"-->
-                <!--android:layout_width="24dp"-->
-                <!--android:layout_height="24dp"-->
-                <!--android:scaleType="centerCrop"-->
-                <!--android:src="@mipmap/ic_coin" />-->
-
-                <!--</LinearLayout>-->
-
-
-                <!--</LinearLayout>-->
-                <!-- end ****** alternative player status -->
 
                 <!--settings button-->
                 <LinearLayout
@@ -274,39 +161,112 @@
 
             </LinearLayout>
 
-
-
             <FrameLayout
                 android:id="@+id/l_fragment_container_root"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                >
+                android:layout_weight="1">
 
             </FrameLayout>
+
 
             <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
                 android:id="@+id/l_bottom_navigation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:itemIconTint="@color/navUnSelectedItemColor"
                 android:background="@color/navBackgroundColor"
-                android:layout_alignParentBottom="true"
+                app:itemIconTint="@color/navUnSelectedItemColor"
 
-                app:menu="@menu/bottom_navigation_menu_items" />
+                app:menu="@menu/bottom_navigation_menu_items">
 
+            </com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx>
 
 
         </LinearLayout>
 
         <!-- Progress bar -->
-        <include layout="@layout/shared_loading"
-            android:visibility="gone"/>
+        <include
+            layout="@layout/shared_loading"
+            android:visibility="gone" />
+
+        <!--walkthrough-->
+        <RelativeLayout
+            android:id="@+id/l_walkthrough_root"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="8dp">
+
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/l_walkthrough_view_pager"
+                android:layout_width="wrap_content"
+                android:layout_height="500dp">
+
+            </android.support.v4.view.ViewPager>
+            <!--buttons and dots indicator-->
+            <LinearLayout
+                android:id="@+id/l_walkthrough_nav_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="12">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:id="@+id/l_previous_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:visibility="invisible"
+                        android:background="@color/leagueRecordOddGradientStart"
+                        />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="6"
+                    android:layout_height="wrap_content"
+                    android:gravity="center">
+                    <LinearLayout
+                        android:id="@+id/l_dots_root"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:orientation="horizontal">
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/l_next_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@color/leagueRecordOddGradientStart"
+                        android:text="@string/lbl_next"
+                        android:visibility="visible"
+                        />
+                </LinearLayout>
+
+
+
+            </LinearLayout>
+
+
+
+        </RelativeLayout>
 
 
     </FrameLayout>
-
-
 
 
 </LinearLayout>
