@@ -49,11 +49,14 @@ public class PrivateGroupsFragment extends Fragment {
             PrivateGroupAdapter privateGroupAdapter = new PrivateGroupAdapter(this.getActivity(), getPrivateGroups());
             listView.setAdapter(privateGroupAdapter);
 
-            if(groupType.equals(getString(R.string.key_public_group_name)))
+            if(groupType.equals(getString(R.string.key_public_group_name))){
                 createPrivateGroupFloatingActionButton.setVisibility(View.GONE);
-            else
-                createPrivateGroupFloatingActionButton.setVisibility(View.VISIBLE);
 
+            }
+
+            else {
+                createPrivateGroupFloatingActionButton.setVisibility(View.VISIBLE);
+            }
             createPrivateGroupFloatingActionButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

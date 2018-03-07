@@ -84,6 +84,7 @@
                             android:gravity="center"
                             />
                         <ImageView
+                            android:id="@+id/fsg_group_navigation_group_name_edit_image_view"
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_pencil"

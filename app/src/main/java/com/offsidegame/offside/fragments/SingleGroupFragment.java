@@ -91,6 +91,7 @@ public class SingleGroupFragment extends Fragment {
     private LinearLayout singleGroupDeletePrivateGroupButtonRoot;
     private EditText singleGroupChangeGroupNameEditText;
     private LinearLayout singleGroupNoGamesRoot;
+    private ImageView groupNavigationGroupNameEditImageView;
 
 
     public static SingleGroupFragment newInstance() {
@@ -126,7 +127,6 @@ public class SingleGroupFragment extends Fragment {
             getIDs(view);
             setEvents();
             resetVisibility();
-
             return view;
 
         } catch (Exception ex) {
@@ -171,6 +171,7 @@ public class SingleGroupFragment extends Fragment {
         singleGroupDeletePrivateGroupButtonRoot = view.findViewById(R.id.fsg_single_group_delete_group_root);
 
         singleGroupNoGamesRoot = view.findViewById(R.id.fsg_single_group_no_games_root);
+        groupNavigationGroupNameEditImageView = view.findViewById(R.id.fsg_group_navigation_group_name_edit_image_view);
 
     }
 
@@ -243,16 +244,19 @@ public class SingleGroupFragment extends Fragment {
             }
         });
 
-        goupNavigationGroupNameRoot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        boolean isPrivateGroup = OffsideApplication.getSelectedPrivateGroup().getGroupType().equals(getResources().getString(R.string.key_private_group_name));
+        toggleGroupNameUpdateButton(isPrivateGroup);
 
-                String dialogTitle = getString(R.string.lbl_change_name_of_this_group);
-                String dialogInstructions = getString(R.string.lbl_pick_new_name);
-                String groupCurrentName = groupNavigationGroupNameTextView.getText().toString();
-                EventBus.getDefault().post(new EditValueEvent(dialogTitle,dialogInstructions,groupCurrentName,EditValueEvent.updateGroupName));
-            }
-        });
+//        goupNavigationGroupNameRoot.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                String dialogTitle = getString(R.string.lbl_change_name_of_this_group);
+//                String dialogInstructions = getString(R.string.lbl_pick_new_name);
+//                String groupCurrentName = groupNavigationGroupNameTextView.getText().toString();
+//                EventBus.getDefault().post(new EditValueEvent(dialogTitle,dialogInstructions,groupCurrentName,EditValueEvent.updateGroupName));
+//            }
+//        });
 
 
     }
@@ -292,6 +296,7 @@ public class SingleGroupFragment extends Fragment {
         singleGroupGamesRoot.setVisibility(View.GONE);
         singleGroupTabsRoot.setVisibility(View.GONE);
         singleGroupNoGamesRoot.setVisibility(View.GONE);
+        groupNavigationGroupNameEditImageView.setVisibility(View.GONE);
 
 
     }
@@ -313,6 +318,8 @@ public class SingleGroupFragment extends Fragment {
 
             groupNavigationGroupNameTextView.setText(OffsideApplication.getSelectedPrivateGroup().getName());
             groupNavigationLastPlayedTextView.setText(OffsideApplication.getSelectedPrivateGroup().getPrettyLastPlayed());
+            boolean isPrivateGroup = OffsideApplication.getSelectedPrivateGroup().getGroupType().equals(getResources().getString(R.string.key_private_group_name));
+            toggleGroupNameUpdateButton(isPrivateGroup);
 
             OffsideApplication.networkingService.requestAvailableGames(OffsideApplication.getPlayerId(), OffsideApplication.getSelectedPrivateGroupId());
 
@@ -320,6 +327,31 @@ public class SingleGroupFragment extends Fragment {
             ACRA.getErrorReporter().handleSilentException(ex);
 
         }
+
+    }
+
+    private void toggleGroupNameUpdateButton(boolean isAllowed){
+        if(isAllowed){
+            groupNavigationGroupNameEditImageView.setVisibility(View.VISIBLE);
+            goupNavigationGroupNameRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    String dialogTitle = getString(R.string.lbl_change_name_of_this_group);
+                    String dialogInstructions = getString(R.string.lbl_pick_new_name);
+                    String groupCurrentName = groupNavigationGroupNameTextView.getText().toString();
+                    EventBus.getDefault().post(new EditValueEvent(dialogTitle,dialogInstructions,groupCurrentName,EditValueEvent.updateGroupName));
+                }
+            });
+
+        }
+        else{
+            goupNavigationGroupNameRoot.setOnClickListener(null);
+            groupNavigationGroupNameEditImageView.setVisibility(View.GONE);
+
+
+        }
+
 
     }
 
